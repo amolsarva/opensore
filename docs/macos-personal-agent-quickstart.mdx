@@ -1,0 +1,80 @@
+---
+title: "Mac Personal Agent Quickstart"
+description: "Install OpenSRE on macOS and configure a low-cost LLM plus WhatsApp or iMessage."
+---
+
+This path is for using OpenSRE as a local personal agent instead of an incident-response demo.
+
+## 1. Install
+
+From the repo root while developing:
+
+```bash
+make install
+uv run opensre personal doctor
+```
+
+For an installed release:
+
+```bash
+curl -fsSL https://install.opensre.com | bash
+opensre personal doctor
+```
+
+## 2. Configure a low-cost LLM
+
+Run:
+
+```bash
+uv run opensre onboard
+```
+
+Choose one of these starting points:
+
+| Provider | Good first choice | Notes |
+|---|---|---|
+| Gemini | Google Gemini or Gemini CLI | Usually the cheapest hosted path to try first. |
+| OpenAI | OpenAI or Codex CLI | Good general-purpose default. |
+| Claude | Anthropic or Claude Code CLI | Strong reasoning, usually not the cheapest. |
+| OpenRouter | OpenRouter | Useful when you want one key and multiple model options. |
+| Ollama | Ollama local | No API key; speed depends on your Mac. |
+
+Then verify:
+
+```bash
+uv run opensre doctor
+```
+
+## 3. Configure WhatsApp
+
+OpenSRE currently supports Twilio-backed WhatsApp delivery. Inbound WhatsApp message handling is on the personal-agent roadmap.
+
+```bash
+uv run opensre integrations setup whatsapp
+uv run opensre integrations verify whatsapp
+uv run opensre messaging pair --platform whatsapp
+uv run opensre personal doctor
+```
+
+## 4. Configure iMessage
+
+iMessage is not implemented as a native OpenSRE channel yet. For now, use the OpenClaw bridge if you already run OpenClaw or a compatible local gateway:
+
+```bash
+uv run opensre integrations setup openclaw
+uv run opensre integrations verify openclaw
+uv run opensre messaging pair --platform imessage
+uv run opensre personal doctor
+```
+
+Native macOS iMessage support needs a dedicated bridge because Apple does not provide a normal server-side iMessage bot API.
+
+## 5. Start working
+
+For the current repo, start with the interactive shell:
+
+```bash
+uv run opensre
+```
+
+For the personal-agent target, track the remaining work in [Personal Agent Roadmap](/personal-agent-roadmap).

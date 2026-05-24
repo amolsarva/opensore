@@ -1,0 +1,354 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "OpenSRE Documentation",
+  "modeToggle": {
+    "default": "dark",
+    "isHidden": false
+  },
+  "colors": {
+    "primary": "#000000",
+    "light": "#FFFFFF",
+    "dark": "#000000"
+  },
+  "favicon": "/favicon.ico",
+  "styles": {
+    "css": "/sidebar.css"
+  },
+  "scripts": [
+    "/toc-actions.js",
+    "https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js",
+    "/radar-chart.js"
+  ],
+  "navigation": {
+    "directory": "card",
+    "tabs": [
+      {
+        "tab": "Getting Started",
+        "icon": "rocket",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "index",
+              "showcase",
+              "features"
+            ]
+          },
+          {
+            "group": "First steps",
+            "pages": [
+              "quickstart",
+              "macos-personal-agent-quickstart",
+              "personal-agent-roadmap",
+              "workplace-discovery-product-plan",
+              "deployment",
+              "faq"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Installation",
+        "icon": "download",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "install"
+            ]
+          },
+          {
+            "group": "Local",
+            "pages": [
+              "install-local"
+            ]
+          },
+          {
+            "group": "Enterprise",
+            "pages": [
+              "install-enterprise"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Integrations",
+        "icon": "plug",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "integrations-overview",
+              "remote-runtime-investigation",
+              "masking",
+              "interactive-shell-privacy",
+              "agents",
+              "multi-instance-integrations"
+            ]
+          },
+          {
+            "group": "LLM providers",
+            "pages": [
+              "llm-providers"
+            ]
+          },
+          {
+            "group": "Observability and incidents",
+            "expanded": true,
+            "pages": [
+              "alertmanager",
+              "azure-monitor",
+              "betterstack",
+              "coralogix",
+              "datadog",
+              "grafana",
+              "hermes",
+              "honeycomb",
+              "incident_io",
+              "opsgenie",
+              "sentry",
+              "signoz",
+              "splunk"
+            ]
+          },
+          {
+            "group": "Cloud, code, and collaboration",
+            "expanded": true,
+            "pages": [
+              "aws",
+              "bitbucket",
+              "github",
+              "gitlab",
+              "google-docs",
+              "helm",
+              "jira",
+              "vercel"
+            ]
+          },
+          {
+            "group": "Messaging",
+            "expanded": true,
+            "pages": [
+              "messaging/index",
+              "messaging/slack",
+              "messaging/discord",
+              "messaging/telegram",
+              "messaging/whatsapp",
+              "messaging/twilio-sms"
+            ]
+          },
+          {
+            "group": "Data and workflow systems",
+            "pages": [
+              "clickhouse",
+              "kafka",
+              "mariadb",
+              "mongodb",
+              "mysql",
+              "openclaw",
+              "opensearch",
+              "postgresql",
+              "prefect",
+              "rabbitmq",
+              "rds"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Tracer",
+        "icon": "/images/logo/tracer/Tracer-Head-Black.png",
+        "groups": [
+          {
+            "group": "Getting started",
+            "pages": [
+              "introduction-monitoring",
+              "quickstart-monitoring",
+              "tracer-faq"
+            ]
+          },
+          {
+            "group": "Use cases",
+            "pages": [
+              "use-cases/logging",
+              "use-cases/metrics",
+              "use-cases/cost-optimization",
+              "use-cases/right-sizing",
+              "use-cases/cost-center-mapping",
+              "use-cases/datalake"
+            ]
+          },
+          {
+            "group": "Tutorials",
+            "pages": [
+              "tutorials/viewing-task-status",
+              "tutorials/investigating-task-failures",
+              "tutorials/fastquorum-debugging"
+            ]
+          },
+          {
+            "group": "Frameworks",
+            "pages": [
+              "integrations/integration-workflow",
+              "integrations/nextflow",
+              "integrations/wdl",
+              "integrations/bash",
+              "integrations/snakemake",
+              "integrations/slurm"
+            ]
+          },
+          {
+            "group": "Technology",
+            "pages": [
+              "technology/end-to-end",
+              "technology/our-features",
+              "technology/how-it-works",
+              "technology/product-benefits",
+              "technology/tracer-agent",
+              {
+                "group": "Tracer products",
+                "expanded": true,
+                "pages": [
+                  "technology/tracer-collect",
+                  "technology/tracer-tune",
+                  "technology/tracer-sweep"
+                ]
+              },
+              "technology/ebpf-security",
+              "technology/why-ebpf",
+              "technology/data-model",
+              "technology/limits-privacy",
+              "technology/capabilities-compatibility"
+            ]
+          },
+          {
+            "group": "Deployment environments",
+            "pages": [
+              "environments/overview",
+              "environments/codespaces",
+              "environments/linux-cloud",
+              "environments/aws-batch",
+              "environments/google-batch",
+              "environments/docker",
+              "environments/linux-local",
+              "environments/macos",
+              "environments/windows-local"
+            ]
+          },
+          {
+            "group": "Comparisons",
+            "pages": [
+              "comparisons/overview",
+              {
+                "group": "Workflow orchestration",
+                "expanded": true,
+                "pages": [
+                  "comparisons/workflow-orchestration",
+                  "comparisons/Tracer_vs_Airflow",
+                  "comparisons/Tracer_vs_Dagster",
+                  "comparisons/Tracer_vs_Flyte",
+                  "comparisons/Tracer_vs_Prefect",
+                  "comparisons/Tracer_vs_Seqera"
+                ]
+              },
+              {
+                "group": "Observability",
+                "expanded": true,
+                "pages": [
+                  "comparisons/observability-tools",
+                  "comparisons/Tracer_vs_Datadog",
+                  "comparisons/Tracer_vs_Grafana",
+                  "comparisons/Tracer_vs_Prometheus"
+                ]
+              },
+              {
+                "group": "Cloud native",
+                "expanded": true,
+                "pages": [
+                  "comparisons/cloud-native-monitoring",
+                  "comparisons/Tracer_vs_AWS_CloudWatch"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Changelog",
+        "icon": "clock",
+        "groups": [
+          {
+            "group": "Daily updates",
+            "pages": [
+              "daily-updates/overview"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Discord",
+        "href": "https://discord.gg/opensre",
+        "icon": "discord",
+        "iconType": "brands"
+      },
+      {
+        "label": "Releases",
+        "href": "https://github.com/Tracer-Cloud/opensre/releases",
+        "icon": "box"
+      },
+      {
+        "label": "GitHub",
+        "href": "https://github.com/Tracer-Cloud/opensre",
+        "icon": "github",
+        "iconType": "brands"
+      },
+      {
+        "label": "OpenSRE Cloud",
+        "href": "https://app.tracer.cloud/",
+        "icon": "/images/logo/tracer/Tracer-Head-Black.png"
+      }
+    ]
+  },
+  "contextual": {
+    "options": []
+  },
+  "footer": {
+    "socials": {
+      "website": "https://tracer.cloud",
+      "github": "https://github.com/Tracer-Cloud",
+      "linkedin": "https://linkedin.com/company/tracercloud",
+      "slack": "https://join.slack.com/t/tracer-cloud/shared_invite/zt-3ifakcs2e-igoUEH8ygMlfxgJGLxsqeA"
+    },
+    "copyright": "\u00a9 2025 Tracer Cloud. All rights reserved."
+  },
+  "integrations": {
+    "posthog": {
+      "apiKey": "phc_zutpVhmQw7oUmMkbawKNdYCKQWjpfASATtf5ywB75W2",
+      "apiHost": "https://us.i.posthog.com",
+      "sessionRecording": true
+    },
+    "hotjar": {
+      "hjid": "6568352",
+      "hjsv": "6"
+    }
+  },
+  "redirects": [
+    {
+      "source": "/messaging/twilio",
+      "destination": "/messaging/twilio-sms"
+    }
+  ],
+  "seo": {
+    "indexing": "all",
+    "metatags": {}
+  },
+  "logo": {
+    "light": "/images/opensre-logo-black.svg",
+    "dark": "/images/opensre-logo-white.svg"
+  }
+}

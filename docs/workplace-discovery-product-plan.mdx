@@ -1,0 +1,106 @@
+---
+title: "Workplace Discovery Product Plan"
+description: "Pivot OpenSRE into hosted, no-retention discovery for harassment, executive misconduct, and sexual misconduct investigations."
+---
+
+OpenSRE is being repositioned from infrastructure incident response to workplace discovery investigations. The core idea still uses the same retrieval engine: search across logs, messages, tickets, docs, commits, and operational systems. The difference is the investigation target.
+
+Instead of asking "why did production fail?", the product asks:
+
+- What evidence exists across workplace systems?
+- Which custodians, dates, threads, files, or channels match counsel's terms?
+- What should be exported for legal review?
+- How can the host avoid storing sensitive evidence?
+
+This product should support workplace harassment, executive misconduct, retaliation, discrimination, and sexual misconduct investigations. It should help collect and organize evidence, not make legal conclusions.
+
+## Product principles
+
+- No legal advice. The app prepares discovery artifacts for review by counsel or an authorized investigator.
+- No local evidence retention in hosted mode. Evidence should be streamed from source systems into the user's own export destination.
+- User-owned storage. CSV exports should go to the user's Google Drive or another explicitly selected user-owned repository.
+- Read-only source access by default.
+- Clear auditability: every search term, source, custodian, timestamp, and export file should be traceable.
+- Least privilege OAuth scopes.
+- Separate search planning from evidence export.
+- Never train on user evidence.
+
+## Hosted user flow
+
+1. User creates an account.
+2. User creates a matter: title, allegation type, date range, custodians, and notes.
+3. User connects source systems with read-only scopes.
+4. User chooses or edits keyword sets.
+5. App previews the search/export plan without pulling evidence.
+6. User approves the run.
+7. App queries source systems and writes CSV files directly to Google Drive.
+8. App stores only metadata: matter name, source names, export file IDs, timestamps, and run status.
+9. User opens CSVs in Drive or shares them with counsel.
+
+## Initial source systems
+
+- Google Workspace: Gmail, Drive, Docs, Calendar.
+- Slack: messages, channels, users, files metadata.
+- Microsoft 365: Outlook, OneDrive, Teams, SharePoint.
+- GitHub: issues, PRs, comments, commits, code search.
+- Jira: issues, comments, audit trails.
+- Zendesk or support systems.
+- Custom CSV upload for legacy exports.
+
+## CSV output
+
+Every evidence row should include:
+
+- matter_title
+- source
+- custodian
+- message_id
+- timestamp
+- sender
+- recipients
+- matched_keyword_set
+- matched_keyword
+- context_excerpt
+- source_url
+- hash
+
+Later versions should add attachments, thread IDs, privilege tags, review status, reviewer notes, and chain-of-custody metadata.
+
+## Missing features
+
+- Google OAuth login.
+- Google Drive export writer.
+- Google Workspace read-only source connector.
+- Slack OAuth source connector.
+- Microsoft OAuth source connector.
+- Matter metadata store that excludes evidence bodies.
+- Per-run ephemeral workspace with automatic cleanup.
+- Background job runner for long discovery runs.
+- User-facing web dashboard.
+- Admin controls for export retries.
+- Key-term editor with import/export.
+- Custodian directory import.
+- Date-range and channel filters.
+- Evidence hash and deduplication.
+- Redaction pipeline for previews.
+- Privilege and confidentiality tagging.
+- Reviewer assignment.
+- Audit log.
+- Billing and account isolation.
+- Retention policy UI.
+- Legal hold workflow.
+- Permission model for complainant, investigator, counsel, and admin roles.
+- Safety copy that avoids promising legal determinations.
+
+## First shipped slice
+
+The first implementation adds:
+
+- A hosted `/ui` entry point.
+- Discovery request and plan models.
+- Default workplace misconduct keyword groups.
+- No-local-evidence-storage validation.
+- CSV schema and plan summary export.
+- In-memory Google Drive CSV export service scaffolding.
+
+The next slice should implement Google OAuth around the Drive CSV writer before any source connector pulls real evidence.

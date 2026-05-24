@@ -1,0 +1,4 @@
+base: 000-healthy
+scenario_id: 002-connection-exhaustion
+failure_mode: connection_exhaustion
+severity: critical

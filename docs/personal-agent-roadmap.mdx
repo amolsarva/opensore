@@ -1,0 +1,137 @@
+---
+title: "Personal Agent Roadmap"
+description: "What OpenSRE is today, what is missing, and how to turn it into a Mac-first messaging agent."
+---
+
+OpenSRE is currently an AI SRE and incident-response framework. It is strongest at alert ingestion, root-cause analysis, observability tools, cloud infrastructure, and posting investigation results back to team systems.
+
+The OpenClaw-like goal is different: a local-first personal agent that is easy to install on a Mac, cheap to run with hosted or local LLMs, and reachable from everyday chat apps such as WhatsApp and iMessage.
+
+## Current fit
+
+What already exists:
+
+- Interactive CLI and onboarding with multiple LLM providers.
+- Hosted LLM support for Anthropic, OpenAI, Gemini, OpenRouter, Bedrock, NVIDIA, and Ollama.
+- Local CLI provider support for Codex, Claude Code, Gemini CLI, OpenCode, Cursor, Kimi, and Copilot.
+- Integration store under `~/.config/opensre/integrations.json`.
+- Messaging delivery for Slack, Telegram, WhatsApp through Twilio, and SMS through Twilio.
+- Discord inbound slash-command flow.
+- Messaging identity policies with pairing and allowlists.
+- OpenClaw MCP bridge integration.
+
+What is still missing for the personal-agent target:
+
+- A first-run path that says "personal agent" instead of "SRE incident demo".
+- WhatsApp inbound message handling, not only Twilio WhatsApp delivery.
+- iMessage integration.
+- A normalized channel gateway abstraction that treats WhatsApp, iMessage, Discord, Telegram, Slack, SMS, and future channels consistently.
+- Per-contact and per-chat authorization defaults.
+- Persistent chat memory across channels.
+- Safe action approvals before sending messages or performing destructive operations.
+- Message transcript import/export.
+- Attachment handling for images, files, audio, and voice notes.
+- Voice note transcription.
+- Local Mac permissions checks for Messages, Contacts, Calendar, Mail, Files, and Automation.
+- Simple model presets that prioritize low cost.
+- Cost guardrails, token budgets, and fallback routing.
+- A menu bar app or launch agent so the gateway starts on login.
+- Clear recipes for Beeper, BlueBubbles, Twilio WhatsApp, WhatsApp Cloud API, and OpenClaw bridges.
+- End-to-end tests for inbound chat loops.
+- A Mac installer that performs checks before asking for credentials.
+
+## Missing feature backlog
+
+### Install and first run
+
+- One-command Mac install that verifies Xcode command line tools, Homebrew, `uv`, Python, and shell profile setup.
+- `opensre personal doctor` as the default post-install check.
+- `opensre personal start` to run the local gateway.
+- `opensre personal launch-agent install` to start on login.
+- Minimal `.env` template for personal mode.
+- A no-observability quickstart that does not mention Grafana, Datadog, Kubernetes, or RCA fixtures.
+- Troubleshooting output that explains exactly which app permission or token is missing.
+
+### Cheap LLM setup
+
+- Provider presets: cheapest, balanced, strongest, local-only.
+- Gemini low-cost default.
+- OpenAI low-cost default.
+- Claude low-cost default.
+- OpenRouter fallback default.
+- Ollama local default with automatic model pull.
+- Model health probe that sends one tiny prompt.
+- Cost cap per day and per conversation.
+- Fallback model when the primary provider fails.
+- Per-task model routing: classify with cheap model, reason with stronger model only when needed.
+- Token and cost display in command output.
+
+### WhatsApp
+
+- Twilio WhatsApp inbound webhook.
+- WhatsApp Cloud API inbound webhook.
+- Pairing flow over WhatsApp DM.
+- Allowlist by sender phone number and WhatsApp user ID.
+- Reply loop that sends the agent response back to the same thread.
+- Message deduplication by provider message ID.
+- Media download and safe attachment staging.
+- Delivery receipts and error reporting.
+- Sandbox setup wizard.
+- Production sender setup guide.
+
+### iMessage
+
+- macOS-only integration with explicit permission checks.
+- Bridge option for OpenClaw, Beeper, BlueBubbles, or native Messages automation.
+- Pairing flow by sender handle.
+- Read-only transcript import.
+- Send-message action gated by approval.
+- Group chat handling.
+- Contact-name resolution without using names as trust IDs.
+- Clear limitations around AppleScript, database access, and macOS privacy prompts.
+
+### Gateway and agent loop
+
+- A `MessageEnvelope` contract for every inbound channel.
+- Channel adapters for inbound, outbound, status, and attachments.
+- Conversation state keyed by stable channel and participant IDs.
+- Background runner with graceful restart.
+- Queue and retry model for outbound sends.
+- Webhook server for hosted channels.
+- Local polling workers for Mac-only channels.
+- Replayable event log for debugging.
+- Admin commands: pause, resume, stop, forget, approve, deny, status.
+- Human approval prompts before sensitive actions.
+
+### Safety and privacy
+
+- Default deny for inbound users until paired.
+- Per-channel allowlists.
+- Per-action permissions.
+- "Stop" and "pause" hard commands.
+- Sensitive data redaction in logs.
+- Local-only transcript storage by default.
+- Export and delete controls for stored conversations.
+- Audit log of every sent message and tool action.
+- Rate limits per user and per channel.
+
+### Product polish
+
+- `opensre personal doctor` in the README quickstart.
+- `docs/macos-personal-agent-quickstart`.
+- Screenshots or terminal recordings for first-run setup.
+- A sample "send me a daily brief on WhatsApp" workflow.
+- A sample "reply to this iMessage draft" workflow.
+- A local dashboard or menu bar status view.
+
+## First implementation slice
+
+The first slice should be intentionally small:
+
+1. Keep the existing SRE pipeline intact.
+2. Add personal-agent readiness checks.
+3. Extend messaging identity policies to include WhatsApp and iMessage.
+4. Document the Mac-first path.
+5. Then build the WhatsApp inbound webhook loop.
+
+This creates a visible direction without pretending the repo already has full OpenClaw-style messaging.

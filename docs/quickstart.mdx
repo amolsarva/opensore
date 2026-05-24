@@ -1,0 +1,83 @@
+---
+title: "Quickstart"
+slug: "quickstart"
+---
+
+<Steps>
+  <Step title="Install OpenSRE">
+    <Tabs>
+      <Tab title="macOS / Linux">
+        Choose one install method:
+
+        ```bash
+        brew tap tracer-cloud/tap
+        brew install tracer-cloud/tap/opensre
+        ```
+
+        ```bash
+        curl -fsSL https://install.opensre.com | bash
+        ```
+      </Tab>
+      <Tab title="Windows">
+        ```powershell
+        irm https://install.opensre.com | iex
+        ```
+      </Tab>
+    </Tabs>
+
+  </Step>
+
+  <Step title="Onboard">
+    Run the onboarding wizard to configure your LLM provider and connect your integrations (Grafana, Datadog, Honeycomb, Coralogix, Slack, AWS, GitHub MCP, Sentry):
+
+    ```bash
+    opensre onboard
+    ```
+
+  </Step>
+
+  <Step title="Run an investigation">
+    Choose either path — both use the same local `opensre` binary:
+
+    **Interactive prompt shell** — start OpenSRE with no arguments (TTY) to type incidents in plain language and use slash commands (`/help`, `/status`, `/effort`, `/exit`, …):
+
+    ```bash
+    opensre
+    ```
+
+    **Direct investigation** — one-shot run from your shell with an alert file:
+
+    ```bash
+    opensre investigate -i tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json
+    ```
+
+    For file-based runs, OpenSRE fetches alert context, reasons across connected systems, and generates a structured root-cause report.
+
+  </Step>
+
+  <Step title="Keep up to date">
+    ```bash
+    opensre update
+    ```
+  </Step>
+</Steps>
+
+## Uninstall
+
+To remove opensre and all its local data from your machine:
+
+```bash
+opensre uninstall
+```
+
+Pass `--yes` to skip the confirmation prompt:
+
+```bash
+opensre uninstall --yes
+```
+
+## Troubleshooting
+
+- **Docker is not running**: Start Docker Desktop, OrbStack, or Colima before running setup.
+- **`make` is missing**: Install it via your package manager (`brew install make` on macOS, `choco install make` on Windows).
+- **No local LLM provider is configured**: Run `opensre onboard` to select and configure your LLM credentials.
