@@ -370,7 +370,7 @@ def test_opensore_landing_page_smoke(cli_sandbox: CliSandbox) -> None:
 
     assert result.exit_code == 0
     assert "Quick start:" in result.stdout
-    assert "opensore investigate -i alert.json" in result.stdout
+    assert "opensore investigate -i evidence.json" in result.stdout
 
 
 def test_opensore_help_smoke(cli_sandbox: CliSandbox) -> None:

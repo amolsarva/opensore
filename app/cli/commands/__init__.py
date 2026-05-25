@@ -7,6 +7,7 @@ import click
 from app.cli.commands.agent import agents
 from app.cli.commands.config import config_command
 from app.cli.commands.debug import debug_command
+from app.cli.commands.discovery import discovery
 from app.cli.commands.doctor import doctor_command
 from app.cli.commands.general import (
     health_command,
@@ -31,6 +32,7 @@ _COMMANDS: tuple[click.Command, ...] = (
     config_command,
     remote,
     tests,
+    discovery,
     integrations,
     guardrails,
     agents,

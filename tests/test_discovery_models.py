@@ -4,6 +4,7 @@ import pytest
 from pydantic import ValidationError
 
 from app.discovery.models import (
+    DiscoveryCustodian,
     DiscoveryEvidenceRow,
     DiscoveryInvestigationRequest,
     DiscoveryKeywordSet,
@@ -50,6 +51,19 @@ def test_keyword_set_deduplicates_terms() -> None:
     assert group.terms == ["complaint", "board"]
 
 
+def test_custodian_accepts_structured_identity() -> None:
+    custodian = DiscoveryCustodian(
+        display_name="Pat Lee",
+        email="PAT@example.com",
+        aliases=["P. Lee", "p. lee", "plee"],
+        source_ids={"slack": "U123"},
+    )
+
+    assert custodian.email == "pat@example.com"
+    assert custodian.primary_label == "pat@example.com"
+    assert custodian.search_terms() == ["pat@example.com", "Pat Lee", "P. Lee", "plee", "U123"]
+
+
 def test_build_discovery_plan_summarizes_without_evidence() -> None:
     plan = build_discovery_plan(_request())
 
@@ -58,6 +72,9 @@ def test_build_discovery_plan_summarizes_without_evidence() -> None:
     assert plan.keyword_count == 2
     assert "no local evidence storage" in plan.retention_mode
     assert "context_excerpt" in plan.csv_columns
+    assert len(plan.queries) == 2
+    assert plan.queries[0].custodian == "ceo@example.com"
+    assert "retaliation" in plan.queries[0].query_text
 
 
 def test_discovery_plan_csv_has_summary_row() -> None:
