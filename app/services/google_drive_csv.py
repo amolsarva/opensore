@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+import csv
 import importlib
 import io
-import csv
 import json
 import logging
 from pathlib import Path
@@ -233,8 +233,8 @@ class GoogleDriveCsvExporter:
                 "file_id": file_id,
                 "name": created.get("name", metadata["name"]),
                 "web_url": created.get(
-                "webViewLink",
-                f"https://drive.google.com/file/d/{file_id}/view" if file_id else "",
+                    "webViewLink",
+                    f"https://drive.google.com/file/d/{file_id}/view" if file_id else "",
                 ),
                 "mimetype": mimetype,
                 "byte_count": len(body.encode("utf-8")),
