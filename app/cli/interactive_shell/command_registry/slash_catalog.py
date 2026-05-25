@@ -100,6 +100,13 @@ _MCP_BY_COMMAND: dict[str, _SlashMcpFields] = {
         "User asks for environment diagnostics, setup validation, or doctor check",
         anti_examples=("User only wants integration health (use /health instead)",),
     ),
+    "/discovery": _mcp(
+        "Plan and run workplace misconduct discovery searches from matter scope files "
+        "and exported evidence sources.",
+        "User asks to create a discovery search plan for a workplace matter",
+        "User asks to run local keyword discovery over exported evidence",
+        anti_examples=("User asks to investigate an alert or operational incident",),
+    ),
     "/effort": _mcp(
         "Set REPL reasoning effort level: low, medium, high, xhigh, or max.",
         "User asks to change reasoning effort or depth for the active model",

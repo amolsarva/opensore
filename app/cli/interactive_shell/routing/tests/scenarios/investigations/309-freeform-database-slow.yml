@@ -33,6 +33,7 @@ response_contract:
   - vague operational question
   - specific system
   - don't have any alert or context yet
+  - which database
   must_not_contain:
   - $ /
 history:

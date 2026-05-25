@@ -18,7 +18,7 @@ mapper_contracts:
         matched_action_kinds:
           - slash
       - clause_text: show me all connected services
-        clause_position: 40
+        clause_position: 41
         rules:
           - slash_registry:/list integrations
         matched_action_kinds:

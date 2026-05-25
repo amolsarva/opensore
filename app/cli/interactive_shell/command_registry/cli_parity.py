@@ -262,6 +262,10 @@ def _cmd_debug(session: ReplSession, console: Console, args: list[str]) -> bool:
     return run_cli_command(console, ["debug", *args])
 
 
+def _cmd_discovery(session: ReplSession, console: Console, args: list[str]) -> bool:  # noqa: ARG001
+    return run_cli_command(console, ["discovery", *args])
+
+
 COMMANDS: list[SlashCommand] = [
     SlashCommand(
         "/onboard",
@@ -360,6 +364,13 @@ COMMANDS: list[SlashCommand] = [
         "/debug",
         "run targeted runtime diagnostics",
         _cmd_debug,
+        execution_tier=ExecutionTier.SAFE,
+    ),
+    SlashCommand(
+        "/discovery",
+        "Plan and run workplace misconduct discovery searches.",
+        _cmd_discovery,
+        usage=("/discovery plan <config.json>", "/discovery run <config.json> --source <file>"),
         execution_tier=ExecutionTier.SAFE,
     ),
 ]

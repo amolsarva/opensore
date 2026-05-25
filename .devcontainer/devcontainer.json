@@ -1,5 +1,5 @@
 {
-  "name": "OpenSRE",
+  "name": "OpenSore",
   "build": {
     "dockerfile": "Dockerfile",
     "context": ".."
@@ -24,7 +24,7 @@
   ],
   "portsAttributes": {
     "8000": {
-      "label": "OpenSRE health app",
+      "label": "OpenSore health app",
       "onAutoForward": "notify"
     }
   },

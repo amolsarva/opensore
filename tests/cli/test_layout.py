@@ -55,8 +55,7 @@ def test_render_landing_shows_header_and_examples(capsys) -> None:
     assert "OpenSore" in output
     assert "Tips for getting started" in output
     assert (
-        "open-source SRE agent for automated incident investigation and root cause analysis"
-        in output
+        "AI-assisted workplace incident investigation for legal, HR, and compliance teams" in output
     )
     assert "Usage: opensore [OPTIONS] [COMMAND] [ARGS]..." in output
     assert "Quick start:" in output
