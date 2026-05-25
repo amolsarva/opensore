@@ -122,10 +122,12 @@
               "aws",
               "bitbucket",
               "github",
+              "github-actions",
               "gitlab",
               "google-docs",
               "helm",
               "jira",
+              "linear",
               "vercel"
             ]
           },
@@ -145,7 +147,8 @@
           {
             "group": "Investigation features",
             "pages": [
-              "runbooks"
+              "runbooks",
+              "webhooks"
             ]
           },
           {

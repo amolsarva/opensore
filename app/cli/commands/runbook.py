@@ -122,3 +122,59 @@ def generate_runbook_command(
         console.print(
             f"\n[dim]Saved as runbook ID [cyan]{result['runbook_id']}[/cyan] in {result['runbook_path']}[/dim]"
         )
+
+
+@runbook.command(name="similar")
+@click.argument("query")
+@click.option("--top", "-n", default=5, show_default=True, help="Maximum matches to show.")
+@click.option(
+    "--min-score",
+    default=0.08,
+    show_default=True,
+    help="Minimum similarity score (0–1) to include a result.",
+)
+def similar_runbooks_command(query: str, top: int, min_score: float) -> None:
+    """Find past runbooks similar to a free-text description.
+
+    Example: opensore runbook similar "DB connection pool exhausted payments service"
+    """
+    from app.pipeline.similarity import find_similar_incidents
+
+    parts = query.split()
+    alert_name = parts[0] if parts else query
+    root_cause = query
+
+    matches = find_similar_incidents(
+        alert_name=alert_name,
+        root_cause=root_cause,
+        root_cause_category="",
+        top_k=top,
+        min_score=min_score,
+    )
+
+    if not matches:
+        console.print("[dim]No similar past incidents found.[/dim]")
+        return
+
+    table = Table(title=f'Similar incidents for: "{query}"', show_lines=True, expand=True)
+    table.add_column("Score", justify="right", style="cyan", width=7)
+    table.add_column("ID", style="cyan", no_wrap=True, width=14)
+    table.add_column("Alert", style="white")
+    table.add_column("Category", style="yellow")
+    table.add_column("Date", style="dim", width=16)
+    table.add_column("Excerpt", style="dim")
+
+    for m in matches:
+        table.add_row(
+            f"{m['similarity_score']:.2f}",
+            m["runbook_id"],
+            m["alert_name"],
+            m["root_cause_category"],
+            m["generated_at"],
+            (m["excerpt"][:80] + "…") if len(m["excerpt"]) > 80 else m["excerpt"],
+        )
+
+    console.print(table)
+    console.print(
+        "\n[dim]Run [cyan]opensore runbook show <id>[/cyan] to read a full runbook.[/dim]"
+    )

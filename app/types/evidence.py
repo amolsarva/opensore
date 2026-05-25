@@ -56,4 +56,6 @@ EvidenceSource = Literal[
     "twilio",
     "pagerduty",
     "slack",
+    "linear",
+    "github_actions",
 ]

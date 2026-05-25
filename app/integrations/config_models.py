@@ -928,3 +928,43 @@ class SlackSearchIntegrationConfig(StrictConfigModel):
         if not stripped:
             raise ValueError("bot_token cannot be empty")
         return stripped
+
+
+class LinearIntegrationConfig(StrictConfigModel):
+    """Linear GraphQL API credentials for issue search and creation."""
+
+    api_key: str
+    default_team_id: str = ""
+    integration_id: str = ""
+
+    _normalize_strs = field_validator("api_key", "default_team_id", mode="before")(normalize_str())
+
+    @field_validator("api_key", mode="before")
+    @classmethod
+    def _require_api_key(cls, value: object) -> str:
+        stripped = str(value or "").strip()
+        if not stripped:
+            raise ValueError("api_key cannot be empty")
+        return stripped
+
+
+class GitHubActionsIntegrationConfig(StrictConfigModel):
+    """GitHub credentials for Actions/Workflows REST API access during investigations."""
+
+    owner: str
+    repo: str
+    auth_token: str = ""
+    url: str = ""
+    integration_id: str = ""
+
+    _normalize_strs = field_validator("owner", "repo", "auth_token", "url", mode="before")(
+        normalize_str()
+    )
+
+    @field_validator("owner", "repo", mode="before")
+    @classmethod
+    def _require_non_empty(cls, value: object) -> str:
+        stripped = str(value or "").strip()
+        if not stripped:
+            raise ValueError("owner and repo cannot be empty")
+        return stripped

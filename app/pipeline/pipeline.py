@@ -180,6 +180,13 @@ def run_connected_investigation(state: AgentState) -> AgentState:
         except Exception as rb_exc:
             logger.warning("[pipeline] runbook generation failed (non-fatal): %s", rb_exc)
 
+        try:
+            from app.pipeline.similarity import enrich_with_similar_incidents
+
+            _merge(state_any, enrich_with_similar_incidents(state_any))
+        except Exception as sim_exc:
+            logger.warning("[pipeline] similarity enrichment failed (non-fatal): %s", sim_exc)
+
     except Exception as exc:
         capture_exception(exc)
         raise

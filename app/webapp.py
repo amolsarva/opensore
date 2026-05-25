@@ -14,6 +14,7 @@ from app.discovery.models import (
     discovery_plan_csv,
 )
 from app.entrypoints.extension_api import router as extension_router
+from app.entrypoints.webhook_api import router as webhook_router
 from app.utils.sentry_sdk import init_sentry
 from app.version import get_version
 
@@ -29,6 +30,7 @@ class HealthResponse(BaseModel):
 
 app = FastAPI(title="OpenSore Discovery")
 app.include_router(extension_router)
+app.include_router(webhook_router)
 
 
 def _llm_configured() -> bool:

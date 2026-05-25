@@ -1,0 +1,88 @@
+---
+title: "GitHub Actions"
+description: "Correlate production incidents with CI/CD pipeline failures and deployments."
+---
+
+## Overview
+
+The GitHub Actions integration gives the investigation agent direct access to
+workflow runs, job failures, and step-level logs. When an alert fires, the agent
+can immediately check whether a recent deployment or failed CI run is the cause.
+
+This complements the existing GitHub commits tool — commits show you **what changed**,
+Actions shows you **whether the change actually landed cleanly**.
+
+## Setup
+
+You need a GitHub personal access token (classic) with:
+- `repo` scope for private repositories
+- No scope required for public repositories
+
+```bash
+opensore integrations add github-actions
+```
+
+## Tools
+
+### `github_actions_runs`
+
+List recent workflow runs filtered by branch, status, or trigger event.
+
+```json
+{
+  "owner": "my-org",
+  "repo": "payments-api",
+  "status": "failure",
+  "branch": "main",
+  "per_page": 20
+}
+```
+
+**Key filter options:**
+- `status`: `failure`, `success`, `in_progress`, `queued`
+- `event`: `push`, `pull_request`, `schedule`, `workflow_dispatch`
+- `workflow_id`: e.g. `deploy.yml` to scope to the deploy pipeline only
+
+**Returns:** runs with `id`, `name`, `head_branch`, `head_sha`, `conclusion`, `event`, `actor`, `html_url`.
+
+### `github_actions_jobs`
+
+Drill into a specific workflow run to see which jobs and steps failed.
+
+```json
+{
+  "owner": "my-org",
+  "repo": "payments-api",
+  "run_id": 12345,
+  "fetch_logs_for_job_id": 67890
+}
+```
+
+Set `fetch_logs_for_job_id` to retrieve the raw log output for a failing job
+(last 8KB, enough to capture the error message).
+
+**Returns:** `jobs[]` with `name`, `conclusion`, `failed_steps[]`, `html_url`; optional `logs`.
+
+## Investigation workflow
+
+The agent follows this pattern automatically when GitHub is configured:
+
+1. `github_actions_runs` with `status=failure` and `branch=main` — find recent broken runs
+2. Compare run `created_at` timestamps against the alert's firing time
+3. If timestamps overlap, call `github_actions_jobs` for the matching run
+4. `fetch_logs_for_job_id` on the failing job to extract the error message
+5. Include the deployment context in the root cause analysis
+
+## GitHub Enterprise
+
+Set `github_url` to your GHE base URL:
+
+```json
+{
+  "github_url": "https://github.mycompany.com",
+  "owner": "my-org",
+  "repo": "payments-api"
+}
+```
+
+The client automatically appends `/api/v3` to the base URL.
