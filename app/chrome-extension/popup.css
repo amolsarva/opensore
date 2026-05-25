@@ -1,0 +1,169 @@
+/* OpenSore extension popup styles */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  width: 340px;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 13px;
+  background: #0f172a;
+  color: #e2e8f0;
+  line-height: 1.45;
+}
+
+/* ── Header ──────────────────────────────────────────── */
+header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid #1e293b;
+}
+.logo { font-size: 26px; flex-shrink: 0; }
+.header-text { min-width: 0; }
+.title { font-weight: 700; font-size: 15px; color: #f1f5f9; letter-spacing: -0.01em; }
+.subtitle { font-size: 11px; color: #64748b; margin-top: 2px; }
+.subtitle.ok  { color: #34d399; }
+.subtitle.err { color: #f87171; }
+
+/* ── Sections ─────────────────────────────────────────── */
+section {
+  padding: 12px 16px;
+  border-bottom: 1px solid #1e293b;
+}
+.section-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #475569;
+  margin-bottom: 8px;
+}
+
+/* ── Connections list ─────────────────────────────────── */
+.empty-state { color: #475569; font-size: 12px; padding: 2px 0; }
+
+.connection-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 0;
+  border-bottom: 1px solid #1e293b;
+}
+.connection-item:last-child { border-bottom: none; }
+.connection-icon { font-size: 17px; flex-shrink: 0; }
+.connection-label { font-weight: 500; color: #f1f5f9; font-size: 13px; }
+.connection-meta { font-size: 11px; color: #64748b; margin-top: 1px; }
+
+/* ── Provider buttons ────────────────────────────────── */
+.provider-list { display: flex; flex-direction: column; gap: 6px; }
+
+.provider-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 11px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 7px;
+  color: #e2e8f0;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: background 0.12s, border-color 0.12s;
+}
+.provider-btn:hover:not(:disabled) { background: #334155; border-color: #475569; }
+.provider-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.provider-icon { font-size: 15px; flex-shrink: 0; }
+.provider-name { flex: 1; }
+.provider-status { flex-shrink: 0; font-size: 14px; min-width: 16px; text-align: center; }
+.provider-status.pending { opacity: 0.7; }
+.provider-status.success { color: #34d399; }
+.provider-status.error   { color: #f87171; }
+
+.oauth-error {
+  font-size: 11px;
+  color: #f87171;
+  padding: 5px 2px;
+}
+
+.provider-hint {
+  font-size: 11px;
+  color: #475569;
+  margin-top: 8px;
+}
+.provider-hint code {
+  background: #1e293b;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 10.5px;
+}
+
+/* ── Settings panel ──────────────────────────────────── */
+.settings-panel {
+  padding: 10px 16px 12px;
+}
+.settings-panel summary {
+  font-size: 11px;
+  color: #475569;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+  padding: 2px 0;
+}
+.settings-panel summary::-webkit-details-marker { display: none; }
+.settings-panel summary::before { content: "▸ "; }
+details[open] summary::before { content: "▾ "; }
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.settings-row label {
+  flex: 1 1 100%;
+  font-size: 11px;
+  color: #64748b;
+}
+.settings-row input[type="number"] {
+  width: 72px;
+  padding: 4px 7px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 5px;
+  color: #e2e8f0;
+  font-size: 12px;
+}
+#save-port {
+  padding: 4px 12px;
+  background: #4f46e5;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+#save-port:hover { background: #4338ca; }
+
+.redirect-uri {
+  flex-direction: column;
+  align-items: flex-start;
+}
+.redirect-uri label { margin-bottom: 2px; }
+.redirect-uri code {
+  font-size: 10px;
+  word-break: break-all;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 4px;
+  padding: 4px 6px;
+  color: #94a3b8;
+  display: block;
+  width: 100%;
+}

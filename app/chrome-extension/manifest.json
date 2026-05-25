@@ -1,0 +1,50 @@
+{
+  "manifest_version": 3,
+  "name": "OpenSore",
+  "short_name": "OpenSore",
+  "version": "0.1.0",
+  "description": "Connect Slack, Gmail, Drive, and Calendar to OpenSore with one click.",
+  "permissions": ["identity", "storage", "activeTab"],
+  "host_permissions": [
+    "http://localhost:*/*",
+    "https://*.opensore.com/*",
+    "https://chat.openai.com/*",
+    "https://chatgpt.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://localhost:*/*",
+        "https://*.opensore.com/*",
+        "https://chat.openai.com/*",
+        "https://chatgpt.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "OpenSore",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/*.png"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

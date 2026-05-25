@@ -13,6 +13,7 @@ from app.discovery.models import (
     default_keyword_sets,
     discovery_plan_csv,
 )
+from app.entrypoints.extension_api import router as extension_router
 from app.utils.sentry_sdk import init_sentry
 from app.version import get_version
 
@@ -27,6 +28,7 @@ class HealthResponse(BaseModel):
 
 
 app = FastAPI(title="OpenSore Discovery")
+app.include_router(extension_router)
 
 
 def _llm_configured() -> bool:
@@ -106,7 +108,40 @@ def discovery_ui() -> str:
       <a href="/api/discovery/default-keywords">View keyword seeds</a>
       <a class="secondary" href="/api/discovery/schema">API schema</a>
     </div>
+    <div id="ext-banner" style="display:none;margin-top:12px;padding:10px 14px;background:#1e1b4b;
+      border:1px solid #4338ca;border-radius:8px;font-size:13px;color:#c7d2fe;
+      display:flex;align-items:center;gap:10px;max-width:560px">
+      <span style="font-size:20px">🧩</span>
+      <div>
+        <strong style="color:#e0e7ff">Install the OpenSore Chrome extension</strong>
+        to connect Slack and Google directly from your browser — no copy-pasting tokens.
+        <a href="https://github.com/amolsarva/opensore#chrome-extension"
+           style="color:#818cf8;text-decoration:underline;margin-left:4px">Learn more</a>
+      </div>
+      <button onclick="this.parentElement.style.display='none'"
+        style="margin-left:auto;background:none;border:none;color:#6366f1;cursor:pointer;font-size:18px;
+               padding:0 4px;line-height:1">×</button>
+    </div>
   </header>
+  <script>
+    (function () {
+      // Show install banner only if the extension is NOT present.
+      // The content script sets this attribute when it loads.
+      function check() {
+        var hasExt = document.documentElement.getAttribute('data-opensore-extension') === 'true';
+        if (!hasExt) {
+          var el = document.getElementById('ext-banner');
+          if (el) el.style.display = 'flex';
+        }
+      }
+      // Give the content script ~500 ms to inject before deciding it's absent.
+      window.addEventListener('opensore-extension-ready', function () {
+        var el = document.getElementById('ext-banner');
+        if (el) el.style.display = 'none';
+      });
+      setTimeout(check, 500);
+    })();
+  </script>
   <section class="grid">
     <div class="card"><h3>1. Create matter</h3><p>Name the investigation, add custodians, date range, and keyword sets.</p></div>
     <div class="card"><h3>2. Connect sources</h3><p>Use read-only authorization for Google Workspace, Slack, Microsoft 365, GitHub, Jira, or CSV.</p></div>
