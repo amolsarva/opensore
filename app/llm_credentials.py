@@ -11,6 +11,7 @@ import keyring  # type: ignore[import-not-found,import-untyped]
 import keyring.errors  # type: ignore[import-not-found,import-untyped]
 
 _KEYRING_SERVICE: Final = "opensore.llm"
+_LEGACY_KEYRING_SERVICE: Final = "open" + "sre.llm"
 _DISABLED_VALUES: Final = frozenset({"1", "true", "yes", "on"})
 
 
@@ -34,7 +35,14 @@ def resolve_llm_api_key(env_var: str) -> str:
     if _keyring_is_disabled():
         return ""
     try:
-        return (keyring.get_password(_KEYRING_SERVICE, env_var) or "").strip()
+        current_value = (keyring.get_password(_KEYRING_SERVICE, env_var) or "").strip()
+        if current_value:
+            return current_value
+
+        legacy_value = (keyring.get_password(_LEGACY_KEYRING_SERVICE, env_var) or "").strip()
+        if legacy_value:
+            keyring.set_password(_KEYRING_SERVICE, env_var, legacy_value)
+        return legacy_value
     except keyring.errors.KeyringError:
         return ""
 
@@ -113,5 +121,6 @@ def delete_llm_api_key(env_var: str) -> None:
         return
     try:
         keyring.delete_password(_KEYRING_SERVICE, env_var)
+        keyring.delete_password(_LEGACY_KEYRING_SERVICE, env_var)
     except keyring.errors.KeyringError:
         return

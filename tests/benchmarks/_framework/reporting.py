@@ -350,7 +350,9 @@ def _render_html(report: dict[str, Any], cells: list[dict[str, Any]]) -> str:
     parts.append(f"<h1>Benchmark Run — {esc(report.get('run_id', '(unknown)'))}</h1>")
     parts.append('<dl class="meta">')
     parts.append(f"<dt>Config hash</dt><dd><code>{esc(report.get('config_hash', '?'))}</code></dd>")
-    parts.append(f"<dt>opensore SHA</dt><dd><code>{esc(report.get('opensore_sha', '?'))}</code></dd>")
+    parts.append(
+        f"<dt>opensore SHA</dt><dd><code>{esc(report.get('opensore_sha', '?'))}</code></dd>"
+    )
     parts.append(f"<dt>Started</dt><dd>{esc(report.get('started_at', '?'))}</dd>")
     parts.append(f"<dt>Ended</dt><dd>{esc(report.get('ended_at', '?'))}</dd>")
     cost = report.get("cost", {})

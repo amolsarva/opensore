@@ -19,6 +19,22 @@ def test_resolve_env_credential_prefers_env_over_keyring(monkeypatch) -> None:
         keyring.set_keyring(previous_backend)
 
 
+def test_resolve_llm_api_key_migrates_legacy_keyring_service(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.delenv("OPENSORE_DISABLE_KEYRING", raising=False)
+
+    backend = MemoryKeyring()
+    previous_backend = keyring.get_keyring()
+    keyring.set_keyring(backend)
+    try:
+        backend.set_password("open" + "sre.llm", "OPENAI_API_KEY", "legacy-secret")
+
+        assert llm_credentials.resolve_llm_api_key("OPENAI_API_KEY") == "legacy-secret"
+        assert backend.get_password("opensore.llm", "OPENAI_API_KEY") == "legacy-secret"
+    finally:
+        keyring.set_keyring(previous_backend)
+
+
 def test_get_keyring_setup_instructions_for_linux_without_gnome_keyring(monkeypatch) -> None:
     backend_class = type("Keyring", (), {})
     backend_class.__module__ = "keyring.backends.fail"

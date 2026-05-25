@@ -24,7 +24,9 @@ class TestEnvVarResolution:
         monkeypatch.setenv("OPENSORE_INTERACTIVE", "0")
         assert ReplConfig.load().enabled is False
 
-    def test_opensore_interactive_false_disables_repl(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_opensore_interactive_false_disables_repl(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         monkeypatch.setenv("OPENSORE_INTERACTIVE", "false")
         assert ReplConfig.load().enabled is False
 

@@ -632,10 +632,13 @@ class TestOpenClawConnectionVerifiedBug:
             }
         }
 
-        assert list_openclaw_bridge_tools.__opensore_registered_tool__.is_available(sources) is False
+        assert (
+            list_openclaw_bridge_tools.__opensore_registered_tool__.is_available(sources) is False
+        )
         assert call_openclaw_bridge_tool.__opensore_registered_tool__.is_available(sources) is False
         assert (
-            search_openclaw_conversations.__opensore_registered_tool__.is_available(sources) is False
+            search_openclaw_conversations.__opensore_registered_tool__.is_available(sources)
+            is False
         )
 
     def test_extract_params_maps_url_key_not_openclaw_url(self) -> None:

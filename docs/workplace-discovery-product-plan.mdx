@@ -92,6 +92,168 @@ Later versions should add attachments, thread IDs, privilege tags, review status
 - Permission model for complainant, investigator, counsel, and admin roles.
 - Safety copy that avoids promising legal determinations.
 
+## External workflow references
+
+The product should follow established compliance and eDiscovery operating patterns rather than
+inventing a generic chat-search flow.
+
+- Microsoft Purview eDiscovery guidance frames these requests as urgent searches to determine
+  "who knew what when" across email, chat, meetings, files, users, projects, and date ranges.
+  Its query guidance also highlights details OpenSore must model explicitly: Boolean terms,
+  recipient/custodian properties, UTC timestamps, workload-specific searchable fields, and the
+  risk of unexpected results when one query shape is reused across email, chat, and documents.
+  Source: [Microsoft Purview keyword queries and search conditions](https://learn.microsoft.com/en-gb/purview/ediscovery-keyword-queries-and-search-conditions?view=o365-worldwide).
+- DOJ compliance guidance evaluates whether companies collect information needed to detect
+  misconduct, periodically update risk assessment, monitor communications platforms and personal
+  devices where relevant, and use investigations to remediate control gaps. OpenSore should expose
+  reviewable evidence and process metrics; it should not make final legal or HR determinations.
+  Source: [DOJ Evaluation of Corporate Compliance Programs](https://www.justice.gov/criminal-fraud/page/file/937501/download).
+- eDiscovery identification guidance treats custodians, systems, date ranges, jargon, acronyms,
+  and keyword lists as scoped discovery inputs. OpenSore should make those first-class fields and
+  preserve the query plan used for each run. Source:
+  [FindLaw eDiscovery identification: data scope](https://www.findlaw.com/legal/technology/ediscovery-guide/identification-data-scope.html).
+- eDiscovery playbooks include preservation and collection checklists, hold notices, chain of
+  custody, collection logs, ESI specifications, deduplication, time zone normalization, custodian
+  organization, metadata defaults, and review configurations. OpenSore's exports and audit logs
+  should support those artifacts. Source:
+  [TransPerfect Legal eDiscovery playbook](https://www.transperfectlegal.com/blog/playbook-for-e-discovery).
+- Enterprise search for discovery emphasizes hit reports, inventory, facets for chronology,
+  custodians, sources, and file types, fuzzy/stemming/synonym search, and stealth investigation
+  modes that do not alert custodians or disturb source systems. These are later-stage capabilities,
+  but the data model should not block them. Source:
+  [eDiscoveryJournal practical guide to enterprise search for discovery](https://ediscoveryjournal.com/wp-content/uploads/2024/01/196022474234217_Practical_Guide_to_Enterprise_Search_for_Discovery.pdf).
+
+## Feature development plan
+
+### Slice 1: matter scope and search plan
+
+Goal: turn the preview API into a defensible search plan that counsel, HR, or an investigator can
+review before any source evidence is pulled.
+
+Build:
+
+- Add `DiscoveryMatter`, `DiscoveryCustodian`, `DiscoveryDateRange`, `DiscoveryQuery`, and
+  `DiscoveryRun` models under `app/discovery/`.
+- Expand `DiscoveryInvestigationRequest` so custodians can include display name, email, aliases,
+  department, role, and source-specific identifiers.
+- Store a run plan with selected sources, keywords, query operators, date range, timezone,
+  custodians, channels/sites/folders, and export target.
+- Add keyword-set categories: harassment, retaliation, discrimination, sexual misconduct,
+  executive misconduct, confidentiality/cover-up, legal/HR escalation, threats/coercion, conflicts
+  of interest, and financial impropriety.
+- Add hit-report-only preview output: estimated queries by source, not evidence bodies.
+
+Acceptance tests:
+
+- `tests/test_discovery_models.py` validates normalization, dedupe, required scope, and no local
+  evidence retention.
+- API tests prove `/api/discovery/investigations/preview` returns a full query plan without raw
+  evidence.
+
+### Slice 2: local export search runner
+
+Goal: ship a useful local CLI workflow before hosted OAuth is complete.
+
+Build:
+
+- Add `uv run opensore discovery plan <config.json>` and
+  `uv run opensore discovery run <config.json> --source custom_csv --out <dir>`.
+- Support CSV/JSON exports from Slack, Gmail, Teams, Google Vault, Microsoft Purview, Jira, GitHub,
+  and HR case systems as the first ingestion path.
+- Normalize rows into `DiscoveryEvidenceRow` plus extended metadata: `thread_id`, `channel`,
+  `file_name`, `file_type`, `subject`, `participants`, `source_record_type`, `family_id`,
+  `attachment_names`, and `ingested_at`.
+- Implement deterministic keyword matching with phrase, case-insensitive, Boolean OR groups,
+  simple proximity, and per-source field targeting.
+- Generate CSV evidence exports, hit reports by term/source/custodian, and a manifest containing
+  hashes, query plan, command version, and runtime timestamps.
+
+Acceptance tests:
+
+- Add fixture-driven tests under `tests/discovery/` with synthetic Slack, email, calendar, docs,
+  Jira, and GitHub rows.
+- Verify repeated runs produce stable hashes and equivalent hit reports.
+
+### Slice 3: source connector interface
+
+Goal: make connected-system search pluggable and auditable.
+
+Build:
+
+- Add a `DiscoverySourceConnector` protocol with `estimate`, `search`, and `export` methods.
+- Implement `custom_csv` first, then Gmail/Google Drive/Calendar read-only connectors, then Slack.
+- Keep source-specific query builders isolated: Microsoft KQL, Gmail search syntax, Slack search,
+  Drive file query, Jira JQL, GitHub search.
+- Return structured `DiscoverySearchHit` objects with source-native IDs and URLs.
+- Add rate-limit, pagination, retry, and partial-failure accounting per source.
+
+Acceptance tests:
+
+- Contract tests ensure every connector returns stable IDs, source URLs, timestamps, custodians,
+  excerpts, and matched terms.
+- Source mocks cover pagination, auth failures, empty results, and unsupported query features.
+
+### Slice 4: Drive export and no-retention hosted run
+
+Goal: connect real source reads to user-owned exports without storing evidence on the OpenSore host.
+
+Build:
+
+- Replace service-account Drive assumptions with user OAuth for hosted mode.
+- Stream source hits into in-memory CSV batches and upload directly to Google Drive.
+- Persist only matter metadata, run status, query plan, export file IDs, counts, hashes, and error
+  summaries.
+- Add run cancellation and cleanup hooks that clear transient buffers.
+- Add admin-visible retry semantics for failed source pages or failed Drive upload chunks.
+
+Acceptance tests:
+
+- Unit tests prove evidence bodies are not written to disk or durable app storage.
+- Integration tests with mocked Drive verify upload metadata, folder routing, and error mapping.
+
+### Slice 5: review-grade investigation workspace
+
+Goal: make the output useful for counsel and investigators, not just keyword hit collection.
+
+Build:
+
+- Add timeline view data: sorted events, first/last contact between people, escalation dates,
+  complaint dates, HR/legal notifications, follow-up gaps, and post-complaint adverse actions.
+- Add facets: source, custodian, term group, date bucket, channel/site, file type, sender,
+  recipient, thread, attachment, and confidence.
+- Add dedupe and family handling so emails, attachments, and thread replies remain reviewable
+  without inflating counts.
+- Add reviewer tags: relevant, not relevant, privileged, confidential, needs counsel review,
+  witness follow-up, and export excluded.
+- Add report draft generation that cites source rows and separates facts, allegations,
+  contradictions, gaps, and next steps.
+
+Acceptance tests:
+
+- Synthetic matter fixtures verify timeline ordering, dedupe behavior, source citations, and gap
+  detection.
+- Report tests verify no unsupported legal conclusions are emitted.
+
+### Slice 6: compliance controls
+
+Goal: make the system deployable in sensitive workplace matters.
+
+Build:
+
+- Role model: owner, counsel, investigator, HR reviewer, compliance admin, and read-only auditor.
+- Audit log for every matter create/update, connector auth, query plan approval, run, export,
+  download/open action, retry, cancellation, and deletion.
+- Retention controls: matter close, export disposition, metadata retention period, and deletion log.
+- Legal hold workflow hooks: hold notice metadata, custodian acknowledgement status, reminder log,
+  and preservation-source notes.
+- Safety copy and review gates that state OpenSore organizes evidence and does not decide legal
+  liability.
+
+Acceptance tests:
+
+- Permission tests cover cross-matter isolation and least-privilege access.
+- Audit tests prove every state-changing action has actor, timestamp, matter, action, and target.
+
 ## First shipped slice
 
 The first implementation adds:

@@ -413,7 +413,11 @@ def test_run_opensore_agents_scan_prints_clean_foreground_output(
     assert "777 claude-code-777 claude code" in out
     assert "started." not in out
     assert "stdout │" not in out
-    assert session.history[-1] == {"type": "cli_command", "text": "opensore agents scan", "ok": True}
+    assert session.history[-1] == {
+        "type": "cli_command",
+        "text": "opensore agents scan",
+        "ok": True,
+    }
 
 
 def test_run_opensore_agents_scan_register_explains_confirmation(
