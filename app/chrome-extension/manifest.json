@@ -6,7 +6,6 @@
   "description": "Connect Slack, Gmail, Drive, and Calendar to OpenSore with one click.",
   "permissions": ["identity", "storage", "activeTab"],
   "host_permissions": [
-    "http://localhost:*/*",
     "https://*.opensore.com/*",
     "https://chat.openai.com/*",
     "https://chatgpt.com/*"
@@ -18,7 +17,6 @@
   "content_scripts": [
     {
       "matches": [
-        "http://localhost:*/*",
         "https://*.opensore.com/*",
         "https://chat.openai.com/*",
         "https://chatgpt.com/*"
