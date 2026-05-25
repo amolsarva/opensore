@@ -17,6 +17,45 @@
 
 ---
 
+## ⭐ Start Here: Star This Page, Then Try OpenSore
+
+Before anything else: **star this GitHub page first**:
+
+👉 **[Star OpenSore on GitHub](https://github.com/amolsarva/opensore)**
+
+That star is the easiest way to follow the project, find it again, and show that people want an open investigation workspace for legal, HR, compliance, and board-level matters. The path is simple:
+
+1. **Star this page**
+2. **Try OpenSore**
+3. **Share it with someone who handles investigations**
+
+Then try it immediately:
+
+```bash
+curl -fsSL https://install.opensore.com | bash
+opensore
+```
+
+On macOS with Homebrew:
+
+```bash
+brew install tracer-cloud/tap/opensore
+opensore
+```
+
+On Windows PowerShell:
+
+```powershell
+irm https://install.opensore.com | iex
+opensore
+```
+
+Prefer to download instead? Use the green **Code** button on this GitHub page, choose **Download ZIP**, unzip it, and follow the quickstart below.
+
+No production data is required to kick the tires. Start with a sample file, a small export, or a throwaway test matter so you can see the workflow before connecting anything sensitive.
+
+---
+
 ## What Is This? ⚖️
 
 OpenSore is an AI-assisted investigation workspace for high-stakes workplace incidents: sexual harassment, retaliation, discrimination, executive misconduct, policy violations, conflicts of interest, and board-level crises.
@@ -81,10 +120,61 @@ The goal is not to magically decide the truth. The goal is to make the evidence 
 
 ## Quickstart ⚡
 
-Clone and install:
+First: **star this page** so you can find OpenSore again.
+
+👉 **[Star OpenSore on GitHub](https://github.com/amolsarva/opensore)**
+
+Then pick the path that feels easiest.
+
+### Fastest Try-It Path
+
+Install and start:
 
 ```bash
-cd ~/Documents/root/opensore
+curl -fsSL https://install.opensore.com | bash
+opensore
+```
+
+Or on macOS:
+
+```bash
+brew install tracer-cloud/tap/opensore
+opensore
+```
+
+Or on Windows PowerShell:
+
+```powershell
+irm https://install.opensore.com | iex
+opensore
+```
+
+Once it opens, describe a test incident in plain language or point it at a small sample export. You do not need to connect company systems or use real evidence to understand the flow.
+
+### Download The Project
+
+If you would rather download the project from GitHub:
+
+1. Click **⭐ Star** at the top of this page.
+2. Click the green **Code** button.
+3. Choose **Download ZIP**.
+4. Unzip it and open the folder in Terminal.
+5. On macOS or Linux, run:
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh   # if uv is not installed
+make install
+uv run opensore
+```
+
+On Windows, the one-line installer above is the simplest path. If you want to run from the downloaded source instead, follow [SETUP.md](SETUP.md#windows-specific-setup).
+
+### Run From This Checkout
+
+If you already have the repo locally:
+
+```bash
+cd opensore
 brew install uv          # macOS, if uv is not installed
 make install
 ```
@@ -96,7 +186,7 @@ uv run opensore --help
 uv run opensore doctor
 ```
 
-Configure an LLM provider:
+Configure an AI provider:
 
 ```bash
 uv run opensore onboard
@@ -114,7 +204,7 @@ AWS_REGION=us-east-1
 
 Store API keys in your shell, macOS Keychain, or the OpenSore onboarding flow. Do not commit `.env` files with secrets.
 
-Run the local app:
+Run the local app, if you want the browser view:
 
 ```bash
 uv run uvicorn app.webapp:app --reload --host 127.0.0.1 --port 8000
