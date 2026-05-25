@@ -4,11 +4,11 @@
   <img src="docs/logo/opensre-logo-white.svg" alt="OpenSRE" width="360" />
 </p>
 
-# OpenSRE / opensore 🚀
+# OpenSore 🕵️‍♀️
 
-### Build your own AI SRE agent, run incident investigations, and experiment with local agent workflows.
+### AI-assisted incident investigation for lawyers, HR, boards, and compliance teams.
 
-[![Status](https://img.shields.io/badge/status-local%20alpha-orange?style=for-the-badge)](#)
+[![Status](https://img.shields.io/badge/status-investigation%20alpha-orange?style=for-the-badge)](#)
 [![Python](https://img.shields.io/badge/python-3.12%2B-blue?style=for-the-badge)](pyproject.toml)
 [![License](https://img.shields.io/badge/license-Apache%202.0-green?style=for-the-badge)](LICENSE)
 [![Repo](https://img.shields.io/badge/github-amolsarva%2Fopensore-black?style=for-the-badge&logo=github)](https://github.com/amolsarva/opensore)
@@ -17,31 +17,71 @@
 
 ---
 
-## What Is This? 🧠
+## What Is This? ⚖️
 
-OpenSRE is an open-source framework for AI-powered site reliability agents. It is designed to take an alert, gather evidence from the systems you already use, reason across that evidence, and produce a root-cause investigation with next steps.
+OpenSore is an AI-assisted investigation workspace for high-stakes workplace incidents: sexual harassment, retaliation, discrimination, executive misconduct, policy violations, conflicts of interest, and board-level crises.
 
-Think of it as an AI incident-investigation workbench:
+It helps investigation teams collect scattered evidence, organize it into a defensible timeline, surface contradictions, and draft structured incident reports. The project is built on OpenSRE's agentic investigation engine, but the product direction is now focused on **legal, HR, compliance, and workplace misconduct investigations** rather than infrastructure outages.
 
-- 🔎 Pulls context from logs, metrics, traces, cloud systems, runbooks, and chat tools.
-- 🧩 Connects to observability, infrastructure, databases, messaging, GitHub, and MCP-style tool surfaces.
-- 🧠 Routes work through LLM providers such as OpenAI, Anthropic, OpenRouter, Gemini, Bedrock, Ollama, Codex CLI, and Claude Code.
-- 🧪 Includes synthetic and end-to-end incident scenarios so agent behavior can be tested, scored, and improved.
-- 💻 Runs locally as a CLI, an interactive shell, or a FastAPI app.
+Use it when an organization needs to answer questions like:
 
-This repo also contains newer experimental directions:
+- 🧑‍⚖️ What happened, when, and who knew?
+- 📬 Which emails, chats, documents, and calendar events matter?
+- 🧾 What evidence supports or contradicts each allegation?
+- 🧑‍💼 Were executives, managers, HR, or legal notified?
+- ⏱️ Did retaliation, escalation, or cover-up behavior appear after a complaint?
+- 📁 What should counsel or HR review next?
 
-- 🕵️ **Workplace discovery**: workflows for misconduct, retaliation, harassment, and executive-behavior investigations across user-owned evidence exports.
-- 🧑‍💻 **Mac personal agent**: local assistant workflows for OpenClaw-like usage, cheap LLMs, WhatsApp, iMessage, and local automation.
-- 🐕 **Watchdog workflows**: process monitoring with threshold-triggered Telegram alarms.
+> OpenSore is not legal advice and does not replace counsel, HR judgment, or a licensed investigator. It is a tool for evidence organization, analysis, and report drafting.
 
-> Public alpha: the core flows are usable, but APIs, integrations, and product direction are still moving.
+---
+
+## Who It Is For 👥
+
+| Role | What OpenSore Helps With |
+| --- | --- |
+| ⚖️ Employment lawyers | Build timelines, summarize evidence, find gaps, prepare matter memos |
+| 🧑‍💼 HR / People teams | Triage complaints, organize interviews, document follow-up actions |
+| 🏛️ Boards / special committees | Investigate executive incidents with source-backed summaries |
+| 🕵️ Outside investigators | Pull together documents, messages, calendars, and witness notes |
+| ✅ Compliance teams | Review policy violations, escalation paths, and repeated conduct patterns |
+| 🧑‍💻 Technical operators | Connect local files, SaaS exports, and internal systems into one workflow |
+
+---
+
+## What It Does 🔎
+
+OpenSore turns messy workplace evidence into an investigation file.
+
+- 📥 **Ingests evidence** from local files, exports, email archives, docs, chats, calendars, tickets, and connected tools.
+- 🧭 **Builds timelines** across people, dates, systems, and allegations.
+- 🧠 **Uses LLMs carefully** to summarize, classify, and reason over evidence while keeping source references visible.
+- 🧾 **Drafts investigation reports** with allegations, facts, chronology, confidence, open questions, and next steps.
+- 🧩 **Finds contradictions and gaps** such as missing follow-ups, inconsistent accounts, unreviewed custodians, or suspicious timing.
+- 🔐 **Keeps sensitive material local by default** when run from your machine.
+- 🧪 **Supports repeatable test scenarios** so workflows can be validated before use on real matters.
+
+---
+
+## Example Investigation Scenarios 🚨
+
+OpenSore is being shaped around incidents like:
+
+- Sexual harassment complaint involving an executive and multiple witnesses
+- Retaliation after a protected complaint or whistleblower report
+- Board investigation into founder or C-suite misconduct
+- HR failure-to-escalate review after repeated complaints
+- Policy violation involving Slack, email, calendar, and document evidence
+- Litigation hold review across user-owned exports
+- Workplace culture investigation with many small signals spread across systems
+
+The goal is not to magically decide the truth. The goal is to make the evidence review faster, more complete, and more auditable.
 
 ---
 
 ## Quickstart ⚡
 
-From a fresh checkout:
+Clone and install:
 
 ```bash
 cd ~/Documents/root/opensore
@@ -49,7 +89,7 @@ brew install uv          # macOS, if uv is not installed
 make install
 ```
 
-Always run the local checkout with `uv run` so you do not accidentally call another `opensre` binary on your `PATH`:
+Always run this checkout with `uv run`:
 
 ```bash
 uv run opensre --help
@@ -62,7 +102,7 @@ Configure an LLM provider:
 uv run opensre onboard
 ```
 
-Or create a minimal local `.env` yourself:
+Or create a minimal local `.env`:
 
 ```bash
 LLM_PROVIDER=openai
@@ -72,9 +112,9 @@ AWS_PROFILE=amol
 AWS_REGION=us-east-1
 ```
 
-Store API keys in your shell, macOS Keychain, or OpenSRE onboarding flow. Do not commit `.env` files with secrets.
+Store API keys in your shell, macOS Keychain, or the OpenSore onboarding flow. Do not commit `.env` files with secrets.
 
-Run the local health app:
+Run the local app:
 
 ```bash
 uv run uvicorn app.webapp:app --reload --host 127.0.0.1 --port 8000
@@ -86,7 +126,7 @@ Then open:
 http://127.0.0.1:8000
 ```
 
-A healthy local response looks like:
+Healthy local configuration:
 
 ```json
 {"ok":true,"version":"0.1","llm_configured":true,"env":"development"}
@@ -96,15 +136,15 @@ A healthy local response looks like:
 
 ## Run Modes 🛠️
 
-### 1. Interactive Shell
+### 1. Interactive Investigation Shell
 
-Start a terminal REPL for incident triage, slash commands, local tools, and streaming investigations:
+Use the terminal REPL to describe an incident, ask questions, inspect evidence, and run investigation commands:
 
 ```bash
 uv run opensre
 ```
 
-Useful shell commands include:
+Useful commands:
 
 ```text
 /help
@@ -115,25 +155,35 @@ Useful shell commands include:
 /exit
 ```
 
-### 2. One-Shot Investigation
+### 2. One-Shot Evidence Review
 
-Run an RCA investigation against an alert payload:
+Run an investigation against a structured alert or evidence payload:
 
 ```bash
 uv run opensre investigate -i tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json
 ```
 
-### 3. Health App
+The historical fixture above is infrastructure-shaped because this project started from OpenSRE. New workplace-focused fixtures and workflows live under the workplace discovery docs and are being expanded.
 
-Run the FastAPI service locally:
+### 3. Local Web App
+
+Run the FastAPI service for local UI/API workflows:
 
 ```bash
 uv run uvicorn app.webapp:app --reload --host 127.0.0.1 --port 8000
 ```
 
-### 4. Personal Agent Setup
+### 4. Workplace Discovery Direction
 
-For local assistant and messaging workflows:
+Start with the product plan:
+
+[docs/workplace-discovery-product-plan.mdx](docs/workplace-discovery-product-plan.mdx)
+
+The intended hosted mode avoids storing user evidence on the OpenSore host. Users authenticate their own source accounts, and exports should be written to user-owned storage such as Google Drive.
+
+### 5. Personal Agent And Messaging
+
+For local assistant workflows, WhatsApp experiments, and OpenClaw-style local automation:
 
 ```bash
 uv run opensre personal doctor
@@ -141,44 +191,39 @@ uv run opensre integrations setup whatsapp
 uv run opensre messaging pair --platform whatsapp
 ```
 
-### 5. Watchdog
-
-Monitor a process and alert when thresholds trip:
-
-```bash
-uv run opensre watchdog --help
-```
+See [docs/macos-personal-agent-quickstart.mdx](docs/macos-personal-agent-quickstart.mdx) and [docs/personal-agent-roadmap.mdx](docs/personal-agent-roadmap.mdx).
 
 ---
 
-## How It Works 🧭
+## How An Investigation Works 🧭
 
-When an alert comes in, OpenSRE follows a rough loop:
+OpenSore follows an evidence-first loop:
 
-1. 📥 **Ingest** the alert or user-described incident.
-2. 🔌 **Select tools** based on configured integrations and available evidence.
-3. 📚 **Gather context** from logs, metrics, traces, tickets, cloud resources, runbooks, and chat.
-4. 🧠 **Reason** with the configured LLM provider.
-5. 🧾 **Produce an RCA** with probable cause, evidence, confidence, and next actions.
-6. 📣 **Deliver results** through the CLI, local app, or configured messaging integrations.
+1. 📥 **Intake**: describe the incident, upload/export evidence, or point the tool at connected systems.
+2. 🗂️ **Normalize**: convert messages, docs, calendar items, tickets, and notes into reviewable records.
+3. 🧑‍🤝‍🧑 **Map actors**: identify complainants, respondents, witnesses, HR/legal contacts, managers, and executives.
+4. ⏱️ **Build chronology**: order events, communications, meetings, escalations, and follow-up actions.
+5. 🧠 **Analyze**: summarize allegations, evidence, contradictions, corroboration, and missing records.
+6. 🧾 **Draft report**: produce a source-backed investigation memo with findings, confidence, gaps, and next steps.
+7. 🔁 **Iterate**: add custodians, refine date ranges, compare witness accounts, and rerun targeted review.
 
-For deeper internals, see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md), [docs/routing-policy-architecture.md](docs/routing-policy-architecture.md), and [docs/investigation-tool-calling.md](docs/investigation-tool-calling.md).
+For deeper technical internals, see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md), [docs/routing-policy-architecture.md](docs/routing-policy-architecture.md), and [docs/investigation-tool-calling.md](docs/investigation-tool-calling.md).
 
 ---
 
-## Providers And Integrations 🔌
+## Evidence Sources And Integrations 🔌
 
-OpenSRE is designed to work with a broad operations stack.
+OpenSore can reuse OpenSRE's broad integration layer, but the investigation story is about workplace evidence rather than server telemetry.
 
-| Area | Examples |
+| Evidence Area | Examples |
 | --- | --- |
-| 🤖 LLMs | OpenAI, Anthropic, OpenRouter, Gemini, NVIDIA NIM, Bedrock, Ollama, Codex CLI, Claude Code |
-| 📈 Observability | Grafana, Datadog, Honeycomb, Coralogix, CloudWatch, Sentry, Elasticsearch |
-| ☁️ Infrastructure | AWS, Kubernetes, EKS, EC2, Lambda, GCP, Azure |
-| 🗄️ Databases | PostgreSQL, MySQL, MariaDB, MongoDB, ClickHouse, Snowflake |
-| 🧰 Dev tools | GitHub, GitLab, Bitbucket, MCP, OpenClaw |
-| 🚨 Incident tools | PagerDuty, Opsgenie, Jira, Alertmanager |
-| 💬 Messaging | Slack, Discord, Telegram, Google Docs, WhatsApp experiments |
+| 📧 Communications | Gmail exports, Slack, Discord, Telegram, WhatsApp experiments, chat transcripts |
+| 📄 Documents | Google Docs, Drive exports, PDFs, Markdown notes, local files |
+| 📆 Calendar | Meetings, invites, attendee lists, timing around complaints or escalation |
+| 🧾 HR / Legal records | Complaint notes, policy documents, interview summaries, matter memos |
+| 🧑‍💻 Workplace systems | GitHub, Jira, GitLab, tickets, access logs, internal tool exports |
+| ☁️ Cloud / storage | AWS, Google Drive, local folders, user-owned export destinations |
+| 🤖 LLMs | OpenAI, Anthropic, OpenRouter, Gemini, Bedrock, Ollama, Codex CLI, Claude Code |
 
 Set up integrations with:
 
@@ -187,11 +232,30 @@ uv run opensre integrations setup <service>
 uv run opensre integrations verify <service>
 ```
 
-List available commands:
+List available integration commands:
 
 ```bash
 uv run opensre integrations --help
 ```
+
+---
+
+## Privacy, Privilege, And Evidence Handling 🔐
+
+This project deals with sensitive workplace allegations and potentially privileged material. Treat every real investigation as confidential.
+
+- Do not commit `.env`, evidence exports, interview notes, or matter files.
+- Prefer OS keychain storage for LLM and integration credentials.
+- Keep raw evidence in user-owned storage whenever possible.
+- Use read-only credentials for source systems.
+- Keep source references attached to summaries so reviewers can inspect the underlying record.
+- Disable telemetry for sensitive work:
+
+```bash
+export OPENSRE_NO_TELEMETRY=1
+```
+
+Telemetry details: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#telemetry-and-privacy).
 
 ---
 
@@ -226,9 +290,9 @@ Before pushing or opening a PR, follow [CI.md](CI.md). It is the source of truth
 
 | Path | Purpose |
 | --- | --- |
-| `app/` | Core CLI, agent logic, pipeline, services, integrations, tools, state, and web app |
-| `tests/` | Unit, integration, synthetic, e2e, deployment, and chaos test suites |
-| `docs/` | Product docs, integration guides, design notes, and roadmap docs |
+| `app/` | CLI, agent logic, investigation pipeline, integrations, tools, state, and web app |
+| `tests/` | Unit, integration, synthetic, e2e, deployment, and scenario tests |
+| `docs/` | Product plans, investigation docs, integration guides, and contributor notes |
 | `.github/` | Workflows, templates, and repo automation |
 | `pyproject.toml` | Python package metadata and dependency config |
 | `Makefile` | Canonical local commands |
@@ -239,20 +303,20 @@ Before pushing or opening a PR, follow [CI.md](CI.md). It is the source of truth
 
 ## Key Docs 📚
 
+- [docs/workplace-discovery-product-plan.mdx](docs/workplace-discovery-product-plan.mdx) - primary product direction for workplace investigations
+- [docs/macos-personal-agent-quickstart.mdx](docs/macos-personal-agent-quickstart.mdx) - Mac personal-agent path
+- [docs/personal-agent-roadmap.mdx](docs/personal-agent-roadmap.mdx) - personal-agent roadmap
 - [SETUP.md](SETUP.md) - install, uv, Windows, troubleshooting, OpenClaw setup
 - [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) - contributor workflow, benchmarks, deployment, telemetry
 - [CI.md](CI.md) - mandatory checks before push or PR
 - [CONTRIBUTING.md](CONTRIBUTING.md) - contribution workflow
 - [SECURITY.md](SECURITY.md) - security policy
-- [docs/workplace-discovery-product-plan.mdx](docs/workplace-discovery-product-plan.mdx) - workplace discovery direction
-- [docs/macos-personal-agent-quickstart.mdx](docs/macos-personal-agent-quickstart.mdx) - Mac personal-agent path
-- [docs/personal-agent-roadmap.mdx](docs/personal-agent-roadmap.mdx) - personal-agent roadmap
 
 ---
 
 ## Deployment 🚢
 
-OpenSRE can run as a standard Python/FastAPI app through the included `Dockerfile` or on platforms such as Railway, EC2, ECS, and Vercel.
+OpenSore can run as a local-only tool or as a hosted FastAPI service. For legal and HR matters, default to local or user-owned storage until the evidence-handling model is explicitly reviewed.
 
 At minimum, configure:
 
@@ -268,22 +332,22 @@ LLM_PROVIDER=anthropic
 ANTHROPIC_API_KEY=...
 ```
 
-For hosted deployments that need persistence, also configure storage such as `DATABASE_URI` and `REDIS_URI`. See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#deployment).
+For hosted deployments, review privilege, retention, access controls, audit logging, and data residency before connecting real evidence. If persistence is needed, configure storage such as `DATABASE_URI` and `REDIS_URI`. See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#deployment).
 
 ---
 
-## Privacy And Secrets 🔐
+## Built On OpenSRE 🧬
 
-- Do not commit `.env`.
-- Prefer `uv run opensre onboard` or your OS keychain for provider keys.
-- `.env.example` is the template for supported settings.
-- Telemetry is opt-out and can be disabled:
+This repository began as an OpenSRE fork for AI site-reliability investigations. Much of the lower-level agent, CLI, integration, and test infrastructure still reflects that origin.
 
-```bash
-export OPENSRE_NO_TELEMETRY=1
-```
+The repositioning is deliberate:
 
-More detail: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#telemetry-and-privacy).
+- From server outages ➜ workplace incidents
+- From logs and traces ➜ communications, documents, calendars, and HR records
+- From root-cause analysis ➜ source-backed investigation memos
+- From SRE operators ➜ lawyers, HR, boards, compliance, and outside investigators
+
+Some older infrastructure-oriented fixtures and docs remain while the workplace investigation workflows are expanded.
 
 ---
 
