@@ -104,6 +104,21 @@ ipcMain.handle("opensore:runDiscovery", async (_event, payload) => {
   const manifestPath = path.join(payload.outputDir, "discovery_manifest.json");
   const hitReportPath = path.join(payload.outputDir, "discovery_hit_report.csv");
   const evidencePath = path.join(payload.outputDir, "discovery_evidence.csv");
+  const reviewJsonPath = path.join(payload.outputDir, "discovery_review.json");
+  const reportPath = path.join(payload.outputDir, "discovery_report.md");
+  const reviewResult = await runOpenSore([
+    "discovery",
+    "review",
+    manifestPath,
+    "--json-output",
+    reviewJsonPath,
+    "--report",
+    reportPath,
+    "--json",
+  ]);
+  if (reviewResult.code !== 0) {
+    throw new Error(reviewResult.stderr || reviewResult.stdout || "Discovery review failed");
+  }
   const [manifest, hitReport, evidence] = await Promise.all([
     readJson(manifestPath),
     readCsv(hitReportPath),
@@ -114,6 +129,9 @@ ipcMain.handle("opensore:runDiscovery", async (_event, payload) => {
     manifest,
     hitReport,
     evidence,
+    review: JSON.parse(reviewResult.stdout),
+    reviewJsonFile: reviewJsonPath,
+    reportFile: reportPath,
   };
 });
 

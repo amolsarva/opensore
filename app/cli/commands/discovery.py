@@ -12,6 +12,7 @@ from rich.table import Table
 from app.discovery.connectors import get_connector, run_google_oauth, run_slack_oauth
 from app.discovery.credentials import list_sources, remove_source, upsert_source
 from app.discovery.models import build_discovery_plan
+from app.discovery.review import write_review_artifacts
 from app.discovery.runner import load_discovery_request, run_local_discovery
 
 
@@ -73,6 +74,57 @@ def discovery_run(config: Path, sources: tuple[Path, ...], output_dir: Path) -> 
     click.echo(f"Wrote hit report: {manifest.hit_report_file}")
     click.echo(f"Wrote manifest: {manifest.manifest_file}")
     click.echo(f"Matched rows: {manifest.row_count}")
+
+
+@discovery.command(name="review")
+@click.argument(
+    "manifest",
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+)
+@click.option(
+    "--json-output",
+    type=click.Path(dir_okay=False, path_type=Path),
+    default=None,
+    help="Write the review package JSON to a file.",
+)
+@click.option(
+    "--report",
+    "report_output",
+    type=click.Path(dir_okay=False, path_type=Path),
+    default=None,
+    help="Write a Markdown report draft to a file.",
+)
+@click.option(
+    "--json",
+    "emit_json",
+    is_flag=True,
+    help="Print the full review package as JSON.",
+)
+def discovery_review(
+    manifest: Path,
+    json_output: Path | None,
+    report_output: Path | None,
+    emit_json: bool,
+) -> None:
+    """Build timeline, facets, suggested tags, and report draft from a run."""
+
+    summary = write_review_artifacts(
+        manifest,
+        json_output=json_output,
+        report_output=report_output,
+    )
+    if emit_json:
+        click.echo(json.dumps(summary.model_dump(mode="json"), indent=2, sort_keys=True))
+        return
+
+    click.echo(f"Review package: {summary.title}")
+    click.echo(f"Evidence rows: {summary.row_count}")
+    click.echo(f"Unique records: {summary.unique_hash_count}")
+    click.echo(f"Timeline events: {len(summary.timeline)}")
+    if json_output is not None:
+        click.echo(f"Wrote review JSON: {json_output}")
+    if report_output is not None:
+        click.echo(f"Wrote report draft: {report_output}")
 
 
 @discovery.command(name="connect")

@@ -30,6 +30,14 @@ from app.discovery.models import (
     default_keyword_sets,
     discovery_evidence_csv,
 )
+from app.discovery.review import (
+    DiscoveryFacetValue,
+    DiscoveryReviewSummary,
+    DiscoveryTimelineEvent,
+    ReviewTag,
+    build_review_summary,
+    write_review_artifacts,
+)
 
 __all__ = [
     "CustomCsvConnector",
@@ -43,19 +51,25 @@ __all__ = [
     "DiscoveryInvestigationRequest",
     "DiscoveryKeywordSet",
     "DiscoveryQuery",
+    "DiscoveryReviewSummary",
     "DiscoveryRunManifest",
     "DiscoveryRunStatus",
     "DiscoverySearchHit",
     "DiscoverySource",
     "DiscoverySourceConnector",
     "DiscoverySourceKind",
+    "DiscoveryFacetValue",
+    "DiscoveryTimelineEvent",
     "GoogleWorkspaceConnector",
+    "ReviewTag",
     "SlackConnector",
     "build_discovery_queries",
     "build_discovery_plan",
+    "build_review_summary",
     "default_keyword_sets",
     "discovery_evidence_csv",
     "get_connector",
     "run_google_oauth",
     "run_slack_oauth",
+    "write_review_artifacts",
 ]

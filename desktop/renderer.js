@@ -268,6 +268,7 @@ function renderRun() {
     ["Queries", manifest.query_count],
     ["Sources", manifest.source_files.length],
   ]);
+  renderReviewInsights(state.run.review);
   document.querySelector("#evidence-table").innerHTML = state.run.evidence
     .slice(0, 500)
     .map(
@@ -276,12 +277,32 @@ function renderRun() {
           <td>${escapeHtml(row.custodian)}</td>
           <td>${escapeHtml(row.timestamp)}</td>
           <td>${escapeHtml(row.matched_keyword_set)}<br><strong>${escapeHtml(row.matched_keyword)}</strong></td>
+          <td>${escapeHtml((state.run.review.suggested_tags[row.hash] || []).join(", "))}</td>
           <td class="excerpt">${escapeHtml(row.context_excerpt)}</td>
         </tr>
       `,
     )
     .join("");
   renderArtifacts();
+}
+
+function renderReviewInsights(review) {
+  const facetList = document.querySelector("#facet-list");
+  const facetFields = ["source", "custodian", "matched_keyword_set", "matched_keyword"];
+  facetList.innerHTML = facetFields
+    .map((field) => {
+      const values = (review.facets[field] || [])
+        .slice(0, 5)
+        .map((item) => `<span>${escapeHtml(item.value)} <strong>${item.count}</strong></span>`)
+        .join("");
+      return `<div class="facet-row"><strong>${escapeHtml(field)}</strong><div>${values || "<span>none</span>"}</div></div>`;
+    })
+    .join("");
+
+  document.querySelector("#open-questions").innerHTML = review.open_questions
+    .map((question) => `<li>${escapeHtml(question)}</li>`)
+    .join("");
+  document.querySelector("#report-preview").textContent = review.report_markdown;
 }
 
 function renderArtifacts() {
@@ -295,6 +316,8 @@ function renderArtifacts() {
     ["Evidence CSV", manifest.evidence_file],
     ["Hit report CSV", manifest.hit_report_file],
     ["Manifest JSON", manifest.manifest_file],
+    ["Review JSON", state.run.reviewJsonFile],
+    ["Report draft", state.run.reportFile],
   ];
   list.innerHTML = "";
   artifacts.forEach(([label, file]) => {

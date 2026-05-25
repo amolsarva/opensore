@@ -11,8 +11,9 @@ It wraps the existing OpenSore discovery engine in a matter workspace:
 - Keyword set editing for harassment, retaliation, sexual misconduct, executive concealment, and custom terms
 - Discovery plan preview before evidence is read
 - Local CSV/JSON/JSONL/NDJSON export search using `opensore discovery run`
-- Evidence review with hit counts, excerpts, custodians, and timestamps
-- Export package links for `discovery_evidence.csv`, `discovery_hit_report.csv`, and `discovery_manifest.json`
+- Evidence review with hit counts, excerpts, custodians, timestamps, facets, and suggested reviewer tags
+- Report draft generation with source-row citations and open questions
+- Export package links for `discovery_evidence.csv`, `discovery_hit_report.csv`, `discovery_manifest.json`, `discovery_review.json`, and `discovery_report.md`
 
 ## Install
 
@@ -47,6 +48,7 @@ The desktop app launches from the repo root and calls:
 ```bash
 uv run opensore discovery plan ...
 uv run opensore discovery run ...
+uv run opensore discovery review ...
 ```
 
 That keeps the native UI aligned with the CLI behavior and avoids a separate desktop-only investigation engine.
@@ -66,3 +68,12 @@ The smoke check validates that the renderer files exist and that the shared Pyth
 The current desktop flow is local-export mode. It reads files you select from disk and writes artifacts only to the output folder you choose.
 
 Do not store real privileged or confidential evidence inside the repository. Prefer matter-specific folders outside the checkout and keep source exports in user-owned storage.
+
+## Review Package
+
+Every run now creates a deterministic review package:
+
+- `discovery_review.json`: timeline events, facets, suggested tags, open questions, and report text
+- `discovery_report.md`: a Markdown report draft for counsel or investigator review
+
+The report draft deliberately avoids legal conclusions. It organizes evidence hits, chronology, and questions for authorized reviewers.

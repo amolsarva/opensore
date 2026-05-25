@@ -321,6 +321,74 @@ textarea {
   margin-bottom: 18px;
 }
 
+.review-grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.9fr) minmax(220px, 0.9fr) minmax(300px, 1.2fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.review-box {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  background: #fff;
+}
+
+.review-box h3 {
+  margin: 0 0 10px;
+  font-size: 14px;
+}
+
+.facet-list,
+.compact-list {
+  display: grid;
+  gap: 8px;
+}
+
+.compact-list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.facet-row {
+  display: grid;
+  gap: 4px;
+}
+
+.facet-row > strong {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.facet-row div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.facet-row span {
+  border-radius: 999px;
+  padding: 4px 8px;
+  background: #f3eadf;
+  color: var(--accent-dark);
+  font-size: 12px;
+}
+
+.report-preview pre {
+  max-height: 190px;
+  margin: 0;
+  overflow: auto;
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
 .metric {
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -415,7 +483,8 @@ td {
 
   .two-column,
   .form-grid,
-  .metrics {
+  .metrics,
+  .review-grid {
     grid-template-columns: 1fr;
   }
 

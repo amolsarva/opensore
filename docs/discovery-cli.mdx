@@ -12,6 +12,8 @@ Use it for early review tasks:
 - Search exported Slack, Gmail, Teams, Jira, GitHub, HR, or legal records for matter keywords.
 - Scope by custodians and date range.
 - Produce evidence CSV, hit report CSV, and a manifest with query plan metadata and hashes.
+- Build a review package with facets, chronology, suggested reviewer tags, open questions, and a
+  Markdown report draft.
 - Keep the run local and explicit; OpenSore only writes to the output directory you choose.
 
 ## Matter config
@@ -70,6 +72,30 @@ The output directory contains:
 - `discovery_hit_report.csv` - counts by source, custodian, keyword set, and keyword.
 - `discovery_manifest.json` - run metadata, source files, query plan, OpenSore version, and output
   file paths.
+
+## Build a review package
+
+```bash
+uv run opensore discovery review ./matter-output/discovery_manifest.json \
+  --json-output ./matter-output/discovery_review.json \
+  --report ./matter-output/discovery_report.md
+```
+
+The review package is deterministic post-processing of the evidence CSV. It adds:
+
+- timeline events sorted by timestamp
+- facets for source, custodian, keyword set, keyword, sender, recipient, channel, file type, and
+  source record type
+- suggested reviewer tags such as `privilege_review`, `confidential`, `escalation`, and
+  `witness_follow_up`
+- open questions for counsel, HR, or an investigator
+- a Markdown report draft with source-row citations
+
+To print the full package as JSON:
+
+```bash
+uv run opensore discovery review ./matter-output/discovery_manifest.json --json
+```
 
 ## Source fields
 

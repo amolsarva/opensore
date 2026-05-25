@@ -268,5 +268,9 @@ The first implementation adds:
 - A local `uv run opensore discovery run <config.json> --source <export.csv> --out <dir>`
   workflow for CSV, JSON, JSONL, and NDJSON exports.
 - Evidence CSV, hit report CSV, and manifest outputs with stable hashes and query metadata.
+- Review package generation with timeline events, facets, suggested tags, open questions, and a
+  Markdown report draft that avoids legal conclusions.
 
-The next slice should implement Google OAuth around the Drive CSV writer before any source connector pulls real evidence.
+The connector foundation now includes local custom-export search plus Google Workspace and Slack
+OAuth scaffolding. The next hosted slice should harden Google Drive export with no-retention
+streaming before any production source connector stores real evidence.

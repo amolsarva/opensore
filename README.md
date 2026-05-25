@@ -186,10 +186,11 @@ Run deterministic local discovery over exported workplace data:
 ```bash
 uv run opensore discovery plan matter.json
 uv run opensore discovery run matter.json --source slack-export.csv --source gmail-export.json --out ./matter-output
+uv run opensore discovery review ./matter-output/discovery_manifest.json --report ./matter-output/discovery_report.md
 ```
 
 This writes `discovery_evidence.csv`, `discovery_hit_report.csv`, and `discovery_manifest.json`
-for counsel, HR, compliance, or an investigator to review. See
+plus a review package with facets, chronology, suggested reviewer tags, open questions, and a Markdown report draft for counsel, HR, compliance, or an investigator to review. See
 [docs/discovery-cli.mdx](docs/discovery-cli.mdx).
 
 ### 5. Native Desktop Case Desk
@@ -201,7 +202,7 @@ npm install
 npm run desktop
 ```
 
-Use it to define a matter, add custodians, choose local evidence exports, tune keyword sets, preview the discovery plan, run local export search, and review the generated CSV artifacts. See [docs/desktop-case-desk.mdx](docs/desktop-case-desk.mdx).
+Use it to define a matter, add custodians, choose local evidence exports, tune keyword sets, preview the discovery plan, run local export search, review facets and suggested tags, and open the generated CSV/JSON/Markdown artifacts. See [docs/desktop-case-desk.mdx](docs/desktop-case-desk.mdx).
 
 ### 6. Personal Agent And Messaging
 
