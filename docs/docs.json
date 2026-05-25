@@ -109,6 +109,7 @@
               "honeycomb",
               "incident_io",
               "opsgenie",
+              "pagerduty",
               "sentry",
               "signoz",
               "splunk"
@@ -134,10 +135,17 @@
             "pages": [
               "messaging/index",
               "messaging/slack",
+              "slack-search",
               "messaging/discord",
               "messaging/telegram",
               "messaging/whatsapp",
               "messaging/twilio-sms"
+            ]
+          },
+          {
+            "group": "Investigation features",
+            "pages": [
+              "runbooks"
             ]
           },
           {

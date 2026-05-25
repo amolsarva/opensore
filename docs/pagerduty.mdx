@@ -1,0 +1,99 @@
+---
+title: "PagerDuty"
+description: "Read active incidents, on-call schedules, and write RCA findings back to PagerDuty."
+---
+
+## Overview
+
+The PagerDuty integration lets the investigation agent:
+
+- **List and fetch active incidents** — cross-reference the current alert with open PagerDuty incidents
+- **Get on-call rosters** — find who is currently on call across all escalation policies
+- **Write back RCA findings** — post the root cause analysis as a note on the incident for a complete audit trail
+
+## Setup
+
+1. In PagerDuty → **Integrations → API Access Keys**, create a new API key with **Full Access**.
+2. Add to your opensore config:
+
+```bash
+opensore integrations add pagerduty
+```
+
+You'll be prompted for:
+
+| Field | Description |
+|-------|-------------|
+| `api_token` | Your PagerDuty API token |
+| `from_email` | Email of the PagerDuty user adding notes (required for writeback) |
+
+## Tools
+
+### `pagerduty_incidents`
+
+List triggered/acknowledged incidents or fetch details for a specific incident ID.
+
+```json
+{
+  "statuses": ["triggered", "acknowledged"],
+  "limit": 20
+}
+```
+
+To fetch a specific incident:
+
+```json
+{
+  "incident_id": "P1A2B3C"
+}
+```
+
+**Returns:** `incidents[]` with id, title, status, urgency, service, assigned_to, html_url.
+
+### `pagerduty_oncall`
+
+Fetch the current on-call roster.
+
+```json
+{
+  "schedule_ids": [],
+  "limit": 20
+}
+```
+
+**Returns:** `oncalls[]` with user, user_email, schedule, escalation_policy, escalation_level, start, end.
+
+### `pagerduty_add_note`
+
+Write the RCA summary directly into a PagerDuty incident note. The investigation agent calls this
+automatically at the end of an investigation when `pagerduty_incidents` has identified the relevant incident.
+
+```json
+{
+  "incident_id": "P1A2B3C",
+  "content": "Root cause: Connection pool exhaustion on payments-rds..."
+}
+```
+
+**Returns:** `note_id` and `created_at` timestamp.
+
+## Required Scopes
+
+Your API token must have access to:
+
+- `GET /incidents` — list and fetch incidents
+- `GET /oncalls` — on-call lookup
+- `POST /incidents/{id}/notes` — RCA writeback
+
+The default **Full Access** API key grants all of these.
+
+## Investigation workflow
+
+When PagerDuty is configured, the agent will:
+
+1. Call `pagerduty_incidents` to find any open incident matching the alert's service
+2. Call `pagerduty_oncall` to identify who is actively managing the incident
+3. After diagnosis, call `pagerduty_add_note` to write the RCA findings into the incident timeline
+
+This creates a closed loop — every PagerDuty incident automatically gets a machine-generated
+root cause analysis attached, ready for the post-mortem.

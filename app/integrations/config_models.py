@@ -887,3 +887,44 @@ class PrefectIntegrationConfig(StrictConfigModel):
     _normalize_strs = field_validator("api_key", "account_id", "workspace_id", mode="before")(
         normalize_str()
     )
+
+
+class PagerDutyIntegrationConfig(StrictConfigModel):
+    """Normalized PagerDuty credentials for incident lookup, on-call, and writeback."""
+
+    api_token: str
+    from_email: str = ""
+    integration_id: str = ""
+
+    _normalize_strs = field_validator("api_token", "from_email", mode="before")(normalize_str())
+
+    @field_validator("api_token", mode="before")
+    @classmethod
+    def _require_token(cls, value: object) -> str:
+        stripped = str(value or "").strip()
+        if not stripped:
+            raise ValueError("api_token cannot be empty")
+        return stripped
+
+
+class SlackSearchIntegrationConfig(StrictConfigModel):
+    """Slack credentials for searching messages during investigations.
+
+    Requires a bot token with search:read, channels:history, and channels:read scopes.
+    """
+
+    bot_token: str
+    default_channel: str = ""
+    integration_id: str = ""
+
+    _normalize_strs = field_validator("bot_token", "default_channel", mode="before")(
+        normalize_str()
+    )
+
+    @field_validator("bot_token", mode="before")
+    @classmethod
+    def _require_token(cls, value: object) -> str:
+        stripped = str(value or "").strip()
+        if not stripped:
+            raise ValueError("bot_token cannot be empty")
+        return stripped

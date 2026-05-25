@@ -165,6 +165,21 @@ def run_connected_investigation(state: AgentState) -> AgentState:
         )
 
         _merge(state_any, deliver(state))
+
+        try:
+            from app.pipeline.runbook import generate_runbook
+
+            runbook_result = generate_runbook(state_any)
+            _merge(
+                state_any,
+                {
+                    "runbook_id": runbook_result.get("runbook_id"),
+                    "runbook_path": runbook_result.get("runbook_path"),
+                },
+            )
+        except Exception as rb_exc:
+            logger.warning("[pipeline] runbook generation failed (non-fatal): %s", rb_exc)
+
     except Exception as exc:
         capture_exception(exc)
         raise
