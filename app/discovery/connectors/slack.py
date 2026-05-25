@@ -22,7 +22,7 @@ from slack_sdk.errors import SlackApiError
 from app.discovery.connectors.base import DiscoveryEstimate, DiscoverySearchHit
 from app.discovery.connectors.oauth import run_loopback_oauth
 from app.discovery.credentials import new_source_id, utc_now
-from app.discovery.models import DiscoveryInvestigationRequest
+from app.discovery.models import DiscoveryCustodian, DiscoveryInvestigationRequest
 
 _ENV_CLIENT_ID = "OPENSORE_SLACK_CLIENT_ID"
 _ENV_CLIENT_SECRET = "OPENSORE_SLACK_CLIENT_SECRET"
@@ -101,9 +101,7 @@ def run_slack_oauth() -> dict[str, Any]:
     user_info_data = info_response.json()
     user_profile: dict[str, Any] = user_info_data.get("user", {}).get("profile", {})
     user_display_name: str = (
-        user_profile.get("display_name")
-        or user_profile.get("real_name")
-        or authed_user_id
+        user_profile.get("display_name") or user_profile.get("real_name") or authed_user_id
     )
 
     label = f"{team_name} ({user_display_name})"
@@ -273,7 +271,7 @@ def _first_matching_term(text: str, terms: list[str]) -> str:
 def _resolve_custodian_label(
     *,
     sender: str,
-    custodians: list[Any],
+    custodians: list[DiscoveryCustodian],
 ) -> str:
     """Return the primary label of the matching custodian, or the sender as fallback."""
     lowered_sender = sender.lower()

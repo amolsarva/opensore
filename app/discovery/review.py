@@ -8,7 +8,6 @@ from collections import Counter
 from datetime import UTC, datetime
 from enum import StrEnum
 from pathlib import Path
-from typing import Any
 
 from pydantic import Field
 
@@ -166,8 +165,7 @@ def _facets(rows: list[dict[str, str]]) -> dict[str, list[DiscoveryFacetValue]]:
             value for row in rows if (value := str(row.get(field, "")).strip())
         )
         facets[field] = [
-            DiscoveryFacetValue(value=value, count=count)
-            for value, count in counts.most_common(12)
+            DiscoveryFacetValue(value=value, count=count) for value, count in counts.most_common(12)
         ]
     return facets
 
@@ -206,11 +204,15 @@ def _open_questions(rows: list[dict[str, str]]) -> list[str]:
     if not rows:
         return ["No evidence rows were matched. Review the date range, custodians, and terms."]
     if any("complaint" in row.get("matched_keyword", "").lower() for row in rows):
-        questions.append("Which HR, legal, or management recipients received complaint-related records?")
+        questions.append(
+            "Which HR, legal, or management recipients received complaint-related records?"
+        )
     if any("retaliation" in row.get("matched_keyword", "").lower() for row in rows):
         questions.append("What materially changed for the complainant after the complaint date?")
     if any("confidential" in row.get("context_excerpt", "").lower() for row in rows):
-        questions.append("Which confidentiality or privilege restrictions apply before broader review?")
+        questions.append(
+            "Which confidentiality or privilege restrictions apply before broader review?"
+        )
     if not any(row.get("custodian") for row in rows):
         questions.append("Should the search be rerun with named custodians or source-specific IDs?")
     return questions

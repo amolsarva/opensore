@@ -56,11 +56,9 @@ class CustomCsvConnector:
             date_start=request.date_start,
             date_end=request.date_end,
             timezone=request.timezone,
-            custodians=[c.model_dump() for c in request.custodians],
-            sources=[
-                DiscoverySource(kind=DiscoverySourceKind.CUSTOM_CSV, label=self.label)
-            ],
-            keyword_sets=[ks.model_dump() for ks in request.keyword_sets],
+            custodians=list(request.custodians),
+            sources=[DiscoverySource(kind=DiscoverySourceKind.CUSTOM_CSV, label=self.label)],
+            keyword_sets=list(request.keyword_sets),
             export_target=DiscoveryExportTarget.LOCAL_CSV,
             store_evidence_locally=False,
         )

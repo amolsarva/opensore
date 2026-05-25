@@ -18,12 +18,12 @@ from typing import Any
 import httpx
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
+from google_auth_oauthlib.flow import InstalledAppFlow  # type: ignore[import-untyped]
 from googleapiclient.discovery import build  # type: ignore[import-untyped]
 
 from app.discovery.connectors.base import DiscoveryEstimate, DiscoverySearchHit
 from app.discovery.credentials import new_source_id, utc_now
-from app.discovery.models import DiscoveryInvestigationRequest
+from app.discovery.models import DiscoveryCustodian, DiscoveryInvestigationRequest
 
 SCOPES = [
     "https://www.googleapis.com/auth/gmail.readonly",
@@ -240,10 +240,7 @@ class GoogleWorkspaceConnector:
                 query = " ".join(query_parts)
 
                 result = (
-                    gmail.users()
-                    .messages()
-                    .list(userId="me", q=query, maxResults=100)
-                    .execute()
+                    gmail.users().messages().list(userId="me", q=query, maxResults=100).execute()
                 )
                 messages = result.get("messages", [])
                 for msg_ref in messages:
@@ -333,7 +330,9 @@ class GoogleWorkspaceConnector:
 
                     file_id: str = file_record.get("id", "")
                     file_name: str = file_record.get("name", "")
-                    web_link: str = file_record.get("webViewLink", f"https://drive.google.com/file/d/{file_id}")
+                    web_link: str = file_record.get(
+                        "webViewLink", f"https://drive.google.com/file/d/{file_id}"
+                    )
 
                     yield DiscoverySearchHit(
                         source_kind=self.kind,
@@ -356,7 +355,7 @@ def _resolve_custodian_label(
     *,
     sender: str,
     recipients: str,
-    custodians: list[Any],
+    custodians: list[DiscoveryCustodian],
 ) -> str:
     """Return the primary label of the matching custodian, or the sender as fallback."""
     combined = f"{sender} {recipients}".lower()

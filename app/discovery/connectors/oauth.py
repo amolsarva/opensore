@@ -23,7 +23,7 @@ def _find_free_port() -> int:
     """Bind to port 0 to let the OS pick an available port, then return it."""
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(("127.0.0.1", 0))
-        return s.getsockname()[1]
+        return int(s.getsockname()[1])
 
 
 def run_loopback_oauth(

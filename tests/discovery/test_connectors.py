@@ -53,7 +53,9 @@ def test_slack_connector_verify_ok() -> None:
     }
     connector = SlackConnector(record)
     mock_response = MagicMock()
-    mock_response.get = MagicMock(side_effect=lambda key, default=None: True if key == "ok" else default)
+    mock_response.get = MagicMock(
+        side_effect=lambda key, default=None: True if key == "ok" else default
+    )
     with patch.object(connector._client, "auth_test", return_value=mock_response):
         assert connector.verify() is True
 

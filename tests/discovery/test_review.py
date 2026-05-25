@@ -78,6 +78,4 @@ def test_write_review_artifacts_writes_json_and_markdown(tmp_path: Path) -> None
 
     payload = json.loads(json_output.read_text(encoding="utf-8"))
     assert payload["title"] == "Executive complaint review"
-    assert report_output.read_text(encoding="utf-8").startswith(
-        "# OpenSore Discovery Review"
-    )
+    assert report_output.read_text(encoding="utf-8").startswith("# OpenSore Discovery Review")

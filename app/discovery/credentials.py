@@ -120,9 +120,7 @@ def remove_source(source_id: str, path: Path | None = None) -> bool:
         with lock:
             data = _load_store(store_path)
             before = len(data.get("sources", []))
-            data["sources"] = [
-                s for s in data.get("sources", []) if s.get("id") != source_id
-            ]
+            data["sources"] = [s for s in data.get("sources", []) if s.get("id") != source_id]
             after = len(data["sources"])
             if after < before:
                 _atomic_write(store_path, data)
