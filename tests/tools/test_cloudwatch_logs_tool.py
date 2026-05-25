@@ -10,18 +10,18 @@ from tests.tools.conftest import BaseToolContract, mock_agent_state
 
 class TestCloudWatchLogsToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return get_cloudwatch_logs.__opensre_registered_tool__
+        return get_cloudwatch_logs.__opensore_registered_tool__
 
 
 def test_is_available_requires_log_group() -> None:
-    rt = get_cloudwatch_logs.__opensre_registered_tool__
+    rt = get_cloudwatch_logs.__opensore_registered_tool__
     assert rt.is_available({"cloudwatch": {"log_group": "/aws/lambda/fn"}}) is True
     assert rt.is_available({"cloudwatch": {}}) is False
     assert rt.is_available({}) is False
 
 
 def test_extract_params_maps_fields() -> None:
-    rt = get_cloudwatch_logs.__opensre_registered_tool__
+    rt = get_cloudwatch_logs.__opensore_registered_tool__
     sources = mock_agent_state()
     params = rt.extract_params(sources)
     assert params["log_group"] == "/aws/lambda/my-function"

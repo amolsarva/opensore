@@ -17,12 +17,12 @@ def _load_env() -> None:
 
 
 def _disable_sentry() -> None:
-    os.environ["OPENSRE_SENTRY_DISABLED"] = "1"
+    os.environ["OPENSORE_SENTRY_DISABLED"] = "1"
 
 
 def _mark_tests_for_analytics() -> None:
-    os.environ["OPENSRE_NO_TELEMETRY"] = "1"
-    os.environ["OPENSRE_INVESTIGATION_SOURCE"] = "test"
+    os.environ["OPENSORE_NO_TELEMETRY"] = "1"
+    os.environ["OPENSORE_INVESTIGATION_SOURCE"] = "test"
 
 
 _load_env()
@@ -35,7 +35,7 @@ def _disable_system_keyring(request, monkeypatch) -> None:
     """Keep tests isolated from any real developer keychain entries."""
     if request.node.get_closest_marker("live_llm") is not None:
         return
-    monkeypatch.setenv("OPENSRE_DISABLE_KEYRING", "1")
+    monkeypatch.setenv("OPENSORE_DISABLE_KEYRING", "1")
 
 
 def pytest_configure(config):

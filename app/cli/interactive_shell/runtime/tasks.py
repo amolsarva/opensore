@@ -223,7 +223,7 @@ def _process_alive(pid: int) -> bool:
 
 
 def _tasks_store_path() -> Path:
-    return const_module.OPENSRE_HOME_DIR / _TASKS_STORE_FILENAME
+    return const_module.OPENSORE_HOME_DIR / _TASKS_STORE_FILENAME
 
 
 class TaskRegistry:

@@ -9,7 +9,7 @@ Configurable = dict[str, Any]
 
 
 class NodeConfig(TypedDict, total=False):
-    """Config shape consumed by OpenSRE pipeline stages.
+    """Config shape consumed by OpenSore pipeline stages.
 
     Callers may pass a richer runtime config, but core stages only depend on
     these project-owned fields. Top-level ``run_id`` is typically a caller-provided

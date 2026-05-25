@@ -7,7 +7,7 @@ import pytest
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 _SPEC = importlib.util.spec_from_file_location(
-    "opensre_sync_release_version",
+    "opensore_sync_release_version",
     _REPO_ROOT / "packaging" / "sync_release_version.py",
 )
 assert _SPEC is not None and _SPEC.loader is not None

@@ -228,7 +228,7 @@ def test_upgrade_via_install_script_passes_version(monkeypatch: pytest.MonkeyPat
     rc = _upgrade_via_install_script("2026.4.5")
 
     assert rc == 0
-    assert captured_env.get("OPENSRE_VERSION") == "2026.4.5"
+    assert captured_env.get("OPENSORE_VERSION") == "2026.4.5"
 
 
 def test_is_update_available_no_downgrade_local_version() -> None:

@@ -10,11 +10,11 @@ from tests.tools.conftest import BaseToolContract
 
 class TestClickHouseQueryActivityToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return get_clickhouse_query_activity.__opensre_registered_tool__
+        return get_clickhouse_query_activity.__opensore_registered_tool__
 
 
 def test_is_available_true_when_connection_verified() -> None:
-    rt = get_clickhouse_query_activity.__opensre_registered_tool__
+    rt = get_clickhouse_query_activity.__opensore_registered_tool__
     assert (
         rt.is_available({"clickhouse": {"host": "ch.example.com", "connection_verified": True}})
         is True
@@ -22,17 +22,17 @@ def test_is_available_true_when_connection_verified() -> None:
 
 
 def test_is_available_false_without_connection_verified() -> None:
-    rt = get_clickhouse_query_activity.__opensre_registered_tool__
+    rt = get_clickhouse_query_activity.__opensore_registered_tool__
     assert rt.is_available({"clickhouse": {"host": "ch.example.com"}}) is False
 
 
 def test_is_available_false_when_no_clickhouse_source() -> None:
-    rt = get_clickhouse_query_activity.__opensre_registered_tool__
+    rt = get_clickhouse_query_activity.__opensore_registered_tool__
     assert rt.is_available({}) is False
 
 
 def test_extract_params_maps_fields() -> None:
-    rt = get_clickhouse_query_activity.__opensre_registered_tool__
+    rt = get_clickhouse_query_activity.__opensore_registered_tool__
     sources = {
         "clickhouse": {
             "host": "ch.example.com",
@@ -54,7 +54,7 @@ def test_extract_params_maps_fields() -> None:
 
 
 def test_extract_params_uses_defaults_for_missing_fields() -> None:
-    rt = get_clickhouse_query_activity.__opensre_registered_tool__
+    rt = get_clickhouse_query_activity.__opensore_registered_tool__
     params = rt.extract_params({"clickhouse": {"host": "ch.example.com"}})
     assert params["port"] == 8123
     assert params["database"] == "default"

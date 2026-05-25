@@ -88,7 +88,7 @@ class GoogleDriveCsvExporter:
         """Upload rows as a CSV file to the configured Drive folder.
 
         The CSV bytes are built in memory and passed directly to the Drive API.
-        No temporary evidence file is written to the OpenSRE host.
+        No temporary evidence file is written to the OpenSore host.
         """
 
         if not self.is_configured:

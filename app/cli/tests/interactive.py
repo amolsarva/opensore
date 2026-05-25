@@ -42,7 +42,7 @@ _console = Console()
 _BACK = object()
 _EXIT = object()
 _RUN_ALL = object()
-_BACKGROUND_SELECTION_FILE_ENV = "OPENSRE_TEST_PICKER_SELECTION_FILE"
+_BACKGROUND_SELECTION_FILE_ENV = "OPENSORE_TEST_PICKER_SELECTION_FILE"
 
 
 class _GoBack(Exception):
@@ -86,7 +86,7 @@ def _require_interactive_dependencies() -> None:
     ):
         raise RuntimeError(
             "Interactive test browsing requires optional terminal dependencies. "
-            "Use `opensre tests list` or `opensre tests run <id>` in this environment."
+            "Use `opensore tests list` or `opensore tests run <id>` in this environment."
         )
 
 
@@ -334,7 +334,7 @@ def run_interactive_picker(catalog: TestCatalog) -> int:
     _require_interactive_dependencies()
     if not sys.stdin.isatty() or not sys.stdout.isatty():
         raise RuntimeError(
-            "Interactive terminal required. Use `opensre tests list` or `opensre tests run <id>`."
+            "Interactive terminal required. Use `opensore tests list` or `opensore tests run <id>`."
         )
 
     try:

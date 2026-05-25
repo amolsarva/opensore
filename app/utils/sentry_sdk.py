@@ -106,8 +106,8 @@ class _ScopeTagsState:
 
 def _is_sentry_disabled() -> bool:
     return (
-        os.getenv("OPENSRE_NO_TELEMETRY", "0") == "1"
-        or os.getenv("OPENSRE_SENTRY_DISABLED", "0") == "1"
+        os.getenv("OPENSORE_NO_TELEMETRY", "0") == "1"
+        or os.getenv("OPENSORE_SENTRY_DISABLED", "0") == "1"
         or os.getenv("DO_NOT_TRACK", "0") == "1"
     )
 
@@ -122,7 +122,7 @@ def _sample_rate_from_env(env_var: str, default: float) -> float:
 
 def _resolved_dsn() -> str:
     """Allow env overrides while keeping the bundled DSN as the default."""
-    return os.getenv("OPENSRE_SENTRY_DSN") or os.getenv("SENTRY_DSN") or SENTRY_DSN
+    return os.getenv("OPENSORE_SENTRY_DSN") or os.getenv("SENTRY_DSN") or SENTRY_DSN
 
 
 def resolved_sentry_dsn_host() -> str:
@@ -269,7 +269,7 @@ def _scrub_event_in_place(event: dict[str, Any]) -> None:
 
 
 def _event_has_operator_actionable_llm_error(event: dict[str, Any]) -> bool:
-    """Return True for provider/account failures that users can fix outside OpenSRE.
+    """Return True for provider/account failures that users can fix outside OpenSore.
 
     These errors are still rendered to the CLI user, but they should not create
     high-priority Sentry issues because they usually mean a bad key, exhausted
@@ -386,11 +386,11 @@ def _build_sentry_integrations() -> list[Any]:
     Importing ``sentry_sdk.integrations.*`` is deferred to the first init so
     that ``app.constants.sentry`` does not pull in ``sentry_sdk`` at import
     time. The CLI bootstrap relies on a ``try: init_sentry() except
-    ModuleNotFoundError`` guard to keep ``opensre update`` working when the
+    ModuleNotFoundError`` guard to keep ``opensore update`` working when the
     SDK is missing — that guard only fires if the import happens inside
     ``init_sentry``, not at top-level module load.
 
-    Set ``OPENSRE_SENTRY_LOGGING_DISABLED=1`` to disable the
+    Set ``OPENSORE_SENTRY_LOGGING_DISABLED=1`` to disable the
     ``LoggingIntegration`` without affecting ``capture_exception``.
     """
     from sentry_sdk.integrations.asyncio import AsyncioIntegration
@@ -399,7 +399,7 @@ def _build_sentry_integrations() -> list[Any]:
 
     integrations: list[Any] = []
 
-    if os.getenv("OPENSRE_SENTRY_LOGGING_DISABLED", "0") != "1":
+    if os.getenv("OPENSORE_SENTRY_LOGGING_DISABLED", "0") != "1":
         integrations.append(LoggingIntegration(level=logging.INFO, event_level=logging.ERROR))
 
     integrations.append(AsyncioIntegration())
@@ -465,7 +465,7 @@ def _apply_scope_tags(entrypoint: str | None) -> None:
     call site in ``suppress(Exception)`` because the tagging must never
     break the init flow if the SDK is stubbed (e.g. in tests).
 
-    The runtime tag is namespaced as ``opensre.runtime`` to avoid colliding
+    The runtime tag is namespaced as ``opensore.runtime`` to avoid colliding
     with Sentry's built-in ``runtime`` context (which carries the Python
     runtime, e.g. ``CPython 3.12``, and is flattened into a tag of the same
     name by Sentry's event processor — overriding any plain ``runtime`` tag
@@ -477,11 +477,11 @@ def _apply_scope_tags(entrypoint: str | None) -> None:
     if _ScopeTagsState.applied:
         return
     runtime = "hosted" if entrypoint in _HOSTED_ENTRYPOINTS else "cli"
-    deployment_method = os.getenv("OPENSRE_DEPLOYMENT_METHOD", "local")
+    deployment_method = os.getenv("OPENSORE_DEPLOYMENT_METHOD", "local")
     import sentry_sdk
 
     sentry_sdk.set_tag("entrypoint", entrypoint or "unknown")
-    sentry_sdk.set_tag("opensre.runtime", runtime)
+    sentry_sdk.set_tag("opensore.runtime", runtime)
     sentry_sdk.set_tag("deployment_method", deployment_method)
     _ScopeTagsState.applied = True
 
@@ -494,14 +494,14 @@ def _reset_scope_tags_state_for_tests() -> None:
 def init_sentry(entrypoint: str | None = None) -> None:
     """Configure and start the Sentry SDK if a DSN is available.
 
-    DSN sourcing precedence: ``OPENSRE_SENTRY_DSN`` env var, ``SENTRY_DSN``
-    env var, then the bundled constant. Set ``OPENSRE_NO_TELEMETRY=1`` or
+    DSN sourcing precedence: ``OPENSORE_SENTRY_DSN`` env var, ``SENTRY_DSN``
+    env var, then the bundled constant. Set ``OPENSORE_NO_TELEMETRY=1`` or
     ``DO_NOT_TRACK=1`` to disable both Sentry and PostHog product analytics.
-    ``OPENSRE_SENTRY_DISABLED=1`` disables Sentry only;
-    ``OPENSRE_SENTRY_LOGGING_DISABLED=1`` disables automatic forwarding of
+    ``OPENSORE_SENTRY_DISABLED=1`` disables Sentry only;
+    ``OPENSORE_SENTRY_LOGGING_DISABLED=1`` disables automatic forwarding of
     ``logger.error`` and ``logger.exception`` calls to Sentry as events,
     without affecting ``capture_exception``.
-    ``OPENSRE_ANALYTICS_DISABLED=1`` disables PostHog only.
+    ``OPENSORE_ANALYTICS_DISABLED=1`` disables PostHog only.
 
     ``entrypoint`` identifies the calling surface (``cli``, ``webapp``,
     ``remote``, ``mcp``, ``integrations``, ``wizard``, ``pipeline``)
@@ -520,7 +520,7 @@ def init_sentry(entrypoint: str | None = None) -> None:
         _init_sentry_once(
             dsn=_resolved_dsn(),
             environment=get_environment().value,
-            release=f"opensre@{get_version()}",
+            release=f"opensore@{get_version()}",
             sample_rate=_sample_rate_from_env(
                 "SENTRY_ERROR_SAMPLE_RATE",
                 SENTRY_ERROR_SAMPLE_RATE,
@@ -560,7 +560,7 @@ def capture_exception(
             return cast("str | None", sentry_sdk.capture_exception(exc))
         with sentry_sdk.push_scope() as scope:
             if context is not None:
-                scope.set_tag("opensre.context", context)
+                scope.set_tag("opensore.context", context)
             if tags:
                 for key, value in tags.items():
                     scope.set_tag(key, value)

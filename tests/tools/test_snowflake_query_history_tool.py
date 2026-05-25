@@ -21,11 +21,11 @@ from tests.tools.conftest import BaseToolContract, MockHttpxResponse
 
 class TestSnowflakeQueryHistoryToolContract(BaseToolContract):
     def get_tool_under_test(self) -> Any:
-        return query_snowflake_history.__opensre_registered_tool__
+        return query_snowflake_history.__opensore_registered_tool__
 
 
 def _rt() -> Any:
-    return query_snowflake_history.__opensre_registered_tool__
+    return query_snowflake_history.__opensore_registered_tool__
 
 
 def test_is_available_true_when_token_account_and_verified() -> None:

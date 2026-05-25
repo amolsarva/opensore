@@ -305,7 +305,7 @@
             if (currentPageUrl.includes("localhost:3000")) {
                 currentPageUrl = currentPageUrl.replace(
                     "http://localhost:3000",
-                    "https://opensre.com/docs",
+                    "https://opensore.com/docs",
                 );
             }
 

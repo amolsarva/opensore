@@ -1,9 +1,9 @@
-id: 022-opensre-investigate-alert-json
-title: opensre investigate -i alert.json routes to /investigate without LLM planner
+id: 022-opensore-investigate-alert-json
+title: opensore investigate -i alert.json routes to /investigate without LLM planner
 intent_class: deterministic
 risk_level: medium
 input:
-  prompt: opensre investigate -i alert.json
+  prompt: opensore investigate -i alert.json
   surface: interactive_cli
 session:
   has_prior_state: false
@@ -21,7 +21,7 @@ notes:
 route:
   expected_kind: slash
   expected_signals:
-  - opensre_investigate
+  - opensore_investigate
   expected_command_text: /investigate alert.json
 policy:
   should_execute: true

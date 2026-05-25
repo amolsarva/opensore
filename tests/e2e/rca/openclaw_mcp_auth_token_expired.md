@@ -6,17 +6,17 @@
 
   Scenario: OpenClaw is running in streamable-http mode behind a reverse proxy
   (or the hosted OpenClaw cloud). The OPENCLAW_MCP_AUTH_TOKEN in .env was rotated
-  on the OpenClaw side but not updated in opensre. Every MCP call returns HTTP 401.
+  on the OpenClaw side but not updated in opensore. Every MCP call returns HTTP 401.
 
   To reproduce the alert manually:
     1. Start OpenClaw HTTP bridge: openclaw mcp serve --http --port 9876
     2. Set correct token: export OPENCLAW_MCP_URL=http://localhost:9876/mcp
        export OPENCLAW_MCP_AUTH_TOKEN=valid-token-abc123
-    3. Verify it works: opensre integrations verify openclaw
+    3. Verify it works: opensore integrations verify openclaw
     4. Inject fault: export OPENCLAW_MCP_AUTH_TOKEN=stale-expired-token
-    5. Trigger alert: opensre integrations verify openclaw
+    5. Trigger alert: opensore integrations verify openclaw
        → should print: "OpenClaw bridge validation failed: HTTP 401 from POST ..."
-    6. Feed alert JSON below to OpenSRE for RCA.
+    6. Feed alert JSON below to OpenSore for RCA.
 
   Required fields in ## Alert Metadata JSON:
     commonLabels.severity      → passed as severity to the agent
@@ -29,13 +29,13 @@ OpenClaw HTTP MCP endpoint (streamable-http transport)
 ## Message
 **Firing**
 
-`opensre integrations verify openclaw` is returning:
+`opensore integrations verify openclaw` is returning:
 ```
 OpenClaw bridge validation failed: HTTP 401 from POST http://localhost:9876/mcp
 ```
 
 The bearer token stored in `OPENCLAW_MCP_AUTH_TOKEN` is being rejected.
-This affects all opensre investigations that try to read context from OpenClaw
+This affects all opensore investigations that try to read context from OpenClaw
 (search_openclaw_conversations, list_openclaw_tools) and all write-back calls
 (conversations_create).
 
@@ -67,7 +67,7 @@ Annotations:
   },
   "commonAnnotations": {
     "summary": "OpenClaw MCP HTTP endpoint returning 401 Unauthorized. Bearer token has expired or been rotated.",
-    "description": "Every MCP call to http://localhost:9876/mcp is returning HTTP 401 Unauthorized. The OPENCLAW_MCP_AUTH_TOKEN stored in the opensre .env does not match the current token on the OpenClaw server. This blocks list_openclaw_tools, search_openclaw_conversations, call_openclaw_bridge_tool, and write-back via conversations_create.",
+    "description": "Every MCP call to http://localhost:9876/mcp is returning HTTP 401 Unauthorized. The OPENCLAW_MCP_AUTH_TOKEN stored in the opensore .env does not match the current token on the OpenClaw server. This blocks list_openclaw_tools, search_openclaw_conversations, call_openclaw_bridge_tool, and write-back via conversations_create.",
     "error": "HTTP 401 from POST http://localhost:9876/mcp",
     "endpoint": "http://localhost:9876/mcp",
     "transport": "streamable-http",
@@ -85,7 +85,7 @@ Annotations:
         "severity": "high",
         "service": "openclaw-mcp-http",
         "environment": "production",
-        "instance": "opensre-worker-01"
+        "instance": "opensore-worker-01"
       },
       "annotations": {
         "summary": "HTTP 401 on OpenClaw MCP endpoint — bearer token rejected",
@@ -120,9 +120,9 @@ echo "[inject] Replacing token with a stale value..."
 export OPENCLAW_MCP_AUTH_TOKEN="stale-expired-$(date +%s)"
 
 echo "[inject] Verifying fault is active..."
-opensre integrations verify openclaw && echo "ERROR: auth still passing" && exit 1 || true
+opensore integrations verify openclaw && echo "ERROR: auth still passing" && exit 1 || true
 
 echo "[inject] Fault confirmed. MCP calls returning 401."
-echo "[inject] Run 'opensre investigate' with the alert JSON above to get RCA."
+echo "[inject] Run 'opensore investigate' with the alert JSON above to get RCA."
 echo "[inject] To restore: export OPENCLAW_MCP_AUTH_TOKEN=$GOOD_TOKEN"
 ```

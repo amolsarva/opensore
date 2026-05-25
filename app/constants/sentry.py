@@ -1,4 +1,4 @@
-"""Sentry constants for OpenSRE runtime error monitoring."""
+"""Sentry constants for OpenSore runtime error monitoring."""
 
 from __future__ import annotations
 

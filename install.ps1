@@ -1,6 +1,6 @@
 param(
     [ValidateSet("release", "main")]
-    [string]$Channel = $(if ($env:OPENSRE_INSTALL_CHANNEL) { $env:OPENSRE_INSTALL_CHANNEL } else { "release" }),
+    [string]$Channel = $(if ($env:OPENSORE_INSTALL_CHANNEL) { $env:OPENSORE_INSTALL_CHANNEL } else { "release" }),
     [switch]$SkipMain
 )
 
@@ -15,7 +15,7 @@ function Get-OpenSreDefaultInstallDir {
 function Get-OpenSreRequestHeaders {
     return @{
         "Accept" = "application/vnd.github+json"
-        "User-Agent" = "opensre-install-script"
+        "User-Agent" = "opensore-install-script"
     }
 }
 
@@ -183,7 +183,7 @@ function Resolve-OpenSreWindowsArchitecture {
             { $_ -in @("X64", "AMD64", "X86_64") } { return "x64" }
             { $_ -in @("ARM64", "AARCH64") } { return "arm64" }
             { $_ -in @("X86", "I386", "I686") } {
-                throw "Unsupported Windows architecture: $candidate. OpenSRE releases are available only for x64 and arm64."
+                throw "Unsupported Windows architecture: $candidate. OpenSore releases are available only for x64 and arm64."
             }
         }
     }
@@ -207,7 +207,7 @@ function Get-OpenSreArchiveName {
     )
 
     $archiveVersion = if ($Channel -eq "main") { "main" } else { $Version }
-    return "opensre_${archiveVersion}_windows-$TargetArch.zip"
+    return "opensore_${archiveVersion}_windows-$TargetArch.zip"
 }
 
 function Get-OpenSreReleaseMetadata {
@@ -216,7 +216,7 @@ function Get-OpenSreReleaseMetadata {
         [string]$Repo,
         [ValidateSet("release", "main")]
         [string]$Channel = "release",
-        [string]$RequestedVersion = $env:OPENSRE_VERSION
+        [string]$RequestedVersion = $env:OPENSORE_VERSION
     )
 
     $normalizedVersion = ""
@@ -225,7 +225,7 @@ function Get-OpenSreReleaseMetadata {
     }
 
     if ($Channel -eq "main" -and $normalizedVersion) {
-        throw "OPENSRE_VERSION cannot be combined with the main install channel."
+        throw "OPENSORE_VERSION cannot be combined with the main install channel."
     }
 
     if ($Channel -eq "main") {
@@ -495,10 +495,10 @@ function Get-OpenSreBinaryVersionInfo {
 }
 
 function Install-OpenSre {
-    $repo = if ($env:OPENSRE_INSTALL_REPO) { $env:OPENSRE_INSTALL_REPO } else { "Tracer-Cloud/opensre" }
-    $installDir = if ($env:OPENSRE_INSTALL_DIR) { $env:OPENSRE_INSTALL_DIR } else { Get-OpenSreDefaultInstallDir }
-    $binaryName = "opensre.exe"
-    $requestedVersion = if ($env:OPENSRE_VERSION) { $env:OPENSRE_VERSION.Trim().TrimStart("v") } else { "" }
+    $repo = if ($env:OPENSORE_INSTALL_REPO) { $env:OPENSORE_INSTALL_REPO } else { "Tracer-Cloud/opensore" }
+    $installDir = if ($env:OPENSORE_INSTALL_DIR) { $env:OPENSORE_INSTALL_DIR } else { Get-OpenSreDefaultInstallDir }
+    $binaryName = "opensore.exe"
+    $requestedVersion = if ($env:OPENSORE_VERSION) { $env:OPENSORE_VERSION.Trim().TrimStart("v") } else { "" }
     $resolvedChannel = if ($Channel) { $Channel.Trim().ToLowerInvariant() } else { "release" }
 
     Enable-OpenSreTls
@@ -511,7 +511,7 @@ function Install-OpenSre {
     $downloadUrl = [string]$downloadPlan.ArchiveUrl
     $checksumUrl = [string]$downloadPlan.ChecksumUrl
     $resolvedArch = [string]$downloadPlan.ResolvedArch
-    $tmpDir = Join-Path ([System.IO.Path]::GetTempPath()) ("opensre-install-" + [System.Guid]::NewGuid().ToString("N"))
+    $tmpDir = Join-Path ([System.IO.Path]::GetTempPath()) ("opensore-install-" + [System.Guid]::NewGuid().ToString("N"))
 
     New-Item -ItemType Directory -Path $tmpDir | Out-Null
     New-Item -ItemType Directory -Force -Path $installDir | Out-Null
@@ -521,10 +521,10 @@ function Install-OpenSre {
         $checksumPath = "$archivePath.sha256"
 
         if ($resolvedChannel -eq "main") {
-            Write-Host "Installing opensre main build (windows/$targetArch)..."
+            Write-Host "Installing opensore main build (windows/$targetArch)..."
         }
         else {
-            Write-Host "Installing opensre v$version (windows/$targetArch)..."
+            Write-Host "Installing opensore v$version (windows/$targetArch)..."
         }
         if ($resolvedArch -ne $targetArch) {
             Write-Host "Using release asset built for windows/$resolvedArch."
@@ -581,18 +581,18 @@ function Install-OpenSre {
     $installedBinaryPath = Join-Path $installDir $binaryName
     if ($resolvedChannel -eq "main") {
         if ($binaryVersion) {
-            Write-Host "Installed opensre main build ($binaryVersion) to $installedBinaryPath"
+            Write-Host "Installed opensore main build ($binaryVersion) to $installedBinaryPath"
         }
         else {
-            Write-Host "Installed opensre main build to $installedBinaryPath"
+            Write-Host "Installed opensore main build to $installedBinaryPath"
         }
     }
     else {
-        Write-Host "Installed opensre $version to $installedBinaryPath"
+        Write-Host "Installed opensore $version to $installedBinaryPath"
     }
 
     if (-not (Test-OpenSreDirectoryOnPath -Directory $installDir)) {
-        Write-Warning "Add $installDir to your PATH to run opensre from any terminal."
+        Write-Warning "Add $installDir to your PATH to run opensore from any terminal."
     }
 
     $exe = $binaryName.TrimEnd(".exe")
@@ -602,14 +602,14 @@ function Install-OpenSre {
     Write-Host $sep
     if ($resolvedChannel -eq "main") {
         if ($binaryVersion) {
-            Write-Host "  opensre main build ($binaryVersion) installed successfully"
+            Write-Host "  opensore main build ($binaryVersion) installed successfully"
         }
         else {
-            Write-Host "  opensre main build installed successfully"
+            Write-Host "  opensore main build installed successfully"
         }
     }
     else {
-        Write-Host "  opensre v$version installed successfully"
+        Write-Host "  opensore v$version installed successfully"
     }
     Write-Host $sep
     Write-Host ""
@@ -624,7 +624,7 @@ function Install-OpenSre {
     Write-Host "  3. Optional — one-shot RCA from a file:"
     Write-Host "     $exe investigate -i path/to/alert.json"
     Write-Host ""
-    Write-Host "Docs: https://www.opensre.com/docs"
+    Write-Host "Docs: https://www.opensore.com/docs"
     Write-Host ""
 }
 

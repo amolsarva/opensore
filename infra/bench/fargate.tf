@@ -68,7 +68,7 @@ resource "aws_ecs_cluster_capacity_providers" "bench" {
 # image used can be reproduced.
 #
 # `secrets` injects API keys from Secrets Manager as env vars at task start —
-# opensre's existing env-var-based LLM client picks them up unchanged.
+# opensore's existing env-var-based LLM client picks them up unchanged.
 #
 # Logs go to CloudWatch. If/when the team wants logs in Grafana, configure
 # Grafana Cloud's native CloudWatch data source (in Grafana's UI, not here).

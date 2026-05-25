@@ -40,7 +40,7 @@ def test_check_env_file_counts_non_comment_keys(monkeypatch, tmp_path) -> None:
         ),
         encoding="utf-8",
     )
-    monkeypatch.setenv("OPENSRE_PROJECT_ENV_PATH", str(env_file))
+    monkeypatch.setenv("OPENSORE_PROJECT_ENV_PATH", str(env_file))
 
     ok, detail = doctor._check_env_file()
 
@@ -51,7 +51,7 @@ def test_check_env_file_counts_non_comment_keys(monkeypatch, tmp_path) -> None:
 
 def test_check_env_file_missing(monkeypatch, tmp_path) -> None:
     env_file = tmp_path / ".env"
-    monkeypatch.setenv("OPENSRE_PROJECT_ENV_PATH", str(env_file))
+    monkeypatch.setenv("OPENSORE_PROJECT_ENV_PATH", str(env_file))
 
     ok, detail = doctor._check_env_file()
 
@@ -189,7 +189,7 @@ def test_check_integrations_store_missing(monkeypatch, tmp_path) -> None:
 
     assert ok is False
     assert str(store_path) in detail
-    assert "opensre integrations setup" in detail
+    assert "opensore integrations setup" in detail
 
 
 def test_check_integrations_empty_store(monkeypatch, tmp_path) -> None:
@@ -267,7 +267,7 @@ def test_check_version_freshness_update_available(monkeypatch) -> None:
 
     assert ok is False
     assert "current=1.2.3, latest=1.3.0" in detail
-    assert "opensre update" in detail
+    assert "opensore update" in detail
     fetch_latest_version.assert_called_once_with()
     is_update_available.assert_called_once_with("1.2.3", "1.3.0")
 

@@ -29,7 +29,7 @@ class handler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
         self.end_headers()
-        body = json.dumps({"status": "ok", "service": "opensre", "deployment": "vercel"})
+        body = json.dumps({"status": "ok", "service": "opensore", "deployment": "vercel"})
         self.wfile.write(body.encode())
 """
 
@@ -43,7 +43,7 @@ class handler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
         self.end_headers()
-        body = json.dumps({"ok": True, "service": "opensre", "deployment": "vercel"})
+        body = json.dumps({"ok": True, "service": "opensore", "deployment": "vercel"})
         self.wfile.write(body.encode())
 """
 
@@ -175,7 +175,7 @@ def _disable_deployment_protection(
 
 
 def create_deployment(
-    project_name: str = "opensre-deploy-test",
+    project_name: str = "opensore-deploy-test",
 ) -> dict[str, str]:
     """Create a Vercel deployment with a minimal health-check serverless function.
 

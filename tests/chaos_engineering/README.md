@@ -2,7 +2,7 @@
 
 **Defaults:** cluster `tracer-k8s-test` · context `kind-tracer-k8s-test` · Datadog Helm namespace `tracer-test`.
 
-This directory holds Kubernetes manifests (`chaos-demo.yaml`, `pod-kill-demo.yaml`, `experiments/<name>/`), JSON samples for `opensre investigate -i`, and the Python helpers behind **`make chaos-lab-*`** / **`make chaos-experiment-*`** (`python -m tests.chaos_engineering`). Alert paths in JSON use the repo-relative form `tests/chaos_engineering/experiments/.../foo-alert.json`.
+This directory holds Kubernetes manifests (`chaos-demo.yaml`, `pod-kill-demo.yaml`, `experiments/<name>/`), JSON samples for `opensore investigate -i`, and the Python helpers behind **`make chaos-lab-*`** / **`make chaos-experiment-*`** (`python -m tests.chaos_engineering`). Alert paths in JSON use the repo-relative form `tests/chaos_engineering/experiments/.../foo-alert.json`.
 
 ## Quick start (recommended)
 
@@ -89,11 +89,11 @@ Optional extra PodChaos on crashloop: `make chaos-experiment-up EXPERIMENT=crash
 
 After the crashloop pod runs, wait a few minutes, then query logs e.g. `kube_cluster_name:tracer-k8s-test kube_namespace:default crashloop-demo` or `kube_deployment:crashloop-demo`.
 
-### 5. OpenSRE
+### 5. OpenSore
 
 ```bash
-opensre onboard   # Datadog keys as needed
-opensre investigate -i tests/chaos_engineering/experiments/crashloop/crashloop-demo-alert.json
+opensore onboard   # Datadog keys as needed
+opensore investigate -i tests/chaos_engineering/experiments/crashloop/crashloop-demo-alert.json
 ```
 
 Use the matching `*-alert.json` under `experiments/<name>/` for other scenarios. Local kind is observed via Datadog (or a richer synthetic payload), not EKS APIs.

@@ -74,11 +74,11 @@ def _personal_checks() -> dict[str, dict[str, str]]:
         "uv": _check_uv(),
         "llm": _check_llm(),
         "whatsapp": _check_integration(
-            "whatsapp", "run: uv run opensre integrations setup whatsapp"
+            "whatsapp", "run: uv run opensore integrations setup whatsapp"
         ),
         "imessage": _check_imessage(),
         "openclaw": _check_integration(
-            "openclaw", "optional bridge: uv run opensre integrations setup openclaw"
+            "openclaw", "optional bridge: uv run opensore integrations setup openclaw"
         ),
     }
 
@@ -97,7 +97,7 @@ def doctor(json_output: bool) -> None:
         click.echo(json.dumps(checks, indent=2))
         return
 
-    table = Table(title="OpenSRE Personal Agent Readiness")
+    table = Table(title="OpenSore Personal Agent Readiness")
     table.add_column("Check", style="cyan", no_wrap=True)
     table.add_column("Status", no_wrap=True)
     table.add_column("Detail")
@@ -107,9 +107,9 @@ def doctor(json_output: bool) -> None:
     _console.print(table)
     _console.print()
     _console.print("Fast path:")
-    _console.print("  uv run opensre onboard")
-    _console.print("  uv run opensre integrations setup whatsapp")
-    _console.print("  uv run opensre messaging pair --platform whatsapp")
+    _console.print("  uv run opensore onboard")
+    _console.print("  uv run opensore integrations setup whatsapp")
+    _console.print("  uv run opensore messaging pair --platform whatsapp")
     _console.print()
     _console.print("Roadmap: docs/personal-agent-roadmap.mdx")
 

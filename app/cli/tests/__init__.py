@@ -1,4 +1,4 @@
-"""OpenSRE test inventory and interactive selection helpers."""
+"""OpenSore test inventory and interactive selection helpers."""
 
 from app.cli.tests.catalog import TestCatalog, TestCatalogItem, TestRequirement
 from app.cli.tests.discover import load_test_catalog

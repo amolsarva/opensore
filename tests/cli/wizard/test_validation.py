@@ -119,7 +119,7 @@ def test_validate_provider_credentials_returns_failure_for_bad_anthropic_key(mon
 def test_validate_provider_credentials_returns_success_for_valid_anthropic_key(monkeypatch) -> None:
     monkeypatch.setattr(
         "app.cli.wizard.validation.Anthropic",
-        lambda **_kwargs: _FakeAnthropicClient(_FakeAnthropicResponse("OpenSRE ready")),
+        lambda **_kwargs: _FakeAnthropicClient(_FakeAnthropicResponse("OpenSore ready")),
     )
 
     result = validate_provider_credentials(
@@ -130,7 +130,7 @@ def test_validate_provider_credentials_returns_success_for_valid_anthropic_key(m
 
     assert result.ok is True
     assert result.detail == "Anthropic API key validated."
-    assert result.sample_response == "OpenSRE ready"
+    assert result.sample_response == "OpenSore ready"
 
 
 def test_validate_provider_credentials_returns_failure_for_bad_openai_key(monkeypatch) -> None:
@@ -159,7 +159,7 @@ def test_validate_provider_credentials_returns_failure_for_bad_openai_key(monkey
 def test_validate_provider_credentials_returns_success_for_valid_openai_key(monkeypatch) -> None:
     monkeypatch.setattr(
         "app.cli.wizard.validation.OpenAI",
-        lambda **_kwargs: _FakeOpenAIClient(_FakeOpenAIResponse("OpenSRE ready")),
+        lambda **_kwargs: _FakeOpenAIClient(_FakeOpenAIResponse("OpenSore ready")),
     )
 
     result = validate_provider_credentials(
@@ -170,4 +170,4 @@ def test_validate_provider_credentials_returns_success_for_valid_openai_key(monk
 
     assert result.ok is True
     assert result.detail == "OpenAI API key validated."
-    assert result.sample_response == "OpenSRE ready"
+    assert result.sample_response == "OpenSore ready"

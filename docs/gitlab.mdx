@@ -2,19 +2,19 @@
 title: "GitLab"
 ---
 
-OpenSRE's GitLab integration gives the investigation agent read access to your merge requests, commits, pipelines, and files for root cause analysis. Optionally, it can write investigation findings back as a note on the relevant MR.
+OpenSore's GitLab integration gives the investigation agent read access to your merge requests, commits, pipelines, and files for root cause analysis. Optionally, it can write investigation findings back as a note on the relevant MR.
 
 ---
 
 ## Step 1: Create a GitLab Access Token
 
-OpenSRE supports both **Personal Access Tokens** and **Project Access Tokens**. A Project Access Token is recommended for production — it is scoped to a single project and does not depend on a user account.
+OpenSore supports both **Personal Access Tokens** and **Project Access Tokens**. A Project Access Token is recommended for production — it is scoped to a single project and does not depend on a user account.
 
 ### Personal Access Token (quickest for local use)
 
 1. In GitLab, go to your avatar → **Edit profile** → **Access Tokens**.
 2. Click **Add new token**.
-3. Give it a name (e.g. `opensre`) and set an expiry date.
+3. Give it a name (e.g. `opensore`) and set an expiry date.
 4. Select the following scopes:
    - `read_api` — required for reading MRs, commits, pipelines, and files
    - `api` — required only if you enable MR write-back (posting findings as MR notes)
@@ -28,17 +28,17 @@ OpenSRE supports both **Personal Access Tokens** and **Project Access Tokens**. 
 4. Click **Create project access token** and copy the value.
 
 <Note>
-If your GitLab instance is self-hosted, make sure your OpenSRE server can reach it over the network before proceeding.
+If your GitLab instance is self-hosted, make sure your OpenSore server can reach it over the network before proceeding.
 </Note>
 
 ---
 
-## Step 2: Configure the Integration in OpenSRE
+## Step 2: Configure the Integration in OpenSore
 
 Run the setup wizard and select **GitLab**:
 
 ```bash
-opensre onboard
+opensore onboard
 ```
 
 When prompted, enter:
@@ -57,7 +57,7 @@ The wizard validates your token by calling the GitLab API and writes the followi
 
 ## What the Agent Can Do
 
-Once connected, OpenSRE automatically uses GitLab as an investigation source when an alert contains a GitLab MR reference. The agent can:
+Once connected, OpenSore automatically uses GitLab as an investigation source when an alert contains a GitLab MR reference. The agent can:
 
 | Capability | What it reads |
 |---|---|
@@ -70,7 +70,7 @@ Once connected, OpenSRE automatically uses GitLab as an investigation source whe
 
 ## MR Write-back (optional)
 
-OpenSRE can post a formatted investigation summary directly as a note on the GitLab MR that triggered the alert. This is opt-in and disabled by default.
+OpenSore can post a formatted investigation summary directly as a note on the GitLab MR that triggered the alert. This is opt-in and disabled by default.
 
 To enable it, set the following environment variable:
 
@@ -78,11 +78,11 @@ To enable it, set the following environment variable:
 GITLAB_MR_WRITEBACK=true
 ```
 
-When enabled, after each investigation OpenSRE posts a collapsible `### RCA Finding` note on the MR. The note is truncated to 4000 characters if needed.
+When enabled, after each investigation OpenSore posts a collapsible `### RCA Finding` note on the MR. The note is truncated to 4000 characters if needed.
 
 **Requirements for write-back:**
 - Your access token must have the `api` scope (not just `read_api`)
-- The alert payload must include a GitLab MR IID and project ID so OpenSRE can identify the target MR
+- The alert payload must include a GitLab MR IID and project ID so OpenSore can identify the target MR
 
 ---
 
@@ -90,7 +90,7 @@ When enabled, after each investigation OpenSRE posts a collapsible `### RCA Find
 
 **Validation fails with 401**
 
-Your token is invalid or has expired. Regenerate it in GitLab and re-run `opensre onboard`.
+Your token is invalid or has expired. Regenerate it in GitLab and re-run `opensore onboard`.
 
 **Validation fails with 403**
 
@@ -98,7 +98,7 @@ Your token does not have sufficient scopes. Ensure `read_api` is selected (and `
 
 **Self-hosted instance not reachable**
 
-Verify that `GITLAB_BASE_URL` ends in `/api/v4` and that your OpenSRE server can reach the GitLab host. Test with:
+Verify that `GITLAB_BASE_URL` ends in `/api/v4` and that your OpenSore server can reach the GitLab host. Test with:
 
 ```bash
 curl -H "Authorization: Bearer <your-token>" https://your-gitlab-host/api/v4/user
@@ -106,4 +106,4 @@ curl -H "Authorization: Bearer <your-token>" https://your-gitlab-host/api/v4/use
 
 **MR write-back not posting**
 
-Check that `GITLAB_MR_WRITEBACK=true` is set in your environment and that the alert payload contains `gitlab.merge_request_iid` and `gitlab.project_id` fields. Review OpenSRE server logs for `[publish] GitLab MR` entries.
+Check that `GITLAB_MR_WRITEBACK=true` is set in your environment and that the alert payload contains `gitlab.merge_request_iid` and `gitlab.project_id` fields. Review OpenSore server logs for `[publish] GitLab MR` entries.

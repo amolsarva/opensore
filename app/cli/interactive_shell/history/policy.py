@@ -3,7 +3,7 @@
 Built-in redaction patterns + a ``RedactingFileHistory`` that subclasses
 ``prompt_toolkit.FileHistory`` to apply redaction before each entry is
 persisted. Settings resolve from env vars and the ``interactive.history``
-section of ``~/.config/opensre/config.yml``; built-in defaults keep
+section of ``~/.config/opensore/config.yml``; built-in defaults keep
 redaction on, persistence on, and entries capped at 5000.
 """
 
@@ -78,9 +78,9 @@ class HistoryPolicy:
     redact: bool = True
     max_entries: int = DEFAULT_MAX_ENTRIES
 
-    _ENV_ENABLED: ClassVar[str] = "OPENSRE_HISTORY_ENABLED"
-    _ENV_REDACT: ClassVar[str] = "OPENSRE_HISTORY_REDACT"
-    _ENV_MAX_ENTRIES: ClassVar[str] = "OPENSRE_HISTORY_MAX_ENTRIES"
+    _ENV_ENABLED: ClassVar[str] = "OPENSORE_HISTORY_ENABLED"
+    _ENV_REDACT: ClassVar[str] = "OPENSORE_HISTORY_REDACT"
+    _ENV_MAX_ENTRIES: ClassVar[str] = "OPENSORE_HISTORY_MAX_ENTRIES"
 
     @classmethod
     def load(cls, file_settings: dict[str, Any] | None = None) -> HistoryPolicy:

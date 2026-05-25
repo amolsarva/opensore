@@ -38,7 +38,7 @@ def validate_grafana_integration(*, endpoint: str, api_key: str) -> IntegrationH
         client = get_grafana_client_from_credentials(
             endpoint=grafana_config.endpoint,
             api_key=grafana_config.api_key,
-            account_id="opensre_onboard_probe",
+            account_id="opensore_onboard_probe",
         )
         discovered = client.discover_datasource_uids()
         if not discovered:
@@ -242,7 +242,7 @@ def validate_aws_integration(
             sts = boto3.client("sts", region_name=aws_config.region)
             assume_kwargs: dict[str, str] = {
                 "RoleArn": aws_config.role_arn,
-                "RoleSessionName": "opensre-onboard-check",
+                "RoleSessionName": "opensore-onboard-check",
             }
             if aws_config.external_id:
                 assume_kwargs["ExternalId"] = aws_config.external_id

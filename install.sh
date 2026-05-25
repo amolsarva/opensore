@@ -25,16 +25,16 @@ else
   SUCCESS_MARK="Success:"
 fi
 
-REPO="${OPENSRE_INSTALL_REPO:-Tracer-Cloud/opensre}"
+REPO="${OPENSORE_INSTALL_REPO:-Tracer-Cloud/opensore}"
 DEFAULT_INSTALL_DIR="${HOME}/.local/bin"
-USER_INSTALL_DIR_CANDIDATES="${OPENSRE_USER_INSTALL_DIR_CANDIDATES:-$HOME/.local/bin:$HOME/bin}"
-SYSTEM_INSTALL_DIR_CANDIDATES="${OPENSRE_SYSTEM_INSTALL_DIR_CANDIDATES:-/opt/homebrew/bin:/usr/local/bin:/opt/local/bin}"
-INSTALL_DIR="${OPENSRE_INSTALL_DIR:-}"
+USER_INSTALL_DIR_CANDIDATES="${OPENSORE_USER_INSTALL_DIR_CANDIDATES:-$HOME/.local/bin:$HOME/bin}"
+SYSTEM_INSTALL_DIR_CANDIDATES="${OPENSORE_SYSTEM_INSTALL_DIR_CANDIDATES:-/opt/homebrew/bin:/usr/local/bin:/opt/local/bin}"
+INSTALL_DIR="${OPENSORE_INSTALL_DIR:-}"
 INSTALL_DIR_OVERRIDE=0
-INSTALL_CHANNEL="${OPENSRE_INSTALL_CHANNEL:-release}"
-BIN_NAME="opensre"
+INSTALL_CHANNEL="${OPENSORE_INSTALL_CHANNEL:-release}"
+BIN_NAME="opensore"
 INSTALL_WITH_SUDO=0
-requested_version="${OPENSRE_VERSION:-}"
+requested_version="${OPENSORE_VERSION:-}"
 
 [ -n "$INSTALL_DIR" ] && INSTALL_DIR_OVERRIDE=1
 requested_version="${requested_version#v}"
@@ -64,7 +64,7 @@ usage() {
   cat <<'EOF'
 Usage: install.sh [--main] [--version <version>] [--install-dir <path>]
 
-Installs the OpenSRE CLI.
+Installs the OpenSore CLI.
 
 Options:
   --main                Install the rolling build published from the main branch.
@@ -73,9 +73,9 @@ Options:
   -h, --help            Show this help text.
 
 Examples:
-  curl -fsSL https://install.opensre.com | bash
-  curl -fsSL https://install.opensre.com | bash -s -- --main
-  curl -fsSL https://install.opensre.com | bash -s -- --version 2026.4.29
+  curl -fsSL https://install.opensore.com | bash
+  curl -fsSL https://install.opensore.com | bash -s -- --main
+  curl -fsSL https://install.opensore.com | bash -s -- --version 2026.4.29
 EOF
 }
 
@@ -155,7 +155,7 @@ download_text() {
 
   curl "${CURL_FLAGS[@]}" \
     -H "Accept: application/vnd.github+json" \
-    -H "User-Agent: opensre-install-script" \
+    -H "User-Agent: opensore-install-script" \
     "$url"
 }
 
@@ -200,11 +200,11 @@ build_archive_name() {
   fi
 
   if [ "$platform" = "windows" ]; then
-    printf 'opensre_%s_windows-%s.zip\n' "$archive_version" "$asset_arch"
+    printf 'opensore_%s_windows-%s.zip\n' "$archive_version" "$asset_arch"
     return
   fi
 
-  printf 'opensre_%s_%s-%s.tar.gz\n' "$archive_version" "$platform" "$asset_arch"
+  printf 'opensore_%s_%s-%s.tar.gz\n' "$archive_version" "$platform" "$asset_arch"
 }
 
 path_has_dir() {
@@ -286,8 +286,8 @@ resolve_install_dir() {
     return
   fi
 
-  if command -v opensre >/dev/null 2>&1; then
-    existing_bin="$(command -v opensre || true)"
+  if command -v opensore >/dev/null 2>&1; then
+    existing_bin="$(command -v opensore || true)"
     existing_dir="${existing_bin%/*}"
 
     if [ -n "$existing_dir" ] && path_has_dir "$existing_dir" && is_candidate_dir_writable "$existing_dir"; then
@@ -518,7 +518,7 @@ configure_path() {
   esac
 
   if [ "$platform" = "windows" ]; then
-    warn "'${INSTALL_DIR}' is not in PATH for this shell. Add it to Git Bash or Windows PATH to run ${BIN_NAME:-opensre} from any terminal."
+    warn "'${INSTALL_DIR}' is not in PATH for this shell. Add it to Git Bash or Windows PATH to run ${BIN_NAME:-opensore} from any terminal."
     return
   fi
 
@@ -545,7 +545,7 @@ configure_path() {
       path_line="fish_add_path \"${INSTALL_DIR}\""
       ;;
     *)
-      log "Add the following line to your shell profile to use ${BIN_NAME:-opensre}:"
+      log "Add the following line to your shell profile to use ${BIN_NAME:-opensore}:"
       log "  export PATH=\"\$PATH:${INSTALL_DIR}\""
       return
       ;;
@@ -558,7 +558,7 @@ configure_path() {
     return
   fi
 
-  local marker="# Added by opensre installer"
+  local marker="# Added by opensore installer"
   if [ -f "$rc_file" ] && grep -qF "$marker" "$rc_file" && grep -qF "${INSTALL_DIR}" "$rc_file"; then
     return
   fi
@@ -566,7 +566,7 @@ configure_path() {
   printf '\n%s\n%s\n' "$marker" "$path_line" >> "$rc_file"
 
   log ""
-  log "${BIN_NAME:-opensre} has been added to PATH in ${rc_file}."
+  log "${BIN_NAME:-opensore} has been added to PATH in ${rc_file}."
   log "To apply now, run:  source \"${rc_file}\""
   log "Or open a new terminal."
 }
@@ -581,26 +581,26 @@ print_success_screen() {
 
   log ""
   log "$sep"
-  success "Welcome to OpenSRE"
+  success "Welcome to OpenSore"
   if [ "$version" = "main" ]; then
-    log "  ${COLOR_BOLD:-}opensre (main build) installed successfully${COLOR_RESET:-}"
+    log "  ${COLOR_BOLD:-}opensore (main build) installed successfully${COLOR_RESET:-}"
   else
-    log "  ${COLOR_BOLD:-}opensre v${version} installed successfully${COLOR_RESET:-}"
+    log "  ${COLOR_BOLD:-}opensore v${version} installed successfully${COLOR_RESET:-}"
   fi
   log "$sep"
   log ""
   log "Next steps:"
-  log "  1. Run  ${BIN_NAME:-opensre} onboard"
+  log "  1. Run  ${BIN_NAME:-opensore} onboard"
   log "     Set up your LLM provider and add your observability integrations."
   log ""
-  log "  2. Run  ${BIN_NAME:-opensre}  (no subcommand)"
+  log "  2. Run  ${BIN_NAME:-opensore}  (no subcommand)"
   log "     From a normal interactive terminal this starts the interactive shell — type a"
   log "     prompt or incident description at the prompt to investigate."
   log ""
   log "  3. Optional — one-shot RCA from a file:"
-  log "     ${BIN_NAME:-opensre} investigate -i path/to/alert.json"
+  log "     ${BIN_NAME:-opensore} investigate -i path/to/alert.json"
   log ""
-  log "Docs: https://www.opensre.com/docs"
+  log "Docs: https://www.opensore.com/docs"
   log ""
 }
 
@@ -616,7 +616,7 @@ case "$os" in
     ;;
   MINGW*|MSYS*|CYGWIN*)
     platform="windows"
-    BIN_NAME="opensre.exe"
+    BIN_NAME="opensore.exe"
     log "Detected Windows environment (${os})."
     ;;
   *)
@@ -698,9 +698,9 @@ checksum_asset="${archive}.sha256"
 checksum_url="${download_url}.sha256"
 
 if [ "$INSTALL_CHANNEL" = "main" ]; then
-  step "[2/4] Preparing opensre main build (${platform}/${target_arch})..."
+  step "[2/4] Preparing opensore main build (${platform}/${target_arch})..."
 else
-  step "[2/4] Preparing opensre v${version} (${platform}/${target_arch})..."
+  step "[2/4] Preparing opensore v${version} (${platform}/${target_arch})..."
 fi
 if [ "$asset_arch" != "$target_arch" ]; then
   log "Using release asset built for ${platform}/${asset_arch}."

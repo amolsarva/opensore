@@ -60,7 +60,7 @@ _CLAUDE_DESKTOP_PATH_HINTS: tuple[str, ...] = (
 
 @dataclass(frozen=True)
 class DiscoveredAgent:
-    """Candidate process discovered for the ``opensre agents scan`` command."""
+    """Candidate process discovered for the ``opensore agents scan`` command."""
 
     name: str
     pid: int
@@ -468,7 +468,7 @@ def _classify_agent(
         # Intentional fall-through: an unrecognised `claude …` shape still
         # reaches the noise / loose-classification path below so that `--all`
         # surfaces it via the `claude` token signature. Do not add an early
-        # `return None` here — it would silently break `opensre agents scan --all`.
+        # `return None` here — it would silently break `opensore agents scan --all`.
 
     if _is_noise_process(process_name, cmdline):
         return _classify_agent_loose(process_name, cmdline) if include_all else None

@@ -1,7 +1,7 @@
 {
   "_meta": {
     "purpose": "Synthetic alert for NetworkChaos reorder",
-    "run": "opensre investigate -i tests/chaos_engineering/experiments/network-reorder/network-reorder-alert.json"
+    "run": "opensore investigate -i tests/chaos_engineering/experiments/network-reorder/network-reorder-alert.json"
   },
   "title": "[Triggered] Unstable TCP - network-reorder-demo",
   "alert_name": "Datadog monitor: reorder / tail latency",

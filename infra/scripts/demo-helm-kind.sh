@@ -4,7 +4,7 @@
 # Requires: Docker (running), kind, kubectl, helm.
 set -euo pipefail
 
-CLUSTER_NAME="${CLUSTER_NAME:-opensre-helm-demo}"
+CLUSTER_NAME="${CLUSTER_NAME:-opensore-helm-demo}"
 NAMESPACE="${NAMESPACE:-demo}"
 RELEASE="${RELEASE:-demo}"
 

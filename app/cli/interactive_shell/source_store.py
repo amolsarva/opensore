@@ -10,9 +10,9 @@ from typing import Any
 
 import numpy as np
 
-from app.constants import OPENSRE_HOME_DIR
+from app.constants import OPENSORE_HOME_DIR
 
-DEFAULT_STORE_PATH = OPENSRE_HOME_DIR / "source_index.sqlite"
+DEFAULT_STORE_PATH = OPENSORE_HOME_DIR / "source_index.sqlite"
 _SQLITE_VARIABLE_LIMIT = 999
 _DEFAULT_MAX_COSINE_SCAN_ROWS = 50_000
 

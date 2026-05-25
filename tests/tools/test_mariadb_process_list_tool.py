@@ -10,11 +10,11 @@ from tests.tools.conftest import BaseToolContract
 
 class TestMariaDBProcessListToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return get_mariadb_process_list.__opensre_registered_tool__
+        return get_mariadb_process_list.__opensore_registered_tool__
 
 
 def test_metadata() -> None:
-    rt = get_mariadb_process_list.__opensre_registered_tool__
+    rt = get_mariadb_process_list.__opensore_registered_tool__
     assert rt.name == "get_mariadb_process_list"
     assert rt.source == "mariadb"
 

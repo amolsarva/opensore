@@ -10,7 +10,7 @@ def test_devcontainer_config_matches_local_dev_workflow() -> None:
     config = json.loads((REPO_ROOT / ".devcontainer" / "devcontainer.json").read_text())
     dockerfile = (REPO_ROOT / ".devcontainer" / "Dockerfile").read_text()
 
-    assert config["name"] == "OpenSRE"
+    assert config["name"] == "OpenSore"
     assert config["build"]["dockerfile"] == "Dockerfile"
     assert config["build"]["context"] == ".."
     assert (

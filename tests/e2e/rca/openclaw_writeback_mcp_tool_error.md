@@ -15,11 +15,11 @@
 
   To reproduce the alert manually:
     1. Start OpenClaw: openclaw gateway start
-    2. Configure opensre: export OPENCLAW_MCP_MODE=stdio
+    2. Configure opensore: export OPENCLAW_MCP_MODE=stdio
        export OPENCLAW_MCP_COMMAND=openclaw
        export OPENCLAW_MCP_ARGS="mcp serve"
     3. Run investigation that produces a write-back:
-       opensre investigate -i tests/fixtures/openclaw_test_alert.json
+       opensore investigate -i tests/fixtures/openclaw_test_alert.json
     4. Inject fault: In a patched test environment, mock conversations_create to
        return is_error=True (see fault_injection_script below).
     5. Observe: "[publish] OpenClaw delivery failed: OpenClaw tool call failed."
@@ -30,12 +30,12 @@
 -->
 
 ## Source
-OpenSRE publish_findings node — post-investigation write-back
+OpenSore publish_findings node — post-investigation write-back
 
 ## Message
 **Firing**
 
-OpenSRE completed an RCA investigation for **Checkout API Error Rate Spike** and attempted
+OpenSore completed an RCA investigation for **Checkout API Error Rate Spike** and attempted
 to write the report back to OpenClaw via `conversations_create`, but received:
 ```
 [publish] OpenClaw delivery failed: OpenClaw tool call failed.
@@ -48,7 +48,7 @@ will not see the RCA findings and cannot ask follow-up questions about the inves
 Labels:
 - alertname = OpenClawWriteBackFailed
 - severity = warning
-- service = opensre-publish
+- service = opensore-publish
 - environment = production
 - pipeline_name = openclaw_mcp
 
@@ -67,7 +67,7 @@ Annotations:
   "commonLabels": {
     "alertname": "OpenClawWriteBackFailed",
     "severity": "warning",
-    "service": "opensre-publish",
+    "service": "opensore-publish",
     "environment": "production",
     "pipeline_name": "openclaw_mcp"
   },
@@ -90,9 +90,9 @@ Annotations:
       "labels": {
         "alertname": "OpenClawWriteBackFailed",
         "severity": "warning",
-        "service": "opensre-publish",
+        "service": "opensore-publish",
         "environment": "production",
-        "instance": "opensre-prod-01"
+        "instance": "opensore-prod-01"
       },
       "annotations": {
         "summary": "conversations_create returned is_error=True — write-back to OpenClaw failed",

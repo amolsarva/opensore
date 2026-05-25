@@ -12,11 +12,11 @@ import textwrap
 from dataclasses import dataclass, field
 from typing import Any
 
-from app.constants import OPENSRE_TMP_DIR, ensure_opensre_tmp_dir
+from app.constants import OPENSORE_TMP_DIR, ensure_opensore_tmp_dir
 
 DEFAULT_TIMEOUT: int = 30
 MAX_TIMEOUT: int = 60
-_SANDBOX_TMP_ROOT = os.path.realpath(os.fspath(OPENSRE_TMP_DIR))
+_SANDBOX_TMP_ROOT = os.path.realpath(os.fspath(OPENSORE_TMP_DIR))
 
 # Preamble injected before user code: blocks network and restricts filesystem writes.
 _SANDBOX_PREAMBLE = textwrap.dedent(f"""\
@@ -53,7 +53,7 @@ _SANDBOX_PREAMBLE = textwrap.dedent(f"""\
                     for root in _ALLOWED_WRITE_ROOTS
                 ):
                     raise PermissionError(
-                        f"Write access denied outside the OpenSRE temp directory: {{file}}"
+                        f"Write access denied outside the OpenSore temp directory: {{file}}"
                     )
         return _original_open(file, mode, *args, **kwargs)
 
@@ -104,7 +104,7 @@ def run_python_sandbox(
 
     Network access is blocked by replacing ``socket.socket`` and related helpers
     with a class that raises ``PermissionError``. Filesystem writes are restricted
-    to the OpenSRE temp directory, so any attempt to open a file outside that
+    to the OpenSore temp directory, so any attempt to open a file outside that
     directory for writing raises ``PermissionError``. Execution is capped at
     *timeout* seconds.
 
@@ -133,12 +133,12 @@ def run_python_sandbox(
 
     tmp_path: str | None = None
     try:
-        ensure_opensre_tmp_dir()
+        ensure_opensore_tmp_dir()
         with tempfile.NamedTemporaryFile(
             mode="w",
             suffix=".py",
             delete=False,
-            dir=OPENSRE_TMP_DIR,
+            dir=OPENSORE_TMP_DIR,
         ) as tmp:
             tmp.write(full_code)
             tmp_path = tmp.name

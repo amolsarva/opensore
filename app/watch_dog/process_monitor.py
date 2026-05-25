@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from typing import Any, Protocol
 
 from app.agents import probe as process_probe
-from app.cli.support.errors import OpenSREError
+from app.cli.support.errors import OpenSoreError
 from app.watch_dog.config import WatchdogConfig
 
 
@@ -97,7 +97,7 @@ def _resolve_process(config: WatchdogConfig) -> Any:
         try:
             return process_probe.process(config.pid)
         except process_probe.PROCESS_NOT_FOUND as exc:
-            raise OpenSREError(
+            raise OpenSoreError(
                 f"No process found for PID {config.pid}.",
                 suggestion="Check the PID and retry while the process is still running.",
             ) from exc
@@ -110,7 +110,7 @@ def _resolve_process_by_name(pattern: str, *, pick_first: bool) -> Any:
     try:
         compiled = re.compile(pattern)
     except re.error as exc:
-        raise OpenSREError(
+        raise OpenSoreError(
             f"Invalid --name regex: {exc}",
             suggestion="Pass a valid Python regular expression, for example --name claude.",
         ) from exc
@@ -126,13 +126,13 @@ def _resolve_process_by_name(pattern: str, *, pick_first: bool) -> Any:
 
     matches.sort(key=lambda proc: proc.pid)
     if not matches:
-        raise OpenSREError(
+        raise OpenSoreError(
             f"No running process name matched {pattern!r}.",
             suggestion="Run `ps aux` to confirm the process name, then retry.",
         )
     if len(matches) > 1 and not pick_first:
         preview = ", ".join(f"{proc.pid}:{_safe_process_name(proc)}" for proc in matches[:5])
-        raise OpenSREError(
+        raise OpenSoreError(
             f"Multiple processes matched {pattern!r}: {preview}",
             suggestion="Pass --pid for the exact process or --pick-first to use the lowest PID.",
         )

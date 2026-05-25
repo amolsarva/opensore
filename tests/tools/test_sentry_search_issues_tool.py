@@ -11,18 +11,18 @@ from tests.tools.conftest import BaseToolContract, mock_agent_state
 
 class TestSentrySearchIssuesToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return search_sentry_issues.__opensre_registered_tool__
+        return search_sentry_issues.__opensore_registered_tool__
 
 
 def test_is_available_requires_connection_verified() -> None:
-    rt = search_sentry_issues.__opensre_registered_tool__
+    rt = search_sentry_issues.__opensore_registered_tool__
     assert rt.is_available({"sentry": {"connection_verified": True}}) is True
     assert rt.is_available({"sentry": {}}) is False
     assert rt.is_available({}) is False
 
 
 def test_extract_params_maps_fields() -> None:
-    rt = search_sentry_issues.__opensre_registered_tool__
+    rt = search_sentry_issues.__opensore_registered_tool__
     sources = mock_agent_state()
     params = rt.extract_params(sources)
     assert params["organization_slug"] == "my-org"

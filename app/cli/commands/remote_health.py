@@ -147,8 +147,8 @@ def run_remote_health_check(
         raise click.ClickException(
             "Could not connect to "
             f"{resolved_client.base_url}. The server process may not be running. "
-            "SSH into the instance and check: `systemctl status opensre` and "
-            "`cat /var/log/opensre-remote.log`."
+            "SSH into the instance and check: `systemctl status opensore` and "
+            "`cat /var/log/opensore-remote.log`."
         ) from exc
     except Exception as exc:
         raise click.ClickException(f"Health check failed: {exc}") from exc

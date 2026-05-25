@@ -1,7 +1,7 @@
 # Results bucket for bench artifacts.
 #
 # Layout per run:
-#   s3://${var.results_bucket_name}/runs/<date>-<opensre_sha>/
+#   s3://${var.results_bucket_name}/runs/<date>-<opensore_sha>/
 #     ├── pre-registration.yml  (copy of pinned pre-reg)
 #     ├── config.yml            (copy of run config)
 #     ├── report.json           (aggregated metrics)

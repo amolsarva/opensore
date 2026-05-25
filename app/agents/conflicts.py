@@ -52,15 +52,15 @@ class FileWriteConflict:
 def detect_conflicts(
     events: Sequence[WriteEvent],
     window_seconds: float,
-    opensre_agent_id: str,
+    opensore_agent_id: str,
 ) -> list[FileWriteConflict]:
     """Return file-write conflicts within ``window_seconds`` of the most recent event.
 
     A conflict is a path written by two or more distinct agents whose write
-    events all fall within ``window_seconds`` of the most recent non-OpenSRE
+    events all fall within ``window_seconds`` of the most recent non-OpenSore
     event. Repeated writes by the same agent collapse to a single entry in
-    ``agents``. Events whose ``agent`` matches ``opensre_agent_id`` are removed
-    before window selection so OpenSRE never reports itself as a colliding
+    ``agents``. Events whose ``agent`` matches ``opensore_agent_id`` are removed
+    before window selection so OpenSore never reports itself as a colliding
     agent and never anchors the window with its own activity.
 
     The window is anchored on the most recent event timestamp rather than
@@ -69,7 +69,7 @@ def detect_conflicts(
     Results are sorted by ``last_seen`` descending (freshest collisions first),
     with ``path`` ascending as a stable tiebreaker.
     """
-    relevant = [e for e in events if e.agent != opensre_agent_id]
+    relevant = [e for e in events if e.agent != opensore_agent_id]
     if not relevant:
         return []
 

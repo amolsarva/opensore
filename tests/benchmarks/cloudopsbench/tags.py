@@ -5,22 +5,22 @@ The tagging rule comes from the paper's empirical performance stratification
 
   - **Easy** faults (Startup, Runtime) — A@1 > 0.65 universally; explicit
     signals like CrashLoopBackOff/OOMKilled directly name the cause. These
-    are the "seen-shape" cases: opensre+LLM and LLM-alone both do well here,
-    so opensre's structural value should show smaller lift.
+    are the "seen-shape" cases: opensore+LLM and LLM-alone both do well here,
+    so opensore's structural value should show smaller lift.
 
   - **Hard** faults (Admission Control, Performance) — A@1 < 0.36 universally;
     symptoms are decoupled from root cause, requiring cross-layer reasoning.
     These are the "unseen-shape" cases: where Vincent's "performs worse on
-    unseen situations" concern bites, and where opensre's stage-gated
+    unseen situations" concern bites, and where opensore's stage-gated
     investigation should add the most value.
 
   - **Medium** faults (Scheduling, Service Routing, Infrastructure) — A@1
     between 0.4-0.6. Mid-shape. Not classified for now (returns None) so
     seen/unseen aggregates aren't diluted; they still appear in `all`.
 
-This stratification sidesteps subjective tagging — opensre's lift on
+This stratification sidesteps subjective tagging — opensore's lift on
 unseen-shape vs seen-shape becomes the empirical anti-overfit gate
-(per ``framework.md`` § 14: "opensre's lift on unseen-shape must be
+(per ``framework.md`` § 14: "opensore's lift on unseen-shape must be
 ≥ lift on seen-shape").
 """
 

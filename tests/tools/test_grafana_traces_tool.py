@@ -10,11 +10,11 @@ from tests.tools.conftest import BaseToolContract, mock_agent_state
 
 class TestGrafanaTracesToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return query_grafana_traces.__opensre_registered_tool__
+        return query_grafana_traces.__opensore_registered_tool__
 
 
 def test_is_available_requires_grafana_creds() -> None:
-    rt = query_grafana_traces.__opensre_registered_tool__
+    rt = query_grafana_traces.__opensore_registered_tool__
     assert rt.is_available({"grafana": {"connection_verified": True}}) is True
     assert rt.is_available({"grafana": {"_backend": MagicMock()}}) is True
     assert rt.is_available({"grafana": {}}) is False
@@ -28,13 +28,13 @@ def test_is_available_suppressed_by_no_traces_flag() -> None:
     # RDS alert; this assertion guarantees the action is removed from the
     # planner's choice set rather than relying on a soft prompt prohibition the
     # LLM can ignore.
-    rt = query_grafana_traces.__opensre_registered_tool__
+    rt = query_grafana_traces.__opensore_registered_tool__
     assert rt.is_available({"grafana": {"connection_verified": True, "no_traces": True}}) is False
     assert rt.is_available({"grafana": {"_backend": MagicMock(), "no_traces": True}}) is False
 
 
 def test_extract_params_maps_fields() -> None:
-    rt = query_grafana_traces.__opensre_registered_tool__
+    rt = query_grafana_traces.__opensore_registered_tool__
     sources = mock_agent_state()
     params = rt.extract_params(sources)
     assert params["service_name"] == "my-service"

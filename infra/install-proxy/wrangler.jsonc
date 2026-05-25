@@ -1,12 +1,12 @@
 {
     "$schema": "node_modules/wrangler/config-schema.json",
-    "name": "opensre",
+    "name": "opensore",
     "main": "src/index.mjs",
     "compatibility_date": "2026-04-29",
     "workers_dev": true,
     "routes": [
         {
-            "pattern": "install.opensre.com",
+            "pattern": "install.opensore.com",
             "custom_domain": true,
         },
     ],

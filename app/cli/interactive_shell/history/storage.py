@@ -15,9 +15,9 @@ _HISTORY_FILENAME = "interactive_history"
 
 
 def prompt_history_path() -> Path:
-    from app.constants import OPENSRE_HOME_DIR
+    from app.constants import OPENSORE_HOME_DIR
 
-    return OPENSRE_HOME_DIR / _HISTORY_FILENAME
+    return OPENSORE_HOME_DIR / _HISTORY_FILENAME
 
 
 def load_prompt_history(policy: HistoryPolicy | None = None) -> History:

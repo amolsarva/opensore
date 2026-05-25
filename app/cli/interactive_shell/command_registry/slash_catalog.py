@@ -54,7 +54,7 @@ _MCP_BY_COMMAND: dict[str, _SlashMcpFields] = {
     "/?": _mcp(
         "Shortcut for /help — open the interactive slash-command help browser.",
         "User types ? or asks for command help via the shortcut alias",
-        anti_examples=("User asks a docs/how-to question about OpenSRE features",),
+        anti_examples=("User asks a docs/how-to question about OpenSore features",),
     ),
     "/agents": _mcp(
         "Show and manage the local AI agent fleet (Claude Code, Cursor, Aider, etc.). "
@@ -74,7 +74,7 @@ _MCP_BY_COMMAND: dict[str, _SlashMcpFields] = {
         anti_examples=("User asks to stop everything without an id (use /stop guidance first)",),
     ),
     "/clear": _mcp(
-        "Clear the terminal screen and re-render the OpenSRE banner.",
+        "Clear the terminal screen and re-render the OpenSore banner.",
         "User asks to clear the screen or terminal",
     ),
     "/compact": _mcp(
@@ -82,9 +82,9 @@ _MCP_BY_COMMAND: dict[str, _SlashMcpFields] = {
         "User asks to compact, trim, or free memory from session history",
     ),
     "/config": _mcp(
-        "Show or edit local OpenSRE configuration (~/.config/opensre/config.yml). "
+        "Show or edit local OpenSore configuration (~/.config/opensore/config.yml). "
         "Subcommands: show, set <key> <value>.",
-        "User asks to view or change OpenSRE config settings",
+        "User asks to view or change OpenSore config settings",
         anti_examples=("User asks how to configure an integration (may need assistant_handoff)",),
     ),
     "/context": _mcp(
@@ -114,11 +114,11 @@ _MCP_BY_COMMAND: dict[str, _SlashMcpFields] = {
         "User asks about guardrails, PII rules, or sensitive-data masking configuration",
     ),
     "/health": _mcp(
-        "Run a read-only health check of the local OpenSRE agent, LLM connectivity, "
+        "Run a read-only health check of the local OpenSore agent, LLM connectivity, "
         "and configured integrations with pass/fail per component.",
-        "User asks if OpenSRE is healthy, working, or connected",
+        "User asks if OpenSore is healthy, working, or connected",
         anti_examples=(
-            "User asks what integrations OpenSRE supports in general (docs → assistant_handoff)",
+            "User asks what integrations OpenSore supports in general (docs → assistant_handoff)",
             "User asks to list connected integrations (use /list integrations)",
         ),
     ),
@@ -140,7 +140,7 @@ _MCP_BY_COMMAND: dict[str, _SlashMcpFields] = {
         "User asks to verify an integration by name",
         "User asks to show details for a configured integration",
         anti_examples=(
-            "User asks which integrations OpenSRE supports without configuring (assistant_handoff)",
+            "User asks which integrations OpenSore supports without configuring (assistant_handoff)",
             "User asks to list connected integrations (prefer /list integrations)",
         ),
     ),
@@ -161,7 +161,7 @@ _MCP_BY_COMMAND: dict[str, _SlashMcpFields] = {
         "User asks to show or list connected/configured integrations or services",
         "User asks to list MCP servers (/list mcp)",
         anti_examples=(
-            "User asks what integrations OpenSRE supports in general (assistant_handoff)",
+            "User asks what integrations OpenSore supports in general (assistant_handoff)",
         ),
     ),
     "/mcp": _mcp(
@@ -199,9 +199,9 @@ _MCP_BY_COMMAND: dict[str, _SlashMcpFields] = {
         "User asks to quit the REPL",
     ),
     "/remote": _mcp(
-        "Connect to, list, and operate remote deployed OpenSRE agents. "
+        "Connect to, list, and operate remote deployed OpenSore agents. "
         "Subcommands: health, investigate, ops, pull, trigger.",
-        "User explicitly asks to connect to a remote/hosted/EC2/Nitro OpenSRE instance",
+        "User explicitly asks to connect to a remote/hosted/EC2/Nitro OpenSore instance",
         "User asks how many remote deployments are configured or wants to inspect a remote agent",
         "User asks about remote deployment status, health, or operations",
         anti_examples=("Vague connect to X without remote/hosted context (assistant_handoff)",),
@@ -241,23 +241,23 @@ _MCP_BY_COMMAND: dict[str, _SlashMcpFields] = {
         "User asks to enable or disable trust mode or auto-approve",
     ),
     "/uninstall": _mcp(
-        "Remove OpenSRE and all local data from this machine. Destructive — requires confirmation.",
-        "User explicitly asks to uninstall OpenSRE locally",
+        "Remove OpenSore and all local data from this machine. Destructive — requires confirmation.",
+        "User explicitly asks to uninstall OpenSore locally",
     ),
     "/unwatch": _mcp(
         "Cancel a running watchdog task by task id. Requires confirmation.",
         "User asks to stop a /watch background task by id",
     ),
     "/update": _mcp(
-        "Check for a newer OpenSRE version and update if available.",
-        "User asks to update or upgrade OpenSRE",
+        "Check for a newer OpenSore version and update if available.",
+        "User asks to update or upgrade OpenSore",
     ),
     "/verbose": _mcp(
         "Toggle verbose logging in the REPL. on | off.",
         "User asks to enable or disable verbose logging",
     ),
     "/version": _mcp(
-        "Print OpenSRE version, Python version, and OS information.",
+        "Print OpenSore version, Python version, and OS information.",
         "User asks for version information",
     ),
     "/watch": _mcp(
@@ -368,7 +368,7 @@ def format_slash_catalog_text(
 def slash_invoke_tool_description(specs: list[SlashCommandSpec] | None = None) -> str:
     entries = specs if specs is not None else build_slash_command_specs()
     header = (
-        "Run a slash command in the OpenSRE interactive shell. "
+        "Run a slash command in the OpenSore interactive shell. "
         "Pick the command whose use-case best matches the user request, then supply "
         "positional args in the args array."
     )

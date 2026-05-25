@@ -20,9 +20,9 @@ from app.utils.config import load_env
 _PROJECT_ROOT = Path(__file__).resolve().parents[5]
 _ENV_PATH = _PROJECT_ROOT / ".env"
 _ROUTING_TEST_DEFAULT_ENV = {
-    "OPENSRE_SENTRY_DISABLED": "1",
-    "OPENSRE_NO_TELEMETRY": "1",
-    "OPENSRE_INVESTIGATION_SOURCE": "test",
+    "OPENSORE_SENTRY_DISABLED": "1",
+    "OPENSORE_NO_TELEMETRY": "1",
+    "OPENSORE_INVESTIGATION_SOURCE": "test",
 }
 
 
@@ -46,7 +46,7 @@ def _disable_system_keyring(
     """Keep tests isolated from any real developer keychain entries."""
     if request.node.get_closest_marker("live_llm") is not None:
         return
-    monkeypatch.setenv("OPENSRE_DISABLE_KEYRING", "1")
+    monkeypatch.setenv("OPENSORE_DISABLE_KEYRING", "1")
 
 
 @pytest.fixture(autouse=True)

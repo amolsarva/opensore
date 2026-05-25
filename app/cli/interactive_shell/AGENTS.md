@@ -5,7 +5,7 @@ subdirectories. The repo-root `AGENTS.md` still applies.
 
 ## Purpose
 
-`app/cli/interactive_shell/` owns the interactive OpenSRE terminal: the REPL
+`app/cli/interactive_shell/` owns the interactive OpenSore terminal: the REPL
 loop, slash-command surface, local alert ingestion, LLM-backed help/chat,
 action planning, shell execution, session state, history, routing, and Rich /
 prompt-toolkit UI.

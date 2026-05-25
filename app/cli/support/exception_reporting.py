@@ -7,7 +7,7 @@ from typing import Any
 
 import click
 
-from app.cli.support.errors import OpenSREError
+from app.cli.support.errors import OpenSoreError
 from app.utils.sentry_sdk import capture_exception
 
 
@@ -15,7 +15,7 @@ def should_report_exception(exc: BaseException, *, expected: bool = False) -> bo
     """Return whether a caught exception should be reported to Sentry."""
     if expected:
         return False
-    if isinstance(exc, (KeyboardInterrupt, EOFError, OpenSREError, click.Abort)):
+    if isinstance(exc, (KeyboardInterrupt, EOFError, OpenSoreError, click.Abort)):
         return False
     return not isinstance(exc, click.UsageError)
 

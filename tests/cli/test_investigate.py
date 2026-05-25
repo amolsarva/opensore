@@ -10,7 +10,7 @@ from app.cli.investigation import (
     stream_investigation_cli,
 )
 from app.cli.support.cli_error_mapping import reraise_cli_runtime_error
-from app.cli.support.errors import OpenSREError
+from app.cli.support.errors import OpenSoreError
 from app.integrations.llm_cli.errors import CLIAuthenticationRequired
 from app.remote.stream import StreamEvent
 
@@ -71,7 +71,7 @@ def test_run_investigation_cli_passes_investigation_metadata_to_runner(
     )
     assert captured == {
         "raw_alert": {"description": "x"},
-        "opensre_evaluate": False,
+        "opensore_evaluate": False,
         "investigation_metadata": ("A", "B", "high"),
     }
 
@@ -122,9 +122,9 @@ def test_run_investigation_cli_evaluate_reports_skip_when_no_rubric(monkeypatch)
             "slack_message": "r",
             "problem_md": "p",
             "root_cause": "c",
-            "opensre_evaluate": True,
-            "opensre_eval_rubric": "",
-            "opensre_llm_eval": {},
+            "opensore_evaluate": True,
+            "opensore_eval_rubric": "",
+            "opensore_llm_eval": {},
         }
 
     monkeypatch.setattr("app.cli.investigation.investigate.resolve_llm_settings", object)
@@ -132,10 +132,10 @@ def test_run_investigation_cli_evaluate_reports_skip_when_no_rubric(monkeypatch)
 
     result = run_investigation_cli(
         raw_alert={"alert_name": "A"},
-        opensre_evaluate=True,
+        opensore_evaluate=True,
     )
-    assert result["opensre_llm_eval"]["skipped"] is True
-    assert "No scoring_points" in result["opensre_llm_eval"]["reason"]
+    assert result["opensore_llm_eval"]["skipped"] is True
+    assert "No scoring_points" in result["opensore_llm_eval"]["reason"]
 
 
 def test_parse_args_evaluate_flag() -> None:
@@ -154,7 +154,7 @@ def test_run_investigation_cli_fails_fast_for_invalid_llm_config(monkeypatch) ->
         lambda *_args, **_kwargs: pytest.fail("investigation should not start"),
     )
 
-    with pytest.raises(OpenSREError, match="OPENAI_API_KEY"):
+    with pytest.raises(OpenSoreError, match="OPENAI_API_KEY"):
         run_investigation_cli(raw_alert={"alert_name": "PayloadAlert"})
 
 
@@ -207,7 +207,7 @@ def test_stream_investigation_cli_closes_cleanly_on_generator_close(
     assert time.monotonic() - t0 < 2.0
 
 
-def test_run_investigation_cli_maps_cli_auth_to_opensre_error(
+def test_run_investigation_cli_maps_cli_auth_to_opensore_error(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     def boom(*_args: object, **_kwargs: object) -> NoReturn:
@@ -220,13 +220,13 @@ def test_run_investigation_cli_maps_cli_auth_to_opensre_error(
     monkeypatch.setattr("app.cli.investigation.investigate.resolve_llm_settings", object)
     monkeypatch.setattr("app.cli.investigation.investigate._call_run_investigation", boom)
 
-    with pytest.raises(OpenSREError, match="not authenticated") as exc_info:
+    with pytest.raises(OpenSoreError, match="not authenticated") as exc_info:
         run_investigation_cli(raw_alert={"alert_name": "PayloadAlert"})
     assert exc_info.value.suggestion is not None
     assert "agent login" in exc_info.value.suggestion
 
 
-def test_stream_investigation_cli_maps_cli_auth_to_opensre_error(
+def test_stream_investigation_cli_maps_cli_auth_to_opensore_error(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     async def fake_astream_investigation(*args: object, **kwargs: object):
@@ -245,7 +245,7 @@ def test_stream_investigation_cli_maps_cli_auth_to_opensre_error(
 
     events = stream_investigation_cli(raw_alert={"alert_name": "PayloadAlert"})
     assert next(events).event_type == "metadata"
-    with pytest.raises(OpenSREError, match="not authenticated"):
+    with pytest.raises(OpenSoreError, match="not authenticated"):
         next(events)
 
 
@@ -256,7 +256,7 @@ def test_reraise_cli_runtime_error_maps_cli_auth() -> None:
         detail="not logged in",
     )
 
-    with pytest.raises(OpenSREError) as raised:
+    with pytest.raises(OpenSoreError) as raised:
         reraise_cli_runtime_error(exc)
 
     assert str(raised.value) == "opencode CLI is not authenticated."
@@ -266,7 +266,7 @@ def test_reraise_cli_runtime_error_maps_cli_auth() -> None:
 def test_reraise_cli_runtime_error_maps_cli_not_found() -> None:
     exc = RuntimeError("codex CLI not found on PATH")
 
-    with pytest.raises(OpenSREError) as raised:
+    with pytest.raises(OpenSoreError) as raised:
         reraise_cli_runtime_error(exc)
 
     assert str(raised.value) == "CLI tool is not installed or not found."

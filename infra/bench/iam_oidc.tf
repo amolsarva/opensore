@@ -195,7 +195,7 @@ data "aws_iam_policy_document" "terraform_plan_state_read" {
     sid       = "ReadStateObject"
     effect    = "Allow"
     actions   = ["s3:GetObject"]
-    resources = ["arn:aws:s3:::tracer-cloud-tfstate-${data.aws_caller_identity.current.account_id}/opensre-bench/*"]
+    resources = ["arn:aws:s3:::tracer-cloud-tfstate-${data.aws_caller_identity.current.account_id}/opensore-bench/*"]
   }
 }
 

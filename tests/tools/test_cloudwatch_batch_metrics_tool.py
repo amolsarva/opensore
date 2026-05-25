@@ -10,12 +10,12 @@ from tests.tools.conftest import BaseToolContract
 
 class TestCloudWatchBatchMetricsToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return get_cloudwatch_batch_metrics.__opensre_registered_tool__
+        return get_cloudwatch_batch_metrics.__opensore_registered_tool__
 
 
 def test_is_available_always_false_by_default() -> None:
     # no is_available override registered — defaults to always True
-    rt = get_cloudwatch_batch_metrics.__opensre_registered_tool__
+    rt = get_cloudwatch_batch_metrics.__opensore_registered_tool__
     result = rt.is_available({})
     assert isinstance(result, bool)
 

@@ -35,7 +35,7 @@ BEDROCK_TOOL_NAMES: list[str] = [
 ]
 
 AGENT_INSTRUCTION = (
-    "You are OpenSRE, an automated SRE incident investigation agent. "
+    "You are OpenSore, an automated SRE incident investigation agent. "
     "When given an alert or incident description, investigate the root cause by: "
     "1) Gathering evidence from logs, metrics, and cloud resources using the provided tools. "
     "2) Correlating findings across multiple data sources. "
@@ -154,7 +154,7 @@ def create_action_group(
     agent_version: str,
     functions: list[dict[str, Any]],
     *,
-    group_name: str = "opensre-tools",
+    group_name: str = "opensore-tools",
     region: str = DEFAULT_REGION,
 ) -> dict[str, Any]:
     """Create an action group with RETURN_CONTROL execution.

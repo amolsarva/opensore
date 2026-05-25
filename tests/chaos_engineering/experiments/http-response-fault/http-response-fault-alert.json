@@ -1,7 +1,7 @@
 {
   "_meta": {
     "purpose": "Synthetic alert for HTTPChaos response delay +503 replace",
-    "run": "opensre investigate -i tests/chaos_engineering/experiments/http-response-fault/http-response-fault-alert.json"
+    "run": "opensore investigate -i tests/chaos_engineering/experiments/http-response-fault/http-response-fault-alert.json"
   },
   "title": "[Triggered] HTTP 503 / SLA breach - http-response-fault-demo",
   "alert_name": "Datadog monitor: 5xx spike on demo service",

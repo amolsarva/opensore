@@ -16,7 +16,7 @@ from app.types.evidence import EvidenceSource
 from app.types.retrieval import RetrievalControls
 from app.types.tools import ToolSurface
 
-REGISTERED_TOOL_ATTR = "__opensre_registered_tool__"
+REGISTERED_TOOL_ATTR = "__opensore_registered_tool__"
 
 _DEFAULT_SURFACES: tuple[ToolSurface, ...] = ("investigation",)
 _VALID_SURFACES = set(get_args(ToolSurface))

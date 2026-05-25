@@ -1,4 +1,4 @@
-"""Smoke tests for the ``opensre agents`` command group."""
+"""Smoke tests for the ``opensore agents`` command group."""
 
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ def isolated_registry_path(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> P
 
 
 def test_agents_help_lists_all_subcommands() -> None:
-    """``opensre agents --help`` must surface every subcommand."""
+    """``opensore agents --help`` must surface every subcommand."""
     runner = CliRunner()
 
     result = runner.invoke(cli, ["agents", "--help"])
@@ -165,7 +165,7 @@ def test_agents_scan_truncates_long_commands(monkeypatch: pytest.MonkeyPatch) ->
     assert result.exit_code == 0, result.output
     assert "--flag --flag" in result.output
     assert "..." in result.output or "…" in result.output
-    assert "Next: run opensre agents scan --register to track 1 process(es)" in result.output
+    assert "Next: run opensore agents scan --register to track 1 process(es)" in result.output
 
 
 def test_agents_scan_all_passes_include_all(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -193,7 +193,7 @@ def test_agents_scan_empty_state_mentions_all_mode(monkeypatch: pytest.MonkeyPat
 
     assert result.exit_code == 0, result.output
     assert "no running AI-agent sessions detected" in result.output
-    assert "opensre agents scan --all" in result.output
+    assert "opensore agents scan --all" in result.output
 
 
 def test_agents_watch_reports_already_exited(monkeypatch: pytest.MonkeyPatch) -> None:

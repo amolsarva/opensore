@@ -18,7 +18,7 @@ class _FakePipelinesClient(TracerPipelinesMixin):
 
     def __init__(self, response: dict[str, Any]) -> None:
         super().__init__(
-            base_url="https://opensre.com",
+            base_url="https://opensore.com",
             org_id="test-org-123",
             jwt_token="token",
         )
@@ -34,7 +34,7 @@ class _FakePipelinesClientWithCapture(TracerPipelinesMixin):
 
     def __init__(self) -> None:
         super().__init__(
-            base_url="https://opensre.com",
+            base_url="https://opensore.com",
             org_id="test-org-123",
             jwt_token="token",
         )
@@ -397,7 +397,7 @@ class TestGetLatestRun:
         class _FakePipelinesClientRam(TracerPipelinesMixin):
             def __init__(self, max_ram_bytes: int) -> None:
                 super().__init__(
-                    base_url="https://opensre.test",
+                    base_url="https://opensore.test",
                     org_id="test-org-123",
                     jwt_token="token",
                 )

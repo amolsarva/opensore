@@ -36,7 +36,7 @@ def _capture() -> tuple[Console, io.StringIO]:
 
 
 _NITRO_PROMPT = (
-    "I want to deploy OpenSRE on a remote EC2 Nitro instance, and then I want to send\n"
+    "I want to deploy OpenSore on a remote EC2 Nitro instance, and then I want to send\n"
     'it an investigation. Can you please deploy the instance and send it "hello world"?'
 )
 
@@ -44,7 +44,7 @@ _NITRO_PROMPT = (
 # Regression: "connect" was not a trigger verb for the /remote pattern, so the
 # planner only saw the quoted investigation and silently dropped the remote step.
 _NITRO_CONNECT_PROMPT = (
-    "I want to connect to OpenSRE that I have running on a remote EC2 Nitro instance, "
+    "I want to connect to OpenSore that I have running on a remote EC2 Nitro instance, "
     "and then I want to send it an investigation. Can you please connect the instance "
     'and send it "hello world"'
 )
@@ -70,7 +70,7 @@ def _llm_planner_bridge(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_health_then_connected_services_plans_two_actions_in_order() -> None:
-    message = "check the health of my opensre and then show me all connected services"
+    message = "check the health of my opensore and then show me all connected services"
 
     assert agent_actions.plan_cli_actions(message) == ["/health", "/list integrations"]
 
@@ -138,7 +138,7 @@ def test_execute_cli_actions_dispatches_planned_commands(monkeypatch: object) ->
     session = ReplSession()
     console, buf = _capture()
     handled = agent_actions.execute_cli_actions(
-        "check the health of my opensre and then show me all connected services",
+        "check the health of my opensore and then show me all connected services",
         session,
         console,
     )
@@ -148,7 +148,7 @@ def test_execute_cli_actions_dispatches_planned_commands(monkeypatch: object) ->
     assert session.history == [
         {
             "type": "cli_agent",
-            "text": "check the health of my opensre and then show me all connected services",
+            "text": "check the health of my opensore and then show me all connected services",
             "ok": True,
         },
         {"type": "slash", "text": "/health", "ok": True},
@@ -211,7 +211,7 @@ def test_execute_cli_actions_skips_remaining_actions_when_cancelled(
     inner_console, buf = _capture()
     console = _CancelAfterFirst(inner_console, dispatched)
     handled = agent_actions.execute_cli_actions(
-        "check the health of my opensre and then show me all connected services",
+        "check the health of my opensore and then show me all connected services",
         session,
         console,  # type: ignore[arg-type]
     )
@@ -429,22 +429,22 @@ def test_execute_cli_actions_answers_discord_then_dispatches_datadog(
 def test_compound_prompt_plans_chat_list_and_cli_command() -> None:
     message = (
         "tell me how you are doing AND show me all the services we are connected to "
-        "AND then run opensre integrations list"
+        "AND then run opensore integrations list"
     )
 
     assert agent_actions.plan_terminal_tasks(message) == ["slash", "cli_command"]
     assert agent_actions.plan_cli_actions(message) == ["/list integrations", "integrations list"]
 
 
-def test_cli_command_requires_explicit_opensre_context() -> None:
+def test_cli_command_requires_explicit_opensore_context() -> None:
     message = "the tool uses -- deploy as an argument separator"
 
     assert agent_actions.plan_terminal_tasks(message) == []
     assert agent_actions.plan_cli_actions(message) == []
 
 
-def test_cli_command_preserves_flags_after_explicit_opensre_prefix() -> None:
-    assert agent_actions.plan_cli_actions("please run opensre integrations verify --dry-run") == [
+def test_cli_command_preserves_flags_after_explicit_opensore_prefix() -> None:
+    assert agent_actions.plan_cli_actions("please run opensore integrations verify --dry-run") == [
         "integrations verify --dry-run"
     ]
 
@@ -452,7 +452,7 @@ def test_cli_command_preserves_flags_after_explicit_opensre_prefix() -> None:
 def test_compound_prompt_plans_chat_list_and_slash_deploy_paraphrase() -> None:
     message = (
         "tell me how you are doing AND show me all the services we are connected to "
-        "AND then deploy OpenSRE to EC2"
+        "AND then deploy OpenSore to EC2"
     )
 
     assert agent_actions.plan_terminal_tasks(message) == ["slash", "slash"]
@@ -536,7 +536,7 @@ def test_compound_prompt_executes_all_supported_tasks(monkeypatch: object) -> No
     handled = agent_actions.execute_cli_actions(
         (
             "tell me how you are doing AND show me all the services we are connected to "
-            "AND then deploy OpenSRE to EC2"
+            "AND then deploy OpenSore to EC2"
         ),
         session,
         console,
@@ -549,7 +549,7 @@ def test_compound_prompt_executes_all_supported_tasks(monkeypatch: object) -> No
             "type": "cli_agent",
             "text": (
                 "tell me how you are doing AND show me all the services we are connected to "
-                "AND then deploy OpenSRE to EC2"
+                "AND then deploy OpenSore to EC2"
             ),
             "ok": False,
         }
@@ -687,10 +687,10 @@ def test_execute_cli_actions_runs_sample_alert(monkeypatch: object) -> None:
     assert "generic" in output
 
 
-def test_execute_cli_actions_sample_alert_opensre_error_marks_task_failed(
+def test_execute_cli_actions_sample_alert_opensore_error_marks_task_failed(
     monkeypatch: object,
 ) -> None:
-    from app.cli.support.errors import OpenSREError
+    from app.cli.support.errors import OpenSoreError
 
     def _raise(
         *,
@@ -698,7 +698,7 @@ def test_execute_cli_actions_sample_alert_opensre_error_marks_task_failed(
         context_overrides: dict[str, object] | None = None,
         cancel_requested: object | None = None,
     ) -> dict[str, object]:
-        raise OpenSREError("sample pipeline blocked")
+        raise OpenSoreError("sample pipeline blocked")
 
     import app.cli.investigation as investigation_module
 
@@ -792,8 +792,8 @@ def test_execute_cli_actions_lists_all_actions_before_synthetic_rds(monkeypatch:
     assert output.index("1.") < output.index("$ /list integrations")
     assert output.index("2.") < output.index("$ /list integrations")
     assert "synthetic test rds_postgres:001-replication-lag" in output
-    assert output.index("synthetic test") < output.index("$ opensre tests synthetic")
-    assert output.index("$ /list integrations") < output.index("$ opensre tests synthetic")
+    assert output.index("synthetic test") < output.index("$ opensore tests synthetic")
+    assert output.index("$ /list integrations") < output.index("$ opensore tests synthetic")
 
 
 def test_execute_cli_actions_runs_requested_synthetic_scenario(monkeypatch: object) -> None:
@@ -814,7 +814,7 @@ def test_execute_cli_actions_runs_requested_synthetic_scenario(monkeypatch: obje
 
     assert handled is True
     assert popen_calls[0][0][-2:] == ["--scenario", "005-failover"]
-    assert "$ opensre tests synthetic --scenario 005-failover" in buf.getvalue()
+    assert "$ opensore tests synthetic --scenario 005-failover" in buf.getvalue()
 
 
 def test_execute_cli_actions_cancels_single_running_synthetic_task() -> None:
@@ -1168,12 +1168,12 @@ def test_execute_cli_actions_blocks_ambiguous_shell_operators() -> None:
 
 
 def test_compound_prompt_plans_chat_list_and_blocked_deploy() -> None:
-    message = "show versions AND show services AND opensre agent"
+    message = "show versions AND show services AND opensore agent"
     planned = agent_actions.plan_cli_actions(message)
     assert "agent" in planned
     session = ReplSession()
     console, buf = _capture()
-    result = agent_actions.execute_cli_actions("opensre agent", session, console)
+    result = agent_actions.execute_cli_actions("opensore agent", session, console)
     assert result is True
     output = buf.getvalue()
     assert "blocked" in output.lower()

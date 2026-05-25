@@ -1,7 +1,7 @@
 const SHELL_SCRIPT_URL =
-  "https://raw.githubusercontent.com/Tracer-Cloud/opensre/main/install.sh";
+  "https://raw.githubusercontent.com/Tracer-Cloud/opensore/main/install.sh";
 const POWERSHELL_SCRIPT_URL =
-  "https://raw.githubusercontent.com/Tracer-Cloud/opensre/main/install.ps1";
+  "https://raw.githubusercontent.com/Tracer-Cloud/opensore/main/install.ps1";
 
 function requestedShell(request) {
   const url = new URL(request.url);
@@ -57,7 +57,7 @@ export default {
     const upstream = await fetch(targetScriptUrl(request), {
       method: request.method,
       headers: {
-        "User-Agent": "opensre-install-proxy",
+        "User-Agent": "opensore-install-proxy",
       },
     });
 

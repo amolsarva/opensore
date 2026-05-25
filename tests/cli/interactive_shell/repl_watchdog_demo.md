@@ -3,7 +3,7 @@
 Paste the block below into your pull request so reviewers see the demo **in the PR** (see [docs/DEVELOPMENT.md](../../docs/DEVELOPMENT.md#interactive-shell-repl-watchdog-demo)).
 
 ```text
-$ uv run opensre
+$ uv run opensore
 > /trust on
 > /watch <PID> --max-cpu 80
 task <id> started.

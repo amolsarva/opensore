@@ -1,4 +1,4 @@
-"""HTTP client for remote OpenSRE agent deployments (streaming and thread APIs)."""
+"""HTTP client for remote OpenSore agent deployments (streaming and thread APIs)."""
 
 from __future__ import annotations
 
@@ -94,7 +94,7 @@ def normalize_url(url: str) -> str:
 
 
 class RemoteAgentClient:
-    """Client for interacting with a remote OpenSRE-compatible HTTP API.
+    """Client for interacting with a remote OpenSore-compatible HTTP API.
 
     Typical surfaces include:
       - GET  /ok                          Health check

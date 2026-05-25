@@ -36,7 +36,7 @@ SNIPPET = """\
 **1/1 passed**"""
 
 SAMPLE_REPORT = """\
-# OpenSRE Benchmark
+# OpenSore Benchmark
 
 Scope: 001-replication-lag, 002-connection-exhaustion.
 Metrics reported: duration, token usage, estimated LLM cost.

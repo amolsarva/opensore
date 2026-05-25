@@ -10,18 +10,18 @@ from tests.tools.conftest import BaseToolContract, mock_agent_state
 
 class TestS3ListToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return list_s3_objects.__opensre_registered_tool__
+        return list_s3_objects.__opensore_registered_tool__
 
 
 def test_is_available_requires_bucket() -> None:
-    rt = list_s3_objects.__opensre_registered_tool__
+    rt = list_s3_objects.__opensore_registered_tool__
     assert rt.is_available({"s3": {"bucket": "b"}}) is True
     assert rt.is_available({"s3": {}}) is False
     assert rt.is_available({}) is False
 
 
 def test_extract_params_maps_fields() -> None:
-    rt = list_s3_objects.__opensre_registered_tool__
+    rt = list_s3_objects.__opensore_registered_tool__
     sources = mock_agent_state()
     params = rt.extract_params(sources)
     assert params["bucket"] == "my-bucket"

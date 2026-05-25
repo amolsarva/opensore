@@ -10,11 +10,11 @@ from tests.tools.conftest import BaseToolContract
 
 class TestMongoDBAtlasClustersToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return get_mongodb_atlas_clusters.__opensre_registered_tool__
+        return get_mongodb_atlas_clusters.__opensore_registered_tool__
 
 
 def test_metadata() -> None:
-    rt = get_mongodb_atlas_clusters.__opensre_registered_tool__
+    rt = get_mongodb_atlas_clusters.__opensore_registered_tool__
     assert rt.name == "get_mongodb_atlas_clusters"
     assert rt.source == "mongodb_atlas"
 

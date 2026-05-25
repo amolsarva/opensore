@@ -1,4 +1,4 @@
-"""Documentation-aware procedural answers for the OpenSRE interactive shell.
+"""Documentation-aware procedural answers for the OpenSore interactive shell.
 
 When the router classifies an input as a procedural / how-to question we land
 here. We retrieve the most relevant pages from the project ``docs/`` directory
@@ -48,7 +48,7 @@ def _build_grounded_prompt(question: str, cli_reference: str, docs_reference: st
             "configuration, integration setup, deployment, and feature "
             "questions. If the docs do not cover the user's question, say "
             "so explicitly and suggest the closest relevant page, "
-            "`opensre --help`, or `/help` inside the interactive shell. "
+            "`opensore --help`, or `/help` inside the interactive shell. "
             "Do NOT invent setup steps that are not in the docs."
         )
         reference_block = (
@@ -60,14 +60,14 @@ def _build_grounded_prompt(question: str, cli_reference: str, docs_reference: st
             "Project documentation is not available in this environment. "
             "Answer only from the CLI reference below; if it does not cover "
             "the question, say so and point the user to "
-            "https://www.opensre.com/docs."
+            "https://www.opensore.com/docs."
         )
         reference_block = f"--- CLI reference ---\n{cli_reference}\n"
 
     system = (
-        "You are the OpenSRE documentation-aware CLI assistant. The user is "
-        "in the OpenSRE interactive shell and is asking how to use, "
-        "configure, install, deploy, or troubleshoot OpenSRE.\n"
+        "You are the OpenSore documentation-aware CLI assistant. The user is "
+        "in the OpenSore interactive shell and is asking how to use, "
+        "configure, install, deploy, or troubleshoot OpenSore.\n"
         f"{docs_block}\n"
         "Prefer copy-pastable commands. Cite the doc page name in parentheses "
         "when an answer comes from the docs (e.g. '(see docs/datadog)'). "

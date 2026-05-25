@@ -132,7 +132,7 @@ def test_map_actions_with_unhandled_remote_then_investigate_compound() -> None:
 
 def test_map_actions_with_unhandled_health_then_connected_services() -> None:
     actions, has_unhandled = map_actions_with_unhandled(
-        "check the health of my opensre and then show me all connected services"
+        "check the health of my opensore and then show me all connected services"
     )
     assert not has_unhandled
     assert [(item.kind, item.content) for item in actions] == [

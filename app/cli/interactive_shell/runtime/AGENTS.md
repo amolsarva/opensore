@@ -2,7 +2,7 @@
 
 ## Human summary
 
-The `runtime` package is the interactive shell runtime for OpenSRE. It keeps
+The `runtime` package is the interactive shell runtime for OpenSore. It keeps
 the prompt alive, accepts user input turn by turn, routes each turn to the
 right handler, executes actions, and keeps the terminal responsive while work
 is running.

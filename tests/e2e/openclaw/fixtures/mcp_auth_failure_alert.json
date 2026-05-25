@@ -3,7 +3,7 @@
   "groupKey": "{}:{alertname=\"OpenClawMCPAuthFailure\"}",
   "truncatedAlerts": 0,
   "status": "firing",
-  "receiver": "opensre-webhook",
+  "receiver": "opensore-webhook",
   "groupLabels": {
     "alertname": "OpenClawMCPAuthFailure"
   },
@@ -16,7 +16,7 @@
   },
   "commonAnnotations": {
     "summary": "OpenClaw MCP bearer token rejected — 401 Unauthorized on all requests",
-    "description": "The OPENCLAW_MCP_AUTH_TOKEN stored in opensre configuration is returning HTTP 401 from the OpenClaw MCP endpoint. Token may have expired or been rotated. All MCP tool calls (conversations_list, conversations_create) are failing.",
+    "description": "The OPENCLAW_MCP_AUTH_TOKEN stored in opensore configuration is returning HTTP 401 from the OpenClaw MCP endpoint. Token may have expired or been rotated. All MCP tool calls (conversations_list, conversations_create) are failing.",
     "error_code": "401",
     "endpoint": "https://openclaw.example.com/mcp",
     "last_error": "HTTP 401 from POST https://openclaw.example.com/mcp"
@@ -31,7 +31,7 @@
         "environment": "production",
         "service": "openclaw-mcp",
         "job": "openclaw",
-        "instance": "opensre-worker-01"
+        "instance": "opensore-worker-01"
       },
       "annotations": {
         "summary": "OpenClaw MCP bearer token rejected",

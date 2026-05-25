@@ -4,7 +4,7 @@ Backs the ``/agents trace <pid>`` slash command. The attach path only
 accepts *regular files* backing fd 1 of the target pid: TTY/PTY/pipe/
 socket/anon_inode targets are rejected at attach time with a precise
 error so we never compete with the legitimate consumer for bytes.
-PTY interception for OpenSRE-spawned agents is left to a future change
+PTY interception for OpenSore-spawned agents is left to a future change
 once a spawn path lands.
 
 Layered bounding (per the 4 MiB acceptance criterion):

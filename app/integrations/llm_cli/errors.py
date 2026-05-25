@@ -14,7 +14,7 @@ class CLITimeoutError(RuntimeError):
 class CLIAuthenticationRequired(RuntimeError):
     """CLI probe reported the user is definitely not authenticated (`logged_in=False`).
 
-    Investigation / streaming entrypoints map this to :class:`OpenSREError` so the
+    Investigation / streaming entrypoints map this to :class:`OpenSoreError` so the
     CLI prints a short message and suggestion instead of a traceback.
     """
 

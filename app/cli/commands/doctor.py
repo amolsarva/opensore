@@ -2,7 +2,7 @@
 
 Rendered output (colour roles):
 ──────────────────────────────────────────── [DIM rule]
-  OpenSRE Doctor                             [TEXT bold section header]
+  OpenSore Doctor                             [TEXT bold section header]
 ──────────────────────────────────────────── [DIM rule]
 
   ✓  python          Python 3.13.2           [HIGHLIGHT ✓] [SECONDARY check] [TEXT detail]
@@ -13,7 +13,7 @@ Rendered output (colour roles):
   ✓  network         github.com reachable
 
 ──────────────────────────────────────────── [DIM rule]
-  1 error · 1 warning — run opensre doctor   [ERROR/WARNING counts · SECONDARY hint]
+  1 error · 1 warning — run opensore doctor   [ERROR/WARNING counts · SECONDARY hint]
   All checks passed.                         [HIGHLIGHT — when clean]
 """
 
@@ -61,12 +61,12 @@ def _check_python_version() -> tuple[bool, str]:
     version = platform.python_version()
     major, minor = sys.version_info[:2]
     if (major, minor) < (3, 11):
-        return False, f"Python {version} — opensre requires >= 3.11"
+        return False, f"Python {version} — opensore requires >= 3.11"
     return True, f"Python {version}"
 
 
 def _check_env_file() -> tuple[bool, str]:
-    env_path = os.getenv("OPENSRE_PROJECT_ENV_PATH", ".env")
+    env_path = os.getenv("OPENSORE_PROJECT_ENV_PATH", ".env")
     path = Path(env_path)
     if not path.exists():
         return False, f"{env_path} not found"
@@ -112,7 +112,7 @@ def _check_integrations() -> tuple[bool, str]:
 
     path = Path(str(STORE_PATH))
     if not path.exists():
-        return False, f"{STORE_PATH} not found — run 'opensre integrations setup'"
+        return False, f"{STORE_PATH} not found — run 'opensore integrations setup'"
     items = list_integrations()
     if not items:
         return False, "no integrations configured"
@@ -135,7 +135,7 @@ def _check_version_freshness() -> tuple[bool, str]:
     try:
         latest = _fetch_latest_version()
         if _is_update_available(current, latest):
-            return False, f"current={current}, latest={latest} — run 'opensre update'"
+            return False, f"current={current}, latest={latest} — run 'opensore update'"
         return True, f"{current} (up to date)"
     except Exception as exc:
         return True, f"{current} (could not check: {exc})"
@@ -164,7 +164,7 @@ def _render_doctor_results(console: Console, results: list[dict[str, str]]) -> N
 
     # Section header — TEXT weight, DIM rule to col 45.
     header = Text()
-    header.append("  OpenSRE Doctor", style=f"bold {TEXT}")
+    header.append("  OpenSore Doctor", style=f"bold {TEXT}")
     console.print(header)
 
     console.print(Rule(style=DIM))
@@ -219,7 +219,7 @@ def _render_doctor_results(console: Console, results: list[dict[str, str]]) -> N
                 f"{warn_count} warning{'s' if warn_count > 1 else ''}", style=f"bold {WARNING}"
             )
         summary.append("   —   fix and rerun ", style=SECONDARY)
-        summary.append("opensre doctor", style=f"bold {TEXT}")
+        summary.append("opensore doctor", style=f"bold {TEXT}")
         console.print(summary)
 
     console.print()

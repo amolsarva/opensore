@@ -1,29 +1,29 @@
 #!/usr/bin/env python3
-"""Query OpenSRE / OpenRCA telemetry CSVs locally — no Grafana server.
+"""Query OpenSore / OpenRCA telemetry CSVs locally — no Grafana server.
 
-``opensre investigate`` runs the same reads at the start of the **Gathering evidence**
+``opensore investigate`` runs the same reads at the start of the **Gathering evidence**
 step (``node_investigate``) when telemetry paths resolve (local clone or Hub).
 
 Examples::
 
   # Local clone root + relative path (same as alert annotations)
-  export OPENSRE_DATASET_ROOT=~/data/w3joe-opensre
-  python infra/opensre-dataset/query_opensre_telemetry.py \\
+  export OPENSORE_DATASET_ROOT=~/data/w3joe-opensore
+  python infra/opensore-dataset/query_opensore_telemetry.py \\
     --relative Market/cloudbed-1/telemetry/2022_03_20 list
 
   # Materialize only that folder from Hugging Face (needs: pip install huggingface_hub)
-  export OPENSRE_HF_DATASET_ID=tracer-cloud/opensre
-  python infra/opensre-dataset/query_opensre_telemetry.py \\
+  export OPENSORE_HF_DATASET_ID=tracer-cloud/opensore
+  python infra/opensore-dataset/query_opensore_telemetry.py \\
     --relative Market/cloudbed-1/telemetry/2022_03_20 \\
     --from-hub list
 
-  python infra/opensre-dataset/query_opensre_telemetry.py \\
+  python infra/opensore-dataset/query_opensore_telemetry.py \\
     --telemetry-dir /path/to/telemetry/2022_03_20 metrics --contains cpu
-  python infra/opensre-dataset/query_opensre_telemetry.py --telemetry-dir ... logs --service shipping
-  python infra/opensre-dataset/query_opensre_telemetry.py --telemetry-dir ... traces
+  python infra/opensore-dataset/query_opensore_telemetry.py --telemetry-dir ... logs --service shipping
+  python infra/opensore-dataset/query_opensore_telemetry.py --telemetry-dir ... traces
 
   # First rows of one CSV (stdlib only for this subcommand)
-  python infra/opensre-dataset/query_opensre_telemetry.py --telemetry-dir ... raw metric/metric_foo.csv --limit 20
+  python infra/opensore-dataset/query_opensore_telemetry.py --telemetry-dir ... raw metric/metric_foo.csv --limit 20
 """
 
 from __future__ import annotations
@@ -56,11 +56,11 @@ def _resolve_telemetry_dir(args: argparse.Namespace) -> Path:
         raise SystemExit("Pass --telemetry-dir or --relative PATH")
 
     if args.from_hub:
-        from app.integrations.opensre.constants import OPENSRE_HF_DATASET_ID
-        from app.integrations.opensre.hf_remote import materialize_opensre_telemetry_from_hub
+        from app.integrations.opensore.constants import OPENSORE_HF_DATASET_ID
+        from app.integrations.opensore.hf_remote import materialize_opensore_telemetry_from_hub
 
-        dataset_id = (args.dataset_id or "").strip() or OPENSRE_HF_DATASET_ID
-        return materialize_opensre_telemetry_from_hub(
+        dataset_id = (args.dataset_id or "").strip() or OPENSORE_HF_DATASET_ID
+        return materialize_opensore_telemetry_from_hub(
             dataset_id=dataset_id,
             telemetry_relative=rel,
             revision=args.revision or None,
@@ -70,12 +70,12 @@ def _resolve_telemetry_dir(args: argparse.Namespace) -> Path:
 
     root = (
         (args.dataset_root or "").strip()
-        or os.environ.get("OPENSRE_DATASET_ROOT", "").strip()
+        or os.environ.get("OPENSORE_DATASET_ROOT", "").strip()
         or os.environ.get("OPENRCA_DATASET_ROOT", "").strip()
     )
     if not root:
         raise SystemExit(
-            "Local mode needs a dataset root: set OPENSRE_DATASET_ROOT or pass --dataset-root"
+            "Local mode needs a dataset root: set OPENSORE_DATASET_ROOT or pass --dataset-root"
         )
     p = (Path(root).expanduser() / rel).resolve()
     if not p.is_dir():
@@ -114,9 +114,9 @@ def _cmd_raw(root: Path, rel_path: str, limit: int) -> None:
 
 def _csv_backend(root: Path) -> Any:
     """Lazy-construct the CSV Grafana backend after ``sys.path`` is set up."""
-    from app.integrations.opensre.csv_grafana_backend import OpenSRECsvGrafanaBackend
+    from app.integrations.opensore.csv_grafana_backend import OpenSoreCsvGrafanaBackend
 
-    return OpenSRECsvGrafanaBackend(telemetry_dir=root, alert_fixture={})
+    return OpenSoreCsvGrafanaBackend(telemetry_dir=root, alert_fixture={})
 
 
 def _cmd_metrics(root: Path, contains: str) -> None:
@@ -135,7 +135,7 @@ def _cmd_traces(root: Path, service: str) -> None:
 
 
 def main() -> None:
-    from app.integrations.opensre.constants import OPENSRE_HF_DATASET_ID
+    from app.integrations.opensore.constants import OPENSORE_HF_DATASET_ID
 
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument(
@@ -148,17 +148,17 @@ def main() -> None:
     )
     p.add_argument(
         "--dataset-root",
-        help="Local Hugging Face dataset clone root (overrides OPENSRE_DATASET_ROOT)",
+        help="Local Hugging Face dataset clone root (overrides OPENSORE_DATASET_ROOT)",
     )
     p.add_argument(
         "--from-hub",
         action="store_true",
-        help="Download only --relative/** via huggingface_hub (needs OPENSRE_HF_DATASET_ID or --dataset-id)",
+        help="Download only --relative/** via huggingface_hub (needs OPENSORE_HF_DATASET_ID or --dataset-id)",
     )
     p.add_argument(
         "--dataset-id",
         default="",
-        help=f"Hugging Face dataset id (default {OPENSRE_HF_DATASET_ID})",
+        help=f"Hugging Face dataset id (default {OPENSORE_HF_DATASET_ID})",
     )
     p.add_argument("--revision", default="", help="Hub git revision (default main / env)")
 

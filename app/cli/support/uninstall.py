@@ -5,7 +5,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from app.constants import LEGACY_TRACER_HOME_DIR, OPENSRE_HOME_DIR
+from app.constants import LEGACY_TRACER_HOME_DIR, OPENSORE_HOME_DIR
 from app.version import PACKAGE_NAME
 
 
@@ -40,7 +40,7 @@ def _pip_uninstall() -> int:
 
 
 def _data_dirs() -> list[Path]:
-    return [OPENSRE_HOME_DIR, LEGACY_TRACER_HOME_DIR]
+    return [OPENSORE_HOME_DIR, LEGACY_TRACER_HOME_DIR]
 
 
 def run_uninstall(*, yes: bool = False) -> int:
@@ -65,7 +65,7 @@ def run_uninstall(*, yes: bool = False) -> int:
             import questionary
 
             confirmed = questionary.confirm(
-                "  Uninstall opensre from this machine?", default=False
+                "  Uninstall opensore from this machine?", default=False
             ).ask()
         except (EOFError, KeyboardInterrupt):
             print("\n  Aborted.")
@@ -116,8 +116,8 @@ def run_uninstall(*, yes: bool = False) -> int:
         print("  Uninstall finished with errors. See above for details.", file=sys.stderr)
         return 1
 
-    print("  opensre has been uninstalled.")
+    print("  opensore has been uninstalled.")
     print()
     print("  Your config and data have been removed.")
-    print("  To reinstall: curl -fsSL https://install.opensre.com | bash")
+    print("  To reinstall: curl -fsSL https://install.opensore.com | bash")
     return 0

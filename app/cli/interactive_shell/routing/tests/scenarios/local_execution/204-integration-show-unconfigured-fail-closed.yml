@@ -29,7 +29,7 @@ response_contract:
   - datadog integration details
   - /integrations show datadog
   - integrations show datadog
-  - informational opensre request
+  - informational opensore request
   - datadog
   - integration
   must_not_contain:

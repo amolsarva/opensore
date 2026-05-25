@@ -1,7 +1,7 @@
 {
   "_meta": {
     "purpose": "Synthetic alert for TimeChaos clock skew",
-    "run": "opensre investigate -i tests/chaos_engineering/experiments/time-skew/time-skew-alert.json"
+    "run": "opensore investigate -i tests/chaos_engineering/experiments/time-skew/time-skew-alert.json"
   },
   "title": "[Triggered] Clock skew - time-skew-demo",
   "alert_name": "Datadog monitor: time drift / auth anomalies",

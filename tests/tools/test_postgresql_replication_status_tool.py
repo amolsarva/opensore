@@ -10,11 +10,11 @@ from tests.tools.conftest import BaseToolContract
 
 class TestPostgreSQLReplicationStatusToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return get_postgresql_replication_status.__opensre_registered_tool__
+        return get_postgresql_replication_status.__opensore_registered_tool__
 
 
 def test_metadata() -> None:
-    rt = get_postgresql_replication_status.__opensre_registered_tool__
+    rt = get_postgresql_replication_status.__opensore_registered_tool__
     assert rt.name == "get_postgresql_replication_status"
     assert rt.source == "postgresql"
 

@@ -215,7 +215,7 @@ def test_main_captures_analytics_once_for_accepted_command(monkeypatch, capsys) 
     exit_code = main(["version"])
 
     assert exit_code == 0
-    assert "opensre" in capsys.readouterr().out
+    assert "opensore" in capsys.readouterr().out
     assert captured == ["install", "cli"]
 
 
@@ -231,11 +231,11 @@ def test_main_captures_command_metadata_for_version(monkeypatch, capsys) -> None
     exit_code = main(["version"])
 
     assert exit_code == 0
-    assert "opensre" in capsys.readouterr().out
+    assert "opensore" in capsys.readouterr().out
     assert captured == [
         {
-            "entrypoint": "opensre",
-            "command_path": "opensre version",
+            "entrypoint": "opensore",
+            "command_path": "opensore version",
             "command_family": "version",
             "json_output": False,
             "verbose": False,
@@ -268,7 +268,7 @@ def test_main_captures_command_metadata_for_remote_health(monkeypatch) -> None:
     assert exit_code == 0
     properties = captured[0]
     assert properties is not None
-    assert properties["command_path"] == "opensre remote health"
+    assert properties["command_path"] == "opensore remote health"
     assert properties["command_family"] == "remote"
     assert properties["subcommand"] == "health"
     assert properties["command_leaf"] == "health"
@@ -310,7 +310,7 @@ def test_main_captures_command_metadata_for_nested_remote_ops(monkeypatch, capsy
     assert "Provider: railway" in capsys.readouterr().out
     properties = captured[0]
     assert properties is not None
-    assert properties["command_path"] == "opensre remote ops status"
+    assert properties["command_path"] == "opensore remote ops status"
     assert properties["command_family"] == "remote"
     assert properties["subcommand"] == "ops"
     assert properties["command_leaf"] == "status"
@@ -416,9 +416,9 @@ def test_main_emits_first_run_install_before_cli_invoked(
     provider._cached_identity_persistence = "unknown"
     provider._first_run_marker_created_this_process = False
     provider._pending_user_id_load_failures.clear()
-    monkeypatch.delenv("OPENSRE_NO_TELEMETRY", raising=False)
-    monkeypatch.delenv("OPENSRE_ANALYTICS_DISABLED", raising=False)
-    monkeypatch.delenv("OPENSRE_SENTRY_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_NO_TELEMETRY", raising=False)
+    monkeypatch.delenv("OPENSORE_ANALYTICS_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_SENTRY_DISABLED", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
     monkeypatch.setattr(provider, "_CONFIG_DIR", tmp_path)
     monkeypatch.setattr(provider, "_ANONYMOUS_ID_PATH", tmp_path / "anonymous_id")
@@ -430,7 +430,7 @@ def test_main_emits_first_run_install_before_cli_invoked(
     exit_code = main(["version"])
 
     assert exit_code == 0
-    assert "opensre" in capsys.readouterr().out
+    assert "opensore" in capsys.readouterr().out
     assert [payload["json"]["event"] for payload in posted_payloads] == [
         Event.INSTALL_DETECTED.value,
         Event.CLI_INVOKED.value,
@@ -550,7 +550,7 @@ def test_no_interactive_falls_through_to_landing_page(monkeypatch) -> None:
 
 
 def test_default_no_args_enters_repl(monkeypatch) -> None:
-    """Regression: the default invocation `opensre` (no args, TTY) must enter
+    """Regression: the default invocation `opensore` (no args, TTY) must enter
     the REPL.  A previous Click misconfiguration (is_flag + flag_value=False)
     made the `interactive` kwarg resolve to False even with no flag, so every
     local run silently rendered the landing page.  Assert the CLI passes

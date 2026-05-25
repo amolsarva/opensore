@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from app.cli.support.errors import OpenSREError
+from app.cli.support.errors import OpenSoreError
 from app.deployment.operations.health import HealthPollStatus
 from app.remote.ops import RemoteOpsError, ServiceStatus
 from app.remote.runtime_alert import build_runtime_alert_payload
@@ -89,14 +89,14 @@ def test_happy_path_returns_payload_with_service_logs_and_health() -> None:
 
 
 def test_missing_service_name_raises() -> None:
-    with pytest.raises(OpenSREError, match="Service name is required"):
+    with pytest.raises(OpenSoreError, match="Service name is required"):
         build_runtime_alert_payload("")
 
 
 def test_unknown_service_raises_with_suggestion() -> None:
     with (
         _patch_registry("other-svc"),
-        pytest.raises(OpenSREError, match="No remote named 'my-svc'"),
+        pytest.raises(OpenSoreError, match="No remote named 'my-svc'"),
     ):
         build_runtime_alert_payload("my-svc")
 
@@ -109,7 +109,7 @@ def test_status_failure_raises_with_suggestion() -> None:
         _patch_registry("my-svc"),
         _patch_ops_config(),
         _patch_provider(provider_mock),
-        pytest.raises(OpenSREError, match="Failed to fetch deployment status"),
+        pytest.raises(OpenSoreError, match="Failed to fetch deployment status"),
     ):
         build_runtime_alert_payload("my-svc")
 
@@ -170,7 +170,7 @@ def test_unsupported_provider_raises_friendly_error() -> None:
             "app.remote.runtime_alert.resolve_remote_ops_provider",
             side_effect=RemoteOpsError("Unsupported remote ops provider: unknown-provider"),
         ),
-        pytest.raises(OpenSREError, match="Unsupported remote ops provider"),
+        pytest.raises(OpenSoreError, match="Unsupported remote ops provider"),
     ):
         build_runtime_alert_payload("my-svc")
 

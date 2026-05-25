@@ -67,8 +67,8 @@ def _history_pause(session: ReplSession, console: Console, *, paused: bool) -> b
         if paused:
             console.print(
                 f"[{DIM}]history is persisting to disk without redaction. "
-                "Restart with OPENSRE_HISTORY_REDACT=1 to enable runtime pause support, "
-                "or OPENSRE_HISTORY_ENABLED=0 to disable persistence entirely.[/]"
+                "Restart with OPENSORE_HISTORY_REDACT=1 to enable runtime pause support, "
+                "or OPENSORE_HISTORY_ENABLED=0 to disable persistence entirely.[/]"
             )
             return True
         console.print(f"[{DIM}]history persistence is already on (raw file history).[/]")
@@ -79,7 +79,7 @@ def _history_pause(session: ReplSession, console: Console, *, paused: bool) -> b
             return True
         console.print(
             f"[{DIM}]history is in-memory only. "
-            "Restart with OPENSRE_HISTORY_ENABLED=1 to enable persistence.[/]"
+            "Restart with OPENSORE_HISTORY_ENABLED=1 to enable persistence.[/]"
         )
         return True
     if paused:
@@ -108,12 +108,12 @@ def _history_retention(session: ReplSession, console: Console, args: list[str]) 
         backend.set_max_entries(n, prune=True)
         console.print(
             f"[{DIM}]retention cap set to {n} for this session "
-            "(set OPENSRE_HISTORY_MAX_ENTRIES or interactive.history.max_entries to persist).[/]"
+            "(set OPENSORE_HISTORY_MAX_ENTRIES or interactive.history.max_entries to persist).[/]"
         )
         return True
     console.print(
         f"[{DIM}]retention applies only when redacting persistent history. "
-        "Restart with OPENSRE_HISTORY_REDACT=1 to enable.[/]"
+        "Restart with OPENSORE_HISTORY_REDACT=1 to enable.[/]"
     )
     return True
 
@@ -220,7 +220,7 @@ def _cmd_privacy(session: ReplSession, console: Console, args: list[str]) -> boo
         f"[{DIM}]threat model: prompt history is stored unencrypted on disk. "
         f"Use[/] [{HIGHLIGHT}]/history clear[/] [{DIM}]after sharing your machine, "
         f"or[/] [{HIGHLIGHT}]/history off[/] [{DIM}]to pause this session, "
-        f"or set OPENSRE_HISTORY_ENABLED=0 to disable persistence entirely.[/]"
+        f"or set OPENSORE_HISTORY_ENABLED=0 to disable persistence entirely.[/]"
     )
     return True
 

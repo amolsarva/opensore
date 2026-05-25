@@ -9,7 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PYPROJECT_PATH = ROOT / "pyproject.toml"
-APP_CONSTANTS_OPENSRE_PATH = ROOT / "app" / "constants" / "opensre.py"
+APP_CONSTANTS_OPENSORE_PATH = ROOT / "app" / "constants" / "opensore.py"
 CALENDAR_VERSION_PATTERN = re.compile(r"v?(?P<version>\d{4}\.\d{1,2}\.\d{1,2})")
 SEMVER_VERSION_PATTERN = re.compile(r"v?(?P<version>\d+\.\d+(?:\.\d+)?)")
 
@@ -62,7 +62,7 @@ def _replace_default_release_version(version: str, text: str) -> str:
             lines[index] = f'DEFAULT_RELEASE_VERSION: Final[str] = "{version}"{line_ending}'
             return "".join(lines)
 
-    msg = f"Could not find DEFAULT_RELEASE_VERSION in {APP_CONSTANTS_OPENSRE_PATH}."
+    msg = f"Could not find DEFAULT_RELEASE_VERSION in {APP_CONSTANTS_OPENSORE_PATH}."
     raise RuntimeError(msg)
 
 
@@ -91,7 +91,7 @@ def main() -> None:
 
     version = _normalize_release_version(args.tag)
     _sync_file(PYPROJECT_PATH, _replace_project_version, version)
-    _sync_file(APP_CONSTANTS_OPENSRE_PATH, _replace_default_release_version, version)
+    _sync_file(APP_CONSTANTS_OPENSORE_PATH, _replace_default_release_version, version)
     print(f"Synchronized release version to {version}")
 
 

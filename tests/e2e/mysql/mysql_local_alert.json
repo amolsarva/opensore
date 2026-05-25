@@ -11,9 +11,9 @@
     "mysql_instance": "localhost:3307"
   },
   "commonAnnotations": {
-    "summary": "MySQL slow query detected on opensre_test",
-    "description": "Queries exceeding 100ms threshold detected on opensre_test database.",
-    "mysql_database": "opensre_test",
+    "summary": "MySQL slow query detected on opensore_test",
+    "description": "Queries exceeding 100ms threshold detected on opensore_test database.",
+    "mysql_database": "opensore_test",
     "mysql_table": "users"
   },
   "alerts": [
@@ -25,8 +25,8 @@
         "mysql_instance": "localhost:3307"
       },
       "annotations": {
-        "summary": "MySQL slow query detected on opensre_test",
-        "mysql_database": "opensre_test"
+        "summary": "MySQL slow query detected on opensore_test",
+        "mysql_database": "opensore_test"
       },
       "startsAt": "2026-04-14T08:00:00Z",
       "endsAt": "0001-01-01T00:00:00Z"

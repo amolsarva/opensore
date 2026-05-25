@@ -12,7 +12,7 @@ ACTION_PATTERNS: tuple[tuple[re.Pattern[str], str], ...] = (
         re.compile(
             r"\b(?:check|verify|show|get|run)\b.{0,80}?\b(?:health|status)\b"
             r"|"
-            r"\bopensre\s+health\b",
+            r"\bopensore\s+health\b",
             re.IGNORECASE,
         ),
         "/health",
@@ -35,7 +35,7 @@ ACTION_PATTERNS: tuple[tuple[re.Pattern[str], str], ...] = (
             r"\b(?:show|tell\s+me|get|what(?:'s|\s+is)?|current)\b.{0,80}?"
             r"\b(?:cli\s+)?version\b"
             r"|"
-            r"\bopensre\s+version\b",
+            r"\bopensore\s+version\b",
             re.IGNORECASE,
         ),
         "/version",
@@ -50,9 +50,9 @@ ACTION_PATTERNS: tuple[tuple[re.Pattern[str], str], ...] = (
     (
         re.compile(
             r"(?<!how to )(?<!how do i )(?<!how can i )\b(?:deploy|ship|push)\b.{0,80}?"
-            r"\b(?:to|opensre)\b"
+            r"\b(?:to|opensore)\b"
             r"|"
-            r"\bconnect\b.{0,80}?\b(?:opensre|ec2|nitro|instance|remote)\b",
+            r"\bconnect\b.{0,80}?\b(?:opensore|ec2|nitro|instance|remote)\b",
             re.IGNORECASE,
         ),
         "/remote",
@@ -81,14 +81,14 @@ ACTION_PATTERNS: tuple[tuple[re.Pattern[str], str], ...] = (
     ),
     (
         re.compile(
-            r"\b(?:update|upgrade|check\s+for\s+new)\b.{0,80}?\b(?:version|opensre)\b",
+            r"\b(?:update|upgrade|check\s+for\s+new)\b.{0,80}?\b(?:version|opensore)\b",
             re.IGNORECASE,
         ),
         "/update",
     ),
     (
         re.compile(
-            r"\b(?:uninstall|remove|delete|wipe)\b.{0,80}?\bopensre\b",
+            r"\b(?:uninstall|remove|delete|wipe)\b.{0,80}?\bopensore\b",
             re.IGNORECASE,
         ),
         "/uninstall",
@@ -109,13 +109,13 @@ ACTION_PATTERNS: tuple[tuple[re.Pattern[str], str], ...] = (
     ),
     (
         re.compile(
-            # Only match bare "opensre <subcmd>" when opensre is at the very start of the
+            # Only match bare "opensore <subcmd>" when opensore is at the very start of the
             # clause (i.e. the user typed it as a direct command). Matching mid-sentence
-            # would fire on product-name references like "OpenSRE that I have running…"
+            # would fire on product-name references like "OpenSore that I have running…"
             # and treat the next English word as a subcommand.
-            r"(?:^|\A)\s*opensre\s+(?P<subcmd>(?!health|version)[a-z][a-z0-9-]*)(?:\s+(?P<rest>.*))?"
+            r"(?:^|\A)\s*opensore\s+(?P<subcmd>(?!health|version)[a-z][a-z0-9-]*)(?:\s+(?P<rest>.*))?"
             r"|"
-            r"\b(?:run|execute|use|try)\s+opensre\s+(?P<subcmd2>[a-z][a-z0-9-]*)(?:\s+(?P<rest2>.*))?\b",
+            r"\b(?:run|execute|use|try)\s+opensore\s+(?P<subcmd2>[a-z][a-z0-9-]*)(?:\s+(?P<rest2>.*))?\b",
             re.IGNORECASE,
         ),
         "cli_command",

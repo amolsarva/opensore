@@ -22,7 +22,7 @@ notes:
 - "Reproduces the core paste-incident-description flow: rich multi-line alert with\
   \ service name, region, deploy time, and log symptoms. Without configured integrations\
   \ the agent must hand off to the assistant rather than blindly executing\
-  \ opensre investigate --input-json with potentially malformed JSON."
+  \ opensore investigate --input-json with potentially malformed JSON."
 - "Complements 307-new-alert-checkout-502 (single-line) by covering the structured\
   \ multi-line format users naturally paste from incident dashboards."
 route:

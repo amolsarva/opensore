@@ -10,17 +10,17 @@ from tests.tools.conftest import BaseToolContract
 
 class TestTracerTasksToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return get_tracer_tasks.__opensre_registered_tool__
+        return get_tracer_tasks.__opensore_registered_tool__
 
 
 def test_is_available_requires_tracer_web() -> None:
-    rt = get_tracer_tasks.__opensre_registered_tool__
+    rt = get_tracer_tasks.__opensore_registered_tool__
     assert rt.is_available({"tracer_web": {"some": "data"}}) is True
     assert rt.is_available({}) is False
 
 
 def test_metadata() -> None:
-    rt = get_tracer_tasks.__opensre_registered_tool__
+    rt = get_tracer_tasks.__opensore_registered_tool__
     assert rt.name == "get_tracer_tasks"
     assert rt.source == "tracer_web"
 

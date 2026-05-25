@@ -59,7 +59,7 @@ git diff --name-only $(git merge-base HEAD main)
 | `app/services/` | `uv run pytest tests/services/ tests/tools/ -v` *(or add `-k <service>`)* |
 | `app/integrations/` | `uv run pytest tests/integrations/ -v` |
 | `app/integrations/llm_cli/` | `uv run pytest tests/integrations/llm_cli/ -v` |
-| `app/integrations/opensre/` | `uv run pytest tests/integrations/opensre/ -v` |
+| `app/integrations/opensore/` | `uv run pytest tests/integrations/opensore/ -v` |
 | `app/pipeline/` | `make test-cov` |
 | `app/nodes/` | `make test-cov` |
 | `app/agent/` or `app/agents/` | `uv run pytest tests/agent/ tests/agents/ -v` |

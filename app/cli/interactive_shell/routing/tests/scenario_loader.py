@@ -260,8 +260,8 @@ def validate_action_shape(
         if not payload:
             msg = f"{prefix} cli_command requires payload."
             raise ValueError(msg)
-        if payload.lower().startswith("opensre "):
-            msg = f"{prefix} cli_command payload must not include opensre prefix."
+        if payload.lower().startswith("opensore "):
+            msg = f"{prefix} cli_command payload must not include opensore prefix."
             raise ValueError(msg)
 
 

@@ -65,7 +65,7 @@ def _reap(proc: subprocess.Popen[bytes]) -> None:
 
     When ``terminate()`` kills a child of the current process, the child
     becomes a zombie until the parent calls ``waitpid``. In production
-    the target agents are NOT children of opensre, so ``os.kill(pid, 0)``
+    the target agents are NOT children of opensore, so ``os.kill(pid, 0)``
     would correctly fail. In tests we must reap explicitly.
     """
     try:

@@ -2,25 +2,25 @@
 title: "Integrations overview"
 ---
 
-OpenSRE investigates alerts by querying the same tools your engineers use. Connect your stack so OpenSRE can pull logs, check recent deploys, map dependencies, and deliver findings where your team already works.
+OpenSore investigates alerts by querying the same tools your engineers use. Connect your stack so OpenSore can pull logs, check recent deploys, map dependencies, and deliver findings where your team already works.
 
 ## Before you begin
 
 Make sure you have:
 
-- A OpenSRE account — you can create one at [app.tracer.cloud/sign-up](http://app.tracer.cloud/sign-up)
+- A OpenSore account — you can create one at [app.tracer.cloud/sign-up](http://app.tracer.cloud/sign-up)
 - Access credentials for the tools you want to connect
 - Permissions to create API keys
 
 ## Enterprise integrations
 
-Enterprise integrations are configured through the OpenSRE web app at [app.tracer.cloud](https://app.tracer.cloud). Once connected, they are available to all users in your organization.
+Enterprise integrations are configured through the OpenSore web app at [app.tracer.cloud](https://app.tracer.cloud). Once connected, they are available to all users in your organization.
 
-**Observability.** OpenSRE reads your logs, metrics, traces, and alerts to build investigation hypotheses. Connect [Grafana](/grafana) and [Datadog](/datadog).
+**Observability.** OpenSore reads your logs, metrics, traces, and alerts to build investigation hypotheses. Connect [Grafana](/grafana) and [Datadog](/datadog).
 
-**Infrastructure.** OpenSRE maps your environment and dependencies across clouds and clusters. Connect [AWS](/aws).
+**Infrastructure.** OpenSore maps your environment and dependencies across clouds and clusters. Connect [AWS](/aws).
 
-**Communication.** OpenSRE delivers investigation reports where your team already works. Connect [Slack, Discord, or Telegram](/messaging/index).
+**Communication.** OpenSore delivers investigation reports where your team already works. Connect [Slack, Discord, or Telegram](/messaging/index).
 
 <Frame>
   ![Integrations](/images/integrations.png)
@@ -31,8 +31,8 @@ Enterprise integrations are configured through the OpenSRE web app at [app.trace
 Each integration follows a simple, guided flow. Let's look at Datadog as an example.
 
 1. Name - Helps distinguish between different instances
-2. API Key - in Datadog, create a new API key and copy and paste into OpenSRE.
-3. Application Key - In Datadog, create a new Application Key and copy and paste into OpenSRE.
+2. API Key - in Datadog, create a new API key and copy and paste into OpenSore.
+3. Application Key - In Datadog, create a new Application Key and copy and paste into OpenSore.
 
 <Frame>
   ![Connect Datadog](/images/connect_datadog.png)
@@ -40,13 +40,13 @@ Each integration follows a simple, guided flow. Let's look at Datadog as an exam
 
 ## Local integrations
 
-Local integrations are configured on the machine running OpenSRE — via the CLI setup wizard or environment variables. They give OpenSRE access to your databases, source control, error trackers, and workflow tools.
+Local integrations are configured on the machine running OpenSore — via the CLI setup wizard or environment variables. They give OpenSore access to your databases, source control, error trackers, and workflow tools.
 
 ```bash
-opensre integrations setup
+opensore integrations setup
 ```
 
-Or set environment variables and OpenSRE picks them up automatically.
+Or set environment variables and OpenSore picks them up automatically.
 
 | Category | Integrations |
 | --- | --- |
@@ -65,11 +65,11 @@ Or set environment variables and OpenSRE picks them up automatically.
 After setup, confirm everything is working:
 
 ```bash
-opensre integrations verify
+opensore integrations verify
 ```
 
 To check a specific integration:
 
 ```bash
-opensre integrations verify mongodb
+opensore integrations verify mongodb
 ```

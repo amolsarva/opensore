@@ -3,7 +3,7 @@ title: CLI integrations verify dry-run
 intent_class: local_execution
 risk_level: medium
 input:
-  prompt: please run opensre integrations verify --dry-run
+  prompt: please run opensore integrations verify --dry-run
   surface: interactive_cli
 session:
   has_prior_state: false
@@ -35,7 +35,7 @@ executed_actions:
   content: integrations verify --dry-run
 response_contract:
   must_contain_any:
-  - opensre integrations verify --dry-run
+  - opensore integrations verify --dry-run
   must_not_contain: []
 history:
   expected:

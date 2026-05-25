@@ -2,7 +2,7 @@
 """Local alert simulation test for the Kubernetes PIPELINE_ERROR scenario.
 
 Runs the bundled Datadog-style fixture through ``run_investigation`` (the same
-entry point as ``opensre investigate``), including live Datadog API calls when
+entry point as ``opensore investigate``), including live Datadog API calls when
 credentials are configured.
 
 Alert used:

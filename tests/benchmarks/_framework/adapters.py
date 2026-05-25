@@ -6,7 +6,7 @@ the framework handles parallelism, LLM dispatch, output, cost tracking,
 integrity guards.
 
 This module deliberately has zero ``app.*`` imports — the framework is
-independent of opensre internals. Adapters bridge to opensre.
+independent of opensore internals. Adapters bridge to opensore.
 """
 
 from __future__ import annotations
@@ -19,11 +19,11 @@ from typing import Any, Literal
 from pydantic import BaseModel, Field
 
 # --------------------------------------------------------------------------- #
-# Mode — opensre+LLM vs LLM-alone. Framework-level concept; same adapter +    #
+# Mode — opensore+LLM vs LLM-alone. Framework-level concept; same adapter +    #
 # same case work for both modes.                                              #
 # --------------------------------------------------------------------------- #
 
-Mode = Literal["opensre+llm", "llm_alone"]
+Mode = Literal["opensore+llm", "llm_alone"]
 
 
 # --------------------------------------------------------------------------- #
@@ -40,7 +40,7 @@ class CaseFilters(BaseModel):
     systems: list[str] = Field(default_factory=list)
     fault_categories: list[str] = Field(default_factory=list)
     difficulty: list[Literal["easy", "medium", "hard"]] = Field(default_factory=list)
-    # opensre-specific tag; populated post-tagging (Phase D)
+    # opensore-specific tag; populated post-tagging (Phase D)
     seen_shape: list[bool] = Field(default_factory=list)
     case_ids: list[str] = Field(default_factory=list)
     limit: int | None = None
@@ -59,7 +59,7 @@ class BenchmarkCase(BaseModel):
     case_id: str
     benchmark_name: str
     metadata: dict[str, Any] = Field(default_factory=dict)
-    # opensre-specific tag; None until Phase D tagging is applied
+    # opensore-specific tag; None until Phase D tagging is applied
     seen_shape: bool | None = None
 
 
@@ -72,7 +72,7 @@ class AlertPayload(BaseModel):
     """Shape an adapter produces to seed an investigation.
 
     ``raw`` is the verbatim alert (e.g., a Datadog webhook); ``normalized``
-    is the extracted, agent-friendly form used by both opensre+LLM and
+    is the extracted, agent-friendly form used by both opensore+LLM and
     LLM-alone modes.
     """
 
@@ -87,11 +87,11 @@ class AlertPayload(BaseModel):
 
 @dataclass(frozen=True)
 class RunResult:
-    """One complete case-run: opensre+LLM or LLM-alone, one LLM, one trial.
+    """One complete case-run: opensore+LLM or LLM-alone, one LLM, one trial.
 
     Captured at framework level so any adapter's scorer can compute trace-
     based metrics. Per-row fields support:
-      - reproducibility (model_version, opensre_sha, seed)
+      - reproducibility (model_version, opensore_sha, seed)
       - cost accounting (tokens, USD)
       - process scoring (evidence_entries trajectory)
       - paired comparison (case_id + mode + llm join key)
@@ -101,15 +101,15 @@ class RunResult:
     mode: Mode
     llm: str
     model_version: str
-    # opensre git SHA — pinned per result row (Principle: standardization)
-    opensre_sha: str
+    # opensore git SHA — pinned per result row (Principle: standardization)
+    opensore_sha: str
     started_at: str  # ISO-8601 UTC
     ended_at: str
     ok: bool
     error: str | None
     # Diagnosis: {stage, component, root_cause}
     final_diagnosis: dict[str, Any]
-    # Per-tool-call trace; same shape as opensre's AgentState.evidence_entries
+    # Per-tool-call trace; same shape as opensore's AgentState.evidence_entries
     evidence_entries: list[dict[str, Any]]
     tokens_in: int
     tokens_out: int
@@ -231,11 +231,11 @@ class BenchmarkAdapter(ABC):
 
     @abstractmethod
     def build_alert(self, case: BenchmarkCase) -> AlertPayload:
-        """Convert a case into the alert opensre / LLM consume."""
+        """Convert a case into the alert opensore / LLM consume."""
 
     @abstractmethod
-    def build_opensre_integrations(self, case: BenchmarkCase) -> dict[str, Any]:
-        """Return the resolved_integrations dict opensre+LLM mode passes to
+    def build_opensore_integrations(self, case: BenchmarkCase) -> dict[str, Any]:
+        """Return the resolved_integrations dict opensore+LLM mode passes to
         ``run_investigation``. For CloudOpsBench, this wires the replay
         backend in place of live AWS/K8s/Datadog clients.
         """
@@ -243,7 +243,7 @@ class BenchmarkAdapter(ABC):
     @abstractmethod
     def build_baseline_tools(self, case: BenchmarkCase) -> dict[str, Any]:
         """Return the tool surface for LLM-alone mode. Same replay backend
-        access as opensre+LLM (fairness) but no extract/context/diagnose
+        access as opensore+LLM (fairness) but no extract/context/diagnose
         pipeline — just direct LLM with tool-calling.
         """
 
@@ -251,7 +251,7 @@ class BenchmarkAdapter(ABC):
     def score_case(self, case: BenchmarkCase, run: RunResult, context: RunContext) -> CaseScore:
         """Compute per-case metrics from the run result + per-cell context.
 
-        ``context.integrations`` is the dict ``build_opensre_integrations``
+        ``context.integrations`` is the dict ``build_opensore_integrations``
         returned for THIS cell — adapters use it to read runtime state
         accumulated during the run (e.g., a replay backend's action_log).
 

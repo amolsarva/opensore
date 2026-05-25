@@ -1,4 +1,4 @@
-"""Terminal assistant for interactive OpenSRE CLI guidance and chat."""
+"""Terminal assistant for interactive OpenSore CLI guidance and chat."""
 
 from __future__ import annotations
 
@@ -104,10 +104,10 @@ def _is_command_selection_prompt(message: str) -> bool:
 
 def _command_selection_response() -> str:
     return (
-        "If you're asking which command to use, start with `opensre investigate` "
+        "If you're asking which command to use, start with `opensore investigate` "
         "for incidents and paste alert text, JSON, or a concrete incident "
         "description into this interactive shell.\n\n"
-        "If you want a full command list, run `opensre --help`."
+        "If you want a full command list, run `opensore --help`."
     )
 
 
@@ -115,7 +115,7 @@ _TERMINOLOGY_RULE = INTERACTIVE_SHELL_TERMINOLOGY_RULE
 _MARKDOWN_RULE = CLI_ASSISTANT_MARKDOWN_RULE
 
 _ACTION_RULE = (
-    "Action planning: if the user asks you to change OpenSRE runtime state, "
+    "Action planning: if the user asks you to change OpenSore runtime state, "
     "return ONLY a compact JSON object with an `actions` array. Do not give "
     "instructions when an allowed action can satisfy the request. Allowed "
     "action object schemas: "
@@ -127,7 +127,7 @@ _ACTION_RULE = (
     '`{"action":"slash","command":"/model show"}` where command is one of '
     "/model show, /list models, /health, /doctor, /version; "
     '`{"action":"run_cli_command","args":"<subcommand> <flags>"}` '
-    "to run any opensre subcommand (agent is blocked). For ordinary "
+    "to run any opensore subcommand (agent is blocked). For ordinary "
     "questions, return normal Markdown. Do not return action JSON for vague "
     "local model requests such as `connect to local llama`; answer with a brief "
     "clarification or mention `/model set ollama` as an option instead."
@@ -144,7 +144,7 @@ _ALLOWED_SLASH_ACTIONS = frozenset(
 )
 
 
-def _opensre_integration_command_blocked(payload: str, session: ReplSession) -> bool:
+def _opensore_integration_command_blocked(payload: str, session: ReplSession) -> bool:
     """Block integration-management CLI runs when the session has none configured."""
     if not session.configured_integrations_known or session.configured_integrations:
         return False
@@ -176,7 +176,7 @@ def _build_system_prompt(
     :mod:`app.cli.interactive_shell.references.agents_md_reference`; when empty the
     section is omitted so callers in environments that ship no AGENTS.md
     files don't waste tokens on an empty header. ``investigation_flow`` is a
-    concise reference to how ``opensre investigate`` processes alerts.
+    concise reference to how ``opensore investigate`` processes alerts.
     """
     repo_map_block = f"--- Repo map (AGENTS.md) ---\n{agents_md}\n\n" if agents_md else ""
     investigation_flow_block = (
@@ -190,7 +190,7 @@ def _build_system_prompt(
         else ""
     )
     return (
-        "You are the OpenSRE terminal assistant. You help with OpenSRE CLI "
+        "You are the OpenSore terminal assistant. You help with OpenSore CLI "
         "usage, the interactive shell, and onboarding. A deterministic pre-pass "
         "runs first: it executes eligible local commands as argv (no shell) "
         "under a read-only allowlist; users must prefix with ! for full-shell "
@@ -202,7 +202,7 @@ def _build_system_prompt(
         "stages and source files.\n"
         "When the user wants to investigate an alert, tell them to paste "
         "alert text, JSON, or a concrete incident description (errors, "
-        "services, symptoms). Mention `opensre investigate` and pasting "
+        "services, symptoms). Mention `opensore investigate` and pasting "
         "into this interactive shell.\n"
         "Be brief and friendly. Ground CLI facts in the reference below; do "
         "not invent subcommands. For investigation-flow questions, use the "
@@ -316,7 +316,7 @@ def _execute_action_plan(
             label = str(action.get("command", "")).strip()
         elif kind == "run_cli_command":
             args = str(action.get("args", "")).strip()
-            label = f"opensre {args}" if args else "opensre"
+            label = f"opensore {args}" if args else "opensore"
         else:
             label = f"unsupported action: {kind or '?'}"
         console.print(f"[{DIM}]{index}.[/] [{BOLD_BRAND}]{escape(label)}[/]")
@@ -427,17 +427,17 @@ def _execute_action_plan(
             if not args:
                 console.print(f"[{ERROR}]missing args for run_cli_command action[/]")
                 continue
-            if _opensre_integration_command_blocked(args, session):
+            if _opensore_integration_command_blocked(args, session):
                 console.print(
                     f"[{WARNING}]integration command blocked: no integrations are configured "
                     "in this session.[/]"
                 )
                 continue
             from app.cli.interactive_shell.routing.handle_message_with_agent.orchestration.action_executor import (
-                run_opensre_cli_command,
+                run_opensore_cli_command,
             )
 
-            run_opensre_cli_command(
+            run_opensore_cli_command(
                 args,
                 session,
                 console,
@@ -527,7 +527,7 @@ def answer_cli_agent(
         obs_text = _load_synthetic_observation_text(obs_path)
         if obs_text:
             synthetic_block = (
-                "The user is asking about a failed `opensre tests synthetic` run "
+                "The user is asking about a failed `opensore tests synthetic` run "
                 "in this checkout. The JSON below is the saved observation "
                 f"(scores, gates, stderr summary). Path: {obs_path}\n"
                 "Use it to explain validation failures. Do not say nothing ran or "

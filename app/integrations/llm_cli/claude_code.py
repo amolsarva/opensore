@@ -11,7 +11,7 @@ CLAUDE_CODE_TIMEOUT_SECONDS  Optional invocation timeout override in seconds for
 
 Auth
 ----
-When the ``claude`` binary is available, OpenSRE probes ``claude auth status``
+When the ``claude`` binary is available, OpenSore probes ``claude auth status``
 and treats Claude subscription login as first-class auth. ``ANTHROPIC_API_KEY``
 and ``~/.claude/.credentials.json`` (under ``Path.home()`` on all platforms)
 are used as fallbacks when the binary is unavailable.

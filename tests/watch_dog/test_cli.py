@@ -1,4 +1,4 @@
-"""Tests for the ``opensre watchdog`` CLI command."""
+"""Tests for the ``opensore watchdog`` CLI command."""
 
 from __future__ import annotations
 

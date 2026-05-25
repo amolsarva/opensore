@@ -6,7 +6,7 @@ import time
 from typing import Any, cast
 
 from app.alerts import normalize_alert_payload
-from app.integrations.opensre.hf_remote import (
+from app.integrations.opensore.hf_remote import (
     extract_openrca_scoring_points,
     strip_scoring_points_from_alert,
 )
@@ -61,7 +61,7 @@ STATE_DEFAULTS: dict[str, Any] = {
 def make_initial_state(
     raw_alert: str | dict[str, Any],
     *,
-    opensre_evaluate: bool = False,
+    opensore_evaluate: bool = False,
     investigation_metadata: tuple[str, str, str] | None = None,
 ) -> AgentState:
     """Create initial investigation state from the raw alert payload.
@@ -73,7 +73,7 @@ def make_initial_state(
     rubric = ""
     alert_payload: str | dict[str, Any] = raw_alert
     if isinstance(alert_payload, dict):
-        if opensre_evaluate:
+        if opensore_evaluate:
             rubric = extract_openrca_scoring_points(alert_payload)
             if rubric:
                 alert_payload = strip_scoring_points_from_alert(dict(alert_payload))
@@ -98,8 +98,8 @@ def make_initial_state(
             "severity": severity,
             "raw_alert": alert_payload,
             "investigation_started_at": time.monotonic(),
-            "opensre_evaluate": opensre_evaluate,
-            "opensre_eval_rubric": rubric,
+            "opensore_evaluate": opensore_evaluate,
+            "opensore_eval_rubric": rubric,
             **{k: v for k, v in STATE_DEFAULTS.items() if k not in ("mode", "messages")},
         }
     )
@@ -167,7 +167,7 @@ def make_agent_incident_state(
     pid: str | int = "",
     stdout_tail: str = "",
     resource_snapshot: dict[str, Any] | None = None,
-    opensre_evaluate: bool = False,
+    opensore_evaluate: bool = False,
 ) -> AgentState:
     """Create initial state for :func:`node_agent_incident` (local agent fleet SLO breach).
 
@@ -187,7 +187,7 @@ def make_agent_incident_state(
             "raw_alert": {},
             "context": {"agent_incident": payload},
             "investigation_started_at": time.monotonic(),
-            "opensre_evaluate": opensre_evaluate,
+            "opensore_evaluate": opensore_evaluate,
             **{k: v for k, v in STATE_DEFAULTS.items() if k not in ("mode", "messages", "context")},
         }
     )

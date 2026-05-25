@@ -1,5 +1,5 @@
 mapper_contracts:
-  - prompt: check the health of my opensre and then show me all connected services
+  - prompt: check the health of my opensore and then show me all connected services
     has_unhandled: false
     actions:
       - kind: slash
@@ -11,7 +11,7 @@ mapper_contracts:
         source: deterministic
         target_surface: slash
     trace:
-      - clause_text: check the health of my opensre
+      - clause_text: check the health of my opensore
         clause_position: 0
         rules:
           - slash_registry:/health

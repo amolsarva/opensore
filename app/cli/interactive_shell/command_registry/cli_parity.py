@@ -26,7 +26,7 @@ from app.cli.interactive_shell.ui import DIM, ERROR, print_command_output
 _UPDATE_SUBPROCESS_TIMEOUT_SECONDS = 300
 _BACKGROUND_TEST_SUBCOMMANDS = frozenset({"run", "synthetic", "cloudopsbench"})
 _TEST_SUBCOMMANDS = ("list", "run", "synthetic", "cloudopsbench")
-_TEST_PICKER_SELECTION_FILE_ENV = "OPENSRE_TEST_PICKER_SELECTION_FILE"
+_TEST_PICKER_SELECTION_FILE_ENV = "OPENSORE_TEST_PICKER_SELECTION_FILE"
 
 
 def _decode_subprocess_stream(value: str | bytes | None) -> str:
@@ -48,7 +48,7 @@ def run_cli_command(
     ``subprocess_timeout`` caps how long ``subprocess.run`` waits before raising
     :class:`~subprocess.TimeoutExpired`. Interactive flows use ``None`` so the
     child can prompt as long as needed; callers that hit the network without a
-    TTY (like ``opensre update``) pass a bounded timeout. When a timeout is set,
+    TTY (like ``opensore update``) pass a bounded timeout. When a timeout is set,
     stdout/stderr are captured and replayed through ``console`` so output survives
     prompt-toolkit ``patch_stdout`` redraws in the REPL.
 
@@ -111,7 +111,7 @@ def _catalog_task_kind(command: list[str]) -> TaskKind:
 
 
 def _argv_for_catalog_command(command: list[str]) -> list[str]:
-    if command[:1] == ["opensre"]:
+    if command[:1] == ["opensore"]:
         return [sys.executable, "-m", "app.cli", *command[1:]]
     return command
 
@@ -139,7 +139,7 @@ def _start_test_command(
 def _run_test_picker_for_background(session: ReplSession, console: Console) -> bool:
     console.print()
     handle = tempfile.NamedTemporaryFile(  # noqa: SIM115
-        prefix="opensre-test-selection-",
+        prefix="opensore-test-selection-",
         suffix=".json",
         delete=False,
     )
@@ -196,7 +196,7 @@ def _cmd_tests(session: ReplSession, console: Console, args: list[str]) -> bool:
         _start_test_command(
             session=session,
             console=console,
-            command=["opensre", "tests", *args],
+            command=["opensore", "tests", *args],
         )
         return True
 
@@ -311,13 +311,13 @@ COMMANDS: list[SlashCommand] = [
     ),
     SlashCommand(
         "/uninstall",
-        "Remove OpenSRE and all local data from this machine.",
+        "Remove OpenSore and all local data from this machine.",
         _cmd_uninstall,
         execution_tier=ExecutionTier.ELEVATED,
     ),
     SlashCommand(
         "/config",
-        "Show or edit local OpenSRE config.",
+        "Show or edit local OpenSore config.",
         _cmd_config,
         usage=("/config show", "/config set <key> <value>"),
         execution_tier=ExecutionTier.SAFE,

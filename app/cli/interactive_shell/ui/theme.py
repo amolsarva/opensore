@@ -1,4 +1,4 @@
-"""Shared color theme for the OpenSRE CLI.
+"""Shared color theme for the OpenSore CLI.
 
 Single source of truth for every colour rendered to the terminal. Eight
 semantic tokens — never introduce new hexes, never use Rich named colours

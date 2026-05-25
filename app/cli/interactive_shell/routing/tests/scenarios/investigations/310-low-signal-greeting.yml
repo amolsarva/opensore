@@ -29,7 +29,7 @@ planned_actions:
 executed_actions: []
 response_contract:
   must_contain_any:
-  - OpenSRE
+  - OpenSore
   must_not_contain:
   - $ /
 history:

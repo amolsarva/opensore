@@ -19,7 +19,7 @@ import sys
 from app.integrations.openclaw import OpenClawConfig
 from tests.e2e.openclaw.infrastructure_sdk.local import OpenClawHandle, teardown_openclaw
 
-# Port + URL of OpenClaw's Control UI / Gateway service. ``opensre``
+# Port + URL of OpenClaw's Control UI / Gateway service. ``opensore``
 # users sometimes mistake this for the MCP bridge endpoint —
 # :func:`app.integrations.openclaw._is_probable_openclaw_control_ui_url`
 # detects that misconfiguration and the wrong-endpoint scenario asserts
@@ -55,7 +55,7 @@ def inject_sleeping_tool_call(handle: OpenClawHandle) -> None:
     """Reconfigure the handle so the use_case driver targets a Python
     stdio MCP fixture whose only tool sleeps instead of returning.
 
-    Used to verify OpenSRE's tool-call timeout behavior — the
+    Used to verify OpenSore's tool-call timeout behavior — the
     orchestrator must surface a useful "tool timed out" error rather
     than blocking the investigation pipeline indefinitely.
     :func:`app.integrations.openclaw._call_tool_async` wraps

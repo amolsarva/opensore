@@ -1,14 +1,14 @@
 ---
 title: "VictoriaLogs"
-description: "Connect VictoriaLogs so OpenSRE can pull structured log evidence during investigations"
+description: "Connect VictoriaLogs so OpenSore can pull structured log evidence during investigations"
 ---
 
-OpenSRE queries [VictoriaLogs](https://docs.victoriametrics.com/victorialogs/) using LogsQL to retrieve structured log evidence — correlating recent application errors, request anomalies, and stream-level events with the alert under investigation.
+OpenSore queries [VictoriaLogs](https://docs.victoriametrics.com/victorialogs/) using LogsQL to retrieve structured log evidence — correlating recent application errors, request anomalies, and stream-level events with the alert under investigation.
 
 ## Prerequisites
 
 - A reachable VictoriaLogs instance (e.g. `http://vmlogs:9428`)
-- LogsQL knowledge for any custom queries you want OpenSRE to run
+- LogsQL knowledge for any custom queries you want OpenSore to run
 
 ## Setup
 
@@ -20,7 +20,7 @@ Add to your `.env`:
 VICTORIA_LOGS_URL=http://vmlogs.monitoring.svc:9428
 
 # Optional — only set this if your deployment is multi-tenant.
-# Single-tenant clusters should leave it unset; OpenSRE will not send
+# Single-tenant clusters should leave it unset; OpenSore will not send
 # the AccountID header at all.
 # VICTORIA_LOGS_TENANT_ID=acme
 ```
@@ -51,7 +51,7 @@ VICTORIA_LOGS_URL=http://vmlogs.monitoring.svc:9428
 ## Verify
 
 ```bash
-opensre integrations verify victoria_logs
+opensore integrations verify victoria_logs
 ```
 
 Expected output:

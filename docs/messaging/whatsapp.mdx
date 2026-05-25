@@ -3,7 +3,7 @@ title: "WhatsApp"
 description: "Deliver investigation findings to WhatsApp via Twilio."
 ---
 
-OpenSRE's WhatsApp integration delivers investigation findings to any WhatsApp number via Twilio's Messaging API.
+OpenSore's WhatsApp integration delivers investigation findings to any WhatsApp number via Twilio's Messaging API.
 
 <Note>
 This integration uses Twilio as the WhatsApp provider.
@@ -23,7 +23,7 @@ This integration uses Twilio as the WhatsApp provider.
 ### Via CLI wizard (recommended)
 
 ```bash
-opensre integrations setup whatsapp
+opensore integrations setup whatsapp
 ```
 
 You'll be prompted for:
@@ -48,7 +48,7 @@ WHATSAPP_DEFAULT_TO=+1234567890
 ## Step 2: Verify
 
 ```bash
-opensre integrations verify whatsapp
+opensore integrations verify whatsapp
 ```
 
 This calls the Twilio Account API to verify the credentials.
@@ -60,7 +60,7 @@ This calls the Twilio Account API to verify the credentials.
 Trigger a real investigation against a bundled fixture:
 
 ```bash
-opensre investigate --input tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json
+opensore investigate --input tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json
 ```
 
 Findings should arrive in WhatsApp as a plain-text message. Long reports are truncated to WhatsApp limits.
@@ -69,7 +69,7 @@ Findings should arrive in WhatsApp as a plain-text message. Long reports are tru
 
 ## Troubleshooting
 
-### `opensre integrations verify whatsapp` errors
+### `opensore integrations verify whatsapp` errors
 
 **`Missing account_sid`**
 

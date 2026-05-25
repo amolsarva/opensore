@@ -1,13 +1,13 @@
 ---
 title: "OpenSearch / Elasticsearch"
-description: "Connect OpenSearch or Elasticsearch so OpenSRE can search application logs and analytics indices during investigations"
+description: "Connect OpenSearch or Elasticsearch so OpenSore can search application logs and analytics indices during investigations"
 ---
 
-OpenSRE queries OpenSearch (or Elasticsearch) to retrieve application logs, error events, and analytics records — pulling concrete log lines into the investigation alongside metrics and traces from your other observability tools.
+OpenSore queries OpenSearch (or Elasticsearch) to retrieve application logs, error events, and analytics records — pulling concrete log lines into the investigation alongside metrics and traces from your other observability tools.
 
 ## Prerequisites
 
-- OpenSearch 1.x/2.x or Elasticsearch 7.x/8.x reachable from the machine running OpenSRE
+- OpenSearch 1.x/2.x or Elasticsearch 7.x/8.x reachable from the machine running OpenSore
 - The cluster URL (e.g. `https://my-cluster.us-east-1.es.amazonaws.com`)
 - Credentials for one of:
   - HTTP Basic Auth (username and password) — typical for self-hosted OpenSearch
@@ -21,7 +21,7 @@ OpenSearch authenticates clients via Basic Auth by default; the security plugin 
 ### Option 1: Interactive onboarding wizard
 
 ```bash
-opensre onboard
+opensore onboard
 ```
 
 Pick **OpenSearch / Elasticsearch** from the integration menu. The wizard asks for:
@@ -37,7 +37,7 @@ The wizard validates the configuration by calling `GET /_cluster/health` before 
 ### Option 2: Legacy CLI
 
 ```bash
-opensre integrations setup opensearch
+opensore integrations setup opensearch
 ```
 
 Same prompts as the wizard, in a smaller standalone form.
@@ -91,7 +91,7 @@ When both `OPENSEARCH_API_KEY` and Basic Auth credentials are set, the API key t
 ## Verify
 
 ```bash
-opensre integrations verify opensearch
+opensore integrations verify opensearch
 ```
 
 Expected output on success:
@@ -105,7 +105,7 @@ Detail:  Connected to OpenSearch cluster 'my-cluster' (green, 3 node(s)).
 
 ## How it works in investigations
 
-When an OpenSearch integration is configured, OpenSRE automatically includes it as an evidence source during every investigation. Two tools become available to the investigation agent:
+When an OpenSearch integration is configured, OpenSore automatically includes it as an evidence source during every investigation. Two tools become available to the investigation agent:
 
 ### `query_elasticsearch_logs`
 
@@ -128,7 +128,7 @@ Both tools share the same configured credentials, so configuring the integration
 
 | Symptom | Fix |
 | --- | --- |
-| **Status: missing** | Set `OPENSEARCH_URL` or run `opensre onboard` and pick OpenSearch |
+| **Status: missing** | Set `OPENSEARCH_URL` or run `opensore onboard` and pick OpenSearch |
 | **Connection refused** | Verify the URL is reachable from this host; check firewall and VPC rules |
 | **401 Unauthorized** | Verify credentials are correct. For self-hosted OpenSearch, use Basic Auth (`OPENSEARCH_USERNAME` + `OPENSEARCH_PASSWORD`), not API key — most installs do not have API keys enabled |
 | **SSL certificate errors** | For self-signed certificates, ensure the CA cert is in the system trust store |
@@ -137,8 +137,8 @@ Both tools share the same configured credentials, so configuring the integration
 
 ## Security best practices
 
-- Create a **read-only** OpenSearch user for OpenSRE — the agent only reads logs and analytics indices and never writes to the cluster during investigations.
-- Limit the role to the indices OpenSRE needs (typically logs and APM indices), not cluster-wide.
+- Create a **read-only** OpenSearch user for OpenSore — the agent only reads logs and analytics indices and never writes to the cluster during investigations.
+- Limit the role to the indices OpenSore needs (typically logs and APM indices), not cluster-wide.
 - Store credentials in `.env` or the integration store, not in source code.
 - For Elastic Cloud, generate a scoped API key and rotate it on a schedule rather than using the master deployment credentials.
 - For self-hosted clusters behind a reverse proxy, prefer Basic Auth over disabling security entirely — even on internal networks.

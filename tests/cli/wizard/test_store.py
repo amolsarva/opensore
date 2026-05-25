@@ -15,7 +15,7 @@ from app.cli.wizard.store import (
 
 
 def test_save_local_config_writes_versioned_payload(tmp_path) -> None:
-    store_path = tmp_path / "opensre.json"
+    store_path = tmp_path / "opensore.json"
 
     saved_path = save_local_config(
         wizard_mode="quickstart",
@@ -43,7 +43,7 @@ def test_save_local_config_writes_versioned_payload(tmp_path) -> None:
 
 
 def test_load_local_config_returns_independent_empty_payloads(tmp_path) -> None:
-    store_path = tmp_path / "opensre.json"
+    store_path = tmp_path / "opensore.json"
 
     first = load_local_config(store_path)
     first["targets"]["local"] = {"provider": "anthropic"}
@@ -54,7 +54,7 @@ def test_load_local_config_returns_independent_empty_payloads(tmp_path) -> None:
 
 
 def test_remote_ops_config_round_trip(tmp_path) -> None:
-    store_path = tmp_path / "opensre.json"
+    store_path = tmp_path / "opensore.json"
 
     save_remote_ops_config(
         provider="railway",
@@ -68,7 +68,7 @@ def test_remote_ops_config_round_trip(tmp_path) -> None:
 
 
 def test_save_named_remote_persists_url(tmp_path) -> None:
-    store_path = tmp_path / "opensre.json"
+    store_path = tmp_path / "opensore.json"
 
     save_named_remote("ec2", "http://1.2.3.4:8080", set_active=True, source="ec2", path=store_path)
 
@@ -77,7 +77,7 @@ def test_save_named_remote_persists_url(tmp_path) -> None:
 
 
 def test_delete_named_remote_removes_entry_and_clears_active_url(tmp_path) -> None:
-    store_path = tmp_path / "opensre.json"
+    store_path = tmp_path / "opensore.json"
 
     save_named_remote("ec2", "http://1.2.3.4:8080", set_active=True, source="ec2", path=store_path)
     assert load_remote_url(store_path) == "http://1.2.3.4:8080"
@@ -91,7 +91,7 @@ def test_delete_named_remote_removes_entry_and_clears_active_url(tmp_path) -> No
 def test_delete_named_remote_does_not_clear_url_when_different_remote_is_active(
     tmp_path,
 ) -> None:
-    store_path = tmp_path / "opensre.json"
+    store_path = tmp_path / "opensore.json"
 
     save_named_remote("ec2", "http://1.2.3.4:8080", set_active=False, source="ec2", path=store_path)
     save_named_remote(
@@ -105,7 +105,7 @@ def test_delete_named_remote_does_not_clear_url_when_different_remote_is_active(
 
 
 def test_delete_named_remote_is_noop_when_name_missing(tmp_path) -> None:
-    store_path = tmp_path / "opensre.json"
+    store_path = tmp_path / "opensore.json"
     save_named_remote("ec2", "http://1.2.3.4:8080", set_active=True, source="ec2", path=store_path)
 
     delete_named_remote("nonexistent", store_path)
@@ -113,9 +113,9 @@ def test_delete_named_remote_is_noop_when_name_missing(tmp_path) -> None:
     assert load_remote_url(store_path) == "http://1.2.3.4:8080"
 
 
-def test_deploy_destroy_lifecycle_updates_opensre_json(tmp_path) -> None:
+def test_deploy_destroy_lifecycle_updates_opensore_json(tmp_path) -> None:
     """Simulate deploy_remote + destroy_remote config-persistence without live AWS."""
-    store_path = tmp_path / "opensre.json"
+    store_path = tmp_path / "opensore.json"
     stack_name = "tracer-ec2-remote"
     remote_url = "http://54.0.0.1:8080"
 
@@ -137,7 +137,7 @@ def test_deploy_destroy_lifecycle_updates_opensre_json(tmp_path) -> None:
 
 
 def test_remote_ops_config_clears_project_and_service(tmp_path) -> None:
-    store_path = tmp_path / "opensre.json"
+    store_path = tmp_path / "opensore.json"
 
     save_remote_ops_config(
         provider="railway",

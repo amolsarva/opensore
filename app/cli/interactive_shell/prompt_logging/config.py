@@ -8,11 +8,11 @@ from pathlib import Path
 from typing import Any
 
 from app.cli.interactive_shell.config import read_prompt_log_settings
-from app.constants import OPENSRE_HOME_DIR
+from app.constants import OPENSORE_HOME_DIR
 
 _FALSE_VALUES = {"", "0", "false", "off", "no"}
 _DEFAULT_MAX_CHARS = 32_000
-_DEFAULT_LOG_PATH = OPENSRE_HOME_DIR / "prompt_log.jsonl"
+_DEFAULT_LOG_PATH = OPENSORE_HOME_DIR / "prompt_log.jsonl"
 
 
 def _coerce_bool(value: Any, *, default: bool) -> bool:
@@ -43,10 +43,10 @@ class PromptLogConfig:
     @classmethod
     def load(cls) -> PromptLogConfig:
         file_conf = read_prompt_log_settings()
-        disabled = os.getenv("OPENSRE_PROMPT_LOG_DISABLED")
-        local_disabled = os.getenv("OPENSRE_PROMPT_LOG_LOCAL_DISABLED")
-        redact_env = os.getenv("OPENSRE_PROMPT_LOG_REDACT")
-        path_env = os.getenv("OPENSRE_PROMPT_LOG_PATH")
+        disabled = os.getenv("OPENSORE_PROMPT_LOG_DISABLED")
+        local_disabled = os.getenv("OPENSORE_PROMPT_LOG_LOCAL_DISABLED")
+        redact_env = os.getenv("OPENSORE_PROMPT_LOG_REDACT")
+        path_env = os.getenv("OPENSORE_PROMPT_LOG_PATH")
 
         enabled = not _coerce_bool(disabled, default=False)
         local_enabled = not _coerce_bool(local_disabled, default=False)

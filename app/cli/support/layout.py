@@ -1,4 +1,4 @@
-"""Rich landing and help renderers for the OpenSRE CLI."""
+"""Rich landing and help renderers for the OpenSore CLI."""
 
 from __future__ import annotations
 
@@ -13,21 +13,21 @@ from app.cli.interactive_shell.ui.theme import BRAND, DIM, TEXT
 
 _LANDING_EXAMPLES: tuple[tuple[str, str], ...] = (
     (
-        'opensre "investigate high latency in checkout-api"',
+        'opensore "investigate high latency in checkout-api"',
         "Start the interactive agent with a prompt",
     ),
-    ("opensre onboard", "Configure LLM provider and integrations"),
-    ("opensre investigate -i alert.json", "Run RCA against an alert payload"),
-    ("opensre deploy ec2", "Deploy investigation server on AWS EC2"),
-    ("opensre remote --url <ip> health", "Check a remote deployed agent"),
-    ("opensre remote ops status", "Inspect hosted service status (Railway)"),
-    ("opensre tests", "Browse and run inventoried tests"),
-    ("opensre integrations list", "Show configured integrations"),
-    ("opensre guardrails rules", "List configured guardrail rules"),
-    ("opensre health", "Check integration and agent setup status"),
-    ("opensre doctor", "Run a full environment diagnostic"),
-    ("opensre update", "Update to the latest version"),
-    ("opensre version", "Print detailed version, Python and OS info"),
+    ("opensore onboard", "Configure LLM provider and integrations"),
+    ("opensore investigate -i evidence.json", "Run an investigation against evidence"),
+    ("opensore deploy ec2", "Deploy investigation server on AWS EC2"),
+    ("opensore remote --url <ip> health", "Check a remote deployed agent"),
+    ("opensore remote ops status", "Inspect hosted service status (Railway)"),
+    ("opensore tests", "Browse and run inventoried tests"),
+    ("opensore integrations list", "Show configured integrations"),
+    ("opensore guardrails rules", "List configured guardrail rules"),
+    ("opensore health", "Check integration and agent setup status"),
+    ("opensore doctor", "Run a full environment diagnostic"),
+    ("opensore update", "Update to the latest version"),
+    ("opensore version", "Print detailed version, Python and OS info"),
 )
 
 _SHORT_OPTIONS: tuple[tuple[str, str], ...] = (
@@ -54,7 +54,7 @@ def _render_usage(console: Console) -> None:
     console.print(
         Text.assemble(
             ("  Usage: "),
-            ("opensre", f"bold {TEXT}"),
+            ("opensore", f"bold {TEXT}"),
             (" [OPTIONS] [COMMAND] [ARGS]..."),
         )
     )
@@ -104,7 +104,7 @@ def render_landing() -> None:
     console.print(
         Text.assemble(
             ("  ", ""),
-            "open-source SRE agent for automated incident investigation and root cause analysis",
+            "AI-assisted workplace incident investigation for legal, HR, and compliance teams",
         )
     )
     console.print()

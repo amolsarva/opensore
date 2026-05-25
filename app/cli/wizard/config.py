@@ -21,7 +21,7 @@ from app.config import (
 from app.integrations.llm_cli.base import LLMCLIAdapter
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
-PROJECT_ENV_PATH = Path(os.getenv("OPENSRE_PROJECT_ENV_PATH", PROJECT_ROOT / ".env"))
+PROJECT_ENV_PATH = Path(os.getenv("OPENSORE_PROJECT_ENV_PATH", PROJECT_ROOT / ".env"))
 
 CredentialKind = Literal["api_key", "host", "cli", "none"]
 
@@ -70,7 +70,7 @@ class ProviderOption:
     adapter_factory: Callable[[], LLMCLIAdapter] | None = None
     #: Whether the CLI should accept model IDs outside the curated quick-pick list.
     #: Use this for providers whose model catalogs are large, account-gated, or
-    #: updated independently of OpenSRE releases.
+    #: updated independently of OpenSore releases.
     allow_custom_models: bool = False
 
 

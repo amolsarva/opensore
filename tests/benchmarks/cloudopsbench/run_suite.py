@@ -24,7 +24,7 @@ DEFAULT_OUTPUT_DIR = Path(".cloudopsbench-results")
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run the Cloud-OpsBench RCA suite in OpenSRE.")
+    parser = argparse.ArgumentParser(description="Run the Cloud-OpsBench RCA suite in OpenSore.")
     parser.add_argument("--system", default="", help="Filter to boutique or trainticket.")
     parser.add_argument("--fault-category", default="", help="Filter to one fault category.")
     parser.add_argument("--case", default="", help="Filter to one numeric case directory.")

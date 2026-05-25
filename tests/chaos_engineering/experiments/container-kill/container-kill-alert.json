@@ -1,7 +1,7 @@
 {
   "_meta": {
     "purpose": "Synthetic alert for container-kill chaos demo",
-    "run": "opensre investigate -i tests/chaos_engineering/experiments/container-kill/container-kill-alert.json"
+    "run": "opensore investigate -i tests/chaos_engineering/experiments/container-kill/container-kill-alert.json"
   },
   "title": "[Triggered] Container restart storm - container-kill-demo",
   "alert_name": "Datadog monitor: restarts container-kill-demo",

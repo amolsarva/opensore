@@ -1,4 +1,4 @@
-"""EC2 user-data and helpers for the full remote OpenSRE deployment.
+"""EC2 user-data and helpers for the full remote OpenSore deployment.
 
 Installs Python, clones the repo, sets up a venv, writes ``.env``, and
 starts the lightweight FastAPI investigation server as a systemd service.
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 INSTANCE_TYPE = "t3.medium"
 SERVER_PORT = 8080
-REPO_URL = "https://github.com/Tracer-Cloud/opensre.git"
+REPO_URL = "https://github.com/Tracer-Cloud/opensore.git"
 
 HEALTH_POLL_INTERVAL = 10
 HEALTH_MAX_ATTEMPTS = 60  # 10 min ceiling (pip install can be slow)
@@ -38,7 +38,7 @@ def generate_remote_user_data(
     env_vars: dict[str, str],
     branch: str = "main",
 ) -> str:
-    """Cloud-init bash script that bootstraps the full OpenSRE server.
+    """Cloud-init bash script that bootstraps the full OpenSore server.
 
     1. Installs Python 3.11, pip, git, make
     2. Clones the repo (specific branch)
@@ -51,7 +51,7 @@ def generate_remote_user_data(
 
     return f"""\
 #!/bin/bash
-exec > /var/log/opensre-remote.log 2>&1
+exec > /var/log/opensore-remote.log 2>&1
 set -euo pipefail
 
 echo "=== Installing system dependencies ==="
@@ -66,33 +66,33 @@ fi
 echo "Using $PYTHON"
 
 echo "=== Cloning repository ==="
-git clone --branch {branch} --single-branch {REPO_URL} /opt/opensre
+git clone --branch {branch} --single-branch {REPO_URL} /opt/opensore
 
 echo "=== Setting up Python venv ==="
-cd /opt/opensre
+cd /opt/opensore
 $PYTHON -m venv .venv
 .venv/bin/pip install --upgrade pip
 .venv/bin/pip install -e .
 
 echo "=== Writing .env ==="
-echo '{env_b64}' | base64 -d > /opt/opensre/.env
+echo '{env_b64}' | base64 -d > /opt/opensore/.env
 
 echo "=== Creating investigations directory ==="
-mkdir -p /opt/opensre/investigations
+mkdir -p /opt/opensore/investigations
 
 echo "=== Creating systemd unit ==="
-cat > /etc/systemd/system/opensre.service << 'UNITEOF'
+cat > /etc/systemd/system/opensore.service << 'UNITEOF'
 [Unit]
-Description=OpenSRE Remote Investigation Server
+Description=OpenSore Remote Investigation Server
 After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/opt/opensre
-ExecStart=/opt/opensre/.venv/bin/uvicorn app.remote.server:app --host 0.0.0.0 --port {SERVER_PORT}
+WorkingDirectory=/opt/opensore
+ExecStart=/opt/opensore/.venv/bin/uvicorn app.remote.server:app --host 0.0.0.0 --port {SERVER_PORT}
 Restart=on-failure
 RestartSec=5
-Environment=PATH=/opt/opensre/.venv/bin:/usr/local/bin:/usr/bin:/bin
+Environment=PATH=/opt/opensore/.venv/bin:/usr/local/bin:/usr/bin:/bin
 
 [Install]
 WantedBy=multi-user.target
@@ -100,8 +100,8 @@ UNITEOF
 
 echo "=== Starting service ==="
 systemctl daemon-reload
-systemctl enable opensre
-systemctl start opensre
+systemctl enable opensore
+systemctl start opensore
 
 echo "=== Deployment complete ==="
 """

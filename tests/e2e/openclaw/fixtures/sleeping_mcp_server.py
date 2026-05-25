@@ -2,7 +2,7 @@
 
 Used by the OpenClaw tool-call-timeout e2e scenario to exercise
 ``call_openclaw_tool`` against a tool that never responds — the test
-verifies OpenSRE surfaces a timeout error rather than blocking the
+verifies OpenSore surfaces a timeout error rather than blocking the
 whole investigation pipeline. Run as a subprocess via
 ``python -m tests.e2e.openclaw.fixtures.sleeping_mcp_server`` (this is
 how :func:`tests.e2e.openclaw.infrastructure_sdk.fault_injection.inject_sleeping_tool_call`
@@ -38,7 +38,7 @@ def _build_server() -> Server[object]:
                 name="conversations_list",
                 description=(
                     "Fixture tool that intentionally sleeps instead of returning. "
-                    "Used to exercise OpenSRE's call-timeout behavior."
+                    "Used to exercise OpenSore's call-timeout behavior."
                 ),
                 inputSchema={"type": "object", "properties": {}, "additionalProperties": True},
             ),

@@ -1,14 +1,14 @@
 ---
 title: "MongoDB"
-description: "Connect MongoDB so OpenSRE can diagnose database issues during investigations"
+description: "Connect MongoDB so OpenSore can diagnose database issues during investigations"
 ---
 
-OpenSRE uses MongoDB diagnostics to investigate database-related alerts — checking server health, finding slow queries, monitoring replica sets, and analyzing collection statistics.
+OpenSore uses MongoDB diagnostics to investigate database-related alerts — checking server health, finding slow queries, monitoring replica sets, and analyzing collection statistics.
 
 ## Prerequisites
 
 - MongoDB 4.0+ (4.4+ recommended)
-- Network access from the OpenSRE environment to your MongoDB instance
+- Network access from the OpenSore environment to your MongoDB instance
 - Valid credentials (if authentication is enabled)
 
 ## Setup
@@ -16,7 +16,7 @@ OpenSRE uses MongoDB diagnostics to investigate database-related alerts — chec
 ### Option 1: Interactive CLI
 
 ```bash
-opensre integrations setup
+opensore integrations setup
 ```
 
 Select **MongoDB** when prompted and provide your connection string and target database.
@@ -41,7 +41,7 @@ MONGODB_TLS=true
 
 ### Option 3: Persistent store
 
-Integrations are automatically persisted to `~/.config/opensre/integrations.json`:
+Integrations are automatically persisted to `~/.config/opensore/integrations.json`:
 
 ```json
 {
@@ -93,7 +93,7 @@ MONGODB_TLS_INSECURE=true             # Skip validation (dev only)
 
 ## Investigation tools
 
-When OpenSRE investigates a MongoDB-related alert, five diagnostic tools are available:
+When OpenSore investigates a MongoDB-related alert, five diagnostic tools are available:
 
 ### Server status
 
@@ -122,7 +122,7 @@ Returns document count, storage size, index count, and average object size for a
 ## Verify
 
 ```bash
-opensre integrations verify mongodb
+opensore integrations verify mongodb
 ```
 
 Expected output:
@@ -137,7 +137,7 @@ Detail: Connected to MongoDB 6.0.5; target database: production
 
 | Symptom | Fix |
 | --- | --- |
-| **Connection refused** | Verify the host/port, check firewalls, and ensure MongoDB is running. For Atlas, whitelist the OpenSRE IP. |
+| **Connection refused** | Verify the host/port, check firewalls, and ensure MongoDB is running. For Atlas, whitelist the OpenSore IP. |
 | **Authentication failed** | Confirm username/password and `authSource`. Test with `mongosh` first. |
 | **SSL: CERTIFICATE_VERIFY_FAILED** | Provide a CA cert via `MONGODB_CA_CERT` or set `MONGODB_TLS_INSECURE=true` for dev. |
 | **Profiling is disabled** | Run `db.setProfilingLevel(1)` on the target database. |

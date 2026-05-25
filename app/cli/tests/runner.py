@@ -33,7 +33,7 @@ def get_preflight_messages(item: TestCatalogItem) -> tuple[str, ...]:
         return (
             "OpenClaw preflight: no local OpenClaw integration is configured. "
             "This test will not use live OpenClaw context.",
-            "Run `uv run opensre integrations setup openclaw` first if you want live OpenClaw data.",
+            "Run `uv run opensore integrations setup openclaw` first if you want live OpenClaw data.",
         )
 
     config_payload = integration.get("config")
@@ -66,7 +66,7 @@ def get_preflight_messages(item: TestCatalogItem) -> tuple[str, ...]:
     return (
         "OpenClaw preflight: live OpenClaw context is unavailable, so OpenClaw actions may be skipped.",
         f"Reason: {first_line}",
-        "Fix: run `uv run opensre integrations verify openclaw` and make it pass before rerunning this test.",
+        "Fix: run `uv run opensore integrations verify openclaw` and make it pass before rerunning this test.",
     )
 
 

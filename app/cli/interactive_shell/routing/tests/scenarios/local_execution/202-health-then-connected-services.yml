@@ -3,7 +3,7 @@ title: Health then connected services
 intent_class: local_execution
 risk_level: medium
 input:
-  prompt: check the health of my opensre and then show me all connected services
+  prompt: check the health of my opensore and then show me all connected services
   surface: interactive_cli
 session:
   has_prior_state: false

@@ -361,7 +361,7 @@ def test_sync_env_values_rejects_sensitive_keys(tmp_path) -> None:
 
 def test_sync_env_values_routes_secrets_to_keyring(tmp_path, monkeypatch) -> None:
     monkeypatch.delenv("GITLAB_ACCESS_TOKEN", raising=False)
-    monkeypatch.delenv("OPENSRE_DISABLE_KEYRING", raising=False)
+    monkeypatch.delenv("OPENSORE_DISABLE_KEYRING", raising=False)
     monkeypatch.setenv("PYTHON_KEYRING_BACKEND", "tests.shared.keyring_backend.MemoryKeyring")
 
     env_path = tmp_path / ".env"

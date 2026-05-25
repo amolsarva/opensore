@@ -1,10 +1,10 @@
-"""OpenSRE CLI - open-source SRE agent for automated incident investigation.
+"""OpenSore CLI - AI-assisted workplace incident investigation.
 
 Enable shell tab-completion (add to your shell profile for persistence):
 
-  bash:  eval "$(_OPENSRE_COMPLETE=bash_source opensre)"
-  zsh:   eval "$(_OPENSRE_COMPLETE=zsh_source opensre)"
-  fish:  _OPENSRE_COMPLETE=fish_source opensre | source
+  bash:  eval "$(_OPENSORE_COMPLETE=bash_source opensore)"
+  zsh:   eval "$(_OPENSORE_COMPLETE=zsh_source opensore)"
+  fish:  _OPENSORE_COMPLETE=fish_source opensore | source
 """
 
 from __future__ import annotations
@@ -95,7 +95,7 @@ def _cli_invoked_properties(ctx: click.Context) -> Properties:
     )
     obj = ctx.obj if ctx.obj else {}
     return build_cli_invoked_properties(
-        entrypoint="opensre",
+        entrypoint="opensore",
         command_parts=command_parts,
         json_output=bool(obj.get("json", False)),
         verbose=bool(obj.get("verbose", False)),
@@ -120,7 +120,7 @@ def _capture_accepted_cli_invocation(ctx: click.Context) -> None:
     context_settings={"help_option_names": ["-h", "--help"]},
     invoke_without_command=True,
 )
-@click.version_option(version=get_version(), prog_name="opensre")
+@click.version_option(version=get_version(), prog_name="opensore")
 @click.option(
     "--json", "-j", "json_output", is_flag=True, help="Emit machine-readable JSON output."
 )
@@ -137,7 +137,7 @@ def _capture_accepted_cli_invocation(ctx: click.Context) -> None:
     type=click.Choice(["classic", "pinned"]),
     default=None,
     help="Interactive-shell layout: 'classic' (scrolling) or 'pinned' (fixed "
-    "input bar). Overrides OPENSRE_LAYOUT env var and ~/.config/opensre/config.yml.",
+    "input bar). Overrides OPENSORE_LAYOUT env var and ~/.config/opensore/config.yml.",
 )
 @click.pass_context
 def cli(
@@ -149,7 +149,7 @@ def cli(
     interactive: bool,
     layout: str | None,
 ) -> None:
-    """OpenSRE - open-source SRE agent for automated incident investigation and root cause analysis."""
+    """OpenSore - AI-assisted workplace incident investigation for legal, HR, and compliance teams."""
     ctx.ensure_object(dict)
     ctx.obj["json"] = json_output
     ctx.obj["verbose"] = verbose
@@ -173,7 +173,7 @@ def cli(
             )
             if config.enabled:
                 raise SystemExit(run_repl(config=config))
-        click.echo("🚧 OpenSRE is in Public Beta — features may change.", err=True)
+        click.echo("🚧 OpenSore is in Public Beta — features may change.", err=True)
         render_landing()
         raise SystemExit(0)
 
@@ -213,7 +213,7 @@ def _should_capture_cli_exception(exc: click.ClickException) -> bool:
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Entry point for the ``opensre`` console script."""
+    """Entry point for the ``opensore`` console script."""
     _ensure_utf8_stdio()
     load_dotenv(override=False)
     cli_argv = list(sys.argv[1:] if argv is None else argv)

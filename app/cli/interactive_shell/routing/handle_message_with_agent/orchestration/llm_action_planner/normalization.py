@@ -105,7 +105,7 @@ def _normalize_tool_args(
 
     if kind == "cli_command":
         payload = str(args.get("payload", "")).strip()
-        if not payload or payload.lower().startswith("opensre "):
+        if not payload or payload.lower().startswith("opensore "):
             return None
 
         capability_map = getattr(session, "available_capabilities", {}) or {}

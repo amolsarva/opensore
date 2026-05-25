@@ -10,12 +10,12 @@ from typing import Final
 import keyring  # type: ignore[import-not-found,import-untyped]
 import keyring.errors  # type: ignore[import-not-found,import-untyped]
 
-_KEYRING_SERVICE: Final = "opensre.llm"
+_KEYRING_SERVICE: Final = "opensore.llm"
 _DISABLED_VALUES: Final = frozenset({"1", "true", "yes", "on"})
 
 
 def _keyring_is_disabled() -> bool:
-    return os.getenv("OPENSRE_DISABLE_KEYRING", "").strip().lower() in _DISABLED_VALUES
+    return os.getenv("OPENSORE_DISABLE_KEYRING", "").strip().lower() in _DISABLED_VALUES
 
 
 def resolve_env_credential(env_var: str, *, default: str = "") -> str:
@@ -53,8 +53,8 @@ def get_keyring_setup_instructions(env_var: str) -> tuple[str, ...]:
     """Return platform-specific guidance for fixing secure credential storage."""
     if _keyring_is_disabled():
         return (
-            "Secure local credential storage is disabled by OPENSRE_DISABLE_KEYRING.",
-            f"Unset OPENSRE_DISABLE_KEYRING and rerun `opensre onboard` to save {env_var} securely.",
+            "Secure local credential storage is disabled by OPENSORE_DISABLE_KEYRING.",
+            f"Unset OPENSORE_DISABLE_KEYRING and rerun `opensore onboard` to save {env_var} securely.",
         )
 
     backend_name = _keyring_backend_name()
@@ -78,7 +78,7 @@ def get_keyring_setup_instructions(env_var: str) -> tuple[str, ...]:
             [
                 "Start a D-Bus shell: dbus-run-session -- sh",
                 "Inside that shell unlock the keyring: echo '<choose-a-keyring-password>' | gnome-keyring-daemon --unlock",
-                "Then rerun `opensre onboard` in that same shell.",
+                "Then rerun `opensore onboard` in that same shell.",
                 "For deeper diagnostics run `python -m keyring diagnose`.",
             ]
         )
@@ -86,7 +86,7 @@ def get_keyring_setup_instructions(env_var: str) -> tuple[str, ...]:
 
     return (
         f"Current keyring backend: {backend_name}.",
-        "Make sure your system keychain service is installed and unlocked, then rerun `opensre onboard`.",
+        "Make sure your system keychain service is installed and unlocked, then rerun `opensore onboard`.",
         "For deeper diagnostics run `python -m keyring diagnose`.",
     )
 

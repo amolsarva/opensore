@@ -95,7 +95,7 @@ def _get_client(config: MongoDBConfig) -> Any:
         serverSelectionTimeoutMS=DEFAULT_MONGODB_TIMEOUT_MS,
         connectTimeoutMS=DEFAULT_MONGODB_TIMEOUT_MS,
         socketTimeoutMS=int(config.timeout_seconds * 1000),
-        appName="opensre",
+        appName="opensore",
     )
 
 

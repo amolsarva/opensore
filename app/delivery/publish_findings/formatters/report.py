@@ -619,9 +619,9 @@ def format_whatsapp_message(ctx: ReportContext) -> str:
     # Severity header
     severity = ctx.get("severity", "")
     if severity:
-        parts.append(f"[{severity.upper()}] OpenSRE Investigation")
+        parts.append(f"[{severity.upper()}] OpenSore Investigation")
     else:
-        parts.append("OpenSRE Investigation")
+        parts.append("OpenSore Investigation")
 
     # Root cause + top log
     top_log = _get_top_error_log(ctx.get("evidence") or {})

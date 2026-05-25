@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Deploy the full OpenSRE investigation server on EC2.
+"""Deploy the full OpenSore investigation server on EC2.
 
 Creates:
 - 1 IAM role + instance profile
 - 1 Security group allowing ports 22 (SSH) and 8080 (HTTP)
-- 1 EC2 t3.medium running the OpenSRE FastAPI server (no Docker)
+- 1 EC2 t3.medium running the OpenSore FastAPI server (no Docker)
 """
 
 from __future__ import annotations
@@ -40,7 +40,7 @@ _DOTENV_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "
 
 
 def deploy(branch: str = "main") -> dict[str, str]:
-    """Bootstrap the OpenSRE investigation server on a fresh EC2 instance.
+    """Bootstrap the OpenSore investigation server on a fresh EC2 instance.
 
     Returns:
         Dict of output values (InstanceId, PublicIpAddress, etc.).
@@ -64,7 +64,7 @@ def deploy(branch: str = "main") -> dict[str, str]:
     sg = create_security_group(
         name=f"{STACK_NAME}-sg",
         vpc_id=vpc["vpc_id"],
-        description="OpenSRE remote server - SSH and investigation API",
+        description="OpenSore remote server - SSH and investigation API",
         ingress_rules=[
             {"port": 22, "cidr": "0.0.0.0/0", "description": "SSH"},
             {"port": SERVER_PORT, "cidr": "0.0.0.0/0", "description": "Investigation API"},
@@ -170,7 +170,7 @@ def deploy(branch: str = "main") -> dict[str, str]:
     else:
         print("  SSH:    set EC2_KEY_NAME env var to enable SSH access")
     print(f"  Health: curl http://{public_ip}:{SERVER_PORT}/ok")
-    print(f"  Logs:   ssh ec2-user@{public_ip} 'cat /var/log/opensre-remote.log'")
+    print(f"  Logs:   ssh ec2-user@{public_ip} 'cat /var/log/opensore-remote.log'")
 
     return outputs
 

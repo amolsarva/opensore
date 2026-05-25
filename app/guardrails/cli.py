@@ -1,4 +1,4 @@
-"""CLI command implementations for ``opensre guardrails``."""
+"""CLI command implementations for ``opensore guardrails``."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ from app.guardrails.engine import GuardrailEngine
 from app.guardrails.rules import get_default_rules_path, load_rules
 
 _STARTER_CONFIG = """\
-# OpenSRE Guardrails Configuration
+# OpenSore Guardrails Configuration
 # Rules are evaluated against all text sent to LLMs.
 # Actions: redact (mask the value), block (reject the request), audit (log and allow).
 
@@ -53,14 +53,14 @@ def cmd_init() -> None:
     rules_path = get_default_rules_path()
     if rules_path.exists():
         click.echo(f"  Guardrails config already exists at {rules_path}")
-        click.echo("  Use 'opensre guardrails rules' to view current rules.")
+        click.echo("  Use 'opensore guardrails rules' to view current rules.")
         return
 
     rules_path.parent.mkdir(parents=True, exist_ok=True)
     rules_path.write_text(_STARTER_CONFIG, encoding="utf-8")
     click.echo(f"  Created starter guardrails config at {rules_path}")
     click.echo("  Edit the file to customize rules for your environment.")
-    click.echo("  Test with: opensre guardrails test 'AKIAIOSFODNN7EXAMPLE'")
+    click.echo("  Test with: opensore guardrails test 'AKIAIOSFODNN7EXAMPLE'")
 
 
 def cmd_test(text: str) -> None:

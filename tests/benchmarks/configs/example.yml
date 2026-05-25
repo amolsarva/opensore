@@ -11,10 +11,10 @@
 benchmark: cloudopsbench
 
 modes:
-  - opensre+llm
+  - opensore+llm
 
 llms:
-  - claude-default  # use whatever opensre is configured for; llm_dispatch.py
+  - claude-default  # use whatever opensore is configured for; llm_dispatch.py
                     # will let this be a specific provider once it ships
 
 # Pinned model versions — refused at runtime if a model resolves differently.
@@ -23,7 +23,7 @@ llms:
 #   gpt-5: gpt-5-2025-08-07
 #   deepseek-v3.2: deepseek-chat-v3.2
 model_versions:
-  claude-default: "(opensre-default)"
+  claude-default: "(opensore-default)"
 
 # Replication — required ≥3 for stochastic LLMs (Box-Hunter-Hunter Ch 3.4)
 runs_per_case: 3
@@ -42,7 +42,7 @@ output_dir: .bench-results/example/
 
 # Pre-registration — Phase 0 integrity gate. Path must exist + be non-empty
 # AND be committed to git before the run. See:
-# ~/DevBox/opensre-notes/opensre-benchmark-framework.md § 0
+# ~/DevBox/opensore-notes/opensore-benchmark-framework.md § 0
 pre_registration_path: tests/benchmarks/configs/preregistrations/example.yml
 
 filters:

@@ -26,16 +26,16 @@ def _load_local_config() -> dict[str, Any]:
 def _run_onboarding_command(
     run_command: RunCommand, *, load_config: ConfigLoader = _load_local_config
 ) -> None:
-    from app.cli.support.errors import OpenSREError
+    from app.cli.support.errors import OpenSoreError
 
     capture_onboard_started()
     try:
         exit_code = run_command()
     except PermissionError as exc:
         capture_onboard_failed()
-        raise OpenSREError(
+        raise OpenSoreError(
             str(exc),
-            suggestion="Check file permissions or set OPENSRE_PROJECT_ENV_PATH to a writable path.",
+            suggestion="Check file permissions or set OPENSORE_PROJECT_ENV_PATH to a writable path.",
         ) from exc
     except Exception:
         capture_onboard_failed()

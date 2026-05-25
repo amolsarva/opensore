@@ -12,16 +12,16 @@
   To reproduce the alert manually (legacy command variant):
     1. Set: export OPENCLAW_MCP_MODE=stdio
        export OPENCLAW_MCP_COMMAND=openclaw-mcp   ← deprecated binary
-    2. Trigger alert: opensre integrations verify openclaw
+    2. Trigger alert: opensore integrations verify openclaw
        → should print: "Command not found: openclaw-mcp
           Hint: OpenClaw's current MCP bridge is exposed via `openclaw mcp serve`..."
-    3. Feed alert JSON below to OpenSRE for RCA.
+    3. Feed alert JSON below to OpenSore for RCA.
 
   To reproduce (binary removed from PATH variant):
     1. Set: export OPENCLAW_MCP_MODE=stdio
        export OPENCLAW_MCP_COMMAND=openclaw
     2. Inject fault: sudo mv $(which openclaw) /tmp/openclaw.bak
-    3. Trigger alert: opensre integrations verify openclaw
+    3. Trigger alert: opensore integrations verify openclaw
        → should print: "Command not found: openclaw
           Hint: Install the OpenClaw CLI or set OPENCLAW_MCP_COMMAND to the full path."
     4. To restore: sudo mv /tmp/openclaw.bak $(dirname $(which python))/openclaw
@@ -32,26 +32,26 @@
 -->
 
 ## Source
-OpenSRE worker (stdio MCP transport — local host)
+OpenSore worker (stdio MCP transport — local host)
 
 ## Message
 **Firing**
 
-`opensre integrations verify openclaw` is returning:
+`opensore integrations verify openclaw` is returning:
 ```
 OpenClaw bridge validation failed: Command not found: openclaw-mcp
 Hint: OpenClaw's current MCP bridge is exposed via `openclaw mcp serve`, not `openclaw-mcp`.
 Install the OpenClaw CLI or set `OPENCLAW_MCP_COMMAND` to the full executable path.
 ```
 
-The opensre worker is configured with `OPENCLAW_MCP_COMMAND=openclaw-mcp` which was the
+The opensore worker is configured with `OPENCLAW_MCP_COMMAND=openclaw-mcp` which was the
 binary name in OpenClaw ≤ v2.0. Since v2.1.0 the MCP bridge is started via
 `openclaw mcp serve`. Every stdio-mode MCP bridge call raises `FileNotFoundError`.
 
 Labels:
 - alertname = OpenClawStdioCommandNotFound
 - severity = high
-- service = opensre-worker
+- service = opensore-worker
 - environment = staging
 - pipeline_name = openclaw_mcp
 
@@ -70,13 +70,13 @@ Annotations:
   "commonLabels": {
     "alertname": "OpenClawStdioCommandNotFound",
     "severity": "high",
-    "service": "opensre-worker",
+    "service": "opensore-worker",
     "environment": "staging",
     "pipeline_name": "openclaw_mcp"
   },
   "commonAnnotations": {
-    "summary": "opensre cannot find the openclaw-mcp binary. The command was renamed to 'openclaw mcp serve' in v2.1.0.",
-    "description": "FileNotFoundError: [Errno 2] No such file or directory: 'openclaw-mcp'. The opensre worker has OPENCLAW_MCP_COMMAND=openclaw-mcp but this binary no longer exists. In OpenClaw v2.1.0 the stdio MCP bridge entrypoint changed from the standalone 'openclaw-mcp' binary to 'openclaw mcp serve'. All three bridge tools are permanently unavailable until the config is corrected.",
+    "summary": "opensore cannot find the openclaw-mcp binary. The command was renamed to 'openclaw mcp serve' in v2.1.0.",
+    "description": "FileNotFoundError: [Errno 2] No such file or directory: 'openclaw-mcp'. The opensore worker has OPENCLAW_MCP_COMMAND=openclaw-mcp but this binary no longer exists. In OpenClaw v2.1.0 the stdio MCP bridge entrypoint changed from the standalone 'openclaw-mcp' binary to 'openclaw mcp serve'. All three bridge tools are permanently unavailable until the config is corrected.",
     "error": "Command not found: openclaw-mcp",
     "command": "openclaw-mcp",
     "transport": "stdio",
@@ -93,9 +93,9 @@ Annotations:
       "labels": {
         "alertname": "OpenClawStdioCommandNotFound",
         "severity": "high",
-        "service": "opensre-worker",
+        "service": "opensore-worker",
         "environment": "staging",
-        "instance": "opensre-worker-staging-02"
+        "instance": "opensore-worker-staging-02"
       },
       "annotations": {
         "summary": "openclaw-mcp binary not found — legacy command removed in v2.1.0",
@@ -129,10 +129,10 @@ export OPENCLAW_MCP_COMMAND=openclaw-mcp
 unset OPENCLAW_MCP_ARGS
 
 echo "[inject] Verifying fault is active..."
-opensre integrations verify openclaw && echo "ERROR: verify passed unexpectedly" && exit 1 || true
+opensore integrations verify openclaw && echo "ERROR: verify passed unexpectedly" && exit 1 || true
 
 echo "[inject] Fault confirmed. 'Command not found: openclaw-mcp' triggered."
-echo "[inject] Run 'opensre investigate' with the alert JSON above to get RCA."
+echo "[inject] Run 'opensore investigate' with the alert JSON above to get RCA."
 echo "[inject] To restore:"
 echo "  export OPENCLAW_MCP_COMMAND=${SAVED_COMMAND:-openclaw}"
 echo "  export OPENCLAW_MCP_ARGS='${SAVED_ARGS:-mcp serve}'"

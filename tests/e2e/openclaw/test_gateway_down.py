@@ -1,8 +1,8 @@
-"""End-to-end: OpenClaw Gateway is down — assert OpenSRE identifies it.
+"""End-to-end: OpenClaw Gateway is down — assert OpenSore identifies it.
 
 First fault scenario for #1484. Boots OpenClaw without the Gateway,
 drives an MCP tool call (which fails because the bridge can't reach a
-Gateway), captures the failure, then asserts the OpenSRE investigation
+Gateway), captures the failure, then asserts the OpenSore investigation
 pipeline names "OpenClaw" + "gateway" and recommends starting it via
 ``openclaw gateway run``.
 
@@ -70,7 +70,7 @@ def test_gateway_down_use_case_captures_connection_failure() -> None:
 @pytest.mark.skipif(not openclaw_cli_available(), reason=OPENCLAW_CLI_SKIP_REASON)
 @pytest.mark.skipif(not llm_credentials_present(), reason=LLM_CREDENTIAL_SKIP_REASON)
 def test_gateway_down_investigation_identifies_openclaw_and_remediation() -> None:
-    """Run the full OpenSRE investigation against the captured failure
+    """Run the full OpenSore investigation against the captured failure
     and assert the RCA correctly names OpenClaw + the gateway failure
     mode + the remediation hint.
 

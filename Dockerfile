@@ -1,9 +1,9 @@
-# Production Dockerfile for OpenSRE
+# Production Dockerfile for OpenSore
 # Runs the FastAPI health application (see app/webapp.py).
 #
 # Usage:
-#   docker build -t opensre:latest .
-#   docker run -p 8000:8000 --env-file .env opensre:latest
+#   docker build -t opensore:latest .
+#   docker run -p 8000:8000 --env-file .env opensore:latest
 #
 # Health check:
 #   curl http://localhost:8000/health

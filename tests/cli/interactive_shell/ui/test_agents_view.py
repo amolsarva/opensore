@@ -28,7 +28,7 @@ from app.cli.interactive_shell.ui.agents_view import render_agents_table
 def isolated_agents_yaml(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
     """Autouse: redirect ``agents_config_path`` to a per-test tmp file
     so the rendering tests don't read the developer's real
-    ``~/.config/opensre/agents.yaml`` (which would let real budgets
+    ``~/.config/opensore/agents.yaml`` (which would let real budgets
     leak into the placeholder assertions and create cross-machine
     flakes).
     """
@@ -150,7 +150,7 @@ def test_row_contains_agent_name_and_pid() -> None:
 
 def test_metric_cells_are_placeholders_when_no_sampler_data() -> None:
     """All five metric cells render ``-`` when the sampler has no
-    data for the PID (REPL not running, non-interactive ``opensre
+    data for the PID (REPL not running, non-interactive ``opensore
     agents list``, or fresh registration that has not yet been
     sampled). #2023 split ``tokens/min`` and ``$/hr`` from the
     yaml budget; both still fall back to ``-`` here for the same

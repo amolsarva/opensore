@@ -5,7 +5,7 @@ from __future__ import annotations
 from app.cli.interactive_shell.routing.policy_tags import RouteSignal
 from app.cli.interactive_shell.routing.resolve_cli_command.matcher import (
     is_bare_command_alias,
-    opensre_investigate_slash_text,
+    opensore_investigate_slash_text,
     slash_dispatch_text,
 )
 from app.cli.interactive_shell.routing.types import (
@@ -48,12 +48,12 @@ def resolve_cli_command(
     rules: tuple[RouteRule, ...] = CLI_COMMAND_RULES,
 ) -> RouteDecision | None:
     """Return command-route decision for slash/bare-alias input, if matched."""
-    investigate_slash = opensre_investigate_slash_text(text)
+    investigate_slash = opensore_investigate_slash_text(text)
     if investigate_slash is not None:
         return RouteDecision(
             route_kind=RouteKind.SLASH,
             confidence=0.99,
-            matched_signals=(RouteSignal.OPENSRE_INVESTIGATE.value,),
+            matched_signals=(RouteSignal.OPENSORE_INVESTIGATE.value,),
             command_text=investigate_slash,
         )
 

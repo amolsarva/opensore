@@ -11,11 +11,11 @@ from tests.tools.conftest import BaseToolContract
 
 class TestTracerFailedRunToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return fetch_failed_run.__opensre_registered_tool__
+        return fetch_failed_run.__opensore_registered_tool__
 
 
 def test_is_available_requires_tracer_web() -> None:
-    rt = fetch_failed_run.__opensre_registered_tool__
+    rt = fetch_failed_run.__opensore_registered_tool__
     assert rt.is_available({"tracer_web": {"some": "data"}}) is True
     assert rt.is_available({}) is False
 

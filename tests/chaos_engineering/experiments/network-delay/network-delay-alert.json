@@ -1,7 +1,7 @@
 {
   "_meta": {
     "purpose": "Synthetic alert for network-delay chaos demo",
-    "run": "opensre investigate -i tests/chaos_engineering/experiments/network-delay/network-delay-alert.json"
+    "run": "opensore investigate -i tests/chaos_engineering/experiments/network-delay/network-delay-alert.json"
   },
   "title": "[Triggered] High latency - network-delay-demo",
   "alert_name": "Datadog monitor: elevated latency network-delay-demo",

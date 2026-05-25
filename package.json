@@ -1,7 +1,7 @@
 {
-  "name": "opensre-dev",
+  "name": "opensore-dev",
   "private": true,
-  "description": "Dev tooling for OpenSRE (not a published package).",
+  "description": "Dev tooling for OpenSore (not a published package).",
   "scripts": {
     "regen-splash": "node scripts/regen_splash.js"
   },

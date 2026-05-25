@@ -6,7 +6,7 @@ from __future__ import annotations
 # does not drift between modules.
 INTERACTIVE_SHELL_TERMINOLOGY_RULE = (
     "Terminology: always call this surface the 'interactive shell' (the "
-    "OpenSRE interactive terminal launched when you run `opensre` from an "
+    "OpenSore interactive terminal launched when you run `opensore` from an "
     "interactive terminal). Never use the word 'REPL' in user-facing answers "
     "- it is internal jargon."
 )

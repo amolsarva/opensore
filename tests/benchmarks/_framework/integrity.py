@@ -2,7 +2,7 @@
 
 Encodes the framework's honest-results discipline so that dishonest benchmark
 runs and reports are structurally impossible to produce. See
-``~/DevBox/opensre-notes/opensre-benchmark-framework.md`` § 0 for the full
+``~/DevBox/opensore-notes/opensore-benchmark-framework.md`` § 0 for the full
 mechanism catalogue.
 
 This module provides two enforcement points:
@@ -216,7 +216,7 @@ class IntegrityGuard:
         if not report.negative_results.strip():
             violations.append(
                 "M9: report.negative_results is empty. Reports must include a "
-                "'where opensre lost or tied' section. If genuinely no losses, "
+                "'where opensore lost or tied' section. If genuinely no losses, "
                 "state that explicitly."
             )
 
@@ -224,7 +224,7 @@ class IntegrityGuard:
         if not report.coi_disclosure.strip():
             violations.append(
                 "M10: report.coi_disclosure is empty. Conflict-of-interest "
-                "disclosure is required — name who built opensre, who built "
+                "disclosure is required — name who built opensore, who built "
                 "the benchmark, who ran it, and who interpreted the results."
             )
 
@@ -248,7 +248,7 @@ class IntegrityGuard:
 
 STANDARD_COI_DISCLOSURE: str = (
     "Conflict-of-interest disclosure: this benchmark run was authored, "
-    "executed, and interpreted by the same person who builds opensre. "
+    "executed, and interpreted by the same person who builds opensore. "
     "Per the framework's integrity discipline, this structural bias is "
     "mitigated by (a) pre-registration committed before the run, "
     "(b) per-stratum reporting, (c) required negative-results section, "

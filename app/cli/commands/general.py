@@ -25,7 +25,7 @@ from app.version import get_version
 @click.command(name="uninstall")
 @click.option("--yes", "-y", "local_yes", is_flag=True, help="Skip the confirmation prompt.")
 def uninstall_command(local_yes: bool) -> None:
-    """Remove opensre and all local data from this machine."""
+    """Remove opensore and all local data from this machine."""
     from app.cli.support.uninstall import run_uninstall
 
     raise SystemExit(run_uninstall(yes=local_yes or is_yes()))
@@ -64,7 +64,7 @@ def version_command() -> None:
         click.echo(
             json.dumps(
                 {
-                    "opensre": get_version(),
+                    "opensore": get_version(),
                     "python": platform.python_version(),
                     "os": platform.system().lower(),
                     "arch": platform.machine(),
@@ -72,7 +72,7 @@ def version_command() -> None:
             )
         )
         return
-    click.echo(f"opensre {get_version()}")
+    click.echo(f"opensore {get_version()}")
     click.echo(f"Python  {platform.python_version()}")
     click.echo(f"OS      {platform.system().lower()} ({platform.machine()})")
 
@@ -193,9 +193,9 @@ def investigate_command(
         )
         return
     if slack_thread:
-        from app.cli.support.errors import OpenSREError
+        from app.cli.support.errors import OpenSoreError
 
-        raise OpenSREError(
+        raise OpenSoreError(
             "--slack-thread requires --service.",
             suggestion="Pass --service <name> alongside --slack-thread CHANNEL/TS.",
         )
@@ -233,14 +233,14 @@ def investigate_command(
             # ANSI control codes corrupt the JSON payload that consumers expect on
             # stdout (pipes, redirection, --json, CI logs).
             # --evaluate forces the non-streaming path because the streaming runner
-            # does not yet wire opensre_evaluate scoring through the renderer.
+            # does not yet wire opensore_evaluate scoring through the renderer.
             stream_to_stdout = (
                 sys.stdout.isatty() and not is_json_output() and output is None and not evaluate
             )
             if stream_to_stdout:
                 run_investigation_cli_streaming(raw_alert=payload)
             else:
-                result = run_investigation_cli(raw_alert=payload, opensre_evaluate=evaluate)
+                result = run_investigation_cli(raw_alert=payload, opensore_evaluate=evaluate)
                 write_json(result, output)
     except SystemExit:
         raise
@@ -262,7 +262,7 @@ def _run_service_investigation(
 
     from app.cli.investigation import run_investigation_cli
     from app.cli.support.args import write_json
-    from app.cli.support.errors import OpenSREError
+    from app.cli.support.errors import OpenSoreError
     from app.remote.runtime_alert import build_runtime_alert_payload
 
     conflicting = [
@@ -276,14 +276,14 @@ def _run_service_investigation(
         if value
     ]
     if conflicting:
-        raise OpenSREError(
+        raise OpenSoreError(
             f"--service cannot be combined with {', '.join(conflicting)}.",
-            suggestion="Run 'opensre investigate --service <name>' on its own.",
+            suggestion="Run 'opensore investigate --service <name>' on its own.",
         )
 
     slack_bot_token = os.getenv("SLACK_BOT_TOKEN", "").strip()
     if slack_thread and not slack_bot_token:
-        raise OpenSREError(
+        raise OpenSoreError(
             "--slack-thread was provided but SLACK_BOT_TOKEN is not set.",
             suggestion="Export SLACK_BOT_TOKEN=xoxb-... in your environment and retry.",
         )
@@ -304,7 +304,7 @@ def _run_service_investigation(
     ):
         result = run_investigation_cli(
             raw_alert=raw_alert,
-            opensre_evaluate=_eval,
+            opensore_evaluate=_eval,
         )
     write_json(result, output)
     raise SystemExit(SUCCESS)

@@ -120,7 +120,7 @@ def extract_judge_json_from_response(text: str) -> dict[str, Any]:
     return cast(dict[str, Any], raw)
 
 
-def build_opensre_judge_prompt(*, rubric: str, state: dict[str, Any]) -> str:
+def build_opensore_judge_prompt(*, rubric: str, state: dict[str, Any]) -> str:
     root_cause = str(state.get("root_cause") or "")
     category = str(state.get("root_cause_category") or "")
     problem = str(state.get("problem_md") or "")
@@ -175,12 +175,12 @@ Respond with ONE JSON object only (no markdown), exactly this shape:
 """
 
 
-def run_opensre_llm_judge(*, state: dict[str, Any], rubric: str) -> dict[str, Any]:
+def run_opensore_llm_judge(*, state: dict[str, Any], rubric: str) -> dict[str, Any]:
     from app.config import resolve_llm_settings
     from app.services import get_llm_for_reasoning
 
     resolve_llm_settings()
-    prompt = build_opensre_judge_prompt(rubric=rubric, state=state)
+    prompt = build_opensore_judge_prompt(rubric=rubric, state=state)
     llm = get_llm_for_reasoning()
     response = llm.invoke(prompt)
     content = response.content if hasattr(response, "content") else str(response)

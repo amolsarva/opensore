@@ -131,7 +131,7 @@ def test_run_uninstall_pip_success(
     rc = run_uninstall(yes=True)
 
     assert rc == 0
-    assert "opensre has been uninstalled" in capsys.readouterr().out
+    assert "opensore has been uninstalled" in capsys.readouterr().out
 
 
 def test_run_uninstall_pip_failure_shows_hint(
@@ -167,7 +167,7 @@ def test_run_uninstall_pip_failure_windows_hint(
 def test_run_uninstall_binary_removes_executable(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], tmp_path: Path
 ) -> None:
-    fake_exe = tmp_path / "opensre"
+    fake_exe = tmp_path / "opensore"
     fake_exe.write_bytes(b"\x7fELF")
     monkeypatch.setattr("app.cli.support.uninstall._data_dirs", lambda: [])
     monkeypatch.setattr("app.cli.support.uninstall._is_binary_install", lambda: True)
@@ -218,7 +218,7 @@ def test_uninstall_command_yes_flag_skips_prompt() -> None:
         result = runner.invoke(cli, ["uninstall", "--yes"])
 
     assert result.exit_code == 0
-    assert "opensre has been uninstalled" in result.output
+    assert "opensore has been uninstalled" in result.output
 
 
 def test_uninstall_command_short_yes_flag() -> None:
@@ -238,4 +238,4 @@ def test_uninstall_help_describes_command() -> None:
     runner = CliRunner()
     result = runner.invoke(cli, ["uninstall", "--help"])
     assert result.exit_code == 0
-    assert "Remove opensre and all local data from this machine." in result.output
+    assert "Remove opensore and all local data from this machine." in result.output

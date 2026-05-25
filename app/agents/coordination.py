@@ -1,7 +1,7 @@
 """Branch ownership and cross-agent coordination for local AI agent fleet.
 
 Provides a lightweight ownership table to prevent two agents from racing
-on the same branch. Persists claims to a JSONL file in the OpenSRE config
+on the same branch. Persists claims to a JSONL file in the OpenSore config
 directory.
 """
 
@@ -13,11 +13,11 @@ from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 
-from app.constants import OPENSRE_HOME_DIR
+from app.constants import OPENSORE_HOME_DIR
 
 logger = logging.getLogger(__name__)
 
-_DEFAULT_CLAIMS_PATH = OPENSRE_HOME_DIR / "branch_claims.jsonl"
+_DEFAULT_CLAIMS_PATH = OPENSORE_HOME_DIR / "branch_claims.jsonl"
 
 
 @dataclass(frozen=True)
@@ -47,7 +47,7 @@ class BranchClaim:
 class BranchClaims:
     """JSONL-backed registry of branch ownership claims by local AI agents.
 
-    Persists to ``~/.config/opensre/branch_claims.jsonl`` by default.
+    Persists to ``~/.config/opensore/branch_claims.jsonl`` by default.
     The file is fully rewritten on both claim (to avoid duplicates on re-claim)
     and release operations.
     """

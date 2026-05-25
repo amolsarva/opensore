@@ -94,7 +94,7 @@ def send_openclaw_report(
         return False, f"OpenClaw config invalid: {exc}"
 
     title = (
-        str(state.get("alert_name") or "OpenSRE Investigation").strip() or "OpenSRE Investigation"
+        str(state.get("alert_name") or "OpenSore Investigation").strip() or "OpenSore Investigation"
     )
     content = _report_body(state, report)
     conversation_id = str(openclaw_context.get("conversation_id") or "").strip()

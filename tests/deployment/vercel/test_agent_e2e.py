@@ -44,7 +44,7 @@ class TestVercelDeployment:
 
         body = json.loads(resp.text)
         assert body["status"] == "ok", f"Unexpected status: {body}"
-        assert body["service"] == "opensre", f"Unexpected service: {body}"
+        assert body["service"] == "opensore", f"Unexpected service: {body}"
 
         logger.info("Health endpoint OK: %s", body)
 

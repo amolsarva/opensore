@@ -1,7 +1,7 @@
 {
   "_meta": {
     "purpose": "Synthetic alert for IOChaos latency",
-    "run": "opensre investigate -i tests/chaos_engineering/experiments/io-latency/io-latency-alert.json"
+    "run": "opensore investigate -i tests/chaos_engineering/experiments/io-latency/io-latency-alert.json"
   },
   "title": "[Triggered] Disk latency - io-latency-demo",
   "alert_name": "Datadog monitor: slow I/O workload",

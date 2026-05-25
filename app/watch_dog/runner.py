@@ -162,7 +162,7 @@ def _format_alarm_message(sample: ProcessSample, breach: ThresholdBreach) -> str
 
     return "\n".join(
         [
-            "<b>🚨 OpenSRE Watchdog Alarm</b>",
+            "<b>🚨 OpenSore Watchdog Alarm</b>",
             f"<b>host</b>       <code>{html.escape(socket.gethostname())}</code>",
             f"<b>pid</b>        <code>{sample.pid}</code>  "
             f"(<code>{html.escape(sample.name or '-')}</code>)",

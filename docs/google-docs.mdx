@@ -1,9 +1,9 @@
 ---
 title: "Google Docs"
-description: "Connect Google Docs so OpenSRE can write investigation reports to your Google Drive"
+description: "Connect Google Docs so OpenSore can write investigation reports to your Google Drive"
 ---
 
-OpenSRE can write investigation findings directly to Google Drive as formatted Google Docs — creating a persistent, shareable record of each incident investigation linked to your team's existing Drive folder.
+OpenSore can write investigation findings directly to Google Drive as formatted Google Docs — creating a persistent, shareable record of each incident investigation linked to your team's existing Drive folder.
 
 ## Prerequisites
 
@@ -15,7 +15,7 @@ OpenSRE can write investigation findings directly to Google Drive as formatted G
 ### Option 1: Interactive CLI
 
 ```bash
-opensre integrations setup
+opensore integrations setup
 ```
 
 Select **Google Docs** when prompted and provide your credentials file path and folder ID.
@@ -57,7 +57,7 @@ GOOGLE_DRIVE_FOLDER_ID=your-google-drive-folder-id
 
 1. In Google Cloud Console, go to **IAM & Admin** → **Service Accounts**
 2. Click **Create Service Account**
-3. Give it a name (e.g., `opensre-docs`) and click **Create**
+3. Give it a name (e.g., `opensore-docs`) and click **Create**
 4. Skip role assignment and click **Done**
 5. Click on the service account → **Keys** → **Add Key** → **Create new key** (JSON)
 6. Download the JSON file
@@ -66,7 +66,7 @@ GOOGLE_DRIVE_FOLDER_ID=your-google-drive-folder-id
 
 1. In Google Drive, open the folder where reports should be saved
 2. Click **Share**
-3. Add the service account email (e.g., `opensre-docs@your-project.iam.gserviceaccount.com`)
+3. Add the service account email (e.g., `opensore-docs@your-project.iam.gserviceaccount.com`)
 4. Set the permission to **Editor**
 
 ## Finding the folder ID
@@ -77,7 +77,7 @@ The folder ID appears in the Drive URL:
 ## Verify
 
 ```bash
-opensre integrations verify google_docs
+opensore integrations verify google_docs
 ```
 
 Expected output:

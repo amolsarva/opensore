@@ -16,7 +16,7 @@ from app.llm_reasoning_effort import (
     infer_reasoning_effort_default,
 )
 
-_ENV_KEY = "OPENSRE_REASONING_EFFORT"
+_ENV_KEY = "OPENSORE_REASONING_EFFORT"
 
 
 @pytest.fixture(autouse=True)

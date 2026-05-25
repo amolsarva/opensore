@@ -3,10 +3,10 @@ title: "Telegram"
 description: "Deliver investigation findings to a Telegram chat or channel."
 ---
 
-OpenSRE's Telegram integration delivers investigation findings to any chat your bot has been added to — useful for mobile-first on-call rotations and personal alerting.
+OpenSore's Telegram integration delivers investigation findings to any chat your bot has been added to — useful for mobile-first on-call rotations and personal alerting.
 
 <Note>
-Unlike Slack and Discord, Telegram is **not** included in the interactive `opensre onboard` wizard today. Configure it via environment variables or by editing `~/.config/opensre/integrations.json` directly. Tracked at [#1481](https://github.com/Tracer-Cloud/opensre/issues/1481).
+Unlike Slack and Discord, Telegram is **not** included in the interactive `opensore onboard` wizard today. Configure it via environment variables or by editing `~/.config/opensore/integrations.json` directly. Tracked at [#1481](https://github.com/Tracer-Cloud/opensore/issues/1481).
 </Note>
 
 ---
@@ -25,8 +25,8 @@ Unlike Slack and Discord, Telegram is **not** included in the interactive `opens
 
 1. Open Telegram and search for `@BotFather`. Open the chat and tap **Start**.
 2. Send `/newbot`.
-3. When prompted, send a **display name** for your bot (e.g. `OpenSRE Alerts`).
-4. Send a **username** that ends in `bot` (e.g. `opensre_alerts_bot`). It must be globally unique.
+3. When prompted, send a **display name** for your bot (e.g. `OpenSore Alerts`).
+4. Send a **username** that ends in `bot` (e.g. `opensore_alerts_bot`). It must be globally unique.
 5. BotFather replies with an **HTTP API token** of the form `<numeric-id>:<token-secret>`. Copy it — it is your **bot token**. Treat it like a password. Anyone holding it can send messages as your bot.
 
 <Tip>
@@ -100,14 +100,14 @@ TELEGRAM_DEFAULT_CHAT_ID=<chat-id>
 | `TELEGRAM_BOT_TOKEN` | Bot HTTP API token from BotFather. Required. |
 | `TELEGRAM_DEFAULT_CHAT_ID` | Default delivery destination. Required for delivery to work. |
 
-OpenSRE picks these up at startup and registers Telegram as an active integration.
+OpenSore picks these up at startup and registers Telegram as an active integration.
 
 ---
 
 ## Step 5: Verify
 
 ```bash
-opensre integrations verify telegram
+opensore integrations verify telegram
 ```
 
 This calls Telegram's [`getMe`](https://core.telegram.org/bots/api#getme) endpoint. On success it reports the bot's `@username`. On failure it reports the Telegram API error message verbatim.
@@ -115,7 +115,7 @@ This calls Telegram's [`getMe`](https://core.telegram.org/bots/api#getme) endpoi
 You can also trigger a real investigation against a bundled fixture:
 
 ```bash
-opensre investigate --input tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json
+opensore investigate --input tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json
 ```
 
 Findings should appear in the configured chat. Long reports are truncated to Telegram's 4,096-character message limit.
@@ -124,13 +124,13 @@ Findings should appear in the configured chat. Long reports are truncated to Tel
 
 ## Troubleshooting
 
-`opensre integrations verify telegram` only calls Telegram's `getMe` endpoint, so it surfaces token-validity errors but cannot detect chat-routing problems. Delivery-time errors only show up when an investigation actually posts.
+`opensore integrations verify telegram` only calls Telegram's `getMe` endpoint, so it surfaces token-validity errors but cannot detect chat-routing problems. Delivery-time errors only show up when an investigation actually posts.
 
-### Errors from `opensre integrations verify telegram`
+### Errors from `opensore integrations verify telegram`
 
 **`Missing bot_token`**
 
-`TELEGRAM_BOT_TOKEN` is empty. Re-check `.env` and restart any long-running OpenSRE process so it re-reads the file.
+`TELEGRAM_BOT_TOKEN` is empty. Re-check `.env` and restart any long-running OpenSore process so it re-reads the file.
 
 **`Telegram API check failed: 401 Client Error: Unauthorized for url: …`**
 
@@ -142,7 +142,7 @@ The verifier currently does not redact secrets from this error: the `for url:` p
 
 ### Errors that only surface during delivery
 
-These are Telegram API responses that come back when OpenSRE actually tries to post a finding. `verify` only calls `getMe`, so it cannot catch them. They appear in OpenSRE logs as `[telegram] post message failed: <description>` with the Telegram description copied verbatim.
+These are Telegram API responses that come back when OpenSore actually tries to post a finding. `verify` only calls `getMe`, so it cannot catch them. They appear in OpenSore logs as `[telegram] post message failed: <description>` with the Telegram description copied verbatim.
 
 **`description: chat not found`**
 

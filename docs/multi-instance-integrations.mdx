@@ -5,7 +5,7 @@ description: 'Configure multiple accounts, regions, or clusters per provider'
 
 ## Overview
 
-Real deployments have multiple clusters, regions, teams, and accounts for the same provider — a prod and staging Grafana, two AWS accounts, three Kubernetes clusters. OpenSRE's integration model now supports multiple **named instances** per provider with **tags** for filtering, while remaining fully backward-compatible with existing single-instance configurations.
+Real deployments have multiple clusters, regions, teams, and accounts for the same provider — a prod and staging Grafana, two AWS accounts, three Kubernetes clusters. OpenSore's integration model now supports multiple **named instances** per provider with **tags** for filtering, while remaining fully backward-compatible with existing single-instance configurations.
 
 ## Configuring multiple instances
 
@@ -26,7 +26,7 @@ Supported env vars: `GRAFANA_INSTANCES`, `DD_INSTANCES`, `HONEYCOMB_INSTANCES`, 
 
 When `<SERVICE>_INSTANCES` is set, the legacy single-instance vars for that service (e.g. `GRAFANA_INSTANCE_URL`, `GRAFANA_READ_TOKEN`) are ignored. If the JSON is invalid the loader logs a warning and falls back to the legacy vars.
 
-### 2. Store file (`~/.config/opensre/integrations.json`)
+### 2. Store file (`~/.config/opensore/integrations.json`)
 
 The store uses a v2 schema with multiple instances per record:
 
@@ -63,7 +63,7 @@ Alerts can carry a `grafana_instance` hint — either at the top level of the ra
 }
 ```
 
-When set, OpenSRE selects the matching instance. If the hint is absent or unknown, the default (first) instance is used.
+When set, OpenSore selects the matching instance. If the hint is absent or unknown, the default (first) instance is used.
 
 ### Programmatic selectors
 

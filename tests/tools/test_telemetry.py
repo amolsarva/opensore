@@ -52,7 +52,7 @@ def captured_sentry_events(
     """Patch the Sentry SDK so every capture lands in a local list.
 
     Tests rely on this rather than the real ``sentry_sdk`` because:
-      * ``conftest`` sets ``OPENSRE_SENTRY_DISABLED=1`` to keep the suite
+      * ``conftest`` sets ``OPENSORE_SENTRY_DISABLED=1`` to keep the suite
         offline — we re-enable it here.
       * ``capture_exception`` and ``push_scope`` both need to be present
         for the contextual-tag path inside ``app.utils.sentry_sdk``.
@@ -62,8 +62,8 @@ def captured_sentry_events(
     snapshots the current scope's extras alongside the exception so tests
     can assert on the tags that reached Sentry.
     """
-    monkeypatch.delenv("OPENSRE_SENTRY_DISABLED", raising=False)
-    monkeypatch.delenv("OPENSRE_NO_TELEMETRY", raising=False)
+    monkeypatch.delenv("OPENSORE_SENTRY_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_NO_TELEMETRY", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
 
     events: list[CapturedSentryEvent] = []
@@ -758,7 +758,7 @@ def test_eks_nodegroup_health_tags_failing_nodegroup_during_iteration(
 #   ``_TOOLS_WITHOUT_DELIBERATE_CATCH``
 #       The tool either propagates exceptions (the global wrapper added in
 #       #1476 catches them at ``BaseTool.__call__`` / ``RegisteredTool.__call__``
-#       and reports with ``opensre.context="tool.<name>"``) or has no failure
+#       and reports with ``opensore.context="tool.<name>"``) or has no failure
 #       mode that needs the helper. The allowlist is explicit so a new tool
 #       added with a deliberate-catch pattern fails this test until it is
 #       migrated.

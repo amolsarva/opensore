@@ -7,13 +7,13 @@ variable "region" {
 variable "project" {
   description = "Resource name prefix and tag value. Keep stable across applies."
   type        = string
-  default     = "opensre-bench"
+  default     = "opensore-bench"
 }
 
 variable "github_repository" {
   description = "owner/name of the GitHub repository allowed to assume the bench role via OIDC."
   type        = string
-  default     = "Tracer-Cloud/opensre"
+  default     = "Tracer-Cloud/opensore"
 }
 
 variable "results_bucket_name" {

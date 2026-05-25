@@ -202,7 +202,7 @@ def _resolved_model_for_pid(pid: int) -> str | None:
 
 def _registry_record_for(pid: int) -> AgentRecord | None:
     # The sampler-tick cache is the fast path. Non-interactive
-    # callers (e.g. ``opensre agents list``) never enter the loop,
+    # callers (e.g. ``opensore agents list``) never enter the loop,
     # so the cache stays empty and we fall back to disk.
     record = _TickCache.registry_snapshot.get(pid)
     if record is not None:

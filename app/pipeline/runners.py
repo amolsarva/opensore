@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 # Serializes temporary render_report monkeypatches when multiple streaming
 # investigations run concurrently (e.g. remote server).
 _render_report_patch_lock = threading.Lock()
-_SENTRY_CAPTURED_ATTR = "_opensre_sentry_captured"
+_SENTRY_CAPTURED_ATTR = "_opensore_sentry_captured"
 
 
 def _exception_was_captured(exc: BaseException) -> bool:
@@ -78,7 +78,7 @@ def run_investigation(
     *,
     resolved_integrations: dict[str, Any] | None = None,
     openclaw_context: dict[str, Any] | None = None,
-    opensre_evaluate: bool = False,
+    opensore_evaluate: bool = False,
     investigation_metadata: tuple[str, str, str] | None = None,
 ) -> AgentState:
     """Run the investigation from a raw alert payload. Pure function: inputs in, state out.
@@ -96,7 +96,7 @@ def run_investigation(
 
     initial = make_initial_state(
         raw_alert=raw_alert,
-        opensre_evaluate=opensre_evaluate,
+        opensore_evaluate=opensore_evaluate,
         investigation_metadata=investigation_metadata,
     )
     if resolved_integrations is not None:
@@ -128,7 +128,7 @@ def run_chat(state: AgentState, _config: NodeConfig | None = None) -> AgentState
 async def astream_investigation(
     raw_alert: str | dict[str, Any],
     *,
-    opensre_evaluate: bool = False,
+    opensore_evaluate: bool = False,
     investigation_metadata: tuple[str, str, str] | None = None,
 ) -> AsyncIterator[Any]:
     """Stream investigation events in real time.
@@ -141,7 +141,7 @@ async def astream_investigation(
 
     initial = make_initial_state(
         raw_alert=raw_alert,
-        opensre_evaluate=opensre_evaluate,
+        opensore_evaluate=opensore_evaluate,
         investigation_metadata=investigation_metadata,
     )
 

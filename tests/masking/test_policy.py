@@ -15,7 +15,7 @@ def test_default_policy_is_disabled() -> None:
 
 
 def test_from_env_enabled_true() -> None:
-    policy = MaskingPolicy.from_env({"OPENSRE_MASK_ENABLED": "true"})
+    policy = MaskingPolicy.from_env({"OPENSORE_MASK_ENABLED": "true"})
     assert policy.enabled is True
     assert policy.kinds == ALL_KINDS
 
@@ -35,27 +35,27 @@ def test_from_env_enabled_true() -> None:
     ],
 )
 def test_from_env_bool_parsing(raw: str, expected: bool) -> None:
-    policy = MaskingPolicy.from_env({"OPENSRE_MASK_ENABLED": raw})
+    policy = MaskingPolicy.from_env({"OPENSORE_MASK_ENABLED": raw})
     assert policy.enabled is expected
 
 
 def test_from_env_kinds_subset() -> None:
     policy = MaskingPolicy.from_env(
-        {"OPENSRE_MASK_ENABLED": "true", "OPENSRE_MASK_KINDS": "pod,namespace"}
+        {"OPENSORE_MASK_ENABLED": "true", "OPENSORE_MASK_KINDS": "pod,namespace"}
     )
     assert policy.kinds == ("pod", "namespace")
 
 
 def test_from_env_kinds_unknown_kind_is_ignored() -> None:
     policy = MaskingPolicy.from_env(
-        {"OPENSRE_MASK_ENABLED": "true", "OPENSRE_MASK_KINDS": "pod,not_a_real_kind,email"}
+        {"OPENSORE_MASK_ENABLED": "true", "OPENSORE_MASK_KINDS": "pod,not_a_real_kind,email"}
     )
     assert policy.kinds == ("pod", "email")
 
 
 def test_from_env_kinds_all_invalid_falls_back_to_defaults() -> None:
     policy = MaskingPolicy.from_env(
-        {"OPENSRE_MASK_ENABLED": "true", "OPENSRE_MASK_KINDS": "nope,also_nope"}
+        {"OPENSORE_MASK_ENABLED": "true", "OPENSORE_MASK_KINDS": "nope,also_nope"}
     )
     assert policy.kinds == ALL_KINDS
 
@@ -63,8 +63,8 @@ def test_from_env_kinds_all_invalid_falls_back_to_defaults() -> None:
 def test_from_env_extra_regex_parsed() -> None:
     policy = MaskingPolicy.from_env(
         {
-            "OPENSRE_MASK_ENABLED": "true",
-            "OPENSRE_MASK_EXTRA_REGEX": '{"jira_key": "\\\\b[A-Z]+-\\\\d+\\\\b"}',
+            "OPENSORE_MASK_ENABLED": "true",
+            "OPENSORE_MASK_EXTRA_REGEX": '{"jira_key": "\\\\b[A-Z]+-\\\\d+\\\\b"}',
         }
     )
     assert "jira_key" in policy.extra_patterns
@@ -72,7 +72,7 @@ def test_from_env_extra_regex_parsed() -> None:
 
 def test_from_env_invalid_json_extra_regex_ignored() -> None:
     policy = MaskingPolicy.from_env(
-        {"OPENSRE_MASK_ENABLED": "true", "OPENSRE_MASK_EXTRA_REGEX": "not valid json"}
+        {"OPENSORE_MASK_ENABLED": "true", "OPENSORE_MASK_EXTRA_REGEX": "not valid json"}
     )
     assert policy.extra_patterns == {}
 

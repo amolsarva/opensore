@@ -21,7 +21,7 @@ def test_health_command_runs() -> None:
         result = runner.invoke(cli, ["health"])
 
     assert result.exit_code == 0
-    assert "OpenSRE Health" in result.output
+    assert "OpenSore Health" in result.output
     assert "Environment" in result.output
     assert "Integration store" in result.output
     assert "Summary:" in result.output

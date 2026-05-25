@@ -214,7 +214,7 @@ async def test_run_discord_investigation_posts_followup_on_success(
     assert posted_followups[0]["token"] == _INTERACTION_TOKEN
     embed = posted_followups[0]["embeds"][0]
     assert "CPU spike" in embed["title"]
-    assert embed["footer"]["text"] == "OpenSRE Investigation"
+    assert embed["footer"]["text"] == "OpenSore Investigation"
 
 
 @pytest.mark.asyncio

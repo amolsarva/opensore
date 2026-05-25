@@ -41,7 +41,7 @@ def test_load_command_history_entries_returns_empty_on_mkdir_oserror(
 def test_history_slash_command_does_not_raise_when_history_dir_unwritable(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Regression: /history must not crash the REPL when OPENSRE_HOME_DIR is not writable."""
+    """Regression: /history must not crash the REPL when OPENSORE_HOME_DIR is not writable."""
     mock_path = MagicMock(spec=Path)
     mock_parent = MagicMock()
     mock_path.parent = mock_parent

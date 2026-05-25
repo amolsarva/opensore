@@ -141,13 +141,13 @@ def extract_final_answer_payload(case_data: dict[str, Any]) -> tuple[dict[str, A
         if parsed and isinstance(parsed.get("top_3_predictions"), list):
             return parsed, source
 
-    inferred = infer_final_answer_from_opensre_text(case_data)
+    inferred = infer_final_answer_from_opensore_text(case_data)
     if inferred is not None:
-        return inferred, "inferred_from_opensre_text"
+        return inferred, "inferred_from_opensore_text"
     return None, "unparsed"
 
 
-def infer_final_answer_from_opensre_text(case_data: dict[str, Any]) -> dict[str, Any] | None:
+def infer_final_answer_from_opensore_text(case_data: dict[str, Any]) -> dict[str, Any] | None:
     final_state = case_data.get("final_state")
     texts = [
         case_data.get("root_cause"),
@@ -177,7 +177,7 @@ def infer_final_answer_from_opensre_text(case_data: dict[str, Any]) -> dict[str,
         return None
 
     return {
-        "key_evidence_summary": "Inferred from OpenSRE RCA text for CloudOpsBench scoring.",
+        "key_evidence_summary": "Inferred from OpenSore RCA text for CloudOpsBench scoring.",
         "top_3_predictions": [
             {
                 "rank": 1,

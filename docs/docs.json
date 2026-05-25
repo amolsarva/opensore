@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "OpenSRE Documentation",
+  "name": "OpenSore Documentation",
   "modeToggle": {
     "default": "dark",
     "isHidden": false
@@ -292,23 +292,23 @@
     "links": [
       {
         "label": "Discord",
-        "href": "https://discord.gg/opensre",
+        "href": "https://discord.gg/opensore",
         "icon": "discord",
         "iconType": "brands"
       },
       {
         "label": "Releases",
-        "href": "https://github.com/Tracer-Cloud/opensre/releases",
+        "href": "https://github.com/Tracer-Cloud/opensore/releases",
         "icon": "box"
       },
       {
         "label": "GitHub",
-        "href": "https://github.com/Tracer-Cloud/opensre",
+        "href": "https://github.com/Tracer-Cloud/opensore",
         "icon": "github",
         "iconType": "brands"
       },
       {
-        "label": "OpenSRE Cloud",
+        "label": "OpenSore Cloud",
         "href": "https://app.tracer.cloud/",
         "icon": "/images/logo/tracer/Tracer-Head-Black.png"
       }
@@ -348,7 +348,7 @@
     "metatags": {}
   },
   "logo": {
-    "light": "/images/opensre-logo-black.svg",
-    "dark": "/images/opensre-logo-white.svg"
+    "light": "/images/opensore-logo-black.svg",
+    "dark": "/images/opensore-logo-white.svg"
   }
 }

@@ -36,10 +36,10 @@ def test_capture_cli_invoked_uses_safe_capture(monkeypatch: pytest.MonkeyPatch) 
     stub = _StubAnalytics()
     monkeypatch.setattr(cli, "get_analytics", lambda: stub)
 
-    cli.capture_cli_invoked({"command_path": "opensre version"})
+    cli.capture_cli_invoked({"command_path": "opensore version"})
 
     assert stub.events == [
-        (Event.CLI_INVOKED, {"command_path": "opensre version"}),
+        (Event.CLI_INVOKED, {"command_path": "opensore version"}),
     ]
 
 
@@ -62,14 +62,14 @@ def test_capture_cli_invoked_reports_analytics_failures_to_sentry(
 
 def test_build_cli_invoked_properties_includes_full_command_path() -> None:
     properties = cli.build_cli_invoked_properties(
-        entrypoint="opensre",
+        entrypoint="opensore",
         command_parts=["remote", "ops", "status"],
         debug=True,
     )
 
     assert properties == {
-        "entrypoint": "opensre",
-        "command_path": "opensre remote ops status",
+        "entrypoint": "opensore",
+        "command_path": "opensore remote ops status",
         "command_family": "remote",
         "json_output": False,
         "verbose": False,
@@ -83,11 +83,11 @@ def test_build_cli_invoked_properties_includes_full_command_path() -> None:
 
 def test_build_cli_invoked_properties_handles_root_invocation() -> None:
     properties = cli.build_cli_invoked_properties(
-        entrypoint="opensre",
+        entrypoint="opensore",
         command_parts=[],
     )
 
-    assert properties["command_path"] == "opensre"
+    assert properties["command_path"] == "opensore"
     assert properties["command_family"] == "root"
     assert "subcommand" not in properties
     assert "command_leaf" not in properties
@@ -114,25 +114,25 @@ def test_capture_eval_process_metrics_emit_expected_contract(
     stub = _StubAnalytics()
     monkeypatch.setattr(cli, "get_analytics", lambda: stub)
 
-    cli.capture_eval_process_started(rubric="must cite logs", mode="opensre_llm_judge")
+    cli.capture_eval_process_started(rubric="must cite logs", mode="opensore_llm_judge")
     cli.capture_eval_process_completed(
         duration_ms=740.3,
         overall_pass=True,
         score_0_100=92,
         rubric_item_count=4,
-        mode="opensre_llm_judge",
+        mode="opensore_llm_judge",
     )
     cli.capture_eval_process_parse_failed(
         failure_type="ValueError",
-        mode="opensre_llm_judge",
+        mode="opensore_llm_judge",
     )
     cli.capture_eval_process_failed(
         duration_ms=1200.0,
         failure_stage="invoke_judge",
         failure_type="RuntimeError",
-        mode="opensre_llm_judge",
+        mode="opensore_llm_judge",
     )
-    cli.capture_eval_process_skipped(reason="missing_rubric", mode="opensre_llm_judge")
+    cli.capture_eval_process_skipped(reason="missing_rubric", mode="opensore_llm_judge")
 
     for event, properties in stub.events:
         assert properties is not None

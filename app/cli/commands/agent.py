@@ -75,7 +75,7 @@ def scan_agents(should_register: bool, include_all: bool) -> None:
     candidates = discover_agent_processes(include_all=include_all)
     if not candidates:
         console.print(f"[{DIM}]no running AI-agent sessions detected[/]")
-        console.print(f"[{DIM}]use [bold]opensre agents scan --all[/bold] to inspect helpers[/]")
+        console.print(f"[{DIM}]use [bold]opensore agents scan --all[/bold] to inspect helpers[/]")
         return
 
     table = repl_table(title="agent scan", title_style=BOLD_BRAND)
@@ -99,11 +99,11 @@ def scan_agents(should_register: bool, include_all: bool) -> None:
     elif include_all:
         console.print(
             f"[{DIM}]showing helper processes; use "
-            "[bold]opensre agents scan[/bold] for likely agent sessions only[/]"
+            "[bold]opensore agents scan[/bold] for likely agent sessions only[/]"
         )
     else:
         console.print(
-            f"[{DIM}]Next: run [bold]opensre agents scan --register[/bold] "
+            f"[{DIM}]Next: run [bold]opensore agents scan --register[/bold] "
             f"to track {len(candidates)} process(es)[/]"
         )
 

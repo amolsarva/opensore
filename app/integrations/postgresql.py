@@ -139,7 +139,7 @@ def _get_connection(config: PostgreSQLConfig) -> Any:
         sslmode=config.ssl_mode,
         connect_timeout=int(config.timeout_seconds),
         options=f"-c statement_timeout={int(config.timeout_seconds * 1000)}ms",
-        application_name="opensre",
+        application_name="opensore",
     )
 
 

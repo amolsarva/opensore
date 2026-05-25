@@ -529,7 +529,7 @@ class TestClassifyOpenClawIntegration:
 
 class TestOpenClawExtractParams:
     def test_extract_params_maps_plain_config_keys(self) -> None:
-        params = call_openclaw_bridge_tool.__opensre_registered_tool__.extract_params(
+        params = call_openclaw_bridge_tool.__opensore_registered_tool__.extract_params(
             {
                 "openclaw": {
                     "connection_verified": True,
@@ -549,7 +549,7 @@ class TestOpenClawExtractParams:
         assert params["openclaw_args"] == ["mcp", "serve"]
 
     def test_extract_params_keeps_prefixed_keys_for_detected_sources(self) -> None:
-        params = call_openclaw_bridge_tool.__opensre_registered_tool__.extract_params(
+        params = call_openclaw_bridge_tool.__opensore_registered_tool__.extract_params(
             {
                 "openclaw": {
                     "connection_verified": True,
@@ -565,7 +565,7 @@ class TestOpenClawExtractParams:
         assert params["openclaw_args"] == ["mcp", "serve"]
 
     def test_search_params_maps_search_query_aliases(self) -> None:
-        params = search_openclaw_conversations.__opensre_registered_tool__.extract_params(
+        params = search_openclaw_conversations.__opensore_registered_tool__.extract_params(
             {
                 "openclaw": {
                     "connection_verified": True,

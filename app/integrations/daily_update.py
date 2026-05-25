@@ -1,4 +1,4 @@
-"""Generate and post a daily OpenSRE update from GitHub activity."""
+"""Generate and post a daily OpenSore update from GitHub activity."""
 
 from __future__ import annotations
 
@@ -149,7 +149,7 @@ def _github_headers(token: str) -> dict[str, str]:
     return {
         "Authorization": f"Bearer {token}",
         "Accept": "application/vnd.github+json",
-        "User-Agent": "opensre-daily-update",
+        "User-Agent": "opensore-daily-update",
         "X-GitHub-Api-Version": GITHUB_API_VERSION,
     }
 
@@ -558,7 +558,7 @@ def render_markdown(update: DailyUpdate) -> str:
     lines = [
         "---",
         f'title: "Daily Update \u2014 {london_date}"',
-        f'description: "OpenSRE engineering daily update for {london_date} (Europe/London)"',
+        f'description: "OpenSore engineering daily update for {london_date} (Europe/London)"',
         "---",
         "",
         update.thanks_line,
@@ -600,7 +600,7 @@ def render_markdown(update: DailyUpdate) -> str:
             "",
             "## Generation metadata",
             "",
-            f"- Generator version: `opensre {get_version()}`",
+            f"- Generator version: `opensore {get_version()}`",
             f"- Fallback summary used: `{'yes' if update.fallback_used else 'no'}`",
             f"- UTC window: `{update.window.start_utc.isoformat()}` to `{update.window.end_utc.isoformat()}`",
             "",
@@ -683,7 +683,7 @@ def regenerate_overview(output_dir: Path) -> Path:
     lines = [
         "---",
         'title: "Daily Updates"',
-        'description: "OpenSRE engineering daily updates from merged pull requests"',
+        'description: "OpenSore engineering daily updates from merged pull requests"',
         "---",
         "",
         "Daily updates are generated each evening (Europe/London) from the pull requests merged that day.",

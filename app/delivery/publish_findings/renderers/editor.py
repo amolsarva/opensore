@@ -4,9 +4,9 @@ import os
 import shutil
 import subprocess
 
-from app.constants import OPENSRE_TMP_DIR, ensure_opensre_tmp_dir
+from app.constants import OPENSORE_TMP_DIR, ensure_opensore_tmp_dir
 
-REPORT_PATH = OPENSRE_TMP_DIR / "opensre_last_report.md"
+REPORT_PATH = OPENSORE_TMP_DIR / "opensore_last_report.md"
 
 
 def open_in_editor(content: str) -> None:
@@ -18,7 +18,7 @@ def open_in_editor(content: str) -> None:
     """
     if not os.environ.get("VSCODE_IPC_HOOK_CLI"):
         return
-    ensure_opensre_tmp_dir()
+    ensure_opensore_tmp_dir()
     REPORT_PATH.write_text(content, encoding="utf-8")
     for cmd in ("cursor", "code"):
         if shutil.which(cmd):

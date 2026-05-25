@@ -18,17 +18,17 @@ from tests.benchmarks._framework.llm_dispatch import (
 )
 
 # --------------------------------------------------------------------------- #
-# Fixture: prevent the dispatcher from touching opensre's real singletons.    #
+# Fixture: prevent the dispatcher from touching opensore's real singletons.    #
 # --------------------------------------------------------------------------- #
 
 
 @pytest.fixture(autouse=True)
 def _patch_reset_singletons(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Replace _reset_opensre_singletons with a no-op so tests don't
-    require opensre's real LLM client to be importable."""
+    """Replace _reset_opensore_singletons with a no-op so tests don't
+    require opensore's real LLM client to be importable."""
     monkeypatch.setattr(
         LLMDispatcher,
-        "_reset_opensre_singletons",
+        "_reset_opensore_singletons",
         staticmethod(lambda: None),
     )
 
@@ -76,8 +76,8 @@ def test_verify_model_version_raises_on_mismatch() -> None:
     assert "claude-sonnet-4-5-20250929" in msg
 
 
-def test_verify_model_version_skips_opensre_default() -> None:
-    """Escape-hatch LLM uses whatever opensre is configured for — no pin check."""
+def test_verify_model_version_skips_opensore_default() -> None:
+    """Escape-hatch LLM uses whatever opensore is configured for — no pin check."""
     LLMDispatcher.verify_model_version("claude-default", "literally-anything")
 
 
@@ -132,7 +132,7 @@ def test_activate_openai_compatible_uses_openai_provider_with_base_url(
         assert os.environ["OPENAI_API_KEY"] == "ds-key"
 
 
-def test_activate_opensre_default_does_not_touch_provider_env(
+def test_activate_opensore_default_does_not_touch_provider_env(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """The escape hatch keeps whatever env is already set."""

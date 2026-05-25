@@ -5,7 +5,7 @@
   Run via: make test-rca FILE=openclaw_bridge_tools_silently_skipped
 
   Scenario: OpenClaw is correctly configured and connected. The gateway is running,
-  the token is valid, `opensre integrations verify openclaw` passes. Yet during
+  the token is valid, `opensore integrations verify openclaw` passes. Yet during
   every investigation the planner never selects list_openclaw_tools,
   search_openclaw_conversations, or call_openclaw_bridge_tool. Engineers notice
   that OpenClaw conversation context is never used even for services that have
@@ -21,8 +21,8 @@
     1. Configure openclaw: export OPENCLAW_MCP_MODE=stdio
        export OPENCLAW_MCP_COMMAND=openclaw
        export OPENCLAW_MCP_ARGS="mcp serve"
-    2. Verify passes: opensre integrations verify openclaw  → "discovered N tool(s)"
-    3. Run investigation: opensre investigate -i tests/fixtures/openclaw_test_alert.json
+    2. Verify passes: opensore integrations verify openclaw  → "discovered N tool(s)"
+    3. Run investigation: opensore investigate -i tests/fixtures/openclaw_test_alert.json
     4. Check verbose output: none of the three bridge tools appear in planned_actions
     5. This alert fires when monitoring detects openclaw_tools_selected_total == 0
        across multiple investigations where openclaw was configured.
@@ -33,12 +33,12 @@
 -->
 
 ## Source
-OpenSRE planner telemetry
+OpenSore planner telemetry
 
 ## Message
 **Firing**
 
-OpenClaw is configured and `opensre integrations verify openclaw` returns success, but
+OpenClaw is configured and `opensore integrations verify openclaw` returns success, but
 the investigation planner has not selected any OpenClaw bridge tool across the last 47
 investigations. The tools `list_openclaw_tools`, `search_openclaw_conversations`, and
 `call_openclaw_bridge_tool` all report `is_available=False` despite a valid connection.
@@ -52,7 +52,7 @@ injecting `connection_verified=True`. The `_openclaw_available()` gate reads
 Labels:
 - alertname = OpenClawBridgeToolsNeverSelected
 - severity = high
-- service = opensre-planner
+- service = opensore-planner
 - environment = production
 - pipeline_name = openclaw_mcp
 
@@ -70,13 +70,13 @@ Annotations:
   "commonLabels": {
     "alertname": "OpenClawBridgeToolsNeverSelected",
     "severity": "high",
-    "service": "opensre-planner",
+    "service": "opensore-planner",
     "environment": "production",
     "pipeline_name": "openclaw_mcp"
   },
   "commonAnnotations": {
     "summary": "OpenClaw bridge tools permanently unavailable despite valid connection. connection_verified key absent from catalog-resolved config dict.",
-    "description": "opensre integrations verify openclaw succeeds and the gateway is running, but across 47 consecutive investigations zero OpenClaw bridge tools were selected. Root cause: _catalog_impl.py calls openclaw_config.model_dump() and returns the result directly. model_dump() produces keys url, mode, auth_token, command, args — it does NOT include connection_verified. The _openclaw_available() function reads sources['openclaw']['connection_verified'] which is always absent, so is_available() returns False for all three bridge tools on every single investigation. Fix: add config_dict['connection_verified'] = True after model_dump() in _classify_service_instance() and in the env-var loader path.",
+    "description": "opensore integrations verify openclaw succeeds and the gateway is running, but across 47 consecutive investigations zero OpenClaw bridge tools were selected. Root cause: _catalog_impl.py calls openclaw_config.model_dump() and returns the result directly. model_dump() produces keys url, mode, auth_token, command, args — it does NOT include connection_verified. The _openclaw_available() function reads sources['openclaw']['connection_verified'] which is always absent, so is_available() returns False for all three bridge tools on every single investigation. Fix: add config_dict['connection_verified'] = True after model_dump() in _classify_service_instance() and in the env-var loader path.",
     "affected_tools": "list_openclaw_tools, search_openclaw_conversations, call_openclaw_bridge_tool",
     "root_cause_file": "app/integrations/_catalog_impl.py",
     "bug_id": "Bug 1 (openclaw catalog omits connection_verified)",
@@ -92,9 +92,9 @@ Annotations:
       "labels": {
         "alertname": "OpenClawBridgeToolsNeverSelected",
         "severity": "high",
-        "service": "opensre-planner",
+        "service": "opensore-planner",
         "environment": "production",
-        "instance": "opensre-prod-01"
+        "instance": "opensore-prod-01"
       },
       "annotations": {
         "summary": "OpenClaw bridge tools blocked by missing connection_verified flag in catalog",

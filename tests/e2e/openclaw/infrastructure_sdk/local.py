@@ -100,7 +100,7 @@ _LLM_CREDENTIAL_ENV_VARS: tuple[str, ...] = (
 
 
 def llm_credentials_present() -> bool:
-    """True when at least one OpenSRE-supported LLM API key is set.
+    """True when at least one OpenSore-supported LLM API key is set.
 
     Full-RCA sub-tests skipif on this; use-case sub-tests run without
     an LLM key.

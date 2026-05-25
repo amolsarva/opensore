@@ -1,4 +1,4 @@
-"""Shared constants for the OpenSRE CLI."""
+"""Shared constants for the OpenSore CLI."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Static grounding for the OpenSRE investigation flow.
+"""Static grounding for the OpenSore investigation flow.
 
 The interactive-shell assistant does not run investigations itself, but users
 ask how alerts are processed. Keep this aligned with ``app/pipeline/pipeline.py``
@@ -18,7 +18,7 @@ Source files:
 - app/state/agent_state.py defines AgentState / InvestigationState.
 
 Entry:
-- ``opensre investigate`` and pasted alerts in the interactive shell invoke
+- ``opensore investigate`` and pasted alerts in the interactive shell invoke
   ``run_investigation`` (or the streaming/async variants), which follows the
   pipeline above.
 

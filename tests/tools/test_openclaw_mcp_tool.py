@@ -16,27 +16,27 @@ from tests.tools.conftest import BaseToolContract, mock_agent_state
 
 class TestOpenClawListToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return list_openclaw_bridge_tools.__opensre_registered_tool__
+        return list_openclaw_bridge_tools.__opensore_registered_tool__
 
 
 class TestOpenClawCallToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return call_openclaw_bridge_tool.__opensre_registered_tool__
+        return call_openclaw_bridge_tool.__opensore_registered_tool__
 
 
 class TestOpenClawConversationSearchToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return search_openclaw_conversations.__opensre_registered_tool__
+        return search_openclaw_conversations.__opensore_registered_tool__
 
 
 class TestOpenClawConversationGetToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return get_openclaw_conversation.__opensre_registered_tool__
+        return get_openclaw_conversation.__opensore_registered_tool__
 
 
 class TestOpenClawSendMessageToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return send_openclaw_message.__opensre_registered_tool__
+        return send_openclaw_message.__opensore_registered_tool__
 
 
 def test_openclaw_tools_are_available_from_agent_state() -> None:
@@ -52,13 +52,13 @@ def test_openclaw_tools_are_available_from_agent_state() -> None:
         }
     )
 
-    assert list_openclaw_bridge_tools.__opensre_registered_tool__.is_available(sources) is True
-    assert call_openclaw_bridge_tool.__opensre_registered_tool__.is_available(sources) is True
-    assert search_openclaw_conversations.__opensre_registered_tool__.is_available(sources) is True
+    assert list_openclaw_bridge_tools.__opensore_registered_tool__.is_available(sources) is True
+    assert call_openclaw_bridge_tool.__opensore_registered_tool__.is_available(sources) is True
+    assert search_openclaw_conversations.__opensore_registered_tool__.is_available(sources) is True
 
 
 def test_extract_params_maps_openclaw_source_fields() -> None:
-    rt = call_openclaw_bridge_tool.__opensre_registered_tool__
+    rt = call_openclaw_bridge_tool.__opensore_registered_tool__
     params = rt.extract_params(
         mock_agent_state(
             {
@@ -80,7 +80,7 @@ def test_extract_params_maps_openclaw_source_fields() -> None:
 
 
 def test_extract_params_accept_plain_openclaw_config_keys() -> None:
-    rt = call_openclaw_bridge_tool.__opensre_registered_tool__
+    rt = call_openclaw_bridge_tool.__opensore_registered_tool__
     params = rt.extract_params(
         {
             "openclaw": {
@@ -102,7 +102,7 @@ def test_extract_params_accept_plain_openclaw_config_keys() -> None:
 
 
 def test_search_extract_params_maps_query() -> None:
-    rt = search_openclaw_conversations.__opensre_registered_tool__
+    rt = search_openclaw_conversations.__opensore_registered_tool__
     params = rt.extract_params(
         mock_agent_state(
             {
@@ -122,7 +122,7 @@ def test_search_extract_params_maps_query() -> None:
 
 
 def test_get_conversation_extract_params_maps_conversation_id() -> None:
-    rt = get_openclaw_conversation.__opensre_registered_tool__
+    rt = get_openclaw_conversation.__opensore_registered_tool__
     params = rt.extract_params(
         mock_agent_state(
             {

@@ -3,16 +3,16 @@ from __future__ import annotations
 import pytest
 
 from app.cli.support.cli_error_mapping import reraise_cli_runtime_error
-from app.cli.support.errors import OpenSREError
+from app.cli.support.errors import OpenSoreError
 
 
-def test_anthropic_model_not_found_raises_opensre_error() -> None:
-    """RuntimeError from an invalid Anthropic model name maps to a user-friendly OpenSREError."""
+def test_anthropic_model_not_found_raises_opensore_error() -> None:
+    """RuntimeError from an invalid Anthropic model name maps to a user-friendly OpenSoreError."""
     exc = RuntimeError(
         "Anthropic model 'not-a-real-model-xyz' was not found. "
         "Check your configured model name and try again."
     )
-    with pytest.raises(OpenSREError) as exc_info:
+    with pytest.raises(OpenSoreError) as exc_info:
         reraise_cli_runtime_error(exc)
 
     err = exc_info.value
@@ -27,7 +27,7 @@ def test_anthropic_model_not_found_suggestion_guides_env_vars() -> None:
     exc = RuntimeError(
         "Anthropic model 'bad-model' was not found. Check your configured model name and try again."
     )
-    with pytest.raises(OpenSREError) as exc_info:
+    with pytest.raises(OpenSoreError) as exc_info:
         reraise_cli_runtime_error(exc)
 
     assert exc_info.value.suggestion is not None
@@ -45,13 +45,13 @@ def test_non_anthropic_model_not_found_does_not_match() -> None:
 def test_cli_not_found_still_maps_correctly() -> None:
     """Existing CLI-not-found branch must still work after the new branch was added."""
     exc = RuntimeError("CLI not found on path: codex")
-    with pytest.raises(OpenSREError) as exc_info:
+    with pytest.raises(OpenSoreError) as exc_info:
         reraise_cli_runtime_error(exc)
 
     assert "CLI tool is not installed" in str(exc_info.value)
 
 
-def test_bedrock_model_not_available_maps_to_opensre_error() -> None:
+def test_bedrock_model_not_available_maps_to_opensore_error() -> None:
     exc = RuntimeError(
         "Bedrock model 'us.anthropic.claude-sonnet-4-6' is not available for your account. "
         "Check Bedrock model access in the configured AWS region, AWS Marketplace "
@@ -59,7 +59,7 @@ def test_bedrock_model_not_available_maps_to_opensre_error() -> None:
         "aws-marketplace:ViewSubscriptions and aws-marketplace:Subscribe."
     )
 
-    with pytest.raises(OpenSREError) as exc_info:
+    with pytest.raises(OpenSoreError) as exc_info:
         reraise_cli_runtime_error(exc)
 
     err = exc_info.value

@@ -1,4 +1,4 @@
-"""Optional bridge from Hermes incidents into the OpenSRE investigation pipeline.
+"""Optional bridge from Hermes incidents into the OpenSore investigation pipeline.
 
 The :func:`run_incident_investigation` helper turns a :class:`HermesIncident`
 into a Grafana-shaped alert payload, calls
@@ -61,7 +61,7 @@ def build_alert_from_incident(incident: HermesIncident) -> dict[str, Any]:
 
 
 def run_incident_investigation(incident: HermesIncident) -> str | None:
-    """Invoke the OpenSRE investigation pipeline for ``incident``.
+    """Invoke the OpenSore investigation pipeline for ``incident``.
 
     Returns the resulting summary string, or ``None`` if the pipeline ran
     successfully but produced no usable output. If :func:`run_investigation`

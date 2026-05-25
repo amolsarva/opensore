@@ -3,7 +3,7 @@
   "groupKey": "{}:{alertname=\"OpenClawStdioCommandMissing\"}",
   "truncatedAlerts": 0,
   "status": "firing",
-  "receiver": "opensre-webhook",
+  "receiver": "opensore-webhook",
   "groupLabels": {
     "alertname": "OpenClawStdioCommandMissing"
   },
@@ -12,11 +12,11 @@
     "severity": "high",
     "environment": "staging",
     "service": "openclaw-stdio",
-    "job": "opensre-worker"
+    "job": "opensore-worker"
   },
   "commonAnnotations": {
     "summary": "OpenClaw stdio command not found on PATH",
-    "description": "OpenSRE is configured to launch openclaw-mcp via stdio but the binary cannot be found on PATH. This is the deprecated legacy command; the correct command is 'openclaw mcp serve'. The rename happened in openclaw v2.1.0. All stdio-mode MCP bridge calls are failing with FileNotFoundError.",
+    "description": "OpenSore is configured to launch openclaw-mcp via stdio but the binary cannot be found on PATH. This is the deprecated legacy command; the correct command is 'openclaw mcp serve'. The rename happened in openclaw v2.1.0. All stdio-mode MCP bridge calls are failing with FileNotFoundError.",
     "command": "openclaw-mcp",
     "fix": "Update OPENCLAW_MCP_COMMAND=openclaw and OPENCLAW_MCP_ARGS='mcp serve'"
   },
@@ -29,8 +29,8 @@
         "severity": "high",
         "environment": "staging",
         "service": "openclaw-stdio",
-        "job": "opensre-worker",
-        "instance": "opensre-worker-staging-02"
+        "job": "opensore-worker",
+        "instance": "opensore-worker-staging-02"
       },
       "annotations": {
         "summary": "openclaw-mcp binary not found",

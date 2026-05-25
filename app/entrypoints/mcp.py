@@ -9,7 +9,7 @@ from pydantic import BaseModel, Field, ValidationError
 from app.analytics.cli import track_investigation
 from app.analytics.source import EntrypointSource, TriggerMode
 from app.cli.investigation import run_investigation_cli
-from app.cli.support.errors import OpenSREError
+from app.cli.support.errors import OpenSoreError
 from app.utils.sentry_sdk import capture_exception, init_sentry
 
 load_dotenv(override=False)
@@ -31,7 +31,7 @@ class RunRCAOutput(BaseModel):
     suggestion: str | None = None
 
 
-mcp = FastMCP("opensre")
+mcp = FastMCP("opensore")
 
 
 def _apply_overrides(payload: dict[str, Any], data: RunRCAInput) -> dict[str, Any]:
@@ -74,7 +74,7 @@ def run_rca(
     pipeline_name: str | None = None,
     severity: str | None = None,
 ) -> dict[str, Any]:
-    """Run the existing OpenSRE investigation workflow over MCP."""
+    """Run the existing OpenSore investigation workflow over MCP."""
     try:
         data = RunRCAInput(
             alert_payload=alert_payload,
@@ -100,7 +100,7 @@ def run_rca(
             error_type=type(err).__name__,
         ).model_dump()
 
-    except OpenSREError as err:
+    except OpenSoreError as err:
         return RunRCAOutput(
             ok=False,
             error=str(err),

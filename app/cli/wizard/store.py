@@ -8,7 +8,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from app.constants import OPENSRE_HOME_DIR
+from app.constants import OPENSORE_HOME_DIR
 
 _VERSION = 1
 _EMPTY_CONFIG = {"version": _VERSION, "wizard": {}, "targets": {}, "probes": {}}
@@ -16,7 +16,7 @@ _EMPTY_CONFIG = {"version": _VERSION, "wizard": {}, "targets": {}, "probes": {}}
 
 def get_store_path() -> Path:
     """Return the default wizard config path."""
-    return OPENSRE_HOME_DIR / "opensre.json"
+    return OPENSORE_HOME_DIR / "opensore.json"
 
 
 def _load_raw(path: Path | None = None) -> dict[str, Any]:

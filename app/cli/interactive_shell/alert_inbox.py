@@ -16,7 +16,7 @@ from threading import Thread
 from typing import Any
 from urllib.parse import urlparse
 
-from app.cli.support.errors import OpenSREError
+from app.cli.support.errors import OpenSoreError
 from app.strict_config import StrictConfigModel
 
 log = logging.getLogger(__name__)
@@ -158,9 +158,9 @@ def start_alert_listener(
     token: str | None = None,
 ) -> AlertListenerHandle:
     if host != "127.0.0.1" and token is None:
-        raise OpenSREError(
+        raise OpenSoreError(
             "Refusing to bind alert listener to non-loopback address without a token.",
-            suggestion="Set OPENSRE_ALERT_LISTENER_TOKEN or use 127.0.0.1.",
+            suggestion="Set OPENSORE_ALERT_LISTENER_TOKEN or use 127.0.0.1.",
         )
 
     def _make_handler(token: str | None) -> type[BaseHTTPRequestHandler]:

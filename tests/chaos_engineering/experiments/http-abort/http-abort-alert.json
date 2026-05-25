@@ -1,7 +1,7 @@
 {
   "_meta": {
     "purpose": "Synthetic alert for HTTPChaos abort demo",
-    "run": "opensre investigate -i tests/chaos_engineering/experiments/http-abort/http-abort-alert.json"
+    "run": "opensore investigate -i tests/chaos_engineering/experiments/http-abort/http-abort-alert.json"
   },
   "title": "[Triggered] HTTP resets - http-abort-demo",
   "alert_name": "Datadog monitor: HTTP failures http-abort-demo",

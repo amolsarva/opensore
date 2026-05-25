@@ -132,7 +132,7 @@ def _get_consumer(config: KafkaConfig) -> Any:
     conf: dict[str, Any] = {
         "bootstrap.servers": config.bootstrap_servers,
         "security.protocol": config.security_protocol,
-        "group.id": f"opensre-internal-{config.integration_id or 'readonly'}",
+        "group.id": f"opensore-internal-{config.integration_id or 'readonly'}",
         "enable.auto.commit": False,
         "auto.offset.reset": "latest",
         "socket.timeout.ms": int(config.timeout_seconds * 1000),

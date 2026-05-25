@@ -1,7 +1,7 @@
 {
   "_meta": {
     "purpose": "Synthetic alert for network-bandwidth chaos demo",
-    "run": "opensre investigate -i tests/chaos_engineering/experiments/network-bandwidth/network-bandwidth-alert.json"
+    "run": "opensore investigate -i tests/chaos_engineering/experiments/network-bandwidth/network-bandwidth-alert.json"
   },
   "title": "[Triggered] Throughput collapse - network-bandwidth-demo",
   "alert_name": "Datadog monitor: low throughput network-bandwidth-demo",

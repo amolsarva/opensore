@@ -7,7 +7,7 @@ import tempfile
 from pathlib import Path
 
 from app.constants.investigation import MAX_EXPANSIONS, MAX_INVESTIGATION_LOOPS
-from app.constants.opensre import DEFAULT_RELEASE_VERSION
+from app.constants.opensore import DEFAULT_RELEASE_VERSION
 from app.constants.posthog import (
     DEFAULT_POSTHOG_BOUNCE_THRESHOLD,
     DEFAULT_POSTHOG_BOUNCE_WINDOW,
@@ -24,20 +24,20 @@ from app.constants.sentry import (
     SENTRY_TRACES_SAMPLE_RATE,
 )
 
-OPENSRE_HOME_DIR: Path = Path.home() / ".config" / "opensre"
-LEGACY_OPENSRE_HOME_DIR: Path = Path.home() / ".opensre"
+OPENSORE_HOME_DIR: Path = Path.home() / ".config" / "opensore"
+LEGACY_OPENSORE_HOME_DIR: Path = Path.home() / ".opensore"
 LEGACY_TRACER_HOME_DIR: Path = Path.home() / ".tracer"
-INTEGRATIONS_STORE_PATH: Path = OPENSRE_HOME_DIR / "integrations.json"
+INTEGRATIONS_STORE_PATH: Path = OPENSORE_HOME_DIR / "integrations.json"
 LEGACY_INTEGRATIONS_STORE_PATH: Path = LEGACY_TRACER_HOME_DIR / "integrations.json"
-OPENSRE_TMP_DIR: Path = Path(tempfile.gettempdir()) / "opensre"
+OPENSORE_TMP_DIR: Path = Path(tempfile.gettempdir()) / "opensore"
 
 
-def ensure_opensre_tmp_dir() -> Path:
-    """Create the OpenSRE temp directory with owner-only permissions when possible."""
-    OPENSRE_TMP_DIR.mkdir(parents=True, exist_ok=True, mode=0o700)
+def ensure_opensore_tmp_dir() -> Path:
+    """Create the OpenSore temp directory with owner-only permissions when possible."""
+    OPENSORE_TMP_DIR.mkdir(parents=True, exist_ok=True, mode=0o700)
     with contextlib.suppress(OSError):
-        OPENSRE_TMP_DIR.chmod(0o700)
-    return OPENSRE_TMP_DIR
+        OPENSORE_TMP_DIR.chmod(0o700)
+    return OPENSORE_TMP_DIR
 
 
 __all__ = [
@@ -49,12 +49,12 @@ __all__ = [
     "DEFAULT_POSTHOG_TIMEOUT_SECONDS",
     "DEFAULT_POSTHOG_URL",
     "INTEGRATIONS_STORE_PATH",
-    "LEGACY_OPENSRE_HOME_DIR",
+    "LEGACY_OPENSORE_HOME_DIR",
     "LEGACY_INTEGRATIONS_STORE_PATH",
     "LEGACY_TRACER_HOME_DIR",
-    "ensure_opensre_tmp_dir",
-    "OPENSRE_HOME_DIR",
-    "OPENSRE_TMP_DIR",
+    "ensure_opensore_tmp_dir",
+    "OPENSORE_HOME_DIR",
+    "OPENSORE_TMP_DIR",
     "POSTHOG_CAPTURE_API_KEY",
     "POSTHOG_HOST",
     "SENTRY_DSN",

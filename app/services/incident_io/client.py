@@ -320,7 +320,7 @@ class IncidentIoClient:
         body: str = "",
         notify_incident_channel: bool = False,
     ) -> dict[str, Any]:
-        """Append OpenSRE findings to an incident summary via the supported edit endpoint.
+        """Append OpenSore findings to an incident summary via the supported edit endpoint.
 
         Uses read-post-verify with retries so concurrent writers (including separate OS
         processes) typically converge: if another writer posts between our read and
@@ -328,7 +328,7 @@ class IncidentIoClient:
         summary before re-posting.
         """
         timestamp = datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S UTC")
-        finding = f"\n\n---\n**OpenSRE finding: {title}** ({timestamp})"
+        finding = f"\n\n---\n**OpenSore finding: {title}** ({timestamp})"
         if body:
             finding = f"{finding}\n{body}"
 

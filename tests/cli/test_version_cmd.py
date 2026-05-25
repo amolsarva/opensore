@@ -17,6 +17,6 @@ def test_version_subcommand(monkeypatch, capsys) -> None:
     out = capsys.readouterr().out
     lines = out.strip().splitlines()
     assert len(lines) == 3
-    assert lines[0] == f"opensre {get_version()}"
+    assert lines[0] == f"opensore {get_version()}"
     assert lines[1] == f"Python  {platform.python_version()}"
     assert lines[2] == f"OS      {platform.system().lower()} ({platform.machine()})"

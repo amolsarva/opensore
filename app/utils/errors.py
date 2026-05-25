@@ -87,5 +87,5 @@ def report_and_reraise(
         raise
 
 
-class OpenSRESilentFallback(Warning):
+class OpenSoreSilentFallback(Warning):
     """Warning class for debug-only fallback paths that should still reach Sentry."""

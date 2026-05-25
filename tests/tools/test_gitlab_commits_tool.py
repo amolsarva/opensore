@@ -10,11 +10,11 @@ from tests.tools.conftest import BaseToolContract, mock_agent_state
 
 class TestGitLabCommitsToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return list_gitlab_commits.__opensre_registered_tool__
+        return list_gitlab_commits.__opensore_registered_tool__
 
 
 def test_is_available_requires_connection_and_project_id() -> None:
-    rt = list_gitlab_commits.__opensre_registered_tool__
+    rt = list_gitlab_commits.__opensore_registered_tool__
     assert rt.is_available({"gitlab": {"connection_verified": True, "project_id": "42"}}) is True
     assert rt.is_available({"gitlab": {"connection_verified": True}}) is False
     assert rt.is_available({"gitlab": {"project_id": "42"}}) is False
@@ -22,7 +22,7 @@ def test_is_available_requires_connection_and_project_id() -> None:
 
 
 def test_extract_params_maps_fields() -> None:
-    rt = list_gitlab_commits.__opensre_registered_tool__
+    rt = list_gitlab_commits.__opensore_registered_tool__
     sources = mock_agent_state(
         {
             "gitlab": {
@@ -45,7 +45,7 @@ def test_extract_params_maps_fields() -> None:
 
 
 def test_extract_params_defaults_ref_name_to_main() -> None:
-    rt = list_gitlab_commits.__opensre_registered_tool__
+    rt = list_gitlab_commits.__opensore_registered_tool__
     sources = mock_agent_state({"gitlab": {"connection_verified": True, "project_id": "42"}})
     params = rt.extract_params(sources)
     assert params["ref_name"] == "main"

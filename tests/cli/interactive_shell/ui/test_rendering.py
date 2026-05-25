@@ -27,7 +27,7 @@ def test_render_integrations_table_empty_shows_hint() -> None:
     buf = io.StringIO()
     console = Console(file=buf, force_terminal=False)
     render_integrations_table(console, [])
-    assert "opensre onboard" in buf.getvalue()
+    assert "opensore onboard" in buf.getvalue()
 
 
 def test_repl_print_resets_before_each_line(monkeypatch) -> None:

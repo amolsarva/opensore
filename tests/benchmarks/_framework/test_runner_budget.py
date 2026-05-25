@@ -52,7 +52,7 @@ class _TinyAdapter(BenchmarkAdapter):
     def build_alert(self, _case: BenchmarkCase) -> AlertPayload:
         return AlertPayload(raw={}, normalized={})
 
-    def build_opensre_integrations(self, _case: BenchmarkCase) -> dict[str, Any]:
+    def build_opensore_integrations(self, _case: BenchmarkCase) -> dict[str, Any]:
         return {}
 
     def build_baseline_tools(self, _case: BenchmarkCase) -> dict[str, Any]:
@@ -73,7 +73,7 @@ def _runner(tmp_path: Path) -> BenchmarkRunner:
     config = BenchmarkConfig.model_validate(
         {
             "benchmark": "tiny",
-            "modes": ["opensre+llm"],
+            "modes": ["opensore+llm"],
             "llms": ["claude-4-sonnet"],
             "model_versions": {"claude-4-sonnet": "claude-sonnet-4-5-20250929"},
             "seed": 42,
@@ -91,7 +91,7 @@ def _call_run_one_cell(runner: BenchmarkRunner, tmp_path: Path) -> None:
     cases_dir.mkdir(parents=True, exist_ok=True)
     runner._run_one_cell(
         case=case,
-        mode="opensre+llm",
+        mode="opensore+llm",
         llm="claude-4-sonnet",
         spec=LLM_SPECS["claude-4-sonnet"],
         run_index=0,

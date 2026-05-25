@@ -120,7 +120,7 @@ def _scope_line(cases: list[CaseMetrics]) -> str:
 def render_markdown(cases: list[CaseMetrics], summary: SummaryMetrics) -> str:
     """Render a markdown benchmark report with per-case metrics and summary."""
     lines: list[str] = []
-    lines.append("# OpenSRE Benchmark")
+    lines.append("# OpenSore Benchmark")
     lines.append("")
     lines.append(_scope_line(cases))
     lines.append("Metrics reported: duration, token usage, estimated LLM cost.")
@@ -224,7 +224,7 @@ def run_benchmark(
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     """Parse benchmark CLI arguments."""
-    parser = argparse.ArgumentParser(description="Run OpenSRE benchmark on fixed synthetic cases.")
+    parser = argparse.ArgumentParser(description="Run OpenSore benchmark on fixed synthetic cases.")
     parser.add_argument(
         "--scenario",
         action="append",

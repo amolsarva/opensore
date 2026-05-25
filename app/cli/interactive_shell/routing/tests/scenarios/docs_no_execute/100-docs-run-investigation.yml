@@ -33,7 +33,7 @@ response_contract:
   - how to run an investigation
   - to run an investigation
   - investigation commands
-  - opensre investigate
+  - opensore investigate
   - paste
   must_not_contain:
   - $ /

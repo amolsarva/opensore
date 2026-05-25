@@ -411,7 +411,7 @@ def _persist_llm_api_key(env_var: str, value: str) -> bool:
     except RuntimeError as exc:
         _console.print(f"[{ERROR}]  {GLYPH_ERROR}  {exc}[/]")
         _console.print(
-            f"[{WARNING}]  {GLYPH_WARNING}  OpenSRE could not save your API key to the local system keychain.[/]"
+            f"[{WARNING}]  {GLYPH_WARNING}  OpenSore could not save your API key to the local system keychain.[/]"
         )
         for line in get_keyring_setup_instructions(env_var):
             _console.print(f"[{SECONDARY}]    {line}[/]")
@@ -458,7 +458,7 @@ def _render_header() -> None:
       ─────────────────────────────────────────  [DIM rule]
         ___                    ____  ____  _____ [HIGHLIGHT art]
        / _ \\ ...
-      opensre  ·  v<version>                     [SECONDARY name] [DIM ·] [BRAND version]
+      opensore  ·  v<version>                     [SECONDARY name] [DIM ·] [BRAND version]
       open-source SRE agent for automated …      [DIM description]
       ─────────────────────────────────────────  [DIM rule]
       Setup — Configure your local AI stack …    [SECONDARY subtitle]
@@ -482,7 +482,7 @@ def _render_header() -> None:
 
     subtitle = Text()
     subtitle.append("  ")
-    subtitle.append("opensre", style=SECONDARY)
+    subtitle.append("opensore", style=SECONDARY)
     subtitle.append("  ·  ", style=DIM)
     subtitle.append(f"v{version}", style=BRAND)
     _console.print(subtitle)
@@ -525,10 +525,10 @@ def _render_saved_summary(
         provider    Anthropic                    [SECONDARY key] [TEXT value]
         model       claude-opus-4-5              [SECONDARY key] [TEXT value]
         services    grafana · datadog            [SECONDARY key] [TEXT value]
-        config      ~/.opensre/opensre.json      [SECONDARY key] [BRAND path]
+        config      ~/.opensore/opensore.json      [SECONDARY key] [BRAND path]
         env         .env                         [SECONDARY key] [BRAND path]
         credentials system keychain              [SECONDARY key] [TEXT value]
-        store       ~/.opensre/store.json        [SECONDARY key] [BRAND path]
+        store       ~/.opensore/store.json        [SECONDARY key] [BRAND path]
     """
     from app.integrations.store import STORE_PATH
 
@@ -659,7 +659,7 @@ def _configure_grafana_local() -> tuple[str, str]:
     if ping.returncode != 0:
         _console.print(f"[{ERROR}]Docker is not running.[/]")
         _console.print(
-            f"[{SECONDARY}]Start Docker Desktop, then run [bold]opensre onboard[/bold] again.[/]"
+            f"[{SECONDARY}]Start Docker Desktop, then run [bold]opensore onboard[/bold] again.[/]"
         )
         return "Grafana Local (skipped)", ""
 
@@ -695,7 +695,7 @@ def _configure_grafana_local() -> tuple[str, str]:
     _console.print(f"[{SECONDARY}]UI: {endpoint}[/]")
     _console.print(f"[{SECONDARY}]Loki seeded with events_fact pipeline failure logs.[/]")
     _console.print(f"[{SECONDARY}]Run RCA:[/]")
-    _console.print("[bold]  opensre investigate -i tests/fixtures/grafana_local_alert.json[/]")
+    _console.print("[bold]  opensore investigate -i tests/fixtures/grafana_local_alert.json[/]")
     return "Grafana Local", str(env_path)
 
 
@@ -1161,10 +1161,10 @@ def _configure_openclaw() -> tuple[str, str]:
             )
             _console.print(f"[{HIGHLIGHT}]OpenClaw · ready[/]")
             _console.print(
-                f"[{SECONDARY}]Verify:[/] [bold]uv run opensre integrations verify openclaw[/]"
+                f"[{SECONDARY}]Verify:[/] [bold]uv run opensore integrations verify openclaw[/]"
             )
             _console.print(
-                f"[{SECONDARY}]Smoke test:[/] [bold]uv run opensre investigate -i tests/fixtures/openclaw_test_alert.json[/]"
+                f"[{SECONDARY}]Smoke test:[/] [bold]uv run opensore investigate -i tests/fixtures/openclaw_test_alert.json[/]"
             )
             _console.print(
                 f"[{SECONDARY}]Accurate RCA:[/] [bold]also configure Grafana/Datadog and GitHub[/]"
@@ -1637,9 +1637,9 @@ def _configure_whatsapp() -> tuple[str, str]:
         }
     )
     _console.print(f"[{HIGHLIGHT}]WhatsApp configured[/]")
-    _console.print(f"[{SECONDARY}]Verify:[/] [bold]uv run opensre integrations verify whatsapp[/]")
+    _console.print(f"[{SECONDARY}]Verify:[/] [bold]uv run opensore integrations verify whatsapp[/]")
     _console.print(
-        f"[{SECONDARY}]Pair access:[/] [bold]uv run opensre messaging pair --platform whatsapp[/]"
+        f"[{SECONDARY}]Pair access:[/] [bold]uv run opensore messaging pair --platform whatsapp[/]"
     )
     return "WhatsApp", str(env_path)
 
@@ -1886,7 +1886,7 @@ def _configure_selected_integrations() -> tuple[list[str], str | None]:
         Choice(
             value="openclaw",
             label="OpenClaw (recommended)",
-            hint="Connect OpenSRE to OpenClaw for editor-driven RCA, setup checks, and write-back",
+            hint="Connect OpenSore to OpenClaw for editor-driven RCA, setup checks, and write-back",
         ),
         Choice(value="splunk", label="Splunk", hint="Query logs from Splunk"),
         Choice(
@@ -1982,11 +1982,11 @@ def _render_next_steps() -> None:
       ─────────────────────────────────────────  [DIM rule]
       What's next                                [SECONDARY label]
       ─────────────────────────────────────────  [DIM rule]
-        opensre                                  [BRAND runnable command]
+        opensore                                  [BRAND runnable command]
           Start the interactive agent
-        opensre investigate -i alert.json        [BRAND runnable command]
+        opensore investigate -i alert.json        [BRAND runnable command]
           Run root-cause analysis on an alert
-        opensre doctor                           [BRAND runnable command]
+        opensore doctor                           [BRAND runnable command]
           Verify your environment setup
     """
     _console.print(Rule(style=DIM))
@@ -1999,13 +1999,13 @@ def _render_next_steps() -> None:
     _console.print()
 
     _NEXT: tuple[tuple[str, str], ...] = (
-        ("opensre", "Start the interactive agent"),
+        ("opensore", "Start the interactive agent"),
         (
-            "opensre investigate -i tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json",
+            "opensore investigate -i tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json",
             "Run root-cause analysis on a sample alert",
         ),
-        ("opensre doctor", "Verify your full environment setup"),
-        ("opensre onboard", "Re-run this setup at any time"),
+        ("opensore doctor", "Verify your full environment setup"),
+        ("opensore onboard", "Re-run this setup at any time"),
     )
 
     for cmd, description in _NEXT:

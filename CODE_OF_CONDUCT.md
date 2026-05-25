@@ -12,6 +12,6 @@ Harassment, discrimination, or personal attacks are not tolerated.
 
 If you encounter unacceptable behavior, contact:
 
-support@opensre.com
+support@opensore.com
 
 Maintainers may remove comments, issues, or contributions that violate these expectations.

@@ -51,7 +51,7 @@ def is_rich_pasted_incident(text: str) -> bool:
     return any(_RICH_PASTED_INCIDENT_LINE_RE.search(line) for line in text.splitlines())
 
 
-_SYSTEM_PROMPT_BASE = """You plan actions for the OpenSRE interactive shell.
+_SYSTEM_PROMPT_BASE = """You plan actions for the OpenSore interactive shell.
 
 Use tool calls whenever the user explicitly asks to run, show, execute,
 launch, cancel, connect, switch, or start an operation. Compound requests
@@ -75,7 +75,7 @@ Example mapping for sequence + sample alert:
 - Tool calls (in order): slash_invoke("/health"), alert_sample(template="generic")
 
 Example mapping for compound slash commands:
-- Input: "check the health of my opensre and then show me all connected services"
+- Input: "check the health of my opensore and then show me all connected services"
 - Tool calls (in order): slash_invoke("/health"), slash_invoke("/list", args=["integrations"])
   ("connected services/integrations" → /list integrations)
 
@@ -86,8 +86,8 @@ Other tools:
 - alert_sample — run a sample alert (template="generic")
 - investigation_start — investigate pasted alert text or free-form alert body
 - synthetic_run — run synthetic benchmark scenario by id
-- cli_exec — run opensre <subcommand> when user explicitly says opensre
-  (payload without the opensre  prefix)
+- cli_exec — run opensore <subcommand> when user explicitly says opensore
+  (payload without the opensore  prefix)
 - task_cancel — cancel a background task by id or kind
 - shell_run — narrowly scoped local diagnostic shell commands
 - code_implement — code implementation workflow
@@ -95,7 +95,7 @@ Other tools:
   pasted alerts for analysis discussion, follow-ups, vague ops questions)
 - mark_unhandled — flag a clause that cannot be mapped (see below)
 
-Never use shell_run for OpenSRE product requests like "show integration details",
+Never use shell_run for OpenSore product requests like "show integration details",
 "list connected services", "show model/provider", or docs/how-to questions.
 Those are assistant_handoff or slash/cli operations, not shell diagnostics.
 Use shell_run only when the user explicitly asks for a local shell command
@@ -107,7 +107,7 @@ If ANY clause in the user's request (clauses split by "and", "and then",
   "say hi back", "wish me luck", "be nice", "compliment me", "rap")
 - nonsensical or off-topic (anything not related to SRE/observability/
   infrastructure)
-- ambiguous (cannot be confidently mapped to an OpenSRE operation)
+- ambiguous (cannot be confidently mapped to an OpenSore operation)
 - non-executable (a how-to question embedded in a compound prompt)
 
 … you MUST also call the mark_unhandled tool with a short reason
@@ -120,7 +120,7 @@ Example: for the prompt "show me connected services and sing a song"
 you MUST emit EXACTLY two tool calls in the same response:
 1. slash_invoke (command="/list", args=["integrations"])
 2. mark_unhandled (reason="'sing a song' is chatty filler, not an
-   executable OpenSRE operation.")
+   executable OpenSore operation.")
 
 If the entire request is informational or conversational (a how-to question,
 greeting like "hi"/"hello"/"hey", an alert blob pasted as JSON or free text,

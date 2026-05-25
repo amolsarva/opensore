@@ -39,9 +39,9 @@ def test_cold_build_is_silent(capsys: pytest.CaptureFixture[str]) -> None:
 
     assert captured.out == ""
     assert captured.err == ""
-    assert "=== opensre --help ===" in text
-    assert f"=== opensre {first_command} --help ===" in text
-    assert f"Usage: opensre {first_command}" in text
+    assert "=== opensore --help ===" in text
+    assert f"=== opensore {first_command} --help ===" in text
+    assert f"Usage: opensore {first_command}" in text
 
 
 def test_invalidate_forces_rebuild_miss() -> None:

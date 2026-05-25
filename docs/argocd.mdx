@@ -1,14 +1,14 @@
 ---
 title: "Argo CD"
-description: "Connect Argo CD so OpenSRE can inspect GitOps application health, sync state, revisions, and drift during investigations"
+description: "Connect Argo CD so OpenSore can inspect GitOps application health, sync state, revisions, and drift during investigations"
 ---
 
-OpenSRE queries the Argo CD REST API as a read-only evidence source during GitOps incident investigations. It can list visible applications, inspect one application's sync and health status, and fetch sanitized server-side diff output to show deployment drift.
+OpenSore queries the Argo CD REST API as a read-only evidence source during GitOps incident investigations. It can list visible applications, inspect one application's sync and health status, and fetch sanitized server-side diff output to show deployment drift.
 
 ## Prerequisites
 
-- Argo CD API server reachable from the machine running OpenSRE
-- A dedicated Argo CD account or API token with read access to the applications you want OpenSRE to inspect
+- Argo CD API server reachable from the machine running OpenSore
+- A dedicated Argo CD account or API token with read access to the applications you want OpenSore to inspect
 - The Argo CD base URL, for example `https://argocd.example.com`
 - Optional alert annotations that identify the affected Argo CD application, project, namespace, or revision
 
@@ -28,7 +28,7 @@ ARGOCD_AUTH_TOKEN=***
 # ARGOCD_TOKEN=***   # alias also supported
 
 # Option B: username/password auth. Use instead of ARGOCD_AUTH_TOKEN.
-# ARGOCD_USERNAME=opensre-readonly
+# ARGOCD_USERNAME=opensore-readonly
 # ARGOCD_PASSWORD=***
 
 # Optional scoping and TLS settings
@@ -48,11 +48,11 @@ ARGOCD_VERIFY_SSL=true
 | `ARGOCD_APP_NAMESPACE` | — | Optional application namespace passed as `appNamespace` for application-specific requests. |
 | `ARGOCD_VERIFY_SSL` | `true` | Whether to verify TLS certificates. Set to `false` only for trusted local or lab environments. |
 
-OpenSRE rejects ambiguous auth configuration. Do not set a bearer token and username/password at the same time.
+OpenSore rejects ambiguous auth configuration. Do not set a bearer token and username/password at the same time.
 
 ### Option 2: Persistent store
 
-You can also add Argo CD to `~/.config/opensre/integrations.json`:
+You can also add Argo CD to `~/.config/opensore/integrations.json`:
 
 ```json
 {
@@ -95,20 +95,20 @@ export ARGOCD_INSTANCES='[
     "name": "staging",
     "tags": {"env": "staging"},
     "base_url": "https://argocd.staging.example.com",
-    "username": "opensre-readonly",
+    "username": "opensore-readonly",
     "password": "***"
   }
 ]'
 ```
 
-When `ARGOCD_INSTANCES` is set, the single-instance `ARGOCD_BASE_URL` and auth variables are ignored for this service. `opensre integrations verify argocd` validates the resolved default instance.
+When `ARGOCD_INSTANCES` is set, the single-instance `ARGOCD_BASE_URL` and auth variables are ignored for this service. `opensore integrations verify argocd` validates the resolved default instance.
 
 ## Verify
 
 Run:
 
 ```bash
-opensre integrations verify argocd
+opensore integrations verify argocd
 ```
 
 Expected output:
@@ -119,13 +119,13 @@ Status:  passed
 Detail:  Connected to Argo CD and listed 3 applications.
 ```
 
-Verification performs a read-only application list call. It proves OpenSRE can reach Argo CD and list visible applications with the configured credentials; it does not write to Argo CD or sync applications.
+Verification performs a read-only application list call. It proves OpenSore can reach Argo CD and list visible applications with the configured credentials; it does not write to Argo CD or sync applications.
 
 ## Usage in investigations
 
-When Argo CD is configured and an incoming alert contains GitOps context, OpenSRE can add Argo CD evidence to the investigation plan.
+When Argo CD is configured and an incoming alert contains GitOps context, OpenSore can add Argo CD evidence to the investigation plan.
 
-OpenSRE recognizes these explicit alert fields:
+OpenSore recognizes these explicit alert fields:
 
 | Field | Location | Purpose |
 | --- | --- | --- |
@@ -136,7 +136,7 @@ OpenSRE recognizes these explicit alert fields:
 | `argocd_project` | Top-level alert payload or `annotations` | Argo CD project for scoped application requests. |
 | `argocd_app_namespace` | Top-level alert payload or `annotations` | Argo CD application namespace for scoped requests. |
 
-OpenSRE also looks for GitOps hints in alert text such as `argocd`, `argo cd`, `argo-cd`, `gitops`, `outofsync`, or `outofsynced`.
+OpenSore also looks for GitOps hints in alert text such as `argocd`, `argo cd`, `argo-cd`, `gitops`, `outofsync`, or `outofsynced`.
 
 Example alert:
 
@@ -152,10 +152,10 @@ Example alert:
 }
 ```
 
-Then run OpenSRE with the alert payload:
+Then run OpenSore with the alert payload:
 
 ```bash
-opensre investigate -i alert.json
+opensore investigate -i alert.json
 ```
 
 ## Evidence collected
@@ -179,11 +179,11 @@ Fetches Argo CD server-side diff output for one application.
 
 ## Security best practices
 
-- Use a dedicated read-only Argo CD account or token for OpenSRE.
-- Store credentials in `.env` or `~/.config/opensre/integrations.json`, not in source code.
+- Use a dedicated read-only Argo CD account or token for OpenSore.
+- Store credentials in `.env` or `~/.config/opensore/integrations.json`, not in source code.
 - Use `https://` for remote Argo CD URLs. Plain `http://` is accepted only for loopback or localhost development URLs.
 - Do not disable `ARGOCD_VERIFY_SSL` for production instances.
-- OpenSRE redacts bearer tokens, passwords, token-like strings, and Kubernetes `Secret` diffs before surfacing Argo CD errors or diff evidence.
+- OpenSore redacts bearer tokens, passwords, token-like strings, and Kubernetes `Secret` diffs before surfacing Argo CD errors or diff evidence.
 - The integration is read-only: it lists applications, reads application summaries, and reads server-side diff data. It does not sync, modify, or delete Argo CD resources.
 
 ## Troubleshooting

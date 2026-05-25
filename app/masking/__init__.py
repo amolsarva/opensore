@@ -6,7 +6,7 @@ before sending text to external LLMs, and restores the originals in any
 user-facing output. Complementary to ``app/guardrails`` which performs
 one-way redaction for hard-block rules.
 
-Activated per operator by ``OPENSRE_MASK_ENABLED=true``. Off by default.
+Activated per operator by ``OPENSORE_MASK_ENABLED=true``. Off by default.
 """
 
 from __future__ import annotations

@@ -16,7 +16,7 @@ from tests.tools.conftest import BaseToolContract
 
 
 def _registered_tool() -> Any:
-    return cast(Any, query_azure_monitor_logs).__opensre_registered_tool__
+    return cast(Any, query_azure_monitor_logs).__opensore_registered_tool__
 
 
 class TestAzureMonitorLogsToolContract(BaseToolContract):

@@ -375,9 +375,9 @@ async def test_lifespan_raises_helpful_error_on_permission_denied(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     unwritable = MagicMock()
-    unwritable.mkdir.side_effect = PermissionError("Permission denied: '/opt/opensre'")
-    unwritable.__str__ = lambda _: "/opt/opensre/investigations"
-    unwritable.parent.__str__ = lambda _: "/opt/opensre"
+    unwritable.mkdir.side_effect = PermissionError("Permission denied: '/opt/opensore'")
+    unwritable.__str__ = lambda _: "/opt/opensore/investigations"
+    unwritable.parent.__str__ = lambda _: "/opt/opensore"
 
     monkeypatch.setattr(remote_server, "INVESTIGATIONS_DIR", unwritable)
 

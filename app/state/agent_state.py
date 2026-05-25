@@ -139,10 +139,10 @@ class AgentState(TypedDict, total=False):
     problem_report: dict[str, Any]
     report: str
 
-    # OpenRCA offline rubric eval (``opensre investigate --evaluate``)
-    opensre_evaluate: bool
-    opensre_eval_rubric: str
-    opensre_llm_eval: dict[str, Any]
+    # OpenRCA offline rubric eval (``opensore investigate --evaluate``)
+    opensore_evaluate: bool
+    opensore_eval_rubric: str
+    opensore_llm_eval: dict[str, Any]
 
 
 InvestigationState = AgentState
@@ -214,6 +214,6 @@ class AgentStateModel(StrictConfigModel):
     summary: str = ""
     problem_report: dict[str, Any] = Field(default_factory=dict)
     report: str = ""
-    opensre_evaluate: bool = False
-    opensre_eval_rubric: str = ""
-    opensre_llm_eval: dict[str, Any] = Field(default_factory=dict)
+    opensore_evaluate: bool = False
+    opensore_eval_rubric: str = ""
+    opensore_llm_eval: dict[str, Any] = Field(default_factory=dict)

@@ -47,7 +47,7 @@ from starlette.responses import JSONResponse, StreamingResponse
 from app.analytics.cli import capture_investigation_failed, track_investigation
 from app.analytics.source import EntrypointSource, TriggerMode
 from app.cli.support.cli_error_mapping import reraise_cli_runtime_error
-from app.cli.support.errors import OpenSREError
+from app.cli.support.errors import OpenSoreError
 from app.remote.error_reporting import report_remote_exception
 from app.remote.vercel_poller import (
     VercelInvestigationCandidate,
@@ -62,9 +62,9 @@ load_dotenv(override=False)
 init_sentry(entrypoint="remote")
 
 INVESTIGATIONS_DIR = Path(
-    os.getenv("INVESTIGATIONS_DIR", str(Path.home() / ".opensre" / "investigations"))
+    os.getenv("INVESTIGATIONS_DIR", str(Path.home() / ".opensore" / "investigations"))
 )
-_AUTH_KEY = os.getenv("OPENSRE_API_KEY")
+_AUTH_KEY = os.getenv("OPENSORE_API_KEY")
 _AUTH_EXEMPT_PATHS = {
     "/discord/interactions",
     "/health/deep",
@@ -163,7 +163,7 @@ async def _lifespan(_app: FastAPI) -> AsyncIterator[None]:
 
 
 app = FastAPI(
-    title="OpenSRE Remote",
+    title="OpenSore Remote",
     version=get_version(),
     lifespan=_lifespan,
     dependencies=[Depends(_check_api_key)],
@@ -316,7 +316,7 @@ async def _run_discord_investigation(interaction: DiscordInteraction) -> None:
             {"name": "Root Cause", "value": _truncate(root_cause), "inline": False},
             {"name": "Report", "value": _truncate(report), "inline": False},
         ],
-        "footer": {"text": "OpenSRE Investigation"},
+        "footer": {"text": "OpenSore Investigation"},
     }
 
     # Post via interaction followup webhook (the deferred response requires this)
@@ -400,7 +400,7 @@ def investigate(req: InvestigateRequest) -> InvestigateResponse:
         )
     except VercelResolutionError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
-    except OpenSREError as exc:
+    except OpenSoreError as exc:
         logger.warning("Investigation failed due to CLI runtime error: %s", exc)
         detail = str(exc)
         if exc.suggestion:
@@ -487,7 +487,7 @@ async def investigate_stream(req: InvestigateRequest) -> Response:
                     )
                     try:
                         reraise_cli_runtime_error(exc)
-                    except OpenSREError as mapped:
+                    except OpenSoreError as mapped:
                         logger.warning(
                             "Streaming investigation failed due to CLI runtime error: %s",
                             mapped,

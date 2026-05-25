@@ -5,7 +5,7 @@
 # after `terraform apply`:
 #
 #   aws secretsmanager put-secret-value \
-#     --secret-id opensre-bench/llm/anthropic_api_key \
+#     --secret-id opensore-bench/llm/anthropic_api_key \
 #     --secret-string "$ANTHROPIC_API_KEY"
 #
 # Values must NEVER appear in Terraform code, tfvars, plan output, or state.

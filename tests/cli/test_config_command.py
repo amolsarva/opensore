@@ -9,22 +9,22 @@ from app.cli.__main__ import cli
 
 
 def _patch_config_home(monkeypatch, tmp_path: Path) -> Path:
-    opensre_home = tmp_path / ".opensre"
-    monkeypatch.setattr("app.constants.OPENSRE_HOME_DIR", opensre_home)
-    monkeypatch.setattr("app.cli.commands.config.OPENSRE_HOME_DIR", opensre_home)
-    return opensre_home
+    opensore_home = tmp_path / ".opensore"
+    monkeypatch.setattr("app.constants.OPENSORE_HOME_DIR", opensore_home)
+    monkeypatch.setattr("app.cli.commands.config.OPENSORE_HOME_DIR", opensore_home)
+    return opensore_home
 
 
 def test_config_show_inspects_local_file_not_env(monkeypatch, tmp_path: Path) -> None:
-    opensre_home = _patch_config_home(monkeypatch, tmp_path)
-    config_path = opensre_home / "config.yml"
+    opensore_home = _patch_config_home(monkeypatch, tmp_path)
+    config_path = opensore_home / "config.yml"
     config_path.parent.mkdir(parents=True, exist_ok=True)
     config_path.write_text(
         yaml.safe_dump({"interactive": {"enabled": False, "layout": "classic"}}),
         encoding="utf-8",
     )
-    monkeypatch.setenv("OPENSRE_INTERACTIVE", "1")
-    monkeypatch.setenv("OPENSRE_LAYOUT", "pinned")
+    monkeypatch.setenv("OPENSORE_INTERACTIVE", "1")
+    monkeypatch.setenv("OPENSORE_LAYOUT", "pinned")
 
     runner = CliRunner()
     result = runner.invoke(cli, ["config", "show"])
@@ -38,14 +38,14 @@ def test_config_show_inspects_local_file_not_env(monkeypatch, tmp_path: Path) ->
 
 
 def test_config_set_round_trips_layout(monkeypatch, tmp_path: Path) -> None:
-    opensre_home = _patch_config_home(monkeypatch, tmp_path)
+    opensore_home = _patch_config_home(monkeypatch, tmp_path)
     runner = CliRunner()
 
     set_result = runner.invoke(cli, ["config", "set", "interactive.layout", "pinned"])
     assert set_result.exit_code == 0
     assert "interactive.layout = pinned" in set_result.output
 
-    config_path = opensre_home / "config.yml"
+    config_path = opensore_home / "config.yml"
     assert config_path.exists()
     data = yaml.safe_load(config_path.read_text(encoding="utf-8"))
     assert data["interactive"]["layout"] == "pinned"
@@ -56,14 +56,14 @@ def test_config_set_round_trips_layout(monkeypatch, tmp_path: Path) -> None:
 
 
 def test_config_set_round_trips_enabled(monkeypatch, tmp_path: Path) -> None:
-    opensre_home = _patch_config_home(monkeypatch, tmp_path)
+    opensore_home = _patch_config_home(monkeypatch, tmp_path)
     runner = CliRunner()
 
     set_result = runner.invoke(cli, ["config", "set", "interactive.enabled", "false"])
     assert set_result.exit_code == 0
     assert "interactive.enabled = False" in set_result.output
 
-    config_path = opensre_home / "config.yml"
+    config_path = opensore_home / "config.yml"
     assert config_path.exists()
     data = yaml.safe_load(config_path.read_text(encoding="utf-8"))
     assert data["interactive"]["enabled"] is False
@@ -92,8 +92,8 @@ def test_config_set_invalid_layout_value_returns_helpful_error(monkeypatch, tmp_
 
 
 def test_config_set_malformed_file_preserves_contents(monkeypatch, tmp_path: Path) -> None:
-    opensre_home = _patch_config_home(monkeypatch, tmp_path)
-    config_path = opensre_home / "config.yml"
+    opensore_home = _patch_config_home(monkeypatch, tmp_path)
+    config_path = opensore_home / "config.yml"
     config_path.parent.mkdir(parents=True, exist_ok=True)
     # Unclosed flow sequence — PyYAML rejects this reliably (unlike "::: ..." edge cases).
     original_text = "key: [\n"
@@ -108,8 +108,8 @@ def test_config_set_malformed_file_preserves_contents(monkeypatch, tmp_path: Pat
 
 
 def test_config_show_handles_empty_file(monkeypatch, tmp_path: Path) -> None:
-    opensre_home = _patch_config_home(monkeypatch, tmp_path)
-    config_path = opensre_home / "config.yml"
+    opensore_home = _patch_config_home(monkeypatch, tmp_path)
+    config_path = opensore_home / "config.yml"
     config_path.parent.mkdir(parents=True, exist_ok=True)
     config_path.write_text("", encoding="utf-8")
 

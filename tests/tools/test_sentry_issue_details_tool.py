@@ -10,18 +10,18 @@ from tests.tools.conftest import BaseToolContract, mock_agent_state
 
 class TestSentryIssueDetailsToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return get_sentry_issue_details.__opensre_registered_tool__
+        return get_sentry_issue_details.__opensore_registered_tool__
 
 
 def test_is_available_requires_issue_id() -> None:
-    rt = get_sentry_issue_details.__opensre_registered_tool__
+    rt = get_sentry_issue_details.__opensore_registered_tool__
     assert rt.is_available({"sentry": {"connection_verified": True, "issue_id": "123"}}) is True
     assert rt.is_available({"sentry": {"connection_verified": True}}) is False
     assert rt.is_available({}) is False
 
 
 def test_extract_params_maps_fields() -> None:
-    rt = get_sentry_issue_details.__opensre_registered_tool__
+    rt = get_sentry_issue_details.__opensore_registered_tool__
     sources = mock_agent_state()
     params = rt.extract_params(sources)
     assert params["issue_id"] == "12345"

@@ -1,20 +1,20 @@
 # Development guide
 
-Contributor-focused workflows: local setup details stay in [SETUP.md](https://github.com/Tracer-Cloud/opensre/blob/main/SETUP.md) at the repo root (Windows, troubleshooting, MCP/OpenClaw).
+Contributor-focused workflows: local setup details stay in [SETUP.md](https://github.com/Tracer-Cloud/opensore/blob/main/SETUP.md) at the repo root (Windows, troubleshooting, MCP/OpenClaw).
 
 ## Clone and install
 
 ```bash
-git clone https://github.com/Tracer-Cloud/opensre.git
-cd opensre
+git clone https://github.com/Tracer-Cloud/opensore.git
+cd opensore
 make install
 ```
 
-[`make install`](https://github.com/Tracer-Cloud/opensre/blob/main/Makefile) runs `uv sync --frozen --extra dev` and the analytics install helper. Use **`uv run opensre …`** from the repo root so you always hit this checkout’s `.venv`, not another `opensre` on your `PATH`.
+[`make install`](https://github.com/Tracer-Cloud/opensore/blob/main/Makefile) runs `uv sync --frozen --extra dev` and the analytics install helper. Use **`uv run opensore …`** from the repo root so you always hit this checkout’s `.venv`, not another `opensore` on your `PATH`.
 
 ```bash
-opensre onboard
-opensre investigate -i tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json
+opensore onboard
+opensore investigate -i tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json
 ```
 
 ## Quality gates (same as CI)
@@ -30,11 +30,11 @@ make test-cov      # pytest + coverage (default unit suite)
 
 One-shot (includes heavier `test-full`): `make check`.
 
-Before a PR, run at least `make lint`, `make format-check`, `make typecheck`, and `make test-cov` (see [CONTRIBUTING.md](https://github.com/Tracer-Cloud/opensre/blob/main/CONTRIBUTING.md)).
+Before a PR, run at least `make lint`, `make format-check`, `make typecheck`, and `make test-cov` (see [CONTRIBUTING.md](https://github.com/Tracer-Cloud/opensore/blob/main/CONTRIBUTING.md)).
 
 ## Routing policy architecture
 
-Routing precedence, postprocessing transforms, compatibility seams, and the rule-extension checklist are documented in [`docs/routing-policy-architecture.md`](https://github.com/Tracer-Cloud/opensre/blob/main/docs/routing-policy-architecture.md).
+Routing precedence, postprocessing transforms, compatibility seams, and the rule-extension checklist are documented in [`docs/routing-policy-architecture.md`](https://github.com/Tracer-Cloud/opensore/blob/main/docs/routing-policy-architecture.md).
 
 ## Investigation tool calling
 
@@ -44,7 +44,7 @@ Tool schemas, provider adapters (`agent_llm_client.py`), and investigation messa
 
 PR reviewers expect a **visible demo** (terminal log or screenshot) in the PR under **Demo/Screenshot**, not only tests. Copy the exact steps from this section into your PR description, then attach your terminal output or recording.
 
-1. `uv run opensre` (TTY).
+1. `uv run opensore` (TTY).
 2. `/trust on` (or confirm the elevated-action prompt when running `/watch`).
 3. `/watch <pid> --max-cpu 80` — expect `task … started.` (use a real PID, e.g. the shell’s Python process).
 4. `/watches` — table columns include id, pid, kind, status, thresholds, last sample.
@@ -54,11 +54,11 @@ PR reviewers expect a **visible demo** (terminal log or screenshot) in the PR un
 Automated equivalent (runs in `make test-cov`):  
 `uv run pytest tests/cli/interactive_shell/test_watchdog_repl_e2e_demo.py -v --tb=short`
 
-Longer transcript (optional): [tests/cli/interactive_shell/repl_watchdog_demo.md](https://github.com/Tracer-Cloud/opensre/blob/main/tests/cli/interactive_shell/repl_watchdog_demo.md).
+Longer transcript (optional): [tests/cli/interactive_shell/repl_watchdog_demo.md](https://github.com/Tracer-Cloud/opensore/blob/main/tests/cli/interactive_shell/repl_watchdog_demo.md).
 
 ## VS Code dev container
 
-The dev container is defined under [`.devcontainer/`](https://github.com/Tracer-Cloud/opensre/tree/main/.devcontainer). It builds from [`.devcontainer/Dockerfile`](https://github.com/Tracer-Cloud/opensre/blob/main/.devcontainer/Dockerfile) (Python **3.13**), then **`postCreateCommand`** creates `.venv-devcontainer` and runs **`pip install -e '.[dev]'`** (not `uv`). Docker Desktop, OrbStack, Colima, or another compatible runtime must be available on the host.
+The dev container is defined under [`.devcontainer/`](https://github.com/Tracer-Cloud/opensore/tree/main/.devcontainer). It builds from [`.devcontainer/Dockerfile`](https://github.com/Tracer-Cloud/opensore/blob/main/.devcontainer/Dockerfile) (Python **3.13**), then **`postCreateCommand`** creates `.venv-devcontainer` and runs **`pip install -e '.[dev]'`** (not `uv`). Docker Desktop, OrbStack, Colima, or another compatible runtime must be available on the host.
 
 ## Benchmark
 
@@ -73,7 +73,7 @@ To refresh README benchmark copy from cached results (no LLM calls): `make bench
 ### Hosted runtime
 
 1. Deploy this repository as a standard Python/FastAPI app using the repo `Dockerfile` or your host's native Python workflow.
-2. Set `LLM_PROVIDER` and the matching API key (for example `ANTHROPIC_API_KEY`, `OPENAI_API_KEY` — see [`.env.example`](https://github.com/Tracer-Cloud/opensre/blob/main/.env.example)).
+2. Set `LLM_PROVIDER` and the matching API key (for example `ANTHROPIC_API_KEY`, `OPENAI_API_KEY` — see [`.env.example`](https://github.com/Tracer-Cloud/opensore/blob/main/.env.example)).
 3. Add integration and storage env vars your deployment needs.
 
 Minimal LLM env:
@@ -85,10 +85,10 @@ export ANTHROPIC_API_KEY=...
 
 ### Railway (self-hosted alternative)
 
-Ensure the Railway project has Postgres and Redis and that the OpenSRE service has **`DATABASE_URI`** and **`REDIS_URI`** wired to them before deploying.
+Ensure the Railway project has Postgres and Redis and that the OpenSore service has **`DATABASE_URI`** and **`REDIS_URI`** wired to them before deploying.
 
 ```bash
-opensre deploy railway --project <project> --service <service> --yes
+opensore deploy railway --project <project> --service <service> --yes
 ```
 
 If the service never becomes healthy, confirm both URIs are set on the service.
@@ -98,44 +98,44 @@ If the service never becomes healthy, confirm both URIs are set on the service.
 After deploy:
 
 ```bash
-opensre remote ops --provider railway --project <project> --service <service> status
-opensre remote ops --provider railway --project <project> --service <service> logs --lines 200
-opensre remote ops --provider railway --project <project> --service <service> logs --follow
-opensre remote ops --provider railway --project <project> --service <service> restart --yes
+opensore remote ops --provider railway --project <project> --service <service> status
+opensore remote ops --provider railway --project <project> --service <service> logs --lines 200
+opensore remote ops --provider railway --project <project> --service <service> logs --follow
+opensore remote ops --provider railway --project <project> --service <service> restart --yes
 ```
 
-OpenSRE remembers the last `provider`, so you can shorten to:
+OpenSore remembers the last `provider`, so you can shorten to:
 
 ```bash
-opensre remote ops status
-opensre remote ops logs --follow
+opensore remote ops status
+opensore remote ops logs --follow
 ```
 
 ## Telemetry and privacy
 
-`opensre` ships with two telemetry stacks, both opt-out:
+`opensore` ships with two telemetry stacks, both opt-out:
 
 - **PostHog** — anonymous product analytics (commands used, success/failure, rough runtime, CLI/Python/OS/arch, and limited command metadata).
 - **Sentry** — crashes and errors (stack traces, environment, release).
 
-Events are tagged with `entrypoint`, `opensre.runtime`, and `deployment_method`. Sensitive headers, paths, and secret-shaped keys are scrubbed before send.
+Events are tagged with `entrypoint`, `opensore.runtime`, and `deployment_method`. Sensitive headers, paths, and secret-shaped keys are scrubbed before send.
 
-A random install ID is stored under `~/.config/opensre/anonymous_id`. PostHog `distinct_id` is scoped to that ID. Telemetry is off in GitHub Actions and pytest.
+A random install ID is stored under `~/.config/opensore/anonymous_id`. PostHog `distinct_id` is scoped to that ID. Telemetry is off in GitHub Actions and pytest.
 
 ### Kill-switch matrix
 
 | Env var                        | PostHog    | Sentry     |
 | ------------------------------ | ---------- | ---------- |
-| `OPENSRE_NO_TELEMETRY=1`       | disabled   | disabled   |
+| `OPENSORE_NO_TELEMETRY=1`       | disabled   | disabled   |
 | `DO_NOT_TRACK=1`               | disabled   | disabled   |
-| `OPENSRE_ANALYTICS_DISABLED=1` | disabled   | unaffected |
-| `OPENSRE_SENTRY_DISABLED=1`    | unaffected | disabled   |
-| `OPENSRE_SENTRY_LOGGING_DISABLED=1` | unaffected | disables `logger.error`/`logger.exception` forwarding to Sentry; `capture_exception` unaffected |
+| `OPENSORE_ANALYTICS_DISABLED=1` | disabled   | unaffected |
+| `OPENSORE_SENTRY_DISABLED=1`    | unaffected | disabled   |
+| `OPENSORE_SENTRY_LOGGING_DISABLED=1` | unaffected | disables `logger.error`/`logger.exception` forwarding to Sentry; `capture_exception` unaffected |
 
 Full opt-out:
 
 ```bash
-export OPENSRE_NO_TELEMETRY=1
+export OPENSORE_NO_TELEMETRY=1
 ```
 
 ### Sentry DSN
@@ -144,14 +144,14 @@ Self-hosted users can set `SENTRY_DSN` to their project; unset uses the bundled 
 
 ### Deployment tagging
 
-Set `OPENSRE_DEPLOYMENT_METHOD` to `railway`, `ec2`, `vercel`, or `local` (default `local`) to label Sentry events.
+Set `OPENSORE_DEPLOYMENT_METHOD` to `railway`, `ec2`, `vercel`, or `local` (default `local`) to label Sentry events.
 
 ### Local PostHog event log
 
-By default, outbound PostHog payloads are also appended to `~/.config/opensre/posthog_events.txt` (rotates at 1000 lines). Disable:
+By default, outbound PostHog payloads are also appended to `~/.config/opensore/posthog_events.txt` (rotates at 1000 lines). Disable:
 
 ```bash
-export OPENSRE_ANALYTICS_LOG_EVENTS=0
+export OPENSORE_ANALYTICS_LOG_EVENTS=0
 ```
 
 We do not collect alert contents, file contents, hostnames, credentials, raw CLI arguments, or PII by design.

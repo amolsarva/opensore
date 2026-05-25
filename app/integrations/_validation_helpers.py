@@ -34,7 +34,7 @@ def report_validation_failure(
             ``"get_replication_status.statement_probe"``).
         severity: ``logging``-compatible level name; defaults to ``"warning"``
             since most validator failures are vendor/config issues rather
-            than bugs in OpenSRE.
+            than bugs in OpenSore.
         extras: Optional structured fields (DAG id, statement name, etc.).
             Merged into Sentry ``extra`` without becoming Sentry tags, so
             they don't inflate Sentry's tag cardinality.

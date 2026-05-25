@@ -4,19 +4,19 @@ from __future__ import annotations
 
 from app.agents.conflicts import FileWriteConflict, WriteEvent, detect_conflicts
 
-OPENSRE_ID = "opensre:1"
+OPENSORE_ID = "opensore:1"
 
 
 class TestEmptyAndTrivialInputs:
     def test_empty_events_returns_empty_list(self) -> None:
-        assert detect_conflicts([], window_seconds=60.0, opensre_agent_id=OPENSRE_ID) == []
+        assert detect_conflicts([], window_seconds=60.0, opensore_agent_id=OPENSORE_ID) == []
 
-    def test_only_opensre_events_returns_empty_list(self) -> None:
+    def test_only_opensore_events_returns_empty_list(self) -> None:
         events = [
-            WriteEvent(agent=OPENSRE_ID, path="/a", timestamp=10.0),
-            WriteEvent(agent=OPENSRE_ID, path="/a", timestamp=20.0),
+            WriteEvent(agent=OPENSORE_ID, path="/a", timestamp=10.0),
+            WriteEvent(agent=OPENSORE_ID, path="/a", timestamp=20.0),
         ]
-        assert detect_conflicts(events, window_seconds=60.0, opensre_agent_id=OPENSRE_ID) == []
+        assert detect_conflicts(events, window_seconds=60.0, opensore_agent_id=OPENSORE_ID) == []
 
     def test_single_agent_repeated_writes_no_conflict(self) -> None:
         events = [
@@ -24,7 +24,7 @@ class TestEmptyAndTrivialInputs:
             WriteEvent(agent="claude-code:1", path="/a", timestamp=20.0),
             WriteEvent(agent="claude-code:1", path="/a", timestamp=30.0),
         ]
-        assert detect_conflicts(events, window_seconds=60.0, opensre_agent_id=OPENSRE_ID) == []
+        assert detect_conflicts(events, window_seconds=60.0, opensore_agent_id=OPENSORE_ID) == []
 
 
 class TestWindowBoundaries:
@@ -33,7 +33,7 @@ class TestWindowBoundaries:
             WriteEvent(agent="claude-code:1", path="/a", timestamp=100.0),
             WriteEvent(agent="cursor:2", path="/a", timestamp=110.0),
         ]
-        result = detect_conflicts(events, window_seconds=60.0, opensre_agent_id=OPENSRE_ID)
+        result = detect_conflicts(events, window_seconds=60.0, opensore_agent_id=OPENSORE_ID)
         assert result == [
             FileWriteConflict(
                 path="/a",
@@ -49,7 +49,7 @@ class TestWindowBoundaries:
             WriteEvent(agent="cursor:2", path="/a", timestamp=200.0),
         ]
         # claude's write is 190s before cursor's; window 60s drops it.
-        assert detect_conflicts(events, window_seconds=60.0, opensre_agent_id=OPENSRE_ID) == []
+        assert detect_conflicts(events, window_seconds=60.0, opensore_agent_id=OPENSORE_ID) == []
 
     def test_window_boundary_is_inclusive(self) -> None:
         events = [
@@ -57,7 +57,7 @@ class TestWindowBoundaries:
             WriteEvent(agent="cursor:2", path="/a", timestamp=100.0),
         ]
         # 100 - 40 == 60, exactly at the boundary; must be included.
-        result = detect_conflicts(events, window_seconds=60.0, opensre_agent_id=OPENSRE_ID)
+        result = detect_conflicts(events, window_seconds=60.0, opensore_agent_id=OPENSORE_ID)
         assert len(result) == 1
         assert result[0].agents == ("claude-code:1", "cursor:2")
 
@@ -69,7 +69,7 @@ class TestMultiAgentAndFiltering:
             WriteEvent(agent="cursor:2", path="/a", timestamp=105.0),
             WriteEvent(agent="aider:3", path="/a", timestamp=110.0),
         ]
-        result = detect_conflicts(events, window_seconds=60.0, opensre_agent_id=OPENSRE_ID)
+        result = detect_conflicts(events, window_seconds=60.0, opensore_agent_id=OPENSORE_ID)
         assert result == [
             FileWriteConflict(
                 path="/a",
@@ -79,22 +79,22 @@ class TestMultiAgentAndFiltering:
             )
         ]
 
-    def test_opensre_event_does_not_create_conflict_with_lone_agent(self) -> None:
+    def test_opensore_event_does_not_create_conflict_with_lone_agent(self) -> None:
         events = [
             WriteEvent(agent="claude-code:1", path="/a", timestamp=100.0),
-            WriteEvent(agent=OPENSRE_ID, path="/a", timestamp=105.0),
+            WriteEvent(agent=OPENSORE_ID, path="/a", timestamp=105.0),
         ]
-        # Only one real agent → no conflict, even though OpenSRE also wrote.
-        assert detect_conflicts(events, window_seconds=60.0, opensre_agent_id=OPENSRE_ID) == []
+        # Only one real agent → no conflict, even though OpenSore also wrote.
+        assert detect_conflicts(events, window_seconds=60.0, opensore_agent_id=OPENSORE_ID) == []
 
-    def test_opensre_filtered_when_other_agents_collide(self) -> None:
+    def test_opensore_filtered_when_other_agents_collide(self) -> None:
         events = [
             WriteEvent(agent="claude-code:1", path="/a", timestamp=100.0),
             WriteEvent(agent="cursor:2", path="/a", timestamp=105.0),
-            WriteEvent(agent=OPENSRE_ID, path="/a", timestamp=110.0),
+            WriteEvent(agent=OPENSORE_ID, path="/a", timestamp=110.0),
         ]
-        # OpenSRE must not appear in agents nor influence first_seen/last_seen.
-        result = detect_conflicts(events, window_seconds=60.0, opensre_agent_id=OPENSRE_ID)
+        # OpenSore must not appear in agents nor influence first_seen/last_seen.
+        result = detect_conflicts(events, window_seconds=60.0, opensore_agent_id=OPENSORE_ID)
         assert result == [
             FileWriteConflict(
                 path="/a",
@@ -111,7 +111,7 @@ class TestMultiAgentAndFiltering:
             WriteEvent(agent="cursor:2", path="/a", timestamp=102.0),
             WriteEvent(agent="claude-code:1", path="/a", timestamp=103.0),
         ]
-        result = detect_conflicts(events, window_seconds=60.0, opensre_agent_id=OPENSRE_ID)
+        result = detect_conflicts(events, window_seconds=60.0, opensore_agent_id=OPENSORE_ID)
         assert len(result) == 1
         assert result[0].agents == ("claude-code:1", "cursor:2")
 
@@ -124,7 +124,7 @@ class TestMultipleConflicts:
             WriteEvent(agent="claude-code:1", path="/new", timestamp=140.0),
             WriteEvent(agent="cursor:2", path="/new", timestamp=150.0),
         ]
-        result = detect_conflicts(events, window_seconds=60.0, opensre_agent_id=OPENSRE_ID)
+        result = detect_conflicts(events, window_seconds=60.0, opensore_agent_id=OPENSORE_ID)
         assert [c.path for c in result] == ["/new", "/old"]
         assert result[0].last_seen == 150.0
         assert result[1].last_seen == 105.0

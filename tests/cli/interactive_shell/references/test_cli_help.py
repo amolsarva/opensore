@@ -65,7 +65,7 @@ def _seed_docs_root(root: Path) -> None:
         encoding="utf-8",
     )
     (root / "deployment.mdx").write_text(
-        '---\ntitle: "Deployment"\n---\n\nDeploy OpenSRE to Railway or EC2.\n',
+        '---\ntitle: "Deployment"\n---\n\nDeploy OpenSore to Railway or EC2.\n',
         encoding="utf-8",
     )
 
@@ -93,7 +93,7 @@ class TestSystemPromptGrounding:
         )
         # Falls back to CLI reference + canonical docs URL hint.
         assert "Project documentation is not available" in prompt
-        assert "https://www.opensre.com/docs" in prompt
+        assert "https://www.opensore.com/docs" in prompt
         assert "(cli-ref)" in prompt
 
     def test_prompt_enforces_terminology_and_markdown_rules(self) -> None:
@@ -126,7 +126,7 @@ class TestAnswerCliHelp:
         assert "datadog.mdx" in client.last_prompt
         assert "API Key" in client.last_prompt
         # The CLI reference is also included so the LLM can mention commands.
-        assert "opensre" in client.last_prompt.lower()
+        assert "opensore" in client.last_prompt.lower()
 
     def test_renders_assistant_markdown(
         self,
@@ -135,16 +135,16 @@ class TestAnswerCliHelp:
     ) -> None:
         _seed_docs_root(tmp_path)
         monkeypatch.setattr(docs_reference, "_DOCS_ROOT", tmp_path)
-        _patch_llm(monkeypatch, "Run **opensre investigate** to start.")
+        _patch_llm(monkeypatch, "Run **opensore investigate** to start.")
 
         console, buf = _capture()
         answer_cli_help("how do I run an investigation?", ReplSession(), console)
 
         output = re.sub(r"\x1b\[[0-9;]*[A-Za-z]", "", buf.getvalue())
         # Paragraph-level Markdown render strips the literal ``**``
-        # delimiters around "opensre investigate" at end-of-stream.
-        assert "**opensre investigate**" not in output
-        assert "opensre investigate" in output
+        # delimiters around "opensore investigate" at end-of-stream.
+        assert "**opensore investigate**" not in output
+        assert "opensore investigate" in output
 
     def test_handles_missing_docs_gracefully(
         self,

@@ -10,7 +10,7 @@ def test_validate_aws_accepts_role_arn() -> None:
     result = validate_aws_deploy_config(
         {
             "region": "us-east-1",
-            "role_arn": "arn:aws:iam::123456789012:role/opensre-deploy",
+            "role_arn": "arn:aws:iam::123456789012:role/opensore-deploy",
             "external_id": "ext-1",
         }
     )

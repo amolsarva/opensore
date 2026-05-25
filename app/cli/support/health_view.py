@@ -1,4 +1,4 @@
-"""Rendering helpers for the ``opensre health`` command."""
+"""Rendering helpers for the ``opensore health`` command."""
 
 from __future__ import annotations
 
@@ -80,7 +80,7 @@ def render_health_report(
     counts = _summary_counts(normalized_results)
 
     console.print()
-    console.print(Panel.fit(f"[{BOLD_BRAND}]OpenSRE Health[/]", border_style=BRAND))
+    console.print(Panel.fit(f"[{BOLD_BRAND}]OpenSore Health[/]", border_style=BRAND))
 
     from app.guardrails.rules import get_default_rules_path, load_rules
 
@@ -131,12 +131,12 @@ def render_health_report(
 
     if counts["failed"] > 0:
         console.print(
-            f"[bold {ERROR}]Action:[/] Fix failed integrations, then rerun [bold]opensre health[/bold]."
+            f"[bold {ERROR}]Action:[/] Fix failed integrations, then rerun [bold]opensore health[/bold]."
         )
     elif counts["missing"] > 0:
         console.print(
             f"[bold {WARNING}]Action:[/] Configure missing integrations with "
-            "[bold]opensre integrations setup <service>[/bold]."
+            "[bold]opensore integrations setup <service>[/bold]."
         )
     else:
         console.print(f"[bold {HIGHLIGHT}]All configured integrations look healthy.[/]")

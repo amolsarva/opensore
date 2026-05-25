@@ -43,7 +43,7 @@ class _HonestAdapter(BenchmarkAdapter):
     def build_alert(self, _case: BenchmarkCase) -> AlertPayload:
         return AlertPayload(raw={}, normalized={})
 
-    def build_opensre_integrations(self, _case: BenchmarkCase) -> dict[str, Any]:
+    def build_opensore_integrations(self, _case: BenchmarkCase) -> dict[str, Any]:
         return {}
 
     def build_baseline_tools(self, _case: BenchmarkCase) -> dict[str, Any]:
@@ -89,7 +89,7 @@ def _honest_config(tmp_path: Path, *, with_prereg: bool = True) -> BenchmarkConf
     return BenchmarkConfig.model_validate(
         {
             "benchmark": "honest",
-            "modes": ["opensre+llm"],
+            "modes": ["opensore+llm"],
             "llms": ["claude_sonnet"],
             "model_versions": {"claude_sonnet": "claude-sonnet-4-5-20250929"},
             "seed": 42,
@@ -111,8 +111,8 @@ def _honest_report(tmp_path: Path) -> BenchmarkReport:
         started_at="2026-01-01T00:00:00Z",
         ended_at="2026-01-01T00:01:00Z",
         per_stratum={
-            "all": {"opensre+llm/claude_sonnet": {"a1": 0.5, "grounding": 0.5}},
-            "seen-shape": {"opensre+llm/claude_sonnet": {"a1": 0.6, "grounding": 0.6}},
+            "all": {"opensore+llm/claude_sonnet": {"a1": 0.5, "grounding": 0.5}},
+            "seen-shape": {"opensore+llm/claude_sonnet": {"a1": 0.6, "grounding": 0.6}},
         },
         reported_metrics=["a1", "grounding"],
         raw_artifacts_dir=cases_dir,

@@ -174,7 +174,7 @@ def _get_connection(config: AzureSQLConfig) -> Any:
         f"Encrypt={encrypt_value};"
         f"TrustServerCertificate=no;"
         f"Connection Timeout={int(config.timeout_seconds)};"
-        f"APP=opensre;"
+        f"APP=opensore;"
     )
     return pyodbc.connect(conn_str, timeout=int(config.timeout_seconds))
 

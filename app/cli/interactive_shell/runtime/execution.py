@@ -20,7 +20,7 @@ from app.cli.interactive_shell.prompting import follow_up as _follow_up
 from app.cli.interactive_shell.routing.types import RouteDecision
 from app.cli.interactive_shell.runtime.session import ReplSession
 from app.cli.interactive_shell.ui import DIM, ERROR, WARNING
-from app.cli.support.errors import OpenSREError
+from app.cli.support.errors import OpenSoreError
 from app.cli.support.exception_reporting import report_exception
 from app.llm_reasoning_effort import apply_reasoning_effort
 
@@ -47,11 +47,11 @@ def _build_cli_agent_empty_response_fallback(text: str, session: ReplSession) ->
     if session.configured_integrations_known and not session.configured_integrations:
         guidance = (
             "No integrations are configured in this session yet. "
-            "Use `/integrations` to set one up, or run `opensre investigate --help` "
+            "Use `/integrations` to set one up, or run `opensore investigate --help` "
             "to review investigation commands."
         )
     else:
-        guidance = "You can run `opensre investigate --help` to review investigation commands."
+        guidance = "You can run `opensore investigate --help` to review investigation commands."
 
     return f"I can help investigate this request: {condensed}\n\n{guidance}"
 
@@ -109,7 +109,7 @@ def run_new_alert(
         console.print(f"[{WARNING}]investigation cancelled.[/]")
         session.record("alert", text, ok=False)
         return None
-    except OpenSREError as exc:
+    except OpenSoreError as exc:
         task.mark_failed(str(exc))
         console.print(f"[{ERROR}]investigation failed:[/] {escape(str(exc))}")
         if exc.suggestion:

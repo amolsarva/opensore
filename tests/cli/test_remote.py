@@ -143,7 +143,7 @@ def test_remote_health_connect_error_is_actionable() -> None:
 
     assert result.exit_code == 1
     assert "Could not connect to http://10.0.0.1:2024." in result.output
-    assert "systemctl status opensre" in result.output
+    assert "systemctl status opensore" in result.output
 
 
 def test_remote_group_passes_api_key_to_client() -> None:

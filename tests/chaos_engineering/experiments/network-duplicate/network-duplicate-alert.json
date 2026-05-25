@@ -1,7 +1,7 @@
 {
   "_meta": {
     "purpose": "Synthetic alert for NetworkChaos duplicate",
-    "run": "opensre investigate -i tests/chaos_engineering/experiments/network-duplicate/network-duplicate-alert.json"
+    "run": "opensore investigate -i tests/chaos_engineering/experiments/network-duplicate/network-duplicate-alert.json"
   },
   "title": "[Triggered] Erratic HTTP - network-duplicate-demo",
   "alert_name": "Datadog monitor: duplicate / flaky traffic",

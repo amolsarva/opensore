@@ -1,6 +1,6 @@
 ---
 title: 'CloudOpsBench benchmark'
-description: 'Run opensre+LLM against the 452-scenario Cloud-OpsBench corpus (Wang et al, arXiv:2603.00468v1) and compare to published LLM-alone baselines.'
+description: 'Run opensore+LLM against the 452-scenario Cloud-OpsBench corpus (Wang et al, arXiv:2603.00468v1) and compare to published LLM-alone baselines.'
 ---
 
 ## Overview
@@ -11,15 +11,15 @@ Feb 2026). The paper uses a *State Snapshot* paradigm — each fault case is
 a frozen JSON repository served via mocked `kubectl`-style tool calls — so
 every evaluation is bit-for-bit reproducible and needs no live cluster.
 
-OpenSRE wraps this corpus through a small reusable benchmark framework
+OpenSore wraps this corpus through a small reusable benchmark framework
 that adds cost tracking, integrity guards (pre-registration, per-stratum
 reporting, negative results, COI disclosure), per-LLM dispatch with
 version pinning, and self-contained markdown + HTML reports. The goal
-is to publish the opensre+LLM column against the paper's LLM-alone
+is to publish the opensore+LLM column against the paper's LLM-alone
 baselines on the same scenarios.
 
 ```text
-Paper baseline                 opensre+LLM (this benchmark)
+Paper baseline                 opensore+LLM (this benchmark)
 ─────────────                  ──────────────────────────
 DeepSeek-V3.2  0.73   A@1  →   target 0.78+
 GPT-5          0.67   A@1  →   target 0.78+
@@ -35,7 +35,7 @@ the environment.
 ```bash
 # 1. Python 3.12+ (project standard)
 
-# 2. Benchmark-dedicated LLM API keys — keep separate from production opensre keys
+# 2. Benchmark-dedicated LLM API keys — keep separate from production opensore keys
 export ANTHROPIC_API_KEY=...        # Claude-4-Sonnet via Anthropic direct
 export OPENAI_API_KEY=...           # GPT-5, GPT-4o
 export DEEPSEEK_API_KEY=...         # DeepSeek-V3.2
@@ -111,7 +111,7 @@ uv run python -m tests.benchmarks._framework.cli report \
 benchmark: cloudopsbench
 
 modes:
-  - opensre+llm          # opensre wrapping the LLM
+  - opensore+llm          # opensore wrapping the LLM
   # - llm_alone          # paper provides LLM-alone numbers; rerun only if not trusting them
 
 llms:
@@ -146,8 +146,8 @@ These let CI override knobs without editing the YAML:
 
 | Variable | Purpose |
 |---|---|
-| `OPENSRE_BENCH_WORKERS` | Override `workers:` |
-| `OPENSRE_BENCH_COST_BUDGET_USD` | Override `cost_budget_usd:` |
+| `OPENSORE_BENCH_WORKERS` | Override `workers:` |
+| `OPENSORE_BENCH_COST_BUDGET_USD` | Override `cost_budget_usd:` |
 
 ## Integrity guarantees
 
@@ -219,7 +219,7 @@ at evaluation time.
 
 ## Existing production entry points
 
-`make test-cloudopsbench` and `opensre tests cloudopsbench` route through
+`make test-cloudopsbench` and `opensore tests cloudopsbench` route through
 `tests/benchmarks/cloudopsbench/run_suite.py`, which is the legacy
 imperative-CLI surface. The framework runner is the new YAML-config
 surface and coexists with it during the transition. Both call into the
@@ -232,5 +232,5 @@ same adapter, scoring code, and replay backend.
   [arXiv:2603.00468v1](https://arxiv.org/abs/2603.00468), 28 Feb 2026 —
   [GitHub](https://github.com/LLM4Ops/Cloud-OpsBench)
 - HF dataset: [`tracer-cloud/cloud-ops-bench-dataset`](https://huggingface.co/datasets/tracer-cloud/cloud-ops-bench-dataset)
-- Framework source: [`tests/benchmarks/_framework/`](https://github.com/Tracer-Cloud/opensre/tree/main/tests/benchmarks/_framework)
-- Adapter source: [`tests/benchmarks/cloudopsbench/`](https://github.com/Tracer-Cloud/opensre/tree/main/tests/benchmarks/cloudopsbench)
+- Framework source: [`tests/benchmarks/_framework/`](https://github.com/Tracer-Cloud/opensore/tree/main/tests/benchmarks/_framework)
+- Adapter source: [`tests/benchmarks/cloudopsbench/`](https://github.com/Tracer-Cloud/opensore/tree/main/tests/benchmarks/cloudopsbench)

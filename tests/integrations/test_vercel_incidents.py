@@ -101,8 +101,8 @@ def test_cmd_vercel_incidents_exits_on_api_error(monkeypatch, capsys) -> None:
     captured = capsys.readouterr()
     assert exc_info.value.code == 1
     assert "Failed to list Vercel projects" in captured.err
-    assert "opensre integrations verify vercel" in captured.err
-    assert "opensre integrations setup vercel" in captured.err
+    assert "opensore integrations verify vercel" in captured.err
+    assert "opensore integrations setup vercel" in captured.err
 
 
 def test_select_incident_returns_selected_candidate(monkeypatch) -> None:

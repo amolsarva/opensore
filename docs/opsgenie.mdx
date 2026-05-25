@@ -1,9 +1,9 @@
 ---
 title: "OpsGenie"
-description: "Connect OpsGenie so OpenSRE can read active alerts and incident context during investigations"
+description: "Connect OpsGenie so OpenSore can read active alerts and incident context during investigations"
 ---
 
-OpenSRE queries OpsGenie to retrieve active alerts and their details — correlating on-call incidents with infrastructure events and investigation findings.
+OpenSore queries OpsGenie to retrieve active alerts and their details — correlating on-call incidents with infrastructure events and investigation findings.
 
 ## Prerequisites
 
@@ -15,7 +15,7 @@ OpenSRE queries OpsGenie to retrieve active alerts and their details — correla
 ### Option 1: Interactive CLI
 
 ```bash
-opensre integrations setup
+opensore integrations setup
 ```
 
 Select **OpsGenie** when prompted and provide your API key.
@@ -57,7 +57,7 @@ OPSGENIE_REGION=us   # or "eu" for EU accounts
 
 1. In OpsGenie, go to **Settings** → **API key management**
 2. Click **Add new API key**
-3. Name it `opensre` and enable **Read** access
+3. Name it `opensore` and enable **Read** access
 4. Copy the key
 
 <Info>
@@ -67,7 +67,7 @@ EU accounts use a different endpoint. Set `OPSGENIE_REGION=eu` if your OpsGenie 
 ## Verify
 
 ```bash
-opensre integrations verify opsgenie
+opensore integrations verify opsgenie
 ```
 
 Expected output:

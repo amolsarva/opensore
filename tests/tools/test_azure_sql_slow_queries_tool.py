@@ -10,11 +10,11 @@ from tests.tools.conftest import BaseToolContract
 
 class TestAzureSQLSlowQueriesToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return get_azure_sql_slow_queries.__opensre_registered_tool__
+        return get_azure_sql_slow_queries.__opensore_registered_tool__
 
 
 def test_metadata() -> None:
-    rt = get_azure_sql_slow_queries.__opensre_registered_tool__
+    rt = get_azure_sql_slow_queries.__opensore_registered_tool__
     assert rt.name == "get_azure_sql_slow_queries"
     assert rt.source == "azure_sql"
 

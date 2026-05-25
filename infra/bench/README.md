@@ -78,19 +78,19 @@ gh workflow run bench-seed-secret.yml -f secret=hf_token
 
 ```bash
 aws secretsmanager put-secret-value \
-  --secret-id opensre-bench/llm/anthropic_api_key \
+  --secret-id opensore-bench/llm/anthropic_api_key \
   --secret-string "$ANTHROPIC_API_KEY"
 
 aws secretsmanager put-secret-value \
-  --secret-id opensre-bench/llm/openai_api_key \
+  --secret-id opensore-bench/llm/openai_api_key \
   --secret-string "$OPENAI_API_KEY"
 
 aws secretsmanager put-secret-value \
-  --secret-id opensre-bench/llm/deepseek_api_key \
+  --secret-id opensore-bench/llm/deepseek_api_key \
   --secret-string "$DEEPSEEK_API_KEY"
 
 aws secretsmanager put-secret-value \
-  --secret-id opensre-bench/llm/hf_token \
+  --secret-id opensore-bench/llm/hf_token \
   --secret-string "$HF_TOKEN"
 ```
 
@@ -107,7 +107,7 @@ Cloud's web UI, not a Terraform change:
 1. Grafana Cloud → Connections → Add new connection → Amazon CloudWatch
 2. Configure with an AWS access key/role that has `logs:GetLogEvents`,
    `logs:DescribeLogGroups`, `logs:DescribeLogStreams` on
-   `/ecs/opensre-bench`
+   `/ecs/opensore-bench`
 3. Create a dashboard or use Grafana Explore against the new data source
 
 Logs continue to live in CloudWatch; Grafana just queries them. Zero infra
@@ -135,7 +135,7 @@ aws ecs run-task \
   --network-configuration "awsvpcConfiguration={subnets=[$SUBNETS],securityGroups=[$SG],assignPublicIp=ENABLED}"
 ```
 
-Live logs: `aws logs tail /ecs/opensre-bench --follow` (or via the AWS Console).
+Live logs: `aws logs tail /ecs/opensore-bench --follow` (or via the AWS Console).
 
 ## Building and pushing the bench container image
 

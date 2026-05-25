@@ -119,9 +119,9 @@ class MessagingIdentityPolicy(StrictConfigModel):
 
 
 def _get_hmac_key() -> bytes:
-    """Derive the HMAC key from the OPENSRE_PAIRING_SECRET env var.
+    """Derive the HMAC key from the OPENSORE_PAIRING_SECRET env var.
 
-    **Production requirement**: Set ``OPENSRE_PAIRING_SECRET`` to a strong,
+    **Production requirement**: Set ``OPENSORE_PAIRING_SECRET`` to a strong,
     unique secret in production deployments. Without it, the fallback key is
     derived from the machine hostname, which is not secret — if the stored
     hash leaks, an attacker could brute-force the 6-char code space offline.
@@ -131,15 +131,15 @@ def _get_hmac_key() -> bytes:
     Falls back to a per-machine default derived from the hostname so that
     local development and testing work without extra configuration.
     """
-    env_secret = os.environ.get("OPENSRE_PAIRING_SECRET", "")
+    env_secret = os.environ.get("OPENSORE_PAIRING_SECRET", "")
     if env_secret:
         return env_secret.encode()
     # Fallback: derive from hostname + a fixed namespace so it's unique per machine
     # but deterministic across restarts.
     import platform
 
-    machine_id = platform.node() or "opensre-default"
-    return f"opensre-pairing-{machine_id}".encode()
+    machine_id = platform.node() or "opensore-default"
+    return f"opensore-pairing-{machine_id}".encode()
 
 
 def generate_pairing_code() -> str:
@@ -287,7 +287,7 @@ def complete_pairing(
     resets on the next load and brute-force protection is defeated.
     """
     if not policy.pairing_secret_hash:
-        return False, "No pairing is pending. Ask the operator to run `opensre messaging pair`."
+        return False, "No pairing is pending. Ask the operator to run `opensore messaging pair`."
 
     # Check TTL expiry
     if _is_pairing_expired(policy):
@@ -296,7 +296,7 @@ def complete_pairing(
         policy.pairing_attempts = 0
         return (
             False,
-            "Pairing code has expired. Ask the operator to run `opensre messaging pair` again.",
+            "Pairing code has expired. Ask the operator to run `opensore messaging pair` again.",
         )
 
     # Check brute-force limit

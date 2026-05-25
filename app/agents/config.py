@@ -1,4 +1,4 @@
-"""Per-agent SLO + pricing config loaded from ``~/.config/opensre/agents.yaml``.
+"""Per-agent SLO + pricing config loaded from ``~/.config/opensore/agents.yaml``.
 
 ``hourly_budget_usd`` is reserved for the future budget-alarm
 feature (the dashboard's ``$/hr`` column shows observed cost, not the
@@ -16,7 +16,7 @@ from pathlib import Path
 import yaml
 from pydantic import Field
 
-from app.constants import OPENSRE_HOME_DIR
+from app.constants import OPENSORE_HOME_DIR
 from app.strict_config import StrictConfigModel
 
 logger = logging.getLogger(__name__)
@@ -47,14 +47,14 @@ class AgentBudget(StrictConfigModel):
 
 
 class AgentsConfig(StrictConfigModel):
-    """Top-level shape of ``~/.config/opensre/agents.yaml``."""
+    """Top-level shape of ``~/.config/opensore/agents.yaml``."""
 
     agents: dict[str, AgentBudget] = Field(default_factory=dict)
 
 
 def agents_config_path() -> Path:
     """On-disk path. Indirected so tests can monkeypatch the location."""
-    return OPENSRE_HOME_DIR / "agents.yaml"
+    return OPENSORE_HOME_DIR / "agents.yaml"
 
 
 def load_agents_config() -> AgentsConfig:

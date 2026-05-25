@@ -26,7 +26,7 @@ class HealthResponse(BaseModel):
     env: str
 
 
-app = FastAPI(title="OpenSRE Discovery")
+app = FastAPI(title="OpenSore Discovery")
 
 
 def _llm_configured() -> bool:
@@ -72,7 +72,7 @@ def discovery_ui() -> str:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>OpenSRE Discovery</title>
+  <title>OpenSore Discovery</title>
   <style>
     :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
     body { margin: 0; background: #f7f4ef; color: #202124; }
@@ -117,7 +117,7 @@ def discovery_ui() -> str:
     <ul>
       <li>It is not legal advice or a replacement for counsel.</li>
       <li>It should not decide whether misconduct happened by itself.</li>
-      <li>It should not retain user evidence on the hosted OpenSRE server.</li>
+      <li>It should not retain user evidence on the hosted OpenSore server.</li>
     </ul>
   </section>
 </main>

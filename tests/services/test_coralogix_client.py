@@ -24,7 +24,7 @@ def config() -> CoralogixIntegrationConfig:
     return CoralogixIntegrationConfig(
         api_key="test-key",
         base_url="https://api.eu2.coralogix.com",
-        application_name="opensre",
+        application_name="opensore",
         subsystem_name="api",
     )
 
@@ -44,7 +44,7 @@ def _make_ndjson_success_line() -> str:
                             {"key": "timestamp", "value": "2026-05-04T00:00:00Z"},
                         ],
                         "labels": [
-                            {"key": "applicationname", "value": "opensre"},
+                            {"key": "applicationname", "value": "opensore"},
                             {"key": "subsystemname", "value": "api"},
                         ],
                         "userData": json.dumps(
@@ -82,7 +82,7 @@ def test_query_logs_success_parses_ndjson_rows(client: CoralogixClient) -> None:
     assert result["logs"][0]["message"] == "boom"
     assert result["logs"][0]["level"] == "ERROR"
     assert result["logs"][0]["trace_id"] == "abc-123"
-    assert result["logs"][0]["application_name"] == "opensre"
+    assert result["logs"][0]["application_name"] == "opensore"
     assert result["logs"][0]["subsystem_name"] == "api"
 
 
@@ -199,7 +199,7 @@ def test_probe_access_passed_with_scope_in_message(client: CoralogixClient) -> N
         probe = client.probe_access()
 
     assert probe.status == "passed"
-    assert "opensre" in probe.detail
+    assert "opensore" in probe.detail
     assert "api" in probe.detail
     assert "7 row" in probe.detail
 
@@ -210,10 +210,10 @@ def test_probe_access_passed_with_scope_in_message(client: CoralogixClient) -> N
 
 
 def test_build_coralogix_logs_query_appends_limit_clause() -> None:
-    result = build_coralogix_logs_query(application_name="opensre", limit=5)
+    result = build_coralogix_logs_query(application_name="opensore", limit=5)
 
     assert result.startswith("source logs")
-    assert "filter $l.applicationname == 'opensre'" in result
+    assert "filter $l.applicationname == 'opensore'" in result
     assert result.endswith("limit 5")
 
 

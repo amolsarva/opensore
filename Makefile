@@ -1,7 +1,7 @@
 -include .env
 export
 
-.PHONY: install onboard benchmark benchmark-update-readme test test-full demo alert-template investigate-alert opensre-hub-fetch opensre-hub-export opensre-hub-investigate verify-integrations check-docker grafana-local-up grafana-local-down grafana-local-seed clean lint format deploy deploy-lambda deploy-prefect deploy-flink destroy destroy-lambda destroy-prefect destroy-flink prefect-local-test simulate-k8s-alert test-k8s-local test-k8s test-k8s-datadog chaos-mesh-up chaos-mesh-down chaos-engineering-apply chaos-engineering-delete chaos-lab-up chaos-lab-down chaos-experiment-list chaos-experiment-up chaos-experiment-down deploy-dd-monitors cleanup-dd-monitors deploy-eks destroy-eks test-k8s-eks datadog-demo crashloop-demo regen-trigger-config test-rca test-rca-grafana test-synthetic test-rds-synthetic test-cli-smoke deploy-vercel destroy-vercel test-vercel deploy-ec2 destroy-ec2 test-ec2 deploy-ec2-hello destroy-ec2-hello deploy-remote destroy-remote deploy-bedrock destroy-bedrock test-bedrock download-cloudopsbench-hf validate-cloudopsbench test-openclaw test-openclaw-synthetic test-hermes test-hermes-synthetic
+.PHONY: install onboard benchmark benchmark-update-readme test test-full demo alert-template investigate-alert opensore-hub-fetch opensore-hub-export opensore-hub-investigate verify-integrations check-docker grafana-local-up grafana-local-down grafana-local-seed clean lint format deploy deploy-lambda deploy-prefect deploy-flink destroy destroy-lambda destroy-prefect destroy-flink prefect-local-test simulate-k8s-alert test-k8s-local test-k8s test-k8s-datadog chaos-mesh-up chaos-mesh-down chaos-engineering-apply chaos-engineering-delete chaos-lab-up chaos-lab-down chaos-experiment-list chaos-experiment-up chaos-experiment-down deploy-dd-monitors cleanup-dd-monitors deploy-eks destroy-eks test-k8s-eks datadog-demo crashloop-demo regen-trigger-config test-rca test-rca-grafana test-synthetic test-rds-synthetic test-cli-smoke deploy-vercel destroy-vercel test-vercel deploy-ec2 destroy-ec2 test-ec2 deploy-ec2-hello destroy-ec2-hello deploy-remote destroy-remote deploy-bedrock destroy-bedrock test-bedrock download-cloudopsbench-hf validate-cloudopsbench test-openclaw test-openclaw-synthetic test-hermes test-hermes-synthetic
 
 
 ifneq ($(wildcard .venv/bin/python),)
@@ -38,7 +38,7 @@ build:
 
 # Run the local onboarding flow
 onboard:
-	opensre onboard
+	opensore onboard
 
 # Run Prefect ECS demo (default demo) - shows Investigation Trace in RCA
 demo:
@@ -53,21 +53,21 @@ benchmark-update-readme:
 	$(PYTHON) -m tests.benchmarks.toolcall_model_benchmark.readme_updater
 
 alert-template:
-	opensre investigate --print-template $(or $(TEMPLATE),generic)
+	opensore investigate --print-template $(or $(TEMPLATE),generic)
 
 investigate-alert:
 	@[ -n "$(ALERT)" ] || { echo "Usage: make investigate-alert ALERT=/path/to/alert.json"; exit 1; }
-	opensre investigate --input "$(ALERT)"
+	opensore investigate --input "$(ALERT)"
 
-# Fetch first alert from Hugging Face tracer-cloud/opensre (needs Hub extra + network).
-# OPENSRE_QUERY_PREFIX=Telecom/query_alerts make opensre-hub-fetch
-# OPENSRE_HF_DATASET_ID=tracer-cloud/opensre is optional (same default as the app).
-OPENSRE_HUB_ALERT ?= /tmp/opensre-hub-alert.json
-OPENSRE_QUERY_PREFIX ?= Market/cloudbed-1/query_alerts
-# 0-based: second alert => OPENSRE_HUB_INDEX=1
-OPENSRE_HUB_INDEX ?= 0
-# Extra flags for investigate, e.g. omit --evaluate: OPENSRE_INVESTIGATE_FLAGS=
-OPENSRE_INVESTIGATE_FLAGS ?= --evaluate
+# Fetch first alert from Hugging Face tracer-cloud/opensore (needs Hub extra + network).
+# OPENSORE_QUERY_PREFIX=Telecom/query_alerts make opensore-hub-fetch
+# OPENSORE_HF_DATASET_ID=tracer-cloud/opensore is optional (same default as the app).
+OPENSORE_HUB_ALERT ?= /tmp/opensore-hub-alert.json
+OPENSORE_QUERY_PREFIX ?= Market/cloudbed-1/query_alerts
+# 0-based: second alert => OPENSORE_HUB_INDEX=1
+OPENSORE_HUB_INDEX ?= 0
+# Extra flags for investigate, e.g. omit --evaluate: OPENSORE_INVESTIGATE_FLAGS=
+OPENSORE_INVESTIGATE_FLAGS ?= --evaluate
 
 CLOUDOPSBENCH_HF_DATASET_ID ?= tracer-cloud/cloud-ops-bench-dataset
 CLOUDOPSBENCH_DATASET_DIR ?= tests/benchmarks/cloudopsbench
@@ -75,20 +75,20 @@ CLOUDOPSBENCH_BENCHMARK_DIR ?= $(CLOUDOPSBENCH_DATASET_DIR)/benchmark
 CLOUDOPSBENCH_HF_INCLUDE ?= benchmark/**
 CLOUDOPSBENCH_LIMIT ?=
 
-opensre-hub-fetch:
-	$(PYTHON) infra/opensre-dataset/fetch_opensre_hub_alert.py --prefix "$(OPENSRE_QUERY_PREFIX)" --output "$(OPENSRE_HUB_ALERT)" --index $(OPENSRE_HUB_INDEX)
+opensore-hub-fetch:
+	$(PYTHON) infra/opensore-dataset/fetch_opensore_hub_alert.py --prefix "$(OPENSORE_QUERY_PREFIX)" --output "$(OPENSORE_HUB_ALERT)" --index $(OPENSORE_HUB_INDEX)
 
-# Batch: OPENSRE_EXPORT_DIR=./bank_alerts OPENSRE_EXPORT_LIMIT=30 make opensre-hub-export
-opensre-hub-export:
-	@[ -n "$(OPENSRE_EXPORT_DIR)" ] || { echo "Set OPENSRE_EXPORT_DIR (e.g. ./hub_alerts) and OPENSRE_EXPORT_LIMIT"; exit 1; }
-	@[ -n "$(OPENSRE_EXPORT_LIMIT)" ] || { echo "Set OPENSRE_EXPORT_LIMIT (e.g. 25)"; exit 1; }
-	$(PYTHON) infra/opensre-dataset/fetch_opensre_hub_alert.py --prefix "$(OPENSRE_QUERY_PREFIX)" --export-dir "$(OPENSRE_EXPORT_DIR)" --limit $(OPENSRE_EXPORT_LIMIT)
+# Batch: OPENSORE_EXPORT_DIR=./bank_alerts OPENSORE_EXPORT_LIMIT=30 make opensore-hub-export
+opensore-hub-export:
+	@[ -n "$(OPENSORE_EXPORT_DIR)" ] || { echo "Set OPENSORE_EXPORT_DIR (e.g. ./hub_alerts) and OPENSORE_EXPORT_LIMIT"; exit 1; }
+	@[ -n "$(OPENSORE_EXPORT_LIMIT)" ] || { echo "Set OPENSORE_EXPORT_LIMIT (e.g. 25)"; exit 1; }
+	$(PYTHON) infra/opensore-dataset/fetch_opensore_hub_alert.py --prefix "$(OPENSORE_QUERY_PREFIX)" --export-dir "$(OPENSORE_EXPORT_DIR)" --limit $(OPENSORE_EXPORT_LIMIT)
 
-opensre-hub-investigate: opensre-hub-fetch
-	opensre investigate -i "$(OPENSRE_HUB_ALERT)" $(OPENSRE_INVESTIGATE_FLAGS)
+opensore-hub-investigate: opensore-hub-fetch
+	opensore investigate -i "$(OPENSORE_HUB_ALERT)" $(OPENSORE_INVESTIGATE_FLAGS)
 
 verify-integrations:
-	opensre integrations verify $(if $(SERVICE),$(SERVICE),) $(if $(SLACK_TEST),--send-slack-test,)
+	opensore integrations verify $(if $(SERVICE),$(SERVICE),) $(if $(SLACK_TEST),--send-slack-test,)
 
 check-docker:
 	@command -v docker >/dev/null 2>&1 || { echo "Docker is required for the live local Grafana stack. Install Docker Desktop or another Docker-compatible runtime, then rerun this target."; exit 1; }
@@ -135,7 +135,7 @@ test-rds-synthetic:
 test-k8s-synthetic:
 	$(PYTHON) -m tests.synthetic.eks.run_suite $(if $(SCENARIO),--scenario $(SCENARIO),)
 
-# Run Cloud-OpsBench RCA benchmark suite via the OpenSRE runner
+# Run Cloud-OpsBench RCA benchmark suite via the OpenSore runner
 test-cloudopsbench:
 	$(PYTHON) -m tests.benchmarks.cloudopsbench.run_suite --benchmark-dir "$(CLOUDOPSBENCH_BENCHMARK_DIR)" $(if $(SYSTEM),--system $(SYSTEM),) $(if $(FAULT),--fault-category $(FAULT),) $(if $(CASE),--case $(CASE),) $(if $(CLOUDOPSBENCH_LIMIT),--limit $(CLOUDOPSBENCH_LIMIT),$(if $(LIMIT),--limit $(LIMIT),))
 
@@ -271,7 +271,7 @@ grafana-demo:
 
 # Run the generic CLI (reads from stdin or --input)
 run:
-	opensre investigate
+	opensore investigate
 
 dev:
 	@echo "Run the health app with: uv run uvicorn app.webapp:app --reload --host 0.0.0.0 --port 8000"
@@ -355,7 +355,7 @@ test-full:
 test-cov:
 	$(PYTHON) -m pytest -n auto -v --cov=app --cov-report=term-missing --ignore=tests/e2e/kubernetes_local_alert_simulation --ignore=tests/synthetic -m "not synthetic"
 
-# Run the CLI smoke suite against the installed opensre entrypoint.
+# Run the CLI smoke suite against the installed opensore entrypoint.
 test-cli-smoke:
 	$(PYTHON) -m pytest -v tests/cli_smoke_test.py
 
@@ -484,7 +484,7 @@ help:
 	@echo "  make deploy-vercel     - Deploy health-check function to Vercel"
 	@echo "  make destroy-vercel    - Destroy Vercel deployment"
 	@echo "  make test-vercel       - Run Vercel deployment tests"
-	@echo "  make deploy-ec2        - Deploy OpenSRE on EC2 with Docker"
+	@echo "  make deploy-ec2        - Deploy OpenSore on EC2 with Docker"
 	@echo "  make destroy-ec2       - Terminate EC2 instance and clean up"
 	@echo "  make test-ec2          - Run EC2 deployment tests"
 	@echo "  make deploy-ec2-hello  - Deploy hello-world on EC2 (<60s)"
@@ -535,14 +535,14 @@ help:
 	@echo ""
 	@echo "  LOCAL DEVELOPMENT"
 	@echo "  make install         - Install dependencies"
-	@echo "  make onboard         - Run the OpenSRE onboarding flow"
+	@echo "  make onboard         - Run the OpenSore onboarding flow"
 	@echo "  make docs-dev        - Start the local documentation preview (requires mint CLI)"
 	@echo ""
-	@echo "  CLI (tab-completable, run 'opensre -h' for full help)"
-	@echo "  opensre onboard                    - Interactive setup wizard"
-	@echo "  opensre investigate -i alert.json  - Run RCA on an alert payload"
-	@echo "  opensre integrations list          - Show configured integrations"
-	@echo "  opensre integrations verify        - Verify connectivity"
+	@echo "  CLI (tab-completable, run 'opensore -h' for full help)"
+	@echo "  opensore onboard                    - Interactive setup wizard"
+	@echo "  opensore investigate -i alert.json  - Run RCA on an alert payload"
+	@echo "  opensore integrations list          - Show configured integrations"
+	@echo "  opensore integrations verify        - Verify connectivity"
 	@echo ""
 	@echo "  TESTING & QUALITY"
 	@echo "  make test            - Run fast unit tests + Prefect cloud E2E"

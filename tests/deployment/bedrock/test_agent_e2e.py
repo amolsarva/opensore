@@ -68,7 +68,7 @@ class TestBedrockAgentDeployment:
 
 @pytest.mark.e2e
 class TestBedrockAgentInvestigation:
-    """Validate that a Bedrock Agent can orchestrate OpenSRE tools.
+    """Validate that a Bedrock Agent can orchestrate OpenSore tools.
 
     These tests require model access to be enabled in the Bedrock console for the
     configured foundation model. If model access isn't available, tests are skipped

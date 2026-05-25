@@ -11,7 +11,7 @@ from tests.tools.conftest import BaseToolContract, mock_agent_state
 
 
 def _registered_tool() -> Any:
-    return cast(Any, get_gitlab_file_contents).__opensre_registered_tool__
+    return cast(Any, get_gitlab_file_contents).__opensore_registered_tool__
 
 
 class TestGitLabFileToolContract(BaseToolContract):

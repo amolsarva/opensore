@@ -7,31 +7,31 @@ rules to detect, redact, block, or audit sensitive information.
 
 ```shell
 # Generate a starter config with common patterns
-opensre guardrails init
+opensore guardrails init
 
 # Test it against sample text
-opensre guardrails test "my key is AKIAIOSFODNN7EXAMPLE"
+opensore guardrails test "my key is AKIAIOSFODNN7EXAMPLE"
 
 # View configured rules
-opensre guardrails rules
+opensore guardrails rules
 ```
 
 ## How it works
 
-1. Rules are loaded from `~/.config/opensre/guardrails.yml` on first LLM call
+1. Rules are loaded from `~/.config/opensore/guardrails.yml` on first LLM call
 2. Before every LLM API request, all message content is scanned against the rules
 3. Depending on the rule action:
    - **redact**: matched text is replaced with `[REDACTED:<rule_name>]`
    - **block**: the request is rejected with a `GuardrailBlockedError`
    - **audit**: the match is logged but text passes through unchanged
-4. All matches are written to `~/.config/opensre/guardrail_audit.jsonl`
+4. All matches are written to `~/.config/opensore/guardrail_audit.jsonl`
 
 If no `guardrails.yml` exists, all content passes through unchanged with zero
 overhead.
 
 ## Configuration
 
-The config file lives at `~/.config/opensre/guardrails.yml`. Each rule can use
+The config file lives at `~/.config/opensore/guardrails.yml`. Each rule can use
 regex patterns, keyword lists, or both.
 
 ```yaml
@@ -80,41 +80,41 @@ rules:
 
 ## CLI commands
 
-### `opensre guardrails init`
+### `opensore guardrails init`
 
-Creates a starter `~/.config/opensre/guardrails.yml` with common patterns for AWS
+Creates a starter `~/.config/opensore/guardrails.yml` with common patterns for AWS
 keys, credit cards, private keys, and API tokens. Does not overwrite an
 existing config.
 
-### `opensre guardrails test "text"`
+### `opensore guardrails test "text"`
 
 Dry-run: scans the provided text against all rules and shows what would be
 matched, redacted, or blocked.
 
 ```
-$ opensre guardrails test "key=AKIAIOSFODNN7EXAMPLE"
+$ opensore guardrails test "key=AKIAIOSFODNN7EXAMPLE"
   [REDACT] aws_access_key: matched 'AKIAIOSFODNN7EXAMPLE'
 
   Redacted output: key=[REDACTED:aws_access_key]
 ```
 
-### `opensre guardrails rules`
+### `opensore guardrails rules`
 
 Lists all configured rules with their action and status.
 
-### `opensre guardrails audit`
+### `opensore guardrails audit`
 
-Shows recent entries from the audit log at `~/.config/opensre/guardrail_audit.jsonl`.
+Shows recent entries from the audit log at `~/.config/opensore/guardrail_audit.jsonl`.
 
 ## Health check
 
-`opensre health` shows the current guardrails status:
+`opensore health` shows the current guardrails status:
 
 ```
 CLI
   environment: development
-  integration store: ~/.config/opensre/integrations.json
-  guardrails: 5 rules active (~/.config/opensre/guardrails.yml)
+  integration store: ~/.config/opensore/integrations.json
+  guardrails: 5 rules active (~/.config/opensore/guardrails.yml)
 ```
 
 ## Coverage

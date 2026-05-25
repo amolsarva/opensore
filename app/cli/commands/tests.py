@@ -18,7 +18,7 @@ from app.analytics.cli import (
     capture_tests_picker_opened,
 )
 from app.cli.support.context import is_json_output, is_yes
-from app.cli.support.errors import OpenSREError
+from app.cli.support.errors import OpenSoreError
 from app.correlation.runtime import build_runtime_correlation
 from app.correlation.upstream import (
     LogSignal,
@@ -144,9 +144,9 @@ def tests(ctx: click.Context) -> None:
         return
 
     if is_yes() or is_json_output():
-        raise OpenSREError(
+        raise OpenSoreError(
             "No subcommand provided.",
-            suggestion="Run 'opensre tests list' or 'opensre tests run <test_id>'.",
+            suggestion="Run 'opensore tests list' or 'opensore tests run <test_id>'.",
         )
 
     from app.cli.tests.discover import load_test_catalog
@@ -157,34 +157,34 @@ def tests(ctx: click.Context) -> None:
     try:
         exit_code = run_interactive_picker(catalog)
     except RuntimeError as exc:
-        raise OpenSREError(
+        raise OpenSoreError(
             str(exc),
-            suggestion="Run 'opensre tests list' or 'opensre tests run <test_id>'.",
+            suggestion="Run 'opensore tests list' or 'opensore tests run <test_id>'.",
         ) from exc
     raise SystemExit(exit_code)
 
 
-def _synthetic_suite_not_bundled_error() -> OpenSREError:
-    """Structured error for ``opensre tests synthetic`` when the suite isn't shipped."""
-    return OpenSREError(
+def _synthetic_suite_not_bundled_error() -> OpenSoreError:
+    """Structured error for ``opensore tests synthetic`` when the suite isn't shipped."""
+    return OpenSoreError(
         "The synthetic RDS PostgreSQL suite is not available in this build.",
         suggestion=(
             "Pre-built binaries do not bundle the per-scenario data files "
             "under 'tests/synthetic/rds_postgres/'. Install from source "
-            "(`git clone https://github.com/Tracer-Cloud/opensre && pip "
-            "install -e .`) and re-run 'opensre tests synthetic'."
+            "(`git clone https://github.com/Tracer-Cloud/opensore && pip "
+            "install -e .`) and re-run 'opensore tests synthetic'."
         ),
     )
 
 
-def _openclaw_synthetic_suite_not_bundled_error() -> OpenSREError:
-    return OpenSREError(
+def _openclaw_synthetic_suite_not_bundled_error() -> OpenSoreError:
+    return OpenSoreError(
         "The synthetic OpenClaw suite is not available in this build.",
         suggestion=(
             "Pre-built binaries do not bundle the per-scenario data files under "
             "'tests/synthetic/openclaw/'. Install from source "
-            "(`git clone https://github.com/Tracer-Cloud/opensre && pip install -e .`) "
-            "and re-run 'opensre tests openclaw-synthetic'."
+            "(`git clone https://github.com/Tracer-Cloud/opensore && pip install -e .`) "
+            "and re-run 'opensore tests openclaw-synthetic'."
         ),
     )
 
@@ -242,14 +242,14 @@ def run_synthetic_suite(
     normalized_scope = (scope or "").strip().lower()
     if normalized_scope:
         if normalized_scope != "all":
-            raise OpenSREError(
+            raise OpenSoreError(
                 f"Unknown synthetic scope: {scope}",
-                suggestion="Use 'opensre tests synthetic all' or pass --scenario.",
+                suggestion="Use 'opensore tests synthetic all' or pass --scenario.",
             )
         if scenario:
-            raise OpenSREError(
+            raise OpenSoreError(
                 "Cannot combine positional 'all' with --scenario.",
-                suggestion="Use either 'opensre tests synthetic all' or '--scenario <id>'.",
+                suggestion="Use either 'opensore tests synthetic all' or '--scenario <id>'.",
             )
         # "all" is an explicit intent to run every level; default to full
         # level parallelism unless the user already overrode the worker count.
@@ -257,7 +257,7 @@ def run_synthetic_suite(
         if parallel_levels == 1:
             parallel_levels = 4
 
-    # ``packaging/opensre.spec`` only collects ``app/`` data files, so neither
+    # ``packaging/opensore.spec`` only collects ``app/`` data files, so neither
     # the synthetic Python package's submodules nor the per-scenario data
     # directories are reliably present in PyInstaller bundles. Two failure
     # modes can trip a bundled binary here:
@@ -342,13 +342,13 @@ def run_openclaw_synthetic_suite(scenario: str, output_json: bool) -> None:
     raise SystemExit(exit_code)
 
 
-def _cloudopsbench_suite_not_bundled_error() -> OpenSREError:
-    return OpenSREError(
+def _cloudopsbench_suite_not_bundled_error() -> OpenSoreError:
+    return OpenSoreError(
         "The Cloud-OpsBench suite is not available in this build.",
         suggestion=(
             "Download the corpus with 'make download-cloudopsbench-hf' under "
             "'tests/benchmarks/cloudopsbench/benchmark/' and re-run "
-            "'opensre tests cloudopsbench'."
+            "'opensore tests cloudopsbench'."
         ),
     )
 
@@ -368,7 +368,7 @@ def run_cloudopsbench_suite(
     workers: int,
     output_json: bool,
 ) -> None:
-    """Run the Cloud-OpsBench RCA benchmark through OpenSRE."""
+    """Run the Cloud-OpsBench RCA benchmark through OpenSore."""
     try:
         from tests.benchmarks.cloudopsbench.case_loader import BENCHMARK_DIR
         from tests.benchmarks.cloudopsbench.run_suite import main as run_suite_main
@@ -494,7 +494,7 @@ def upstream_correlation_smoke(output_json: bool) -> None:
     drivers = result.get("most_likely_causal_drivers") or []
 
     if not signals or not drivers:
-        raise OpenSREError("Upstream correlation smoke validation failed.")
+        raise OpenSoreError("Upstream correlation smoke validation failed.")
 
     if output_json or is_json_output():
         click.echo(json.dumps(result, indent=2))
@@ -523,14 +523,14 @@ def run_test(test_id: str, dry_run: bool) -> None:
 
     item = find_test_item(test_id)
     if item is None:
-        raise OpenSREError(
+        raise OpenSoreError(
             f"Unknown test id: '{test_id}'.",
-            suggestion="Run 'opensre tests list' to see available test ids.",
+            suggestion="Run 'opensore tests list' to see available test ids.",
         )
     if not item.is_runnable:
-        raise OpenSREError(
+        raise OpenSoreError(
             f"Test '{test_id}' is a suite and cannot be run directly.",
-            suggestion="Run 'opensre tests list' to see individual runnable ids.",
+            suggestion="Run 'opensore tests list' to see individual runnable ids.",
         )
 
     capture_test_run_started(test_id, dry_run=dry_run)

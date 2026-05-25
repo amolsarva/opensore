@@ -32,7 +32,7 @@ from app.agents.bus import (
 @pytest.fixture
 def sock_path() -> Iterator[Path]:
     """Unix domain socket path must stay short (sun_path length cap, often 104–108)."""
-    path = Path("/tmp") / f"opensre-bus-{uuid.uuid4().hex}.sock"
+    path = Path("/tmp") / f"opensore-bus-{uuid.uuid4().hex}.sock"
     yield path
     with suppress(OSError):
         path.unlink(missing_ok=True)

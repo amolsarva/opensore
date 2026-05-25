@@ -99,7 +99,7 @@ python -m tests.synthetic.rds_postgres.run_suite --mock-grafana --axis2
 Via the interactive CLI (recommended):
 
 ```bash
-opensre tests synthetic
+opensore tests synthetic
 ```
 
 Run the whole Axis 1 suite directly:

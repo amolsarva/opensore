@@ -47,7 +47,7 @@ def test_incident_io_real_api_summary_writeback() -> None:
     with client:
         result = client.append_summary_update(
             os.environ["INCIDENT_IO_WRITEBACK_TEST_INCIDENT_ID"],
-            title="OpenSRE e2e verification",
+            title="OpenSore e2e verification",
             body="Automated sandbox write-back verification.",
             notify_incident_channel=False,
         )

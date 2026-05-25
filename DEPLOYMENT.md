@@ -1,6 +1,6 @@
 ## Deployment
 
-OpenSRE deploys as a standard Python/FastAPI runtime. Use the repo `Dockerfile`,
+OpenSore deploys as a standard Python/FastAPI runtime. Use the repo `Dockerfile`,
 Railway, EC2, ECS, Vercel, or another ASGI-capable host.
 
 ## Runtime Environment
@@ -34,7 +34,7 @@ The full set of supported provider keys and optional model overrides is document
 Railway remains available as a hosted runtime option.
 
 Before deploying on Railway, make sure the target project has both Postgres and
-Redis services, and that your OpenSRE service has `DATABASE_URI` and `REDIS_URI`
+Redis services, and that your OpenSore service has `DATABASE_URI` and `REDIS_URI`
 set to those connection strings.
 
 If the deploy starts but the service never becomes healthy, verify that
@@ -48,23 +48,23 @@ the CLI:
 
 ```bash
 # inspect service status, URL, deployment metadata
-opensre remote ops --provider railway --project <project> --service <service> status
+opensore remote ops --provider railway --project <project> --service <service> status
 
 # tail recent logs
-opensre remote ops --provider railway --project <project> --service <service> logs --lines 200
+opensore remote ops --provider railway --project <project> --service <service> logs --lines 200
 
 # stream logs live
-opensre remote ops --provider railway --project <project> --service <service> logs --follow
+opensore remote ops --provider railway --project <project> --service <service> logs --follow
 
 # trigger restart/redeploy
-opensre remote ops --provider railway --project <project> --service <service> restart --yes
+opensore remote ops --provider railway --project <project> --service <service> restart --yes
 ```
 
-OpenSRE saves your last used `provider`/`project`/`service`, so you can run:
+OpenSore saves your last used `provider`/`project`/`service`, so you can run:
 
 ```bash
-opensre remote ops status
-opensre remote ops logs --follow
+opensore remote ops status
+opensore remote ops logs --follow
 ```
 
 ---

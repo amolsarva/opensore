@@ -1,4 +1,4 @@
-"""Standard exit codes for the opensre CLI.
+"""Standard exit codes for the opensore CLI.
 
 Follows the convention from clig.dev and POSIX:
   0 - success

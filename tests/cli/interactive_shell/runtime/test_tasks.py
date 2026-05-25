@@ -119,9 +119,9 @@ class TestTaskRegistry:
     ) -> None:
         import app.constants as const_module
 
-        monkeypatch.setattr(const_module, "OPENSRE_HOME_DIR", tmp_path)
+        monkeypatch.setattr(const_module, "OPENSORE_HOME_DIR", tmp_path)
         reg = TaskRegistry.persistent()
-        task = reg.create(TaskKind.SYNTHETIC_TEST, command="opensre tests synthetic")
+        task = reg.create(TaskKind.SYNTHETIC_TEST, command="opensore tests synthetic")
         task.mark_running()
         task.attach_pid(os.getpid())
 
@@ -130,7 +130,7 @@ class TestTaskRegistry:
         assert loaded.task_id == task.task_id
         assert loaded.status == TaskStatus.RUNNING
         assert loaded.pid == os.getpid()
-        assert loaded.command == "opensre tests synthetic"
+        assert loaded.command == "opensore tests synthetic"
 
     def test_persistent_registry_marks_missing_pid_finished(
         self,
@@ -139,7 +139,7 @@ class TestTaskRegistry:
     ) -> None:
         import app.constants as const_module
 
-        monkeypatch.setattr(const_module, "OPENSRE_HOME_DIR", tmp_path)
+        monkeypatch.setattr(const_module, "OPENSORE_HOME_DIR", tmp_path)
         store_path = tmp_path / "interactive_tasks.json"
         store_path.parent.mkdir(parents=True, exist_ok=True)
         store_path.write_text(
@@ -154,7 +154,7 @@ class TestTaskRegistry:
                         "result": None,
                         "error": None,
                         "pid": 999_999,
-                        "command": "opensre tests synthetic",
+                        "command": "opensore tests synthetic",
                     }
                 ]
             ),
@@ -177,7 +177,7 @@ class TestTaskRegistry:
     ) -> None:
         import app.constants as const_module
 
-        monkeypatch.setattr(const_module, "OPENSRE_HOME_DIR", tmp_path)
+        monkeypatch.setattr(const_module, "OPENSORE_HOME_DIR", tmp_path)
         calls: list[tuple[int, int]] = []
 
         def _fake_kill(pid: int, sig: int) -> None:
@@ -185,7 +185,7 @@ class TestTaskRegistry:
 
         monkeypatch.setattr("app.cli.interactive_shell.runtime.tasks.os.kill", _fake_kill)
         reg = TaskRegistry.persistent()
-        task = reg.create(TaskKind.SYNTHETIC_TEST, command="opensre tests synthetic")
+        task = reg.create(TaskKind.SYNTHETIC_TEST, command="opensore tests synthetic")
         task.mark_running()
         task.attach_pid(12345)
 
@@ -203,10 +203,10 @@ class TestTaskRegistry:
     ) -> None:
         import app.constants as const_module
 
-        monkeypatch.setattr(const_module, "OPENSRE_HOME_DIR", tmp_path)
+        monkeypatch.setattr(const_module, "OPENSORE_HOME_DIR", tmp_path)
         session = ReplSession()
         session.task_registry = TaskRegistry.persistent()
-        task = session.task_registry.create(TaskKind.SYNTHETIC_TEST, command="opensre tests")
+        task = session.task_registry.create(TaskKind.SYNTHETIC_TEST, command="opensore tests")
         task.mark_running()
         task.mark_completed(result="ok")
 
@@ -219,7 +219,7 @@ class TestTaskRegistry:
         reloaded = TaskRegistry.persistent()
         [loaded] = reloaded.list_recent()
         assert loaded.task_id == task.task_id
-        assert loaded.command == "opensre tests"
+        assert loaded.command == "opensore tests"
         [visible_after_reset] = session.task_registry.list_recent()
         assert visible_after_reset.task_id == task.task_id
 

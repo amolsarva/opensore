@@ -1,6 +1,6 @@
-"""``opensre hermes`` command group: live-tail Hermes logs and dispatch to Telegram.
+"""``opensore hermes`` command group: live-tail Hermes logs and dispatch to Telegram.
 
-The ``opensre hermes watch`` command wires the existing detection
+The ``opensore hermes watch`` command wires the existing detection
 backbone (:class:`~app.hermes.HermesAgent`) to the
 :class:`~app.hermes.TelegramSink` and blocks until ``SIGINT`` /
 ``SIGTERM``. Credentials are loaded via
@@ -8,8 +8,8 @@ backbone (:class:`~app.hermes.HermesAgent`) to the
 ``TELEGRAM_BOT_TOKEN`` env var must be set; ``--chat-id`` overrides the
 ``TELEGRAM_DEFAULT_CHAT_ID`` env var when both are present.
 
-This command intentionally does *not* run an OpenSRE investigation by
-default. Pass ``--investigate`` (or set ``OPENSRE_HERMES_INVESTIGATE=1``)
+This command intentionally does *not* run an OpenSore investigation by
+default. Pass ``--investigate`` (or set ``OPENSORE_HERMES_INVESTIGATE=1``)
 to enable the RCA bridge for ``HIGH``/``CRITICAL`` incidents.
 """
 
@@ -77,9 +77,9 @@ def hermes_command() -> None:
     "investigate",
     default=None,
     help=(
-        "Run an OpenSRE investigation for HIGH/CRITICAL incidents and append "
+        "Run an OpenSore investigation for HIGH/CRITICAL incidents and append "
         "the RCA summary before delivery. Defaults to off; set "
-        "OPENSRE_HERMES_INVESTIGATE=1 to enable globally."
+        "OPENSORE_HERMES_INVESTIGATE=1 to enable globally."
     ),
 )
 @click.option(
@@ -221,7 +221,7 @@ def _resolve_investigate_flag(cli_value: bool | None) -> bool:
     """CLI flag wins; otherwise fall back to the env var."""
     if cli_value is not None:
         return cli_value
-    env_value = os.getenv("OPENSRE_HERMES_INVESTIGATE", "").strip().lower()
+    env_value = os.getenv("OPENSORE_HERMES_INVESTIGATE", "").strip().lower()
     return env_value in {"1", "true", "yes", "on"}
 
 

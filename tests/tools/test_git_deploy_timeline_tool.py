@@ -18,11 +18,11 @@ from tests.tools.conftest import BaseToolContract, mock_agent_state
 
 class TestGitDeployTimelineToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return get_git_deploy_timeline.__opensre_registered_tool__
+        return get_git_deploy_timeline.__opensore_registered_tool__
 
 
 def test_is_available_requires_connection_owner_repo() -> None:
-    rt = get_git_deploy_timeline.__opensre_registered_tool__
+    rt = get_git_deploy_timeline.__opensore_registered_tool__
     assert (
         rt.is_available({"github": {"connection_verified": True, "owner": "org", "repo": "repo"}})
         is True
@@ -32,7 +32,7 @@ def test_is_available_requires_connection_owner_repo() -> None:
 
 
 def test_extract_params_maps_fields() -> None:
-    rt = get_git_deploy_timeline.__opensre_registered_tool__
+    rt = get_git_deploy_timeline.__opensore_registered_tool__
     sources = mock_agent_state()
     params = rt.extract_params(sources)
     assert params["owner"] == "my-org"
@@ -383,7 +383,7 @@ def _run_with_shared_window(
 def test_extract_params_passes_shared_incident_window_through() -> None:
     """The tool's extract_params reads ``_meta.incident_window`` from sources
     and threads it as the ``shared_incident_window`` kwarg."""
-    rt = get_git_deploy_timeline.__opensre_registered_tool__
+    rt = get_git_deploy_timeline.__opensore_registered_tool__
     sources = mock_agent_state()
     sources["_meta"] = {
         "incident_window": _shared_window_dict("2026-04-20T08:00:00Z", "2026-04-20T10:00:00Z")
@@ -395,7 +395,7 @@ def test_extract_params_passes_shared_incident_window_through() -> None:
 def test_extract_params_handles_missing_meta_key() -> None:
     """If ``_meta`` is absent (e.g. extract_alert hasn't run yet),
     extract_params returns ``shared_incident_window=None`` cleanly."""
-    rt = get_git_deploy_timeline.__opensre_registered_tool__
+    rt = get_git_deploy_timeline.__opensore_registered_tool__
     params = rt.extract_params(mock_agent_state())
     assert params["shared_incident_window"] is None
 
@@ -403,7 +403,7 @@ def test_extract_params_handles_missing_meta_key() -> None:
 def test_extract_params_defensive_against_non_dict_meta() -> None:
     """If ``_meta`` is ever populated with a non-dict (e.g. a future bug
     upstream), extract_params must not raise — it degrades to None."""
-    rt = get_git_deploy_timeline.__opensre_registered_tool__
+    rt = get_git_deploy_timeline.__opensore_registered_tool__
     sources = mock_agent_state()
     sources["_meta"] = "not-a-dict"  # type: ignore[assignment]
     params = rt.extract_params(sources)
@@ -412,7 +412,7 @@ def test_extract_params_defensive_against_non_dict_meta() -> None:
 
 def test_extract_params_defensive_against_non_dict_incident_window() -> None:
     """If the nested incident_window is non-dict, same degradation."""
-    rt = get_git_deploy_timeline.__opensre_registered_tool__
+    rt = get_git_deploy_timeline.__opensore_registered_tool__
     sources = mock_agent_state()
     sources["_meta"] = {"incident_window": "garbage"}
     params = rt.extract_params(sources)

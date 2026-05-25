@@ -3,7 +3,7 @@ title: Latency measurement help
 intent_class: docs_no_execute
 risk_level: low
 input:
-  prompt: how do I measure latency with opensre?
+  prompt: how do I measure latency with opensore?
   surface: interactive_cli
 session:
   has_prior_state: false

@@ -279,8 +279,8 @@ def _comment_map_for_makefile(path: Path) -> dict[str, str]:
 def discover_make_targets() -> list[TestCatalogItem]:
     if not MAKEFILE_PATH.is_file():
         # PyInstaller-bundled builds ship only the ``app/`` tree (see
-        # ``packaging/opensre.spec``), so the Makefile is absent at runtime.
-        # Return an empty catalog slice so ``opensre tests`` still launches
+        # ``packaging/opensore.spec``), so the Makefile is absent at runtime.
+        # Return an empty catalog slice so ``opensore tests`` still launches
         # against whatever sources *are* bundled.
         return []
     comment_map = _comment_map_for_makefile(MAKEFILE_PATH)
@@ -342,7 +342,7 @@ def _discover_rds_synthetic_scenarios() -> list[TestCatalogItem]:
     """One catalog item per RDS synthetic scenario directory.
 
     Bundled (PyInstaller) builds collect only ``app/`` data files (see
-    ``packaging/opensre.spec``), so ``tests/synthetic/rds_postgres`` is
+    ``packaging/opensore.spec``), so ``tests/synthetic/rds_postgres`` is
     absent at runtime and ``iterdir()`` would raise ``FileNotFoundError``.
     Skip cleanly in that case — the synthetic-suite catalog entries are
     only meaningful when the scenarios are on disk anyway.
@@ -372,7 +372,7 @@ def _discover_rds_synthetic_scenarios() -> list[TestCatalogItem]:
                 kind="cli_command",
                 display_name=display_name,
                 description=f"Run the '{scenario_id}' synthetic RCA scenario against the mock backend.",
-                command=("opensre", "tests", "synthetic", "--scenario", scenario_id),
+                command=("opensore", "tests", "synthetic", "--scenario", scenario_id),
                 tags=("synthetic", "rds", "test"),
                 source_path=str(scenario_dir),
                 requirements=req,
@@ -412,7 +412,7 @@ def _discover_openclaw_synthetic_scenarios() -> list[TestCatalogItem]:
                 kind="cli_command",
                 display_name=display_name,
                 description=description,
-                command=("opensre", "tests", "openclaw-synthetic", "--scenario", scenario_id),
+                command=("opensore", "tests", "openclaw-synthetic", "--scenario", scenario_id),
                 tags=("synthetic", "openclaw", "rca", "ci-safe"),
                 source_path=str(scenario_dir),
                 requirements=requirements,
@@ -431,8 +431,8 @@ def _discover_cloudopsbench_suite() -> list[TestCatalogItem]:
             id="synthetic:cloudopsbench",
             kind="cli_command",
             display_name="Cloud-OpsBench RCA Benchmark",
-            description="Run the downloaded Cloud-OpsBench corpus through the OpenSRE runner.",
-            command=("opensre", "tests", "cloudopsbench"),
+            description="Run the downloaded Cloud-OpsBench corpus through the OpenSore runner.",
+            command=("opensore", "tests", "cloudopsbench"),
             tags=("synthetic", "cloudopsbench", "k8s", "benchmark"),
             source_path=str(CLOUDOPSBENCH_DIR),
             requirements=TestRequirement(env_vars=("ANTHROPIC_API_KEY",)),
@@ -441,7 +441,7 @@ def _discover_cloudopsbench_suite() -> list[TestCatalogItem]:
 
 
 def discover_cli_commands() -> list[TestCatalogItem]:
-    """Catalog entries for opensre sub-commands that have no Makefile equivalent."""
+    """Catalog entries for opensore sub-commands that have no Makefile equivalent."""
     return [
         *_discover_rds_synthetic_scenarios(),
         *_discover_openclaw_synthetic_scenarios(),

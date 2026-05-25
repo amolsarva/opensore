@@ -94,7 +94,7 @@ class HermesLogCursor:
     def at_end(cls, path: Path | str) -> HermesLogCursor:
         """Cursor pointing at the current end-of-file for ``path``.
 
-        Used by ``opensre hermes watch`` to start a live tail without
+        Used by ``opensore hermes watch`` to start a live tail without
         replaying historical lines. ``stat`` failures return an
         at-start cursor so the next poll can recover gracefully.
         """

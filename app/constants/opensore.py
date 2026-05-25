@@ -1,4 +1,4 @@
-"""OpenSRE product version constants."""
+"""OpenSore product version constants."""
 
 from __future__ import annotations
 

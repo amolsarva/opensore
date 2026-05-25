@@ -1,7 +1,7 @@
 """Typed contracts for workplace discovery investigations.
 
 These models define a hosted investigation setup that avoids storing user
-evidence on the OpenSRE host. Source systems are queried with user-scoped
+evidence on the OpenSore host. Source systems are queried with user-scoped
 credentials and evidence exports are written to the user's own destination.
 """
 

@@ -1,9 +1,9 @@
 ---
 title: "Bitbucket"
-description: "Connect Bitbucket so OpenSRE can correlate recent commits and code changes with incidents"
+description: "Connect Bitbucket so OpenSore can correlate recent commits and code changes with incidents"
 ---
 
-OpenSRE queries Bitbucket to retrieve recent commits, file contents, and code search results — helping trace which change in a Bitbucket-hosted repository triggered an incident.
+OpenSore queries Bitbucket to retrieve recent commits, file contents, and code search results — helping trace which change in a Bitbucket-hosted repository triggered an incident.
 
 ## Prerequisites
 
@@ -15,7 +15,7 @@ OpenSRE queries Bitbucket to retrieve recent commits, file contents, and code se
 ### Option 1: Interactive CLI
 
 ```bash
-opensre integrations setup
+opensore integrations setup
 ```
 
 Select **Bitbucket** when prompted and provide your workspace, username, and app password.
@@ -60,7 +60,7 @@ BITBUCKET_APP_PASSWORD=your-app-password
 
 1. In Bitbucket, go to **Personal settings** → **App passwords**
 2. Click **Create app password**
-3. Give it a label (e.g., `opensre`)
+3. Give it a label (e.g., `opensore`)
 4. Enable the following permissions: **Repositories: Read**
 5. Copy the generated password
 
@@ -70,7 +70,7 @@ The workspace slug is the identifier in your Bitbucket URL: `https://bitbucket.o
 
 ## Investigation tools
 
-When OpenSRE investigates a Bitbucket-related alert, three tools are available:
+When OpenSore investigates a Bitbucket-related alert, three tools are available:
 
 - **Commits** — retrieves recent commits for a repository, optionally filtered by file path
 - **File contents** — fetches the contents of a file at a specific revision
@@ -81,7 +81,7 @@ All operations are read-only.
 ## Verify
 
 ```bash
-opensre integrations verify bitbucket
+opensore integrations verify bitbucket
 ```
 
 Expected output:

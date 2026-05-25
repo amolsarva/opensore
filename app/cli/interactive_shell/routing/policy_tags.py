@@ -11,7 +11,7 @@ class RouteSignal(StrEnum):
 
     SLASH_PREFIX = "slash_prefix"
     BARE_COMMAND_ALIAS = "bare_command_alias"
-    OPENSRE_INVESTIGATE = "opensre_investigate"
+    OPENSORE_INVESTIGATE = "opensore_investigate"
     CLI_AGENT_ACTION_PLAN = "cli_agent_action_plan"
     CLI_AGENT_DEGRADED = "cli_agent_degraded"
 

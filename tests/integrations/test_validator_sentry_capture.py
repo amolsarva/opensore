@@ -271,7 +271,7 @@ CASES: tuple[MigrationCase, ...] = (
         "mongodb_atlas",
         "get_cluster_events",
     ),
-    # sentry (its own validator captures into OpenSRE's Sentry)
+    # sentry (its own validator captures into OpenSore's Sentry)
     MigrationCase(
         "app/integrations/sentry.py", "validate_sentry_config", "sentry", "validate_sentry_config"
     ),

@@ -1,11 +1,11 @@
 # Contributing
 
-Welcome to OpenSRE
+Welcome to OpenSore
 
 ## Quick Links
 
-- **GitHub:** [https://github.com/Tracer-Cloud/opensre](https://github.com/Tracer-Cloud/opensre)
-- **Discord:** [https://discord.gg/opensre](https://discord.gg/opensre)
+- **GitHub:** [https://github.com/Tracer-Cloud/opensore](https://github.com/Tracer-Cloud/opensore)
+- **Discord:** [https://discord.gg/opensore](https://discord.gg/opensore)
 - **X/Twitter:** [@open_sre](https://x.com/open_sre)
 
 ## How to Contribute
@@ -14,12 +14,12 @@ Looking for a safe first contribution? See [Good First Issues](docs/good-first-i
 
 Use the path that matches the kind of contribution you want to make:
 
-1. **Bugs & small fixes** -> Open a PR. If you need to file an issue first, use the [bug report template](https://github.com/Tracer-Cloud/opensre/issues/new?template=bug_report.yml).
-2. **New features or behavioral changes** -> Start with a [feature request](https://github.com/Tracer-Cloud/opensre/issues/new?template=feature_request.yml) or ask in Discord before coding. Most feature ideas are better shipped as third-party plugins via the plugin SDK.
-3. **Improvements tied to concrete work** -> Use the [improvement template](https://github.com/Tracer-Cloud/opensre/issues/new?template=improvement.yml) when proposing a focused refactor, optimization, or quality improvement.
+1. **Bugs & small fixes** -> Open a PR. If you need to file an issue first, use the [bug report template](https://github.com/Tracer-Cloud/opensore/issues/new?template=bug_report.yml).
+2. **New features or behavioral changes** -> Start with a [feature request](https://github.com/Tracer-Cloud/opensore/issues/new?template=feature_request.yml) or ask in Discord before coding. Most feature ideas are better shipped as third-party plugins via the plugin SDK.
+3. **Improvements tied to concrete work** -> Use the [improvement template](https://github.com/Tracer-Cloud/opensore/issues/new?template=improvement.yml) when proposing a focused refactor, optimization, or quality improvement.
 4. **Refactor-only PRs** -> Do not open one unless a maintainer explicitly asked for it as part of a real fix.
 5. **Test/CI-only PRs for known `main` failures** -> Do not open one unless the change is required to validate a real fix the maintainers asked for.
-6. **Questions** -> Use the docs, email [support@opensre.com](mailto:support@opensre.com), or ask in Discord [#contribute](http://discord.gg/opensre). GitHub Issues are for actionable work.
+6. **Questions** -> Use the docs, email [support@opensore.com](mailto:support@opensore.com), or ask in Discord [#contribute](http://discord.gg/opensore). GitHub Issues are for actionable work.
 7. **Security issues** -> Follow `SECURITY.md`; do not open a public issue.
 
 ### Environment Setup
@@ -31,7 +31,7 @@ See **[SETUP.md](SETUP.md)** for detailed setup instructions including Windows-s
 1. Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and clone the repository (see [SETUP.md](SETUP.md) for Windows and alternatives)
 2. Install dependencies: `make install`
 3. Run checks: `make lint && make format-check && make typecheck && make test-cov`
-    - When invoking the CLI from your checkout, prefer **`uv run opensre …`** (see `SETUP.md` troubleshooting if another `opensre` shadows `.venv`).
+    - When invoking the CLI from your checkout, prefer **`uv run opensore …`** (see `SETUP.md` troubleshooting if another `opensore` shadows `.venv`).
 4. Build release artifacts when needed: `make build`
 
 If you prefer VS Code, use the devcontainer at [.devcontainer/devcontainer.json](.devcontainer/devcontainer.json). Details: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#vs-code-dev-container).
@@ -120,7 +120,7 @@ pytestmark = pytest.mark.synthetic
 
 Without this marker the new file silently runs in **zero** standard CI configurations. The pattern is already in `tests/synthetic/rds_postgres/test_suite.py`; new files in the same tree should follow it.
 
-See [#1671](https://github.com/Tracer-Cloud/opensre/issues/1671) for the meta-issue tracking this discoverability gap.
+See [#1671](https://github.com/Tracer-Cloud/opensore/issues/1671) for the meta-issue tracking this discoverability gap.
 
 ### 4. Run Local Checks (Required Before PR)
 
@@ -239,7 +239,7 @@ make build
 
 ## Reporting Bugs
 
-Use the **[bug report template](https://github.com/Tracer-Cloud/opensre/issues/new?template=bug_report.yml)** when creating an issue. It guides you to include:
+Use the **[bug report template](https://github.com/Tracer-Cloud/opensore/issues/new?template=bug_report.yml)** when creating an issue. It guides you to include:
 
 - **Summary:** One-line description of the bug (specific, not vague)
 - **Expected behavior:** What should happen
@@ -255,25 +255,25 @@ Use the **[bug report template](https://github.com/Tracer-Cloud/opensre/issues/n
 
 ```
 ### Expected Behavior
-`opensre investigate --org myorg` should return investigation results
+`opensore investigate --org myorg` should return investigation results
 
 ### Actual Behavior
 Command exits silently with no output
 Error: exit code 0
 
 ### Steps to Reproduce
-1. Run `opensre investigate --org myorg`
+1. Run `opensore investigate --org myorg`
 2. Observe output
 
 ### Environment
 - OS: macOS 14.2
 - Python: 3.11.5
-- opensre version: v0.2.1
+- opensore version: v0.2.1
 ```
 
 ## Requesting Features
 
-Use the **[feature request template](https://github.com/Tracer-Cloud/opensre/issues/new?template=feature_request.yml)** to propose new functionality. It guides you to clarify:
+Use the **[feature request template](https://github.com/Tracer-Cloud/opensore/issues/new?template=feature_request.yml)** to propose new functionality. It guides you to clarify:
 
 - **Problem statement:** Why do we need this? (focus on the problem, not solution)
 - **Proposed solution:** How should it work? (specific and concrete with examples)
@@ -284,7 +284,7 @@ Use the **[feature request template](https://github.com/Tracer-Cloud/opensre/iss
 
 ## Suggesting Improvements
 
-Use the **[improvement template](https://github.com/Tracer-Cloud/opensre/issues/new?template=improvement.yml)** to propose refactors, optimizations, or quality improvements. It requires:
+Use the **[improvement template](https://github.com/Tracer-Cloud/opensore/issues/new?template=improvement.yml)** to propose refactors, optimizations, or quality improvements. It requires:
 
 - **Current state:** How does it work now? (with code references)
 - **Desired state:** How should it work instead?

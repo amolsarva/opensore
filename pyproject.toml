@@ -3,16 +3,16 @@ requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "opensre"
+name = "opensore"
 version = "0.1"
-description = "Open-source SRE agent for automated incident investigation and root cause analysis. Automatically analyzes alerts from Slack, Grafana, Datadog, and other tooling."
+description = "AI-assisted workplace incident investigation for lawyers, HR, boards, and compliance teams."
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "Apache-2.0" }
 authors = [
-  { name = "OpenSRE", email = "support@opensre.com" },
+  { name = "OpenSore", email = "support@opensore.com" },
 ]
-keywords = ["sre", "devops", "incident", "rca", "llm", "ai", "agent", "observability"]
+keywords = ["workplace", "investigation", "litigation", "hr", "compliance", "misconduct", "llm", "ai", "agent"]
 dependencies = [
     # Core AI/Agent
     "anthropic>=0.77.1",
@@ -69,13 +69,13 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Tracer-Cloud/opensre"
-Repository = "https://github.com/Tracer-Cloud/opensre"
-Issues = "https://github.com/Tracer-Cloud/opensre/issues"
-Changelog = "https://github.com/Tracer-Cloud/opensre/releases"
+Homepage = "https://github.com/amolsarva/opensore"
+Repository = "https://github.com/amolsarva/opensore"
+Issues = "https://github.com/amolsarva/opensore/issues"
+Changelog = "https://github.com/amolsarva/opensore/releases"
 
 [project.scripts]
-opensre = "app.cli.__main__:main"
+opensore = "app.cli.__main__:main"
 
 [project.optional-dependencies]
 dev = [
@@ -108,7 +108,7 @@ release = [
     "twine>=6.0.0",
     "pyinstaller>=6.3.0",
 ]
-opensre-hub = [
+opensore-hub = [
     "huggingface_hub>=0.26.0",
     "datasets>=3.0.0",
 ]

@@ -1,7 +1,7 @@
 {
   "_meta": {
     "purpose": "Synthetic alert for NetworkChaos netem combo",
-    "run": "opensre investigate -i tests/chaos_engineering/experiments/network-netem-combo/network-netem-combo-alert.json"
+    "run": "opensore investigate -i tests/chaos_engineering/experiments/network-netem-combo/network-netem-combo-alert.json"
   },
   "title": "[Triggered] Severe network degradation - network-netem-combo-demo",
   "alert_name": "Datadog monitor: SLO burn on netem combo",

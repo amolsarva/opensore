@@ -1,4 +1,4 @@
-"""Tests for the `opensre messaging` CLI commands."""
+"""Tests for the `opensore messaging` CLI commands."""
 
 from __future__ import annotations
 

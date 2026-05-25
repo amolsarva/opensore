@@ -10,11 +10,11 @@ from tests.tools.conftest import BaseToolContract, mock_agent_state
 
 class TestGitHubFileContentsToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return get_github_file_contents.__opensre_registered_tool__
+        return get_github_file_contents.__opensore_registered_tool__
 
 
 def test_is_available_requires_owner_repo_path() -> None:
-    rt = get_github_file_contents.__opensre_registered_tool__
+    rt = get_github_file_contents.__opensore_registered_tool__
     assert (
         rt.is_available(
             {
@@ -36,7 +36,7 @@ def test_is_available_requires_owner_repo_path() -> None:
 
 
 def test_extract_params_maps_fields() -> None:
-    rt = get_github_file_contents.__opensre_registered_tool__
+    rt = get_github_file_contents.__opensore_registered_tool__
     sources = mock_agent_state()
     params = rt.extract_params(sources)
     assert params["path"] == "src/main.py"

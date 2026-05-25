@@ -12,14 +12,14 @@ without ever surfacing a raw Python traceback. Format:
   ✗  ExceptionType                       ← ERROR
      message text                        ← TEXT
      path/to/file.py:42 in fn_name      ← DIM
-     Run opensre doctor to diagnose      ← SECONDARY hint
+     Run opensore doctor to diagnose      ← SECONDARY hint
 
 Example rendered output (colour roles):
   ┌──────────────────────────────────────────────────────┐ [DIM]
   │  ✗  ValueError                                       │ [ERROR glyph + type]
   │     argument must be positive                        │ [TEXT message]
   │     app/nodes/plan_actions/node.py:88 in _build      │ [DIM location]
-  │     Run opensre doctor to diagnose connection issues  │ [SECONDARY hint]
+  │     Run opensore doctor to diagnose connection issues  │ [SECONDARY hint]
   └──────────────────────────────────────────────────────┘ [DIM]
 """
 
@@ -35,7 +35,7 @@ from rich.panel import Panel
 from rich.text import Text
 
 
-class OpenSREError(click.ClickException):
+class OpenSoreError(click.ClickException):
     """A CLI error that renders with an optional suggestion and docs URL."""
 
     def __init__(
@@ -88,13 +88,13 @@ def render_error(
     console:
         Rich Console to print to.  Defaults to stderr.
     hint:
-        Override the default "run opensre doctor" hint with a custom line.
+        Override the default "run opensore doctor" hint with a custom line.
 
     Rendered output (colour roles):
       ✗  ValueError                             ← GLYPH_ERROR + type name in ERROR
          argument must be positive              ← TEXT (message)
          app/nodes/plan.py:88 in _build        ← DIM (file:line in fn)
-         Run `opensre doctor` to diagnose       ← SECONDARY (hint)
+         Run `opensore doctor` to diagnose       ← SECONDARY (hint)
     """
     # Lazy import avoids circular dependency: errors ← interactive_shell ← errors.
     from app.cli.interactive_shell.ui.theme import (
@@ -127,7 +127,7 @@ def render_error(
                 path = frame.filename
             frame_line = f"{path}:{frame.lineno} in {frame.name}"
 
-    _hint = hint or "Run opensre doctor to diagnose environment issues."
+    _hint = hint or "Run opensore doctor to diagnose environment issues."
 
     body = Text()
 

@@ -13,7 +13,7 @@ from app.cli.interactive_shell.routing.handle_message_with_agent.orchestration.e
 )
 from app.cli.interactive_shell.runtime import ReplSession, TaskKind
 from app.cli.interactive_shell.ui import ERROR, WARNING
-from app.cli.support.errors import OpenSREError
+from app.cli.support.errors import OpenSoreError
 from app.cli.support.exception_reporting import report_exception
 
 
@@ -57,7 +57,7 @@ def run_sample_alert(
         console.print(f"[{WARNING}]investigation cancelled.[/]")
         session.record("alert", f"sample:{template_name}", ok=False)
         return
-    except OpenSREError as exc:
+    except OpenSoreError as exc:
         task.mark_failed(str(exc))
         console.print(f"[{ERROR}]investigation failed:[/] {escape(str(exc))}")
         if exc.suggestion:
@@ -116,7 +116,7 @@ def run_text_investigation(
         console.print(f"[{WARNING}]investigation cancelled.[/]")
         session.record("alert", alert_text, ok=False)
         return
-    except OpenSREError as exc:
+    except OpenSoreError as exc:
         task.mark_failed(str(exc))
         console.print(f"[{ERROR}]investigation failed:[/] {escape(str(exc))}")
         if exc.suggestion:

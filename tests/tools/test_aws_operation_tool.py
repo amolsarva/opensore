@@ -10,12 +10,12 @@ from tests.tools.conftest import BaseToolContract
 
 class TestAWSOperationToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return execute_aws_operation.__opensre_registered_tool__
+        return execute_aws_operation.__opensore_registered_tool__
 
 
 def test_is_available_never_auto_available() -> None:
     # This tool deliberately never auto-selects
-    rt = execute_aws_operation.__opensre_registered_tool__
+    rt = execute_aws_operation.__opensore_registered_tool__
     assert rt.is_available({"aws_sdk": {"configured": True}}) is False
     assert rt.is_available({}) is False
 
@@ -62,6 +62,6 @@ def test_run_api_error() -> None:
 
 
 def test_metadata() -> None:
-    rt = execute_aws_operation.__opensre_registered_tool__
+    rt = execute_aws_operation.__opensore_registered_tool__
     assert rt.name == "execute_aws_operation"
     assert rt.source == "aws_sdk"

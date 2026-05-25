@@ -13,8 +13,8 @@
   },
   "commonAnnotations": {
     "summary": "payments_etl is failing with repeated database connection errors",
-    "description": "Bundled OpenSRE demo alert. Edit this file or pass your own path to opensre investigate -i.",
-    "correlation_id": "opensre-demo-001",
+    "description": "Bundled OpenSore demo alert. Edit this file or pass your own path to opensore investigate -i.",
+    "correlation_id": "opensore-demo-001",
     "context_sources": "generic"
   }
 }

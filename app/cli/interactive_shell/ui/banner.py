@@ -8,7 +8,7 @@ render_splash(console, first_run=False)
 
 render_ready_box(console, session=None)
     DIM-bordered two-column welcome panel:
-      left  → ◉ OpenSRE · provider · model · mode · cwd
+      left  → ◉ OpenSore · provider · model · mode · cwd
       right → "Tips for getting started" + "What's new"
     Called after the splash and on /clear, /welcome, and greeting aliases.
 
@@ -18,9 +18,9 @@ render_banner(console)
 
 Rendered output legend (colour roles)
 --------------------------------------
-# [HIGHLIGHT]  ASCII art lines · ◉ glyph · OpenSRE brand name
+# [HIGHLIGHT]  ASCII art lines · ◉ glyph · OpenSore brand name
 # [BRAND]      version string · model name · section headers
-# [SECONDARY]  "opensre" product name label · cwd · tip / note body
+# [SECONDARY]  "opensore" product name label · cwd · tip / note body
 # [DIM]        subtitle description · rule lines · box chrome · dividers
 # [TEXT]       provider/model values · greeting
 # [WARNING]    read-only or trust-mode notice
@@ -89,15 +89,15 @@ def _render_art(console_width: int = 80) -> str:
     """Return the splash art string for the given terminal width.
 
     Priority: SPLASH_ART (grid, 34 cols) → SPLASH_ART_NARROW (simpleBlock, 72 cols)
-    → _FALLBACK_ART (minimal, 44 cols).  OPENSRE_FIGLET_FONT overrides the default
+    → _FALLBACK_ART (minimal, 44 cols).  OPENSORE_FIGLET_FONT overrides the default
     when pyfiglet is installed.
     """
-    custom_font = os.getenv("OPENSRE_FIGLET_FONT")
+    custom_font = os.getenv("OPENSORE_FIGLET_FONT")
     if custom_font:
         try:
             import pyfiglet  # type: ignore[import-untyped,import-not-found]
 
-            rendered: str = pyfiglet.figlet_format("OpenSRE", font=custom_font).rstrip()
+            rendered: str = pyfiglet.figlet_format("OpenSore", font=custom_font).rstrip()
             if rendered and all(len(ln) <= console_width - 2 for ln in rendered.splitlines()):
                 return rendered
         except Exception:
@@ -176,7 +176,7 @@ def render_splash(console: Console | None = None, *, first_run: bool | None = No
     ╋╋╋╋╋╋╋╋╋╋╋╋╋╋╋╋╋╋╋╋╋╋╋╋╋╋╋╋╋╋╋╋╋╋           [HIGHLIGHT art]
     ╋┏━━┓╋┏━━┓╋┏━━┓╋┏━┓╋╋┏━━┓╋┏━┓╋┏━━┓
     ...
-      opensre  [SECONDARY]  ·  v<version> [BRAND]
+      opensore  [SECONDARY]  ·  v<version> [BRAND]
       open-source SRE agent for automated incident
       investigation and root cause analysis          [DIM]
     ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄ [DIM divider]
@@ -212,7 +212,7 @@ def render_splash(console: Console | None = None, *, first_run: bool | None = No
 
     subtitle = Text()
     subtitle.append("  ")
-    subtitle.append("opensre", style=SECONDARY)
+    subtitle.append("opensore", style=SECONDARY)
     subtitle.append("  ·  ", style=DIM)
     subtitle.append(f"v{version}", style=BRAND)
     console.print(subtitle)
@@ -234,7 +234,7 @@ def render_splash(console: Console | None = None, *, first_run: bool | None = No
         notice.append(
             "This tool executes AI-powered commands against your infrastructure.\n"
             "     Review the documentation before connecting production systems.\n"
-            "     Source: https://github.com/opensre-dev/opensre",
+            "     Source: https://github.com/opensore-dev/opensore",
             style=SECONDARY,
         )
         console.print(notice)
@@ -273,7 +273,7 @@ _PANEL_PADDING_X = 2
 _PANEL_FRAME_WIDTH = 2 + (_PANEL_PADDING_X * 2)
 _MIN_TWO_COLUMN_CONTENT_WIDTH = _MIN_LEFT_COL_WIDTH + _DIVIDER_WIDTH + _MIN_RIGHT_COL_WIDTH
 
-# OpenSRE brand mark — single "O" from oh-my-logo tiny font (half-block chars).
+# OpenSore brand mark — single "O" from oh-my-logo tiny font (half-block chars).
 _LOGO_MARK_ROWS: tuple[tuple[str, str], ...] = (
     ("█▀█", ""),
     ("█▄█", ""),
@@ -380,7 +380,7 @@ def build_ready_panel(
     trust_mode: bool = bool(getattr(session, "trust_mode", False))
 
     panel_title = Text()
-    panel_title.append(" OpenSRE", style=f"bold {HIGHLIGHT}")
+    panel_title.append(" OpenSore", style=f"bold {HIGHLIGHT}")
     panel_title.append(" · ", style=DIM)
     panel_title.append(f"v{version} ", style=BRAND)
 
@@ -434,14 +434,14 @@ def render_ready_box(
     """Print the two-column welcome panel with an embedded title bar.
 
     Layout:
-    ── OpenSRE · v<version> ────────────────────────────────────────────────╮
+    ── OpenSore · v<version> ────────────────────────────────────────────────╮
     │                                                                         │
     │      Welcome back paul!          │  Tips for getting started            │
     │           █▀█                   │  Paste alert JSON or describe…        │
     │           █▄█                   │  ───                                  │
     │                                  │  What's new                          │
     │  claude-opus-4-7  ·  anthropic  │  Two-column welcome with tips…        │
-    │  · ~/code/opensre                │  /release-notes for more             │
+    │  · ~/code/opensore                │  /release-notes for more             │
     │                                                                         │
     ╰─────────────────────────────────────────────────────────────────────────╯
     """

@@ -10,11 +10,11 @@ from tests.tools.conftest import BaseToolContract
 
 class TestRabbitMQQueueBacklogToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return get_rabbitmq_queue_backlog.__opensre_registered_tool__
+        return get_rabbitmq_queue_backlog.__opensore_registered_tool__
 
 
 def test_metadata() -> None:
-    rt = get_rabbitmq_queue_backlog.__opensre_registered_tool__
+    rt = get_rabbitmq_queue_backlog.__opensore_registered_tool__
     assert rt.name == "get_rabbitmq_queue_backlog"
     assert rt.source == "rabbitmq"
 

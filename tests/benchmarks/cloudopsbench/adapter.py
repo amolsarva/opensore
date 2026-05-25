@@ -118,8 +118,8 @@ class CloudOpsBenchAdapter(BenchmarkAdapter):
         adapter = CloudOpsBenchAdapter()
         for case in adapter.load_cases(CaseFilters(limit=5, seed=42)):
             alert = adapter.build_alert(case)
-            integrations = adapter.build_opensre_integrations(case)
-            # ... runner invokes opensre, builds RunResult ...
+            integrations = adapter.build_opensore_integrations(case)
+            # ... runner invokes opensore, builds RunResult ...
             score = adapter.score_case(case, run_result)
     """
 
@@ -129,7 +129,7 @@ class CloudOpsBenchAdapter(BenchmarkAdapter):
     def __init__(self, benchmark_dir: Path = BENCHMARK_DIR) -> None:
         self._benchmark_dir = benchmark_dir
         # CloudOpsCase cache so we don't re-load case files between
-        # build_alert / build_opensre_integrations / score_case for the same case.
+        # build_alert / build_opensore_integrations / score_case for the same case.
         # Mutated only from load_cases (single-threaded before parallel runs
         # start); read-only during cell execution → safe for the framework
         # runner's ThreadPoolExecutor.
@@ -222,9 +222,9 @@ class CloudOpsBenchAdapter(BenchmarkAdapter):
             },
         )
 
-    def build_opensre_integrations(self, case: BenchmarkCase) -> dict[str, Any]:
+    def build_opensore_integrations(self, case: BenchmarkCase) -> dict[str, Any]:
         """Construct a fresh State Snapshot replay backend per case and
-        wire it under the ``eks`` integration key opensre's CloudOpsBench
+        wire it under the ``eks`` integration key opensore's CloudOpsBench
         tools (``app/tools/CloudOpsBenchK8sTools/__init__.py``) read from.
 
         The returned dict is the only place this cell's backend lives;
@@ -261,19 +261,19 @@ class CloudOpsBenchAdapter(BenchmarkAdapter):
         """LLM-alone mode is implemented in Phase B (separate workstream).
 
         Raises NotImplementedError so the runner fails fast and clearly
-        rather than silently scoring a baseline run as opensre.
+        rather than silently scoring a baseline run as opensore.
         """
         raise NotImplementedError(
             "build_baseline_tools is Phase B of the task scope — "
-            "see opensre-benchmark-task-scope.md. Until then, run with "
-            "modes=['opensre+llm'] only."
+            "see opensore-benchmark-task-scope.md. Until then, run with "
+            "modes=['opensore+llm'] only."
         )
 
     def score_case(self, case: BenchmarkCase, run: RunResult, context: RunContext) -> CaseScore:
         """Score the case using CloudOpsBench's 15 paper metrics.
 
         Reads the replay backend out of ``context.integrations`` — the same
-        dict ``build_opensre_integrations`` returned for THIS cell. No
+        dict ``build_opensore_integrations`` returned for THIS cell. No
         per-cell state on the adapter (thread-safe).
         """
         legacy = self._require_case(case)

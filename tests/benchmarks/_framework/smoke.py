@@ -3,7 +3,7 @@
 Two stages, exposed via flags:
 
 1. ``--adapter-only`` (default): load 1 case, build alert + integrations,
-   exercise score_case with a fake RunResult. No LLM, no cost, no opensre
+   exercise score_case with a fake RunResult. No LLM, no cost, no opensore
    pipeline. Verifies the adapter wiring end-to-end.
 
 2. ``--run-investigation``: actually invoke ``run_investigation`` from
@@ -43,10 +43,10 @@ def _fake_run_result(case: BenchmarkCase) -> RunResult:
     now = datetime.now(UTC).isoformat()
     return RunResult(
         case_id=case.case_id,
-        mode="opensre+llm",
+        mode="opensore+llm",
         llm="fake-llm",
         model_version="fake-llm-0.0",
-        opensre_sha="HEAD-uncommitted",
+        opensore_sha="HEAD-uncommitted",
         started_at=now,
         ended_at=now,
         ok=True,
@@ -65,13 +65,13 @@ def _fake_run_result(case: BenchmarkCase) -> RunResult:
 
 
 def _real_run_result(case: BenchmarkCase, adapter: CloudOpsBenchAdapter) -> RunResult:
-    """Invoke opensre's run_investigation for real. Requires LLM credentials."""
+    """Invoke opensore's run_investigation for real. Requires LLM credentials."""
     # Late import — only needed in this branch, keeps adapter-only path
-    # importable without the full opensre dep tree.
+    # importable without the full opensore dep tree.
     from app.pipeline.runners import run_investigation
 
     alert = adapter.build_alert(case)
-    integrations = adapter.build_opensre_integrations(case)
+    integrations = adapter.build_opensore_integrations(case)
     started = datetime.now(UTC)
     t0 = time.monotonic()
 
@@ -85,17 +85,17 @@ def _real_run_result(case: BenchmarkCase, adapter: CloudOpsBenchAdapter) -> RunR
     final_state_dict = dict(final_state)
     return RunResult(
         case_id=case.case_id,
-        mode="opensre+llm",
-        llm="(opensre-default)",  # llm_dispatch not yet implemented; uses opensre's config
+        mode="opensore+llm",
+        llm="(opensore-default)",  # llm_dispatch not yet implemented; uses opensore's config
         model_version="(unpinned)",  # llm_dispatch not yet implemented
-        opensre_sha="HEAD-uncommitted",
+        opensore_sha="HEAD-uncommitted",
         started_at=started.isoformat(),
         ended_at=ended.isoformat(),
         ok=True,
         error=None,
         final_diagnosis={
             "stage": final_state_dict.get("root_cause_category") or "",
-            "component": "",  # opensre doesn't return this field directly
+            "component": "",  # opensore doesn't return this field directly
             "root_cause": final_state_dict.get("root_cause") or "",
             "report": final_state_dict.get("report") or "",
         },
@@ -114,7 +114,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--run-investigation",
         action="store_true",
-        help="Actually invoke opensre's run_investigation (requires LLM config + costs $).",
+        help="Actually invoke opensore's run_investigation (requires LLM config + costs $).",
     )
     parser.add_argument(
         "--adapter-only",
@@ -157,25 +157,25 @@ def main(argv: list[str] | None = None) -> int:
         alert = adapter.build_alert(case)
         print(f"  ✓ build_alert: raw_keys={sorted(alert.raw.keys())[:6]}...")
 
-        # 2. build_opensre_integrations
-        integrations = adapter.build_opensre_integrations(case)
+        # 2. build_opensore_integrations
+        integrations = adapter.build_opensore_integrations(case)
         backend_obj = integrations.get("eks", {}).get("_backend")
         backend_type = type(backend_obj).__name__ if backend_obj is not None else "MISSING"
         print(
-            f"  ✓ build_opensre_integrations: integration keys={sorted(integrations.keys())}; "
+            f"  ✓ build_opensore_integrations: integration keys={sorted(integrations.keys())}; "
             f"eks._backend type={backend_type}"
         )
 
         # 3. Run (real or fake)
         if use_real_runner:
-            print("  ▶ running opensre investigation (this takes time + costs $)...")
+            print("  ▶ running opensore investigation (this takes time + costs $)...")
             try:
                 run = _real_run_result(case, adapter)
                 print(f"  ✓ run completed in {run.latency_ms}ms")
                 print(f"    final_diagnosis.root_cause={run.final_diagnosis.get('root_cause')!r}")
             except Exception as exc:
                 print(f"  ✗ run_investigation failed: {exc}")
-                print("    Check: ~/.config/opensre/integrations.json + LLM API key")
+                print("    Check: ~/.config/opensore/integrations.json + LLM API key")
                 return 2
         else:
             run = _fake_run_result(case)

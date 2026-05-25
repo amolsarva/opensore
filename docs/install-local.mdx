@@ -1,9 +1,9 @@
 ---
 title: "Local and on-prem setup"
-description: "Run OpenSRE locally with the CLI binary and onboard integrations from your environment"
+description: "Run OpenSore locally with the CLI binary and onboard integrations from your environment"
 ---
 
-This guide is for teams running OpenSRE with the local `opensre` binary on developer machines, VMs, or on-prem
+This guide is for teams running OpenSore with the local `opensore` binary on developer machines, VMs, or on-prem
 hosts.
 
 ## What mode should I use?
@@ -23,24 +23,24 @@ Environment-specific install steps live under the `Installation` tab:
 
 ## Local setup workflow
 
-### 1) Install the OpenSRE CLI
+### 1) Install the OpenSore CLI
 
 ```bash
 brew tap tracer-cloud/tap
-brew install tracer-cloud/tap/opensre
+brew install tracer-cloud/tap/opensore
 # or
-curl -fsSL https://install.opensre.com | bash
+curl -fsSL https://install.opensore.com | bash
 ```
 
-### 2) Enter the OpenSRE shell
+### 2) Enter the OpenSore shell
 
 ```bash
-opensre
+opensore
 ```
 
 ### 3) Run onboarding
 
-From inside the OpenSRE shell:
+From inside the OpenSore shell:
 
 ```bash
 onboard
@@ -54,7 +54,7 @@ onboard
 
 ### 4) Verify integration health
 
-From inside the OpenSRE shell:
+From inside the OpenSore shell:
 
 ```bash
 integrations verify
@@ -68,7 +68,7 @@ integrations verify <integration-name>
 
 ### 5) Run your first investigation
 
-**From inside the OpenSRE shell** (after running bare `opensre`):
+**From inside the OpenSore shell** (after running bare `opensore`):
 
 ```bash
 investigate -i tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json
@@ -77,7 +77,7 @@ investigate -i tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json
 **From your normal terminal** (direct investigation, no shell):
 
 ```bash
-opensre investigate -i tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json
+opensore investigate -i tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json
 ```
 
 ## Integration catalog

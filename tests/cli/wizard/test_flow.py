@@ -37,7 +37,7 @@ def test_run_wizard_advanced_remote_falls_back_to_local(monkeypatch, tmp_path, c
     monkeypatch.setattr(flow, "select_prompt", _mock_select)
     monkeypatch.setattr(flow.questionary, "confirm", _mock_confirm)
     monkeypatch.setattr(flow.questionary, "password", _mock_password)
-    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "probe_local_target", lambda _path: ProbeResult("local", True, "ok"))
     monkeypatch.setattr(
         flow, "probe_remote_target", lambda: ProbeResult("remote", True, "remote ok")
@@ -45,7 +45,7 @@ def test_run_wizard_advanced_remote_falls_back_to_local(monkeypatch, tmp_path, c
 
     def _save_local_config(**kwargs):
         saved.update(kwargs)
-        return tmp_path / "opensre.json"
+        return tmp_path / "opensore.json"
 
     monkeypatch.setattr(flow, "save_local_config", _save_local_config)
     monkeypatch.setattr(flow, "sync_provider_env", lambda **_kwargs: tmp_path / ".env")
@@ -84,9 +84,9 @@ def test_run_wizard_no_saved_provider_shows_selection(monkeypatch, tmp_path) -> 
 
     monkeypatch.setattr(flow, "select_prompt", _mock_select)
     monkeypatch.setattr(flow.questionary, "password", _mock_password)
-    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "probe_local_target", lambda _path: ProbeResult("local", True, "ok"))
-    monkeypatch.setattr(flow, "save_local_config", lambda **_kwargs: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "save_local_config", lambda **_kwargs: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "sync_provider_env", lambda **_kwargs: tmp_path / ".env")
     monkeypatch.setattr(flow, "save_llm_api_key", lambda *_args, **_kwargs: None)
 
@@ -111,7 +111,7 @@ def test_run_wizard_shows_keyring_fix_steps_when_secure_storage_is_unavailable(
 
     monkeypatch.setattr(flow, "select_prompt", _mock_select)
     monkeypatch.setattr(flow.questionary, "password", _mock_password)
-    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "probe_local_target", lambda _path: ProbeResult("local", True, "ok"))
     monkeypatch.setattr(
         flow,
@@ -134,7 +134,7 @@ def test_run_wizard_shows_keyring_fix_steps_when_secure_storage_is_unavailable(
 
     assert exit_code == 1
     output = capsys.readouterr().out
-    assert "OpenSRE could not save your API key to the local system keychain." in output
+    assert "OpenSore could not save your API key to the local system keychain." in output
     assert "Install it first: sudo apt update && sudo apt install -y gnome-keyring" in output
     assert "dbus-user-session" in output
     assert "Start a D-Bus shell: dbus-run-session -- sh" in output
@@ -171,7 +171,7 @@ def test_run_wizard_configures_optional_integrations(monkeypatch, tmp_path, caps
     monkeypatch.setattr(flow, "select_prompt", _mock_select)
     monkeypatch.setattr(flow.questionary, "password", _mock_password)
     monkeypatch.setattr(flow.questionary, "text", _mock_text)
-    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "probe_local_target", lambda _path: ProbeResult("local", True, "ok"))
     monkeypatch.setattr(
         flow,
@@ -183,7 +183,7 @@ def test_run_wizard_configures_optional_integrations(monkeypatch, tmp_path, caps
         "validate_slack_webhook",
         lambda **_kwargs: flow.IntegrationHealthResult(ok=True, detail="Slack ok"),
     )
-    monkeypatch.setattr(flow, "save_local_config", lambda **_kwargs: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "save_local_config", lambda **_kwargs: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "sync_provider_env", lambda **_kwargs: tmp_path / ".env")
     monkeypatch.setattr(flow, "save_llm_api_key", lambda *_args, **_kwargs: None)
 
@@ -246,14 +246,14 @@ def test_run_wizard_configures_honeycomb(monkeypatch, tmp_path) -> None:
     monkeypatch.setattr(flow, "select_prompt", _mock_select)
     monkeypatch.setattr(flow.questionary, "password", _mock_password)
     monkeypatch.setattr(flow.questionary, "text", _mock_text)
-    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "probe_local_target", lambda _path: ProbeResult("local", True, "ok"))
     monkeypatch.setattr(
         flow,
         "validate_honeycomb_integration",
         lambda **_kwargs: flow.IntegrationHealthResult(ok=True, detail="Honeycomb ok"),
     )
-    monkeypatch.setattr(flow, "save_local_config", lambda **_kwargs: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "save_local_config", lambda **_kwargs: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "sync_provider_env", lambda **_kwargs: tmp_path / ".env")
     monkeypatch.setattr(flow, "save_llm_api_key", lambda *_args, **_kwargs: None)
 
@@ -322,14 +322,14 @@ def test_run_wizard_configures_coralogix(monkeypatch, tmp_path) -> None:
     monkeypatch.setattr(flow, "select_prompt", _mock_select)
     monkeypatch.setattr(flow.questionary, "password", _mock_password)
     monkeypatch.setattr(flow.questionary, "text", _mock_text)
-    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "probe_local_target", lambda _path: ProbeResult("local", True, "ok"))
     monkeypatch.setattr(
         flow,
         "validate_coralogix_integration",
         lambda **_kwargs: flow.IntegrationHealthResult(ok=True, detail="Coralogix ok"),
     )
-    monkeypatch.setattr(flow, "save_local_config", lambda **_kwargs: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "save_local_config", lambda **_kwargs: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "sync_provider_env", lambda **_kwargs: tmp_path / ".env")
     monkeypatch.setattr(flow, "save_llm_api_key", lambda *_args, **_kwargs: None)
 
@@ -415,14 +415,14 @@ def test_run_wizard_configures_github_mcp_and_sentry(monkeypatch, tmp_path, caps
     monkeypatch.setattr(flow, "select_prompt", _mock_select)
     monkeypatch.setattr(flow.questionary, "password", _mock_password)
     monkeypatch.setattr(flow.questionary, "text", _mock_text)
-    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "probe_local_target", lambda _path: ProbeResult("local", True, "ok"))
     monkeypatch.setattr(
         flow,
         "validate_github_mcp_integration",
         lambda **_kwargs: flow.IntegrationHealthResult(ok=True, detail="GitHub MCP ok"),
     )
-    monkeypatch.setattr(flow, "save_local_config", lambda **_kwargs: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "save_local_config", lambda **_kwargs: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "sync_provider_env", lambda **_kwargs: tmp_path / ".env")
     monkeypatch.setattr(flow, "save_llm_api_key", lambda *_args, **_kwargs: None)
 
@@ -498,7 +498,7 @@ def test_run_wizard_reuses_saved_defaults_when_user_keeps_provider(monkeypatch, 
 
     monkeypatch.setattr(flow, "select_prompt", _mock_select)
     monkeypatch.setattr(flow.questionary, "confirm", _mock_confirm)
-    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensore.json")
     monkeypatch.setattr(
         flow,
         "load_local_config",
@@ -519,7 +519,7 @@ def test_run_wizard_reuses_saved_defaults_when_user_keeps_provider(monkeypatch, 
 
     def _save_local_config(**kwargs):
         saved.update(kwargs)
-        return tmp_path / "opensre.json"
+        return tmp_path / "opensore.json"
 
     monkeypatch.setattr(flow, "save_local_config", _save_local_config)
     monkeypatch.setattr(flow, "sync_provider_env", lambda **_kwargs: tmp_path / ".env")
@@ -569,7 +569,7 @@ def test_run_wizard_changes_model_when_user_keeps_provider(monkeypatch, tmp_path
 
     monkeypatch.setattr(flow, "select_prompt", _mock_select)
     monkeypatch.setattr(flow.questionary, "confirm", _mock_confirm)
-    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensore.json")
     monkeypatch.setattr(
         flow,
         "load_local_config",
@@ -590,7 +590,7 @@ def test_run_wizard_changes_model_when_user_keeps_provider(monkeypatch, tmp_path
 
     def _save_local_config(**kwargs):
         saved.update(kwargs)
-        return tmp_path / "opensre.json"
+        return tmp_path / "opensore.json"
 
     monkeypatch.setattr(flow, "save_local_config", _save_local_config)
     monkeypatch.setattr(flow, "sync_provider_env", lambda **_kwargs: tmp_path / ".env")
@@ -617,7 +617,7 @@ def test_run_wizard_persists_matching_local_config_and_env(monkeypatch, tmp_path
         m.ask.return_value = "openai-secret"
         return m
 
-    store_path = tmp_path / "opensre.json"
+    store_path = tmp_path / "opensore.json"
     env_path = tmp_path / ".env"
 
     monkeypatch.setattr(flow, "select_prompt", _mock_select)
@@ -672,7 +672,7 @@ def test_run_wizard_codex_skips_api_key_and_runs_cli_onboarding(monkeypatch, tmp
         cli_onboarding_providers.append(provider.value)
         return "ok"
 
-    store_path = tmp_path / "opensre.json"
+    store_path = tmp_path / "opensore.json"
     env_path = tmp_path / ".env"
 
     monkeypatch.setattr(flow, "select_prompt", _mock_select)
@@ -726,7 +726,7 @@ def test_run_wizard_claude_code_skips_api_key_and_runs_cli_onboarding(
         cli_onboarding_providers.append(provider.value)
         return "ok"
 
-    store_path = tmp_path / "opensre.json"
+    store_path = tmp_path / "opensore.json"
     env_path = tmp_path / ".env"
 
     monkeypatch.setattr(flow, "select_prompt", _mock_select)
@@ -778,7 +778,7 @@ def test_run_wizard_gemini_cli_skips_api_key_and_runs_cli_onboarding(monkeypatch
         cli_onboarding_providers.append(provider.value)
         return "ok"
 
-    store_path = tmp_path / "opensre.json"
+    store_path = tmp_path / "opensore.json"
     env_path = tmp_path / ".env"
 
     monkeypatch.setattr(flow, "select_prompt", _mock_select)
@@ -1104,14 +1104,14 @@ def test_run_wizard_configures_gitlab(monkeypatch, tmp_path) -> None:
     monkeypatch.setattr(flow, "select_prompt", _mock_select)
     monkeypatch.setattr(flow.questionary, "password", _mock_password)
     monkeypatch.setattr(flow.questionary, "text", _mock_text)
-    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "probe_local_target", lambda _path: ProbeResult("local", True, "ok"))
     monkeypatch.setattr(
         flow,
         "validate_gitlab_integration",
         lambda **_kwargs: flow.IntegrationHealthResult(ok=True, detail="GitLab ok"),
     )
-    monkeypatch.setattr(flow, "save_local_config", lambda **_kwargs: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "save_local_config", lambda **_kwargs: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "sync_provider_env", lambda **_kwargs: tmp_path / ".env")
     monkeypatch.setattr(flow, "save_llm_api_key", lambda *_args, **_kwargs: None)
 
@@ -1194,10 +1194,10 @@ def test_run_wizard_gitlab_retries_on_validation_failure(monkeypatch, tmp_path) 
     monkeypatch.setattr(flow, "select_prompt", _mock_select)
     monkeypatch.setattr(flow.questionary, "password", _mock_password)
     monkeypatch.setattr(flow.questionary, "text", _mock_text)
-    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "probe_local_target", lambda _path: ProbeResult("local", True, "ok"))
     monkeypatch.setattr(flow, "validate_gitlab_integration", _validate_gitlab)
-    monkeypatch.setattr(flow, "save_local_config", lambda **_kwargs: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "save_local_config", lambda **_kwargs: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "sync_provider_env", lambda **_kwargs: tmp_path / ".env")
     monkeypatch.setattr(flow, "save_llm_api_key", lambda *_args, **_kwargs: None)
 
@@ -1262,7 +1262,7 @@ def test_run_wizard_switches_provider_and_keeps_store_and_env_in_sync(
         m.ask.return_value = "fresh-openai-key"
         return m
 
-    store_path = tmp_path / "opensre.json"
+    store_path = tmp_path / "opensore.json"
     env_path = tmp_path / ".env"
     wizard_store.save_local_config(
         wizard_mode="quickstart",
@@ -1350,14 +1350,14 @@ def test_run_wizard_configures_opensearch(monkeypatch, tmp_path) -> None:
     monkeypatch.setattr(flow, "select_prompt", _mock_select)
     monkeypatch.setattr(flow.questionary, "password", _mock_password)
     monkeypatch.setattr(flow.questionary, "text", _mock_text)
-    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "probe_local_target", lambda _path: ProbeResult("local", True, "ok"))
     monkeypatch.setattr(
         flow,
         "validate_opensearch_integration",
         lambda **_kwargs: flow.IntegrationHealthResult(ok=True, detail="OpenSearch ok"),
     )
-    monkeypatch.setattr(flow, "save_local_config", lambda **_kwargs: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "save_local_config", lambda **_kwargs: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "sync_provider_env", lambda **_kwargs: tmp_path / ".env")
     monkeypatch.setattr(flow, "save_llm_api_key", lambda *_args, **_kwargs: None)
 
@@ -1448,10 +1448,10 @@ def test_run_wizard_opensearch_retries_on_validation_failure(monkeypatch, tmp_pa
     monkeypatch.setattr(flow, "select_prompt", _mock_select)
     monkeypatch.setattr(flow.questionary, "password", _mock_password)
     monkeypatch.setattr(flow.questionary, "text", _mock_text)
-    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "probe_local_target", lambda _path: ProbeResult("local", True, "ok"))
     monkeypatch.setattr(flow, "validate_opensearch_integration", _validate_opensearch)
-    monkeypatch.setattr(flow, "save_local_config", lambda **_kwargs: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "save_local_config", lambda **_kwargs: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "sync_provider_env", lambda **_kwargs: tmp_path / ".env")
     monkeypatch.setattr(flow, "save_llm_api_key", lambda *_args, **_kwargs: None)
 
@@ -1540,10 +1540,10 @@ def test_run_wizard_opensearch_rejects_empty_api_key(monkeypatch, tmp_path) -> N
     monkeypatch.setattr(flow, "select_prompt", _mock_select)
     monkeypatch.setattr(flow.questionary, "password", _mock_password)
     monkeypatch.setattr(flow.questionary, "text", _mock_text)
-    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "probe_local_target", lambda _path: ProbeResult("local", True, "ok"))
     monkeypatch.setattr(flow, "validate_opensearch_integration", _validate_opensearch)
-    monkeypatch.setattr(flow, "save_local_config", lambda **_kwargs: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "save_local_config", lambda **_kwargs: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "sync_provider_env", lambda **_kwargs: tmp_path / ".env")
     monkeypatch.setattr(flow, "save_llm_api_key", lambda *_args, **_kwargs: None)
 
@@ -1635,10 +1635,10 @@ def test_run_wizard_opensearch_rejects_empty_basic_password(monkeypatch, tmp_pat
     monkeypatch.setattr(flow, "select_prompt", _mock_select)
     monkeypatch.setattr(flow.questionary, "password", _mock_password)
     monkeypatch.setattr(flow.questionary, "text", _mock_text)
-    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "get_store_path", lambda: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "probe_local_target", lambda _path: ProbeResult("local", True, "ok"))
     monkeypatch.setattr(flow, "validate_opensearch_integration", _validate_opensearch)
-    monkeypatch.setattr(flow, "save_local_config", lambda **_kwargs: tmp_path / "opensre.json")
+    monkeypatch.setattr(flow, "save_local_config", lambda **_kwargs: tmp_path / "opensore.json")
     monkeypatch.setattr(flow, "sync_provider_env", lambda **_kwargs: tmp_path / ".env")
     monkeypatch.setattr(flow, "save_llm_api_key", lambda *_args, **_kwargs: None)
 

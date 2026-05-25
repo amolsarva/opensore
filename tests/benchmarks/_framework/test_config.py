@@ -25,7 +25,7 @@ def _minimal_raw(tmp_path: Path, **overrides: object) -> dict[str, object]:
     prereg.write_text("expected_a1_lift: 0.05\n")
     base: dict[str, object] = {
         "benchmark": "cloudopsbench",
-        "modes": ["opensre+llm"],
+        "modes": ["opensore+llm"],
         "llms": ["claude_sonnet"],
         "model_versions": {"claude_sonnet": "claude-sonnet-4-5-20250929"},
         "runs_per_case": 3,
@@ -151,7 +151,7 @@ def test_lint_warns_on_oversized_grid(tmp_path: Path) -> None:
                 "d": "claude-sonnet-4-5-20250929",
                 "e": "claude-sonnet-4-5-20250929",
             },
-            modes=["opensre+llm", "llm_alone"],
+            modes=["opensore+llm", "llm_alone"],
             runs_per_case=5,
         )
     )
@@ -166,7 +166,7 @@ def test_lint_warns_on_oversized_cost_budget(tmp_path: Path) -> None:
 
 
 def test_lint_rejects_system_path_output_dir(tmp_path: Path) -> None:
-    config = BenchmarkConfig.model_validate(_minimal_raw(tmp_path, output_dir="/etc/opensre"))
+    config = BenchmarkConfig.model_validate(_minimal_raw(tmp_path, output_dir="/etc/opensore"))
     errors = config.lint()
     assert any("system path" in e for e in errors)
 
@@ -200,7 +200,7 @@ def test_load_config_env_var_overrides_workers(
 ) -> None:
     config_path = tmp_path / "config.yml"
     _write_yaml(config_path, _minimal_raw(tmp_path, workers=2))
-    monkeypatch.setenv("OPENSRE_BENCH_WORKERS", "16")
+    monkeypatch.setenv("OPENSORE_BENCH_WORKERS", "16")
     loaded = load_config(config_path)
     assert loaded.workers == 16
 
@@ -210,7 +210,7 @@ def test_load_config_env_var_overrides_budget(
 ) -> None:
     config_path = tmp_path / "config.yml"
     _write_yaml(config_path, _minimal_raw(tmp_path, cost_budget_usd=10.0))
-    monkeypatch.setenv("OPENSRE_BENCH_COST_BUDGET_USD", "250.5")
+    monkeypatch.setenv("OPENSORE_BENCH_COST_BUDGET_USD", "250.5")
     loaded = load_config(config_path)
     assert loaded.cost_budget_usd == 250.5
 

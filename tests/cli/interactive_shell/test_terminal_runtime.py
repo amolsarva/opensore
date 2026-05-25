@@ -94,7 +94,7 @@ def test_build_prompt_session_uses_persistent_history(
 ) -> None:
     import app.constants as const_module
 
-    monkeypatch.setattr(const_module, "OPENSRE_HOME_DIR", tmp_path)
+    monkeypatch.setattr(const_module, "OPENSORE_HOME_DIR", tmp_path)
 
     with create_app_session(input=DummyInput(), output=DummyOutput()):
         prompt = prompt_surface._build_prompt_session()
@@ -116,7 +116,7 @@ def test_build_prompt_session_falls_back_to_memory_history(
 
     blocked_home = tmp_path / "not-a-directory"
     blocked_home.write_text("", encoding="utf-8")
-    monkeypatch.setattr(const_module, "OPENSRE_HOME_DIR", blocked_home)
+    monkeypatch.setattr(const_module, "OPENSORE_HOME_DIR", blocked_home)
 
     with create_app_session(input=DummyInput(), output=DummyOutput()):
         prompt = prompt_surface._build_prompt_session()
@@ -130,7 +130,7 @@ def test_repl_session_prompt_history_backend_matches_prompt_toolkit_history(
 ) -> None:
     import app.constants as const_module
 
-    monkeypatch.setattr(const_module, "OPENSRE_HOME_DIR", tmp_path)
+    monkeypatch.setattr(const_module, "OPENSORE_HOME_DIR", tmp_path)
     with create_app_session(input=DummyInput(), output=DummyOutput()):
         session = ReplSession()
         prompt = prompt_surface._build_prompt_session()
@@ -152,7 +152,7 @@ def test_shift_enter_inserts_newline_before_submit(
 ) -> None:
     import app.constants as const_module
 
-    monkeypatch.setattr(const_module, "OPENSRE_HOME_DIR", tmp_path)
+    monkeypatch.setattr(const_module, "OPENSORE_HOME_DIR", tmp_path)
 
     async def _collect() -> str:
         with (
@@ -318,18 +318,18 @@ def test_shell_completer_path_completion_honors_mixed_case_prefix(tmp_path: Path
     assert "RePoRtS" in joined
 
 
-def test_run_new_alert_marks_task_failed_on_opensre_error(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_run_new_alert_marks_task_failed_on_opensore_error(monkeypatch: pytest.MonkeyPatch) -> None:
     from rich.console import Console
 
     from app.cli.interactive_shell.runtime.tasks import TaskKind, TaskStatus
-    from app.cli.support.errors import OpenSREError
+    from app.cli.support.errors import OpenSoreError
 
     def _raise(
         alert_text: str,
         context_overrides: object = None,
         cancel_requested: object = None,
     ) -> dict[str, object]:
-        raise OpenSREError("integration misconfigured", suggestion="run /doctor")
+        raise OpenSoreError("integration misconfigured", suggestion="run /doctor")
 
     monkeypatch.setattr("app.cli.investigation.run_investigation_for_session", _raise)
     session = ReplSession()
@@ -439,10 +439,10 @@ def test_run_new_alert_reports_unexpected_error(monkeypatch: pytest.MonkeyPatch)
     assert isinstance(captured_errors[0], RuntimeError)
 
 
-def test_run_new_alert_does_not_report_opensre_error(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_run_new_alert_does_not_report_opensore_error(monkeypatch: pytest.MonkeyPatch) -> None:
     from rich.console import Console
 
-    from app.cli.support.errors import OpenSREError
+    from app.cli.support.errors import OpenSoreError
 
     captured_errors: list[BaseException] = []
 
@@ -451,7 +451,7 @@ def test_run_new_alert_does_not_report_opensre_error(monkeypatch: pytest.MonkeyP
         context_overrides: object = None,
         cancel_requested: object = None,
     ) -> dict[str, object]:
-        raise OpenSREError("integration misconfigured")
+        raise OpenSoreError("integration misconfigured")
 
     monkeypatch.setattr("app.cli.investigation.run_investigation_for_session", _raise)
     monkeypatch.setattr(
@@ -609,7 +609,7 @@ class TestLooksLikeConfirmationAnswer:
     @pytest.mark.parametrize(
         "text",
         [
-            "what is opensre?",
+            "what is opensore?",
             "yeah do it",  # extra words even after "yeah" — ambiguous, not delivered
             "yep",
             "yup",
@@ -1476,8 +1476,8 @@ class TestExecutionAllowedRespectsDispatchCancelled:
 
         policy = ExecutionPolicyResult(
             verdict="ask",
-            action_type="opensre_cli",
-            reason="this opensre subcommand may change local config or infrastructure",
+            action_type="opensore_cli",
+            reason="this opensore subcommand may change local config or infrastructure",
         )
 
         with pytest.raises(loop_dispatch.DispatchCancelled):
@@ -1485,7 +1485,7 @@ class TestExecutionAllowedRespectsDispatchCancelled:
                 policy,
                 session=session,
                 console=console,
-                action_summary="opensre remote health --help",
+                action_summary="opensore remote health --help",
                 confirm_fn=_cancel_confirm,
                 is_tty=True,
             )
@@ -1515,8 +1515,8 @@ class TestExecutionAllowedRespectsDispatchCancelled:
 
         policy = ExecutionPolicyResult(
             verdict="ask",
-            action_type="opensre_cli",
-            reason="this opensre subcommand may change local config or infrastructure",
+            action_type="opensore_cli",
+            reason="this opensore subcommand may change local config or infrastructure",
         )
 
         # Empty string answer (the pre-fix cancel return value) is
@@ -1527,7 +1527,7 @@ class TestExecutionAllowedRespectsDispatchCancelled:
                 policy,
                 session=session,
                 console=console,
-                action_summary="opensre remote health --help",
+                action_summary="opensore remote health --help",
                 confirm_fn=lambda _prompt: "",
                 is_tty=True,
             )

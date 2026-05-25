@@ -2,7 +2,7 @@
 
 Run once at REPL boot. Idempotent — running twice in a row is a no-op
 the second time. Removes ``AgentRegistry`` entries whose PIDs no longer
-exist plus lockfiles in ``~/.config/opensre/agents/`` that correspond
+exist plus lockfiles in ``~/.config/opensore/agents/`` that correspond
 to dead PIDs.
 
 Liveness is checked via ``pid_exists`` rather than ``probe()``
@@ -28,12 +28,12 @@ from pathlib import Path
 
 from app.agents.probe import pid_exists
 from app.agents.registry import AgentRecord, AgentRegistry
-from app.constants import OPENSRE_HOME_DIR
+from app.constants import OPENSORE_HOME_DIR
 
 logger = logging.getLogger(__name__)
 
 #: Default location of the per-PID lockfile directory.
-DEFAULT_LOCK_DIR: Path = OPENSRE_HOME_DIR / "agents"
+DEFAULT_LOCK_DIR: Path = OPENSORE_HOME_DIR / "agents"
 
 
 @dataclass(frozen=True)

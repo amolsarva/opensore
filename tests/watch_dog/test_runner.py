@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from app.cli.support.errors import OpenSREError
+from app.cli.support.errors import OpenSoreError
 from app.cli.support.exit_codes import ERROR, SUCCESS
 from app.watch_dog.config import WatchdogConfig
 from app.watch_dog.process_monitor import ProcessSample
@@ -67,7 +67,7 @@ def test_once_exits_after_first_threshold_trip() -> None:
     assert code == ERROR
     assert len(dispatcher.calls) == 1
     assert dispatcher.calls[0][0] == "max_cpu"
-    assert "OpenSRE Watchdog Alarm" in dispatcher.calls[0][1]
+    assert "OpenSore Watchdog Alarm" in dispatcher.calls[0][1]
 
 
 def test_default_mode_keeps_polling_until_target_exits() -> None:
@@ -112,14 +112,14 @@ def test_missing_credentials_fail_fast_before_sampling(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     def _raise_missing_credentials(*, chat_id_override: str | None = None) -> object:
-        raise OpenSREError("missing telegram credentials")
+        raise OpenSoreError("missing telegram credentials")
 
     monkeypatch.setattr(
         "app.watch_dog.runner.load_credentials_from_env",
         _raise_missing_credentials,
     )
 
-    with pytest.raises(OpenSREError, match="missing telegram credentials"):
+    with pytest.raises(OpenSoreError, match="missing telegram credentials"):
         run_watchdog(
             WatchdogConfig(pid=123, max_cpu=90),
             sampler=_ExplodingSampler(),
@@ -167,6 +167,6 @@ def test_alarm_message_uses_html_formatting() -> None:
 
     assert code == ERROR
     message = dispatcher.calls[0][1]
-    assert "<b>🚨 OpenSRE Watchdog Alarm</b>" in message
+    assert "<b>🚨 OpenSore Watchdog Alarm</b>" in message
     assert "&lt;unsafe&gt;" in message
     assert "<script>" not in message

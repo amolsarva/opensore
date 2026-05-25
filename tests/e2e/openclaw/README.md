@@ -2,10 +2,10 @@
 
 Boots a real local OpenClaw instance, injects a fault, drives a real
 OpenClaw conversation that hits the broken path, captures the failure,
-and asserts the OpenSRE investigation pipeline names OpenClaw + the
+and asserts the OpenSore investigation pipeline names OpenClaw + the
 specific failure mode.
 
-Parent issue: [#1484](https://github.com/Tracer-Cloud/opensre/issues/1484).
+Parent issue: [#1484](https://github.com/Tracer-Cloud/opensore/issues/1484).
 
 ## Prerequisites
 
@@ -46,7 +46,7 @@ tests/e2e/openclaw/
 ├── fixtures/
 │   └── sleeping_mcp_server.py      stdio MCP fixture used by the timeout scenario
 ├── use_case.py                     drives an OpenClaw conversation, captures failure
-├── orchestrator.py                 builds alert, invokes OpenSRE pipeline
+├── orchestrator.py                 builds alert, invokes OpenSore pipeline
 ├── test_local.py                   scaffold + boot/teardown smoke
 ├── test_gateway_down.py            gateway-down scenario
 ├── test_wrong_endpoint.py          wrong-endpoint scenario
@@ -73,7 +73,7 @@ calls the investigation pipeline (gated on
 
 ## References
 
-- Parent issue: [#1484](https://github.com/Tracer-Cloud/opensre/issues/1484)
+- Parent issue: [#1484](https://github.com/Tracer-Cloud/opensore/issues/1484)
 - Existing patterns: `tests/e2e/crashloop/test_local.py`,
   `tests/e2e/upstream_lambda/test_agent_e2e.py`
 - OpenClaw integration code: `app/integrations/openclaw.py`

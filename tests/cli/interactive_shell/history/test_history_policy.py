@@ -152,25 +152,25 @@ def test_policy_defaults_match_documented_shape() -> None:
 
 
 def test_env_var_disables_persistence(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("OPENSRE_HISTORY_ENABLED", "0")
+    monkeypatch.setenv("OPENSORE_HISTORY_ENABLED", "0")
     policy = HistoryPolicy.load()
     assert policy.enabled is False
 
 
 def test_env_var_disables_redaction(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("OPENSRE_HISTORY_REDACT", "false")
+    monkeypatch.setenv("OPENSORE_HISTORY_REDACT", "false")
     policy = HistoryPolicy.load()
     assert policy.redact is False
 
 
 def test_env_var_overrides_max_entries(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("OPENSRE_HISTORY_MAX_ENTRIES", "42")
+    monkeypatch.setenv("OPENSORE_HISTORY_MAX_ENTRIES", "42")
     policy = HistoryPolicy.load()
     assert policy.max_entries == 42
 
 
 def test_env_var_garbage_falls_back_to_default(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("OPENSRE_HISTORY_MAX_ENTRIES", "not-a-number")
+    monkeypatch.setenv("OPENSORE_HISTORY_MAX_ENTRIES", "not-a-number")
     policy = HistoryPolicy.load()
     assert policy.max_entries == DEFAULT_MAX_ENTRIES
 

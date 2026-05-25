@@ -54,7 +54,7 @@
       content: "docs:run_investigation"
   expected_executed_actions: []
   expected_terminal_response_contains:
-    - "opensre investigate"
+    - "opensore investigate"
     - "alert"
   expected_session_history_delta:
     - type: "cli_agent"
@@ -90,7 +90,7 @@
       ok: true
 
 - id: docs_railway_deploy
-  input: "how to deploy OpenSRE on Railway?"
+  input: "how to deploy OpenSore on Railway?"
   expected_route_kind: "cli_agent"
   expected_planned_actions:
     - kind: "assistant_handoff"
@@ -100,7 +100,7 @@
     - "railway"
   expected_session_history_delta:
     - type: "cli_agent"
-      text: "how to deploy OpenSRE on Railway?"
+      text: "how to deploy OpenSore on Railway?"
       ok: true
 
 - id: docs_command_question
@@ -251,7 +251,7 @@
       ok: true
 
 - id: cli_agent_health_then_connected_services
-  input: "check the health of my opensre and then show me all connected services"
+  input: "check the health of my opensore and then show me all connected services"
   expected_route_kind: "cli_agent"
   expected_planned_actions:
     - kind: "slash"
@@ -268,7 +268,7 @@
     - "ran /list integrations"
   expected_session_history_delta:
     - type: "cli_agent"
-      text: "check the health of my opensre and then show me all connected services"
+      text: "check the health of my opensore and then show me all connected services"
       ok: true
     - type: "slash"
       text: "/health"
@@ -299,7 +299,7 @@
       content: "chat:greeting"
   expected_executed_actions: []
   expected_terminal_response_contains:
-    - "OpenSRE"
+    - "OpenSore"
   expected_session_history_delta:
     - type: "cli_agent"
       text: "hello"
@@ -422,7 +422,7 @@
       ok: true
 
 - id: cli_help_latency_measurement
-  input: "how do I measure latency with opensre?"
+  input: "how do I measure latency with opensore?"
   expected_route_kind: "cli_agent"
   expected_planned_actions:
     - kind: "assistant_handoff"
@@ -432,5 +432,5 @@
     - "latency"
   expected_session_history_delta:
     - type: "cli_agent"
-      text: "how do I measure latency with opensre?"
+      text: "how do I measure latency with opensore?"
       ok: true

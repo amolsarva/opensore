@@ -24,7 +24,7 @@ WHATS_NEW: tuple[str, ...] = (
 
 
 def _read_config_file() -> dict[str, Any]:
-    """Read the interactive section from ~/.config/opensre/config.yml.
+    """Read the interactive section from ~/.config/opensore/config.yml.
 
     Returns an empty dict if the file is missing, unreadable, or malformed.
     Failures are always silent — a bad config file must never crash the CLI.
@@ -32,9 +32,9 @@ def _read_config_file() -> dict[str, Any]:
     try:
         import yaml  # type: ignore[import-untyped]
 
-        from app.constants import OPENSRE_HOME_DIR
+        from app.constants import OPENSORE_HOME_DIR
 
-        config_path = OPENSRE_HOME_DIR / "config.yml"
+        config_path = OPENSORE_HOME_DIR / "config.yml"
         if not config_path.exists():
             return {}
 
@@ -58,16 +58,16 @@ class ReplConfig:
     Axes
     ----
     enabled : bool
-        When False the REPL is skipped and ``opensre`` falls back to
+        When False the REPL is skipped and ``opensore`` falls back to
         ``render_landing()``.  Controlled by ``--no-interactive`` CLI flag,
-        the ``OPENSRE_INTERACTIVE`` env var, or ``interactive.enabled`` in
-        ``~/.config/opensre/config.yml``.
+        the ``OPENSORE_INTERACTIVE`` env var, or ``interactive.enabled`` in
+        ``~/.config/opensore/config.yml``.
 
     layout : str  ("classic" | "pinned")
         Which renderer to use.  Only ``classic`` is wired today; ``pinned``
         is accepted and stored so the flag round-trips cleanly once P3 lands.
-        Controlled by ``--layout`` CLI option, ``OPENSRE_LAYOUT`` env var, or
-        ``interactive.layout`` in ``~/.config/opensre/config.yml``.
+        Controlled by ``--layout`` CLI option, ``OPENSORE_LAYOUT`` env var, or
+        ``interactive.layout`` in ``~/.config/opensore/config.yml``.
     """
 
     enabled: bool = True
@@ -96,8 +96,8 @@ class ReplConfig:
 
         Priority (highest wins):
             1. CLI flag   — ``cli_enabled`` / ``cli_layout`` params
-            2. Env var    — ``OPENSRE_INTERACTIVE`` / ``OPENSRE_LAYOUT``
-            3. Config file — ``~/.config/opensre/config.yml`` ``interactive`` section
+            2. Env var    — ``OPENSORE_INTERACTIVE`` / ``OPENSORE_LAYOUT``
+            3. Config file — ``~/.config/opensore/config.yml`` ``interactive`` section
             4. Built-in defaults (enabled=True, layout="classic")
         """
         file_conf = _read_config_file()
@@ -105,7 +105,7 @@ class ReplConfig:
         # --- enabled ---
         if cli_enabled is not None:
             enabled = cli_enabled
-        elif (env_val := os.getenv("OPENSRE_INTERACTIVE")) is not None:
+        elif (env_val := os.getenv("OPENSORE_INTERACTIVE")) is not None:
             enabled = cls._coerce_bool(env_val, default=True)
         else:
             enabled = cls._coerce_bool(file_conf.get("enabled"), default=True)
@@ -113,7 +113,7 @@ class ReplConfig:
         # --- layout ---
         if cli_layout is not None:
             layout = cli_layout.lower()
-        elif (env_val := os.getenv("OPENSRE_LAYOUT")) is not None:
+        elif (env_val := os.getenv("OPENSORE_LAYOUT")) is not None:
             layout = env_val.lower()
         else:
             layout = str(file_conf.get("layout", "classic")).lower()
@@ -122,7 +122,7 @@ class ReplConfig:
             layout = "classic"
 
         # --- alert_listener_enabled ---
-        if (env_val := os.getenv("OPENSRE_ALERT_LISTENER_ENABLED")) is not None:
+        if (env_val := os.getenv("OPENSORE_ALERT_LISTENER_ENABLED")) is not None:
             alert_listener_enabled = cls._coerce_bool(env_val, default=False)
         else:
             alert_listener_enabled = cls._coerce_bool(
@@ -130,18 +130,18 @@ class ReplConfig:
             )
 
         # --- alert_listener_host ---
-        if (env_val := os.getenv("OPENSRE_ALERT_LISTENER_HOST")) is not None:
+        if (env_val := os.getenv("OPENSORE_ALERT_LISTENER_HOST")) is not None:
             alert_listener_host = env_val.strip()
         else:
             alert_listener_host = str(file_conf.get("alert_listener_host", "127.0.0.1"))
 
         # --- alert_listener_port ---
-        if (env_val := os.getenv("OPENSRE_ALERT_LISTENER_PORT")) is not None:
+        if (env_val := os.getenv("OPENSORE_ALERT_LISTENER_PORT")) is not None:
             try:
                 alert_listener_port = int(env_val.strip())
             except ValueError:
                 log.warning(
-                    "OPENSRE_ALERT_LISTENER_PORT=%r is not a valid port number; defaulting to 0 (random).",
+                    "OPENSORE_ALERT_LISTENER_PORT=%r is not a valid port number; defaulting to 0 (random).",
                     env_val,
                 )
                 alert_listener_port = 0
@@ -156,7 +156,7 @@ class ReplConfig:
                 alert_listener_port = 0
 
         # --- alert_listener_token ---
-        if (env_val := os.getenv("OPENSRE_ALERT_LISTENER_TOKEN")) is not None:
+        if (env_val := os.getenv("OPENSORE_ALERT_LISTENER_TOKEN")) is not None:
             alert_listener_token = env_val.strip() or None
         else:
             alert_listener_token = file_conf.get("alert_listener_token") or None

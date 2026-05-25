@@ -32,7 +32,7 @@ terraform {
     # the account ID makes the bucket name unique across the world and
     # makes ownership obvious from the name alone.
     bucket         = "tracer-cloud-tfstate-395261708130"
-    key            = "opensre-bench/terraform.tfstate"
+    key            = "opensore-bench/terraform.tfstate"
     region         = "us-east-1"
     dynamodb_table = "tracer-cloud-tflock"
     encrypt        = true

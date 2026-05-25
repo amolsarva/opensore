@@ -8,7 +8,7 @@ from tests.tools.conftest import BaseToolContract, mock_agent_state
 
 class TestDataDogMetricsToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return query_datadog_metrics.__opensre_registered_tool__
+        return query_datadog_metrics.__opensore_registered_tool__
 
 
 def test_is_available_returns_false_until_implemented() -> None:
@@ -16,14 +16,14 @@ def test_is_available_returns_false_until_implemented() -> None:
     # burns a tool-call budget slot on a tool that always returns a "not yet
     # implemented" error.  Flip this expectation back to the connection_verified
     # gate once the Metrics API v2 body is in place.
-    rt = query_datadog_metrics.__opensre_registered_tool__
+    rt = query_datadog_metrics.__opensore_registered_tool__
     assert rt.is_available({"datadog": {"connection_verified": True}}) is False
     assert rt.is_available({"datadog": {}}) is False
     assert rt.is_available({}) is False
 
 
 def test_extract_params_maps_fields() -> None:
-    rt = query_datadog_metrics.__opensre_registered_tool__
+    rt = query_datadog_metrics.__opensore_registered_tool__
     sources = mock_agent_state()
     params = rt.extract_params(sources)
     assert "metric_name" in params
@@ -39,6 +39,6 @@ def test_run_returns_stub_unavailable() -> None:
 
 
 def test_run_metadata() -> None:
-    rt = query_datadog_metrics.__opensre_registered_tool__
+    rt = query_datadog_metrics.__opensore_registered_tool__
     assert rt.name == "query_datadog_metrics"
     assert rt.source == "datadog"

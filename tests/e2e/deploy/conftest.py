@@ -39,7 +39,7 @@ def deploy_image_tag() -> str:
     if not docker_available():
         pytest.skip("Docker is required for deployment validation tests")
 
-    image_tag = f"opensre-deploy-validate:{uuid.uuid4().hex[:12]}"
+    image_tag = f"opensore-deploy-validate:{uuid.uuid4().hex[:12]}"
     subprocess.run(
         ["docker", "build", "-t", image_tag, "."],
         cwd=str(_repo_root()),

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # infra/scripts/signoz/investigate.sh
-# Trigger a synthetic SigNoz alert investigation via the OpenSRE CLI.
+# Trigger a synthetic SigNoz alert investigation via the OpenSore CLI.
 # Run from repo root: bash infra/scripts/signoz/investigate.sh
 
 set -euo pipefail
@@ -29,4 +29,4 @@ ALERT_PAYLOAD='{
 }'
 
 echo "Running SigNoz investigation ..."
-uv run opensre investigate --input-json "$ALERT_PAYLOAD"
+uv run opensore investigate --input-json "$ALERT_PAYLOAD"

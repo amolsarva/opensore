@@ -1,13 +1,13 @@
 ---
 title: "Alertmanager"
-description: "Connect Alertmanager so OpenSRE can surface firing alerts and active silences during investigations"
+description: "Connect Alertmanager so OpenSore can surface firing alerts and active silences during investigations"
 ---
 
-OpenSRE queries Alertmanager to retrieve firing, silenced, and inhibited alerts — correlating the triggering alert with concurrent signals to narrow root-cause hypotheses faster.
+OpenSore queries Alertmanager to retrieve firing, silenced, and inhibited alerts — correlating the triggering alert with concurrent signals to narrow root-cause hypotheses faster.
 
 ## Prerequisites
 
-- Alertmanager v0.20+ reachable from the machine running OpenSRE
+- Alertmanager v0.20+ reachable from the machine running OpenSore
 - The Alertmanager URL (e.g. `http://alertmanager.monitoring.svc:9093`)
 - Credentials if your instance sits behind authentication (bearer token or basic auth)
 
@@ -16,7 +16,7 @@ OpenSRE queries Alertmanager to retrieve firing, silenced, and inhibited alerts 
 ### Option 1: Interactive CLI
 
 ```bash
-opensre integrations setup alertmanager
+opensore integrations setup alertmanager
 ```
 
 The wizard will ask for:
@@ -75,7 +75,7 @@ Only one auth method is used at a time. If `ALERTMANAGER_BEARER_TOKEN` is set it
 ## Verify
 
 ```bash
-opensre integrations verify alertmanager
+opensore integrations verify alertmanager
 ```
 
 Expected output:
@@ -88,7 +88,7 @@ Detail:  Connected to Alertmanager at http://alertmanager.monitoring.svc:9093; c
 
 ## How it works in investigations
 
-When an Alertmanager integration is configured, OpenSRE automatically includes it as an evidence source during every investigation. Two tools become available to the investigation agent:
+When an Alertmanager integration is configured, OpenSore automatically includes it as an evidence source during every investigation. Two tools become available to the investigation agent:
 
 ### `alertmanager_alerts`
 
@@ -113,7 +113,7 @@ Queries `/api/v2/silences` for active silences. The agent uses this to:
 
 | Symptom | Fix |
 | --- | --- |
-| **Status: missing** | Set `ALERTMANAGER_URL` or run `opensre integrations setup alertmanager` |
+| **Status: missing** | Set `ALERTMANAGER_URL` or run `opensore integrations setup alertmanager` |
 | **Connection refused** | Verify the URL is reachable from this host; check firewall rules |
 | **401 Unauthorized** | Supply a bearer token or basic auth credentials |
 | **SSL error** | Ensure the CA cert is trusted, or use an `http://` URL for internal instances |
@@ -121,6 +121,6 @@ Queries `/api/v2/silences` for active silences. The agent uses this to:
 
 ## Security best practices
 
-- Use a **read-only** reverse-proxy token when possible — OpenSRE only reads alerts and silences and never writes to Alertmanager during investigations.
+- Use a **read-only** reverse-proxy token when possible — OpenSore only reads alerts and silences and never writes to Alertmanager during investigations.
 - Store credentials in `.env`, not in source code.
 - For internal Kubernetes deployments, prefer no auth over exposing credentials — restrict access at the network level instead.

@@ -65,7 +65,7 @@ _INTENT_CANONICAL_TOKENS: tuple[str, ...] = (
     "ollama",
     "onboard",
     "openai",
-    "opensre",
+    "opensore",
     "openrouter",
     "provider",
     "quit",

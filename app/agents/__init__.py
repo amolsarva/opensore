@@ -3,7 +3,7 @@
 Backend support package for the ``monitor-local-agents`` initiative.
 The per-PID probe, registry, status heuristic, token meters, and
 other collectors live in submodules and feed the ``/agents``
-slash-command dashboard inside the ``opensre`` interactive shell;
+slash-command dashboard inside the ``opensore`` interactive shell;
 UI wiring lives in ``app/cli/interactive_shell/command_registry/``.
 
 This file is required for setuptools' default ``find_packages``

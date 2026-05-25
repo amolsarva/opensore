@@ -35,7 +35,7 @@ from app.integrations._catalog_impl import (
 
 @pytest.fixture(autouse=True)
 def _quiet_sentry(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("OPENSRE_NO_TELEMETRY", "1")
+    monkeypatch.setenv("OPENSORE_NO_TELEMETRY", "1")
 
 
 # ---------------------------------------------------------------------------

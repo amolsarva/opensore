@@ -1,7 +1,7 @@
 {
   "_meta": {
     "purpose": "Synthetic alert for network-corrupt chaos demo",
-    "run": "opensre investigate -i tests/chaos_engineering/experiments/network-corrupt/network-corrupt-alert.json"
+    "run": "opensore investigate -i tests/chaos_engineering/experiments/network-corrupt/network-corrupt-alert.json"
   },
   "title": "[Triggered] Corrupt responses - network-corrupt-demo",
   "alert_name": "Datadog monitor: HTTP errors network-corrupt-demo",

@@ -3,7 +3,7 @@
   "groupKey": "{}:{alertname=\"OpenClawBridgeToolsNeverSelected\"}",
   "truncatedAlerts": 0,
   "status": "firing",
-  "receiver": "opensre-webhook",
+  "receiver": "opensore-webhook",
   "groupLabels": {
     "alertname": "OpenClawBridgeToolsNeverSelected"
   },
@@ -11,8 +11,8 @@
     "alertname": "OpenClawBridgeToolsNeverSelected",
     "severity": "high",
     "environment": "production",
-    "service": "opensre-planner",
-    "job": "opensre"
+    "service": "opensore-planner",
+    "job": "opensore"
   },
   "commonAnnotations": {
     "summary": "OpenClaw bridge tools permanently unavailable despite valid configuration",
@@ -29,9 +29,9 @@
         "alertname": "OpenClawBridgeToolsNeverSelected",
         "severity": "high",
         "environment": "production",
-        "service": "opensre-planner",
-        "job": "opensre",
-        "instance": "opensre-prod-01"
+        "service": "opensore-planner",
+        "job": "opensore",
+        "instance": "opensore-prod-01"
       },
       "annotations": {
         "summary": "OpenClaw bridge tools blocked by missing connection_verified flag",
@@ -39,7 +39,7 @@
       },
       "startsAt": "2026-05-11T06:00:00Z",
       "endsAt": "0001-01-01T00:00:00Z",
-      "generatorURL": "http://prometheus.monitoring.svc:9090/graph?g0.expr=opensre_openclaw_tools_selected_total+%3D%3D+0",
+      "generatorURL": "http://prometheus.monitoring.svc:9090/graph?g0.expr=opensore_openclaw_tools_selected_total+%3D%3D+0",
       "fingerprint": "openclaw-bridge-tools-unavailable-001"
     }
   ]

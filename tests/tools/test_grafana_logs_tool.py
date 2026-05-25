@@ -10,11 +10,11 @@ from tests.tools.conftest import BaseToolContract, mock_agent_state
 
 class TestGrafanaLogsToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return query_grafana_logs.__opensre_registered_tool__
+        return query_grafana_logs.__opensore_registered_tool__
 
 
 def test_is_available_requires_grafana_creds() -> None:
-    rt = query_grafana_logs.__opensre_registered_tool__
+    rt = query_grafana_logs.__opensore_registered_tool__
     assert rt.is_available({"grafana": {"connection_verified": True}}) is True
     assert rt.is_available({"grafana": {"_backend": MagicMock()}}) is True
     assert rt.is_available({"grafana": {"endpoint": "https://grafana.example.com"}}) is True
@@ -24,7 +24,7 @@ def test_is_available_requires_grafana_creds() -> None:
 
 
 def test_extract_params_maps_fields() -> None:
-    rt = query_grafana_logs.__opensre_registered_tool__
+    rt = query_grafana_logs.__opensore_registered_tool__
     sources = mock_agent_state()
     params = rt.extract_params(sources)
     assert params["service_name"] == "my-service"
@@ -32,7 +32,7 @@ def test_extract_params_maps_fields() -> None:
 
 
 def test_extract_params_accepts_catalog_grafana_shape() -> None:
-    rt = query_grafana_logs.__opensre_registered_tool__
+    rt = query_grafana_logs.__opensore_registered_tool__
     params = rt.extract_params(
         {
             "grafana": {

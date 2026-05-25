@@ -54,7 +54,7 @@ def test_planner_policy_trace_marks_compound_reconciliation() -> None:
         )
     ]
     result = finalize_planner_result_with_trace(
-        "check opensre health and show connected services",
+        "check opensore health and show connected services",
         llm_actions,
         False,
     )

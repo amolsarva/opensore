@@ -6,7 +6,7 @@ from typing import Any
 
 import pytest
 
-from app.cli.support.errors import OpenSREError
+from app.cli.support.errors import OpenSoreError
 from app.watch_dog.alarms import (
     AlarmCredentials,
     AlarmDispatcher,
@@ -100,7 +100,7 @@ def test_load_credentials_missing_bot_token(monkeypatch: pytest.MonkeyPatch) -> 
     monkeypatch.delenv("TELEGRAM_BOT_TOKEN", raising=False)
     monkeypatch.setenv("TELEGRAM_DEFAULT_CHAT_ID", "chat-1")
 
-    with pytest.raises(OpenSREError) as exc_info:
+    with pytest.raises(OpenSoreError) as exc_info:
         load_credentials_from_env()
 
     assert "TELEGRAM_BOT_TOKEN" in str(exc_info.value)
@@ -112,7 +112,7 @@ def test_load_credentials_blank_bot_token(monkeypatch: pytest.MonkeyPatch) -> No
     monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "   ")
     monkeypatch.setenv("TELEGRAM_DEFAULT_CHAT_ID", "chat-1")
 
-    with pytest.raises(OpenSREError):
+    with pytest.raises(OpenSoreError):
         load_credentials_from_env()
 
 
@@ -120,7 +120,7 @@ def test_load_credentials_missing_chat_id(monkeypatch: pytest.MonkeyPatch) -> No
     monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "tok")
     monkeypatch.delenv("TELEGRAM_DEFAULT_CHAT_ID", raising=False)
 
-    with pytest.raises(OpenSREError) as exc_info:
+    with pytest.raises(OpenSoreError) as exc_info:
         load_credentials_from_env()
 
     assert "chat id" in str(exc_info.value).lower()

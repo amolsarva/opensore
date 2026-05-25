@@ -11,7 +11,7 @@ from typing import Any
 
 import yaml
 
-from app.constants import OPENSRE_HOME_DIR
+from app.constants import OPENSORE_HOME_DIR
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +39,7 @@ class GuardrailRule:
 
 def get_default_rules_path() -> Path:
     """Return the default guardrails config path."""
-    return OPENSRE_HOME_DIR / "guardrails.yml"
+    return OPENSORE_HOME_DIR / "guardrails.yml"
 
 
 def load_rules(path: Path | None = None) -> list[GuardrailRule]:

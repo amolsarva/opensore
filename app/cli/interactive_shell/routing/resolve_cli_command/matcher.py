@@ -15,15 +15,15 @@ from app.cli.interactive_shell.routing.resolve_cli_command.catalog import (
     BARE_COMMAND_ALIASES_WITH_ARGS,
 )
 
-_OPENSRE_WRAPPED_SLASH_RE = re.compile(r"^/opensre(?:\s+(?P<inner>.+))?$", re.IGNORECASE)
-_OPENSRE_INVESTIGATE_RE = re.compile(
-    r"^\s*opensre\s+investigate(?:\s+(?:-i|--input|--input-file)\s+(?P<path>\S+))?\s*$",
+_OPENSORE_WRAPPED_SLASH_RE = re.compile(r"^/opensore(?:\s+(?P<inner>.+))?$", re.IGNORECASE)
+_OPENSORE_INVESTIGATE_RE = re.compile(
+    r"^\s*opensore\s+investigate(?:\s+(?:-i|--input|--input-file)\s+(?P<path>\S+))?\s*$",
     re.IGNORECASE,
 )
 
 
-def _unwrap_opensre_wrapped_slash(text: str) -> str:
-    match = _OPENSRE_WRAPPED_SLASH_RE.match(text)
+def _unwrap_opensore_wrapped_slash(text: str) -> str:
+    match = _OPENSORE_WRAPPED_SLASH_RE.match(text)
     if match is None:
         return text
     inner = (match.group("inner") or "").strip()
@@ -34,10 +34,10 @@ def _unwrap_opensre_wrapped_slash(text: str) -> str:
     return f"/{inner}"
 
 
-def opensre_investigate_slash_text(text: str) -> str | None:
-    """Map ``opensre investigate -i <file>`` to ``/investigate <file>`` for deterministic routing."""
+def opensore_investigate_slash_text(text: str) -> str | None:
+    """Map ``opensore investigate -i <file>`` to ``/investigate <file>`` for deterministic routing."""
     stripped = text.strip()
-    match = _OPENSRE_INVESTIGATE_RE.match(stripped)
+    match = _OPENSORE_INVESTIGATE_RE.match(stripped)
     if match is not None:
         alert_path = match.group("path") or "alert.json"
         return f"/investigate {alert_path}"
@@ -46,7 +46,7 @@ def opensre_investigate_slash_text(text: str) -> str | None:
         tokens = shlex.split(stripped)
     except ValueError:
         return None
-    if len(tokens) < 2 or tokens[0].lower() != "opensre" or tokens[1].lower() != "investigate":
+    if len(tokens) < 2 or tokens[0].lower() != "opensore" or tokens[1].lower() != "investigate":
         return None
     if len(tokens) == 2:
         return "/investigate alert.json"
@@ -77,7 +77,7 @@ def slash_dispatch_text(text: str) -> str:
     """Return slash command text, including typo-tolerant bare alias mapping."""
     stripped = text.strip()
     if stripped.startswith("/"):
-        return _unwrap_opensre_wrapped_slash(stripped)
+        return _unwrap_opensore_wrapped_slash(stripped)
     first, sep, rest = stripped.partition(" ")
     if sep:
         mapped_first = BARE_COMMAND_ALIAS_MAP.get(first.lower())
@@ -92,6 +92,6 @@ def slash_dispatch_text(text: str) -> str:
 
 __all__ = [
     "is_bare_command_alias",
-    "opensre_investigate_slash_text",
+    "opensore_investigate_slash_text",
     "slash_dispatch_text",
 ]

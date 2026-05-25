@@ -220,9 +220,9 @@ def run_synthetic_test(
         session=session,
         console=console,
         action_summary=(
-            "opensre tests synthetic all"
+            "opensore tests synthetic all"
             if run_all
-            else f"opensre tests synthetic --scenario {resolved_scenario}"
+            else f"opensore tests synthetic --scenario {resolved_scenario}"
         ),
         confirm_fn=confirm_fn,
         is_tty=is_tty,
@@ -232,9 +232,9 @@ def run_synthetic_test(
         return
 
     display_command = (
-        "opensre tests synthetic all"
+        "opensore tests synthetic all"
         if run_all
-        else f"opensre tests synthetic --scenario {resolved_scenario}"
+        else f"opensore tests synthetic --scenario {resolved_scenario}"
     )
     console.print(f"[bold]$ {display_command}[/bold]")
     session.last_synthetic_observation_path = None

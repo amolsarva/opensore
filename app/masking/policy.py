@@ -50,9 +50,9 @@ class MaskingPolicy(StrictConfigModel):
     kinds: tuple[IdentifierKind, ...] = ALL_KINDS
     extra_patterns: dict[str, str] = Field(default_factory=dict)
 
-    _ENV_ENABLED: ClassVar[str] = "OPENSRE_MASK_ENABLED"
-    _ENV_KINDS: ClassVar[str] = "OPENSRE_MASK_KINDS"
-    _ENV_EXTRA_REGEX: ClassVar[str] = "OPENSRE_MASK_EXTRA_REGEX"
+    _ENV_ENABLED: ClassVar[str] = "OPENSORE_MASK_ENABLED"
+    _ENV_KINDS: ClassVar[str] = "OPENSORE_MASK_KINDS"
+    _ENV_EXTRA_REGEX: ClassVar[str] = "OPENSORE_MASK_EXTRA_REGEX"
 
     @field_validator("kinds", mode="before")
     @classmethod

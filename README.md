@@ -1,7 +1,7 @@
 <div align="center">
 
 <p align="center">
-  <img src="docs/logo/opensre-logo-white.svg" alt="OpenSRE" width="360" />
+  <img src="docs/logo/opensore-logo-white.svg" alt="OpenSore" width="360" />
 </p>
 
 # OpenSore 🕵️‍♀️
@@ -21,7 +21,7 @@
 
 OpenSore is an AI-assisted investigation workspace for high-stakes workplace incidents: sexual harassment, retaliation, discrimination, executive misconduct, policy violations, conflicts of interest, and board-level crises.
 
-It helps investigation teams collect scattered evidence, organize it into a defensible timeline, surface contradictions, and draft structured incident reports. The project is built on OpenSRE's agentic investigation engine, but the product direction is now focused on **legal, HR, compliance, and workplace misconduct investigations** rather than infrastructure outages.
+It helps investigation teams collect scattered evidence, organize it into a defensible timeline, surface contradictions, and draft structured incident reports. The project is built on OpenSore's agentic investigation engine, but the product direction is now focused on **legal, HR, compliance, and workplace misconduct investigations** rather than infrastructure outages.
 
 Use it when an organization needs to answer questions like:
 
@@ -92,14 +92,14 @@ make install
 Always run this checkout with `uv run`:
 
 ```bash
-uv run opensre --help
-uv run opensre doctor
+uv run opensore --help
+uv run opensore doctor
 ```
 
 Configure an LLM provider:
 
 ```bash
-uv run opensre onboard
+uv run opensore onboard
 ```
 
 Or create a minimal local `.env`:
@@ -141,7 +141,7 @@ Healthy local configuration:
 Use the terminal REPL to describe an incident, ask questions, inspect evidence, and run investigation commands:
 
 ```bash
-uv run opensre
+uv run opensore
 ```
 
 Useful commands:
@@ -160,10 +160,10 @@ Useful commands:
 Run an investigation against a structured alert or evidence payload:
 
 ```bash
-uv run opensre investigate -i tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json
+uv run opensore investigate -i tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json
 ```
 
-The historical fixture above is infrastructure-shaped because this project started from OpenSRE. New workplace-focused fixtures and workflows live under the workplace discovery docs and are being expanded.
+The historical fixture above is infrastructure-shaped because this project started from OpenSore. New workplace-focused fixtures and workflows live under the workplace discovery docs and are being expanded.
 
 ### 3. Local Web App
 
@@ -186,9 +186,9 @@ The intended hosted mode avoids storing user evidence on the OpenSore host. User
 For local assistant workflows, WhatsApp experiments, and OpenClaw-style local automation:
 
 ```bash
-uv run opensre personal doctor
-uv run opensre integrations setup whatsapp
-uv run opensre messaging pair --platform whatsapp
+uv run opensore personal doctor
+uv run opensore integrations setup whatsapp
+uv run opensore messaging pair --platform whatsapp
 ```
 
 See [docs/macos-personal-agent-quickstart.mdx](docs/macos-personal-agent-quickstart.mdx) and [docs/personal-agent-roadmap.mdx](docs/personal-agent-roadmap.mdx).
@@ -213,7 +213,7 @@ For deeper technical internals, see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md), 
 
 ## Evidence Sources And Integrations 🔌
 
-OpenSore can reuse OpenSRE's broad integration layer, but the investigation story is about workplace evidence rather than server telemetry.
+OpenSore can reuse OpenSore's broad integration layer, but the investigation story is about workplace evidence rather than server telemetry.
 
 | Evidence Area | Examples |
 | --- | --- |
@@ -228,14 +228,14 @@ OpenSore can reuse OpenSRE's broad integration layer, but the investigation stor
 Set up integrations with:
 
 ```bash
-uv run opensre integrations setup <service>
-uv run opensre integrations verify <service>
+uv run opensore integrations setup <service>
+uv run opensore integrations verify <service>
 ```
 
 List available integration commands:
 
 ```bash
-uv run opensre integrations --help
+uv run opensore integrations --help
 ```
 
 ---
@@ -252,7 +252,7 @@ This project deals with sensitive workplace allegations and potentially privileg
 - Disable telemetry for sensitive work:
 
 ```bash
-export OPENSRE_NO_TELEMETRY=1
+export OPENSORE_NO_TELEMETRY=1
 ```
 
 Telemetry details: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#telemetry-and-privacy).
@@ -336,9 +336,9 @@ For hosted deployments, review privilege, retention, access controls, audit logg
 
 ---
 
-## Built On OpenSRE 🧬
+## Built On OpenSore 🧬
 
-This repository began as an OpenSRE fork for AI site-reliability investigations. Much of the lower-level agent, CLI, integration, and test infrastructure still reflects that origin.
+This repository began as an OpenSore fork for AI site-reliability investigations. Much of the lower-level agent, CLI, integration, and test infrastructure still reflects that origin.
 
 The repositioning is deliberate:
 

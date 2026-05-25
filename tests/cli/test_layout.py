@@ -19,9 +19,9 @@ def test_render_help_shows_all_registered_commands(capsys) -> None:
     render_help(cli)
     output = _normalized_output(capsys.readouterr().out)
 
-    assert "OpenSRE" in output
+    assert "OpenSore" in output
     assert "Tips for getting started" in output
-    assert "Usage: opensre [OPTIONS] [COMMAND] [ARGS]..." in output
+    assert "Usage: opensore [OPTIONS] [COMMAND] [ARGS]..." in output
     assert "Commands:" in output
     assert "Options:" in output
 
@@ -52,13 +52,13 @@ def test_render_landing_shows_header_and_examples(capsys) -> None:
     render_landing()
     output = _normalized_output(capsys.readouterr().out)
 
-    assert "OpenSRE" in output
+    assert "OpenSore" in output
     assert "Tips for getting started" in output
     assert (
         "open-source SRE agent for automated incident investigation and root cause analysis"
         in output
     )
-    assert "Usage: opensre [OPTIONS] [COMMAND] [ARGS]..." in output
+    assert "Usage: opensore [OPTIONS] [COMMAND] [ARGS]..." in output
     assert "Quick start:" in output
     assert "Options:" in output
 
@@ -75,7 +75,7 @@ def test_rich_group_format_help_delegates_to_render_help(monkeypatch) -> None:
 
     monkeypatch.setattr("app.cli.support.layout.render_help", fake_render_help)
 
-    group = RichGroup(name="opensre")
+    group = RichGroup(name="opensore")
     group.format_help(click.Context(group), click.HelpFormatter())
 
     assert len(called_with) == 1

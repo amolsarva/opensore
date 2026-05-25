@@ -45,13 +45,13 @@ def test_v1_aws_record_with_top_level_role_arn_migrates_correctly() -> None:
         "id": "aws-1",
         "service": "aws",
         "status": "active",
-        "role_arn": "arn:aws:iam::123456789012:role/opensre",
+        "role_arn": "arn:aws:iam::123456789012:role/opensore",
         "external_id": "ext-token",
         "credentials": {"region": "us-east-1"},
     }
     migrated = _migrate_record_v1_to_v2(record)
     creds = migrated["instances"][0]["credentials"]
-    assert creds["role_arn"] == "arn:aws:iam::123456789012:role/opensre"
+    assert creds["role_arn"] == "arn:aws:iam::123456789012:role/opensore"
     assert creds["external_id"] == "ext-token"
     assert creds["region"] == "us-east-1"
     # Top-level fields should NOT leak through
@@ -126,8 +126,8 @@ def test_missing_file_yields_empty_v2_store(tmp_path: Path) -> None:
     assert data == {"version": _VERSION, "integrations": []}
 
 
-def test_legacy_store_is_moved_to_opensre_path(tmp_path: Path) -> None:
-    store_file = tmp_path / ".config" / "opensre" / "integrations.json"
+def test_legacy_store_is_moved_to_opensore_path(tmp_path: Path) -> None:
+    store_file = tmp_path / ".config" / "opensore" / "integrations.json"
     legacy_store_file = tmp_path / ".tracer" / "integrations.json"
     _write_store(
         legacy_store_file,

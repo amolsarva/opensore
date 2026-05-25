@@ -13,7 +13,7 @@ from app.services import get_llm_for_reasoning
 from app.state import InvestigationState
 
 # Alert source values that must never be overwritten by the LLM classifier.
-_CANONICAL_ALERT_SOURCES = frozenset({"openrca_dataset", "opensre", "opensre_dataset"})
+_CANONICAL_ALERT_SOURCES = frozenset({"openrca_dataset", "opensore", "opensore_dataset"})
 
 
 class AlertExtractionInput:
@@ -55,7 +55,7 @@ Extract these fields from the message text:
 - alert_name: The name of the alert (e.g. "Pipeline Error in Logs")
 - pipeline_name: The affected pipeline/table/service name
 - severity: critical/high/warning/info
-- alert_source: Which platform fired this alert. If the JSON already sets alert_source to "openrca_dataset", "opensre", or "opensre_dataset", keep that exact value. Set to "grafana" if the URL/text mentions grafana.net, Grafana alerting, or grafana_folder. Set to "datadog" if it mentions datadoghq.com or Datadog monitors. Set to "honeycomb" if it mentions Honeycomb or api.honeycomb.io. Set to "coralogix" if it mentions Coralogix or DataPrime. Set to "cloudwatch" if it mentions AWS CloudWatch alarms. Set to "eks" if it mentions EKS, CrashLoopBackOff, OOMKilled, Kubernetes pods, or kube_namespace. Set to "alertmanager" if the payload contains Prometheus/Alertmanager-specific fields. Set to "signoz" if it mentions SigNoz, signoz.io, or signoz_metrics. Leave null if truly unknown.
+- alert_source: Which platform fired this alert. If the JSON already sets alert_source to "openrca_dataset", "opensore", or "opensore_dataset", keep that exact value. Set to "grafana" if the URL/text mentions grafana.net, Grafana alerting, or grafana_folder. Set to "datadog" if it mentions datadoghq.com or Datadog monitors. Set to "honeycomb" if it mentions Honeycomb or api.honeycomb.io. Set to "coralogix" if it mentions Coralogix or DataPrime. Set to "cloudwatch" if it mentions AWS CloudWatch alarms. Set to "eks" if it mentions EKS, CrashLoopBackOff, OOMKilled, Kubernetes pods, or kube_namespace. Set to "alertmanager" if the payload contains Prometheus/Alertmanager-specific fields. Set to "signoz" if it mentions SigNoz, signoz.io, or signoz_metrics. Leave null if truly unknown.
 - kube_namespace: Kubernetes namespace if mentioned
 - cloudwatch_log_group: AWS CloudWatch log group if mentioned
 - error_message: The actual error line from the alert
@@ -184,9 +184,9 @@ def _alert_dict_needs_full_json(raw_alert: dict[str, Any]) -> bool:
     ):
         return True
     for key in (
-        "opensre_telemetry_relative",
+        "opensore_telemetry_relative",
         "openrca_telemetry_relative",
-        "opensre_dataset_root",
+        "opensore_dataset_root",
         "openrca_dataset_root",
     ):
         if raw_alert.get(key):

@@ -1,4 +1,4 @@
-"""OpenSRE CLI command runner — route subcommands to foreground or background."""
+"""OpenSore CLI command runner — route subcommands to foreground or background."""
 
 from __future__ import annotations
 
@@ -25,7 +25,7 @@ from app.cli.support.exception_reporting import report_exception
 from .background_tasks import start_background_cli_task as _start_background_cli_task_default
 from .task_streaming import SHELL_COMMAND_TIMEOUT_SECONDS, _ae_resolve
 
-_OPENSRE_BLOCKED_SUBCOMMANDS: frozenset[str] = frozenset({"agent"})
+_OPENSORE_BLOCKED_SUBCOMMANDS: frozenset[str] = frozenset({"agent"})
 
 # Command paths (one or two whitespace-joined tokens) that drive a
 # full-TTY interactive wizard — ``questionary`` radio widgets, multi-
@@ -45,7 +45,7 @@ _OPENSRE_BLOCKED_SUBCOMMANDS: frozenset[str] = frozenset({"agent"})
 # Stored as space-joined paths (e.g. ``"integrations setup"``) so both
 # one-token (``"onboard"``) and two-token cases live in a single
 # data-driven set; :func:`_is_interactive_wizard` does the lookup.
-_INTERACTIVE_OPENSRE_COMMAND_PATHS: frozenset[str] = frozenset(
+_INTERACTIVE_OPENSORE_COMMAND_PATHS: frozenset[str] = frozenset(
     {
         "onboard",
         "integrations setup",
@@ -54,19 +54,19 @@ _INTERACTIVE_OPENSRE_COMMAND_PATHS: frozenset[str] = frozenset(
 
 
 def _is_interactive_wizard(tokens: list[str]) -> bool:
-    """True when ``tokens`` name an opensre subcommand whose Click
+    """True when ``tokens`` name an opensore subcommand whose Click
     handler drives an interactive wizard (questionary-backed widgets)
     that needs a full TTY.
     """
     if not tokens:
         return False
     one = tokens[0].lower()
-    if one in _INTERACTIVE_OPENSRE_COMMAND_PATHS:
+    if one in _INTERACTIVE_OPENSORE_COMMAND_PATHS:
         return True
     if len(tokens) < 2:
         return False
     two = f"{one} {tokens[1].lower()}"
-    return two in _INTERACTIVE_OPENSRE_COMMAND_PATHS
+    return two in _INTERACTIVE_OPENSORE_COMMAND_PATHS
 
 
 def print_interactive_wizard_handoff(console: Console, command_str: str) -> None:
@@ -80,7 +80,7 @@ def print_interactive_wizard_handoff(console: Console, command_str: str) -> None
     modules creates a hidden public contract.
     """
     console.print(
-        f"[{WARNING}]`opensre {command_str}` is an interactive wizard "
+        f"[{WARNING}]`opensore {command_str}` is an interactive wizard "
         "that needs a full terminal.[/]"
     )
     console.print(
@@ -88,7 +88,7 @@ def print_interactive_wizard_handoff(console: Console, command_str: str) -> None
     )
 
 
-_READ_ONLY_OPENSRE_SUBCOMMANDS: frozenset[str] = frozenset(
+_READ_ONLY_OPENSORE_SUBCOMMANDS: frozenset[str] = frozenset(
     {
         "health",
         "version",
@@ -99,7 +99,7 @@ _READ_ONLY_OPENSRE_SUBCOMMANDS: frozenset[str] = frozenset(
 )
 
 # Core RCA entrypoint — users open the REPL to investigate; no extra confirm.
-_INVESTIGATION_OPENSRE_SUBCOMMANDS: frozenset[str] = frozenset({"investigate"})
+_INVESTIGATION_OPENSORE_SUBCOMMANDS: frozenset[str] = frozenset({"investigate"})
 
 
 class OpensreCommandClass(StrEnum):
@@ -138,11 +138,11 @@ class OpensreRunResult:
     display_command: str | None = None
 
 
-def _classify_opensre_command(tokens: list[str]) -> str:
+def _classify_opensore_command(tokens: list[str]) -> str:
     first_token = tokens[0].lower()
-    if first_token in _READ_ONLY_OPENSRE_SUBCOMMANDS:
+    if first_token in _READ_ONLY_OPENSORE_SUBCOMMANDS:
         return OpensreCommandClass.READ_ONLY.value
-    if first_token in _INVESTIGATION_OPENSRE_SUBCOMMANDS:
+    if first_token in _INVESTIGATION_OPENSORE_SUBCOMMANDS:
         return OpensreCommandClass.INVESTIGATION.value
     if first_token == "agents":
         subcommand = tokens[1].lower() if len(tokens) > 1 else "list"
@@ -153,28 +153,28 @@ def _classify_opensre_command(tokens: list[str]) -> str:
     return OpensreCommandClass.MUTATING.value
 
 
-def _opensre_confirmation_reason(tokens: list[str]) -> str:
+def _opensore_confirmation_reason(tokens: list[str]) -> str:
     if tokens[:2] == ["agents", "scan"] and "--register" in tokens[2:]:
         return "register discovered local AI-agent processes"
     if tokens and tokens[0] == "agents":
         return "this updates the local AI-agent registry"
-    return "this opensre subcommand may change local config or infrastructure"
+    return "this opensore subcommand may change local config or infrastructure"
 
 
-def _should_run_opensre_in_foreground(tokens: list[str]) -> bool:
-    return _build_opensre_execution_plan(tokens).execution_mode in {
+def _should_run_opensore_in_foreground(tokens: list[str]) -> bool:
+    return _build_opensore_execution_plan(tokens).execution_mode in {
         OpensreExecutionMode.FOREGROUND,
         OpensreExecutionMode.FOREGROUND_STREAMING,
     }
 
 
-def _build_opensre_execution_plan(tokens: list[str]) -> OpensreExecutionPlan:
+def _build_opensore_execution_plan(tokens: list[str]) -> OpensreExecutionPlan:
     """Compute classification + execution mode from one canonical policy table."""
-    classification = OpensreCommandClass(_classify_opensre_command(tokens))
+    classification = OpensreCommandClass(_classify_opensore_command(tokens))
     first_token = tokens[0].lower()
 
     execution_mode = OpensreExecutionMode.BACKGROUND
-    if first_token in _READ_ONLY_OPENSRE_SUBCOMMANDS:
+    if first_token in _READ_ONLY_OPENSORE_SUBCOMMANDS:
         execution_mode = OpensreExecutionMode.FOREGROUND
     elif first_token == "agents":
         subcommand = tokens[1].lower() if len(tokens) > 1 else "list"
@@ -185,7 +185,7 @@ def _build_opensre_execution_plan(tokens: list[str]) -> OpensreExecutionPlan:
 
     requires_confirmation = classification is OpensreCommandClass.MUTATING
     reason = (
-        _opensre_confirmation_reason([token.lower() for token in tokens])
+        _opensore_confirmation_reason([token.lower() for token in tokens])
         if requires_confirmation
         else None
     )
@@ -227,7 +227,7 @@ def _to_action_execution_plan(plan: OpensreExecutionPlan) -> ActionExecutionPlan
     )
 
 
-def _run_opensre_foreground(
+def _run_opensore_foreground(
     argv_list: list[str],
     display_command: str,
     session: ReplSession,
@@ -253,7 +253,7 @@ def _run_opensre_foreground(
         session.record("cli_command", display_command, ok=False)
         return
     except Exception as exc:  # noqa: BLE001
-        report_exception(exc, context="interactive_shell.opensre_cli.start")
+        report_exception(exc, context="interactive_shell.opensore_cli.start")
         console.print(f"[{ERROR}]failed to start:[/] {escape(str(exc))}")
         session.record("cli_command", display_command, ok=False)
         return
@@ -266,7 +266,7 @@ def _run_opensre_foreground(
     session.record("cli_command", display_command, ok=ok)
 
 
-def _run_opensre_foreground_streaming(
+def _run_opensore_foreground_streaming(
     argv_list: list[str],
     display_command: str,
     session: ReplSession,
@@ -283,7 +283,7 @@ def _run_opensre_foreground_streaming(
             errors="replace",
         )
     except Exception as exc:  # noqa: BLE001
-        report_exception(exc, context="interactive_shell.opensre_cli.start")
+        report_exception(exc, context="interactive_shell.opensore_cli.start")
         console.print(f"[{ERROR}]failed to start:[/] {escape(str(exc))}")
         session.record("cli_command", display_command, ok=False)
         return
@@ -298,7 +298,7 @@ def _run_opensre_foreground_streaming(
     session.record("cli_command", display_command, ok=ok)
 
 
-def run_opensre_cli_command(
+def run_opensore_cli_command(
     args: str,
     session: ReplSession,
     console: Console,
@@ -306,7 +306,7 @@ def run_opensre_cli_command(
     confirm_fn: Callable[[str], str] | None = None,
     is_tty: bool | None = None,
 ) -> bool:
-    result = run_opensre_cli_command_result(
+    result = run_opensore_cli_command_result(
         args,
         session,
         console,
@@ -316,7 +316,7 @@ def run_opensre_cli_command(
     return result.attempted
 
 
-def run_opensre_cli_command_result(
+def run_opensore_cli_command_result(
     args: str,
     session: ReplSession,
     console: Console,
@@ -324,7 +324,7 @@ def run_opensre_cli_command_result(
     confirm_fn: Callable[[str], str] | None = None,
     is_tty: bool | None = None,
 ) -> OpensreRunResult:
-    """Run an opensre subcommand (not agent).
+    """Run an opensore subcommand (not agent).
 
     Returns a typed outcome so callers can distinguish blocked/declined/
     handed-off/executed states without overloading ``bool``.
@@ -342,53 +342,53 @@ def run_opensre_cli_command_result(
         return OpensreRunResult(outcome=OpensreRunOutcome.INVALID, attempted=False)
 
     first_token = tokens[0].lower()
-    if first_token in _OPENSRE_BLOCKED_SUBCOMMANDS:
-        console.print(f"[{ERROR}]Cannot run `opensre {first_token}`: subcommand is blocked.[/]")
+    if first_token in _OPENSORE_BLOCKED_SUBCOMMANDS:
+        console.print(f"[{ERROR}]Cannot run `opensore {first_token}`: subcommand is blocked.[/]")
         return OpensreRunResult(outcome=OpensreRunOutcome.BLOCKED, attempted=False)
 
     if _is_interactive_wizard(tokens):
         command_str = " ".join(tokens)
         print_interactive_wizard_handoff(console, command_str)
-        session.record("cli_command", f"opensre {command_str}", ok=False)
+        session.record("cli_command", f"opensore {command_str}", ok=False)
         return OpensreRunResult(
             outcome=OpensreRunOutcome.HANDED_OFF,
             attempted=True,
-            display_command=f"opensre {command_str}",
+            display_command=f"opensore {command_str}",
         )
 
-    plan = _build_opensre_execution_plan(tokens)
+    plan = _build_opensore_execution_plan(tokens)
     execution_plan = _to_action_execution_plan(plan)
 
     if not execution_allowed(
         execution_plan.policy,
         session=session,
         console=console,
-        action_summary=f"$ opensre {' '.join(tokens)}",
+        action_summary=f"$ opensore {' '.join(tokens)}",
         confirm_fn=confirm_fn,
         is_tty=is_tty,
         action_already_listed=True,
     ):
-        session.record("cli_command", f"opensre {' '.join(tokens)}", ok=False)
+        session.record("cli_command", f"opensore {' '.join(tokens)}", ok=False)
         return OpensreRunResult(
             outcome=OpensreRunOutcome.DECLINED,
             attempted=True,
-            display_command=f"opensre {' '.join(tokens)}",
+            display_command=f"opensore {' '.join(tokens)}",
         )
 
     argv_list = [sys.executable, "-m", "app.cli"] + tokens
-    display_command = f"opensre {' '.join(tokens)}"
+    display_command = f"opensore {' '.join(tokens)}"
     if execution_plan.execution_mode in {
         ActionExecutionMode.FOREGROUND,
         ActionExecutionMode.FOREGROUND_STREAMING,
     }:
         if execution_plan.execution_mode is ActionExecutionMode.FOREGROUND_STREAMING:
-            _run_opensre_foreground_streaming(argv_list, display_command, session, console)
+            _run_opensore_foreground_streaming(argv_list, display_command, session, console)
             return OpensreRunResult(
                 outcome=OpensreRunOutcome.EXECUTED_FOREGROUND,
                 attempted=True,
                 display_command=display_command,
             )
-        _run_opensre_foreground(argv_list, display_command, session, console)
+        _run_opensore_foreground(argv_list, display_command, session, console)
         return OpensreRunResult(
             outcome=OpensreRunOutcome.EXECUTED_FOREGROUND,
             attempted=True,

@@ -109,7 +109,7 @@ def test_invariant_actions_are_sorted_by_position() -> None:
 
 def test_invariant_duplicate_slash_actions_are_deduped() -> None:
     actions, has_unhandled, _trace = map_actions_with_trace(
-        "check opensre health and then check opensre health"
+        "check opensore health and then check opensore health"
     )
     # The second duplicated clause is intentionally left unmatched after dedupe,
     # so the mapper fail-closes by surfacing an unhandled clause.

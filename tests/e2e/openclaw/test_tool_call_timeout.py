@@ -1,5 +1,5 @@
 """End-to-end: an OpenClaw MCP tool call never returns — assert
-OpenSRE surfaces a timeout error rather than blocking forever.
+OpenSore surfaces a timeout error rather than blocking forever.
 
 Drives a Python stdio MCP fixture
 (:mod:`tests.e2e.openclaw.fixtures.sleeping_mcp_server`) whose only
@@ -52,7 +52,7 @@ def test_tool_call_timeout_use_case_surfaces_timeout() -> None:
 @pytest.mark.skipif(not openclaw_cli_available(), reason=OPENCLAW_CLI_SKIP_REASON)
 @pytest.mark.skipif(not llm_credentials_present(), reason=LLM_CREDENTIAL_SKIP_REASON)
 def test_tool_call_timeout_investigation_identifies_timeout() -> None:
-    """Run the full OpenSRE investigation against a sleeping tool call.
+    """Run the full OpenSore investigation against a sleeping tool call.
 
     Asserts the RCA names OpenClaw + timeout, and the remediation
     points the user toward investigating the upstream tool's responsiveness.

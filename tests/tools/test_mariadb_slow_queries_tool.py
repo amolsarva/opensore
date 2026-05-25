@@ -10,11 +10,11 @@ from tests.tools.conftest import BaseToolContract
 
 class TestMariaDBSlowQueriesToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return get_mariadb_slow_queries.__opensre_registered_tool__
+        return get_mariadb_slow_queries.__opensore_registered_tool__
 
 
 def test_metadata() -> None:
-    rt = get_mariadb_slow_queries.__opensre_registered_tool__
+    rt = get_mariadb_slow_queries.__opensore_registered_tool__
     assert rt.name == "get_mariadb_slow_queries"
     assert rt.source == "mariadb"
 

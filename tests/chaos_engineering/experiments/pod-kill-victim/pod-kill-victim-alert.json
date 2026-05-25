@@ -1,7 +1,7 @@
 {
   "_meta": {
     "purpose": "Synthetic alert for pod-kill victim demo",
-    "run": "opensre investigate -i tests/chaos_engineering/experiments/pod-kill-victim/pod-kill-victim-alert.json"
+    "run": "opensore investigate -i tests/chaos_engineering/experiments/pod-kill-victim/pod-kill-victim-alert.json"
   },
   "title": "[Triggered] Pod restarted - pod-kill-victim-demo",
   "alert_name": "Datadog monitor: pod churn pod-kill-victim-demo",

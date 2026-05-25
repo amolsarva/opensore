@@ -1,4 +1,4 @@
-"""Interactive CLI for managing local integrations (~/.config/opensre/integrations.json).
+"""Interactive CLI for managing local integrations (~/.config/opensore/integrations.json).
 
 Usage:
     python -m app.integrations setup <service>
@@ -496,7 +496,7 @@ def _register_discord_slash_command(application_id: str, bot_token: str) -> None
     url = f"https://discord.com/api/v10/applications/{application_id}/commands"
     payload = {
         "name": "investigate",
-        "description": "Trigger an OpenSRE investigation",
+        "description": "Trigger an OpenSore investigation",
         "options": [
             {
                 "name": "alert",
@@ -621,8 +621,8 @@ def _setup_openclaw() -> None:
 
     upsert_integration("openclaw", {"credentials": credentials})
     print("  Next:")
-    print("    - opensre integrations verify openclaw")
-    print("    - uv run opensre investigate -i tests/fixtures/openclaw_test_alert.json")
+    print("    - opensore integrations verify openclaw")
+    print("    - uv run opensore investigate -i tests/fixtures/openclaw_test_alert.json")
     print("    - for accurate RCA, also configure Grafana/Datadog and GitHub")
 
 
@@ -910,8 +910,8 @@ def cmd_list() -> None:
 
     if not items:
         print(
-            "  No integrations. Run: opensre integrations setup <service>, "
-            "or opensre onboard for the guided wizard."
+            "  No integrations. Run: opensore integrations setup <service>, "
+            "or opensore onboard for the guided wizard."
         )
         return
     print(f"\n  {_B}{'SERVICE':<14}STATUS    ID{_R}")

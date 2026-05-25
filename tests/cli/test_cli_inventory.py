@@ -39,7 +39,7 @@ def test_tests_run_dry_run_prints_command() -> None:
 
 
 def test_tests_list_works_in_non_interactive_env() -> None:
-    """opensre tests list must succeed regardless of TUI availability."""
+    """opensore tests list must succeed regardless of TUI availability."""
     runner = CliRunner()
 
     result = runner.invoke(cli, ["tests", "list"])
@@ -151,11 +151,11 @@ def test_tests_run_unknown_id_gives_helpful_error() -> None:
     assert result.exit_code != 0
     output = result.output
     assert "does-not-exist-xyz" in output
-    assert "opensre tests list" in output
+    assert "opensore tests list" in output
 
 
 def test_tests_no_subcommand_non_interactive_gives_clear_error() -> None:
-    """opensre tests with no subcommand in a non-tty env must not traceback."""
+    """opensore tests with no subcommand in a non-tty env must not traceback."""
     runner = CliRunner()
 
     result = runner.invoke(cli, ["tests"])
@@ -166,7 +166,7 @@ def test_tests_no_subcommand_non_interactive_gives_clear_error() -> None:
     assert "tests list" in result.output or "tests run" in result.output or result.exit_code != 0
 
 
-def test_tests_no_subcommand_missing_tui_deps_gives_opensre_error() -> None:
+def test_tests_no_subcommand_missing_tui_deps_gives_opensore_error() -> None:
     """When questionary is absent the interactive path degrades to a structured error."""
     runner = CliRunner()
 
@@ -200,18 +200,18 @@ def test_format_command_renders_make_target() -> None:
     assert format_command(item) == "make test-cov"
 
 
-def test_format_command_renders_opensre_subcommand() -> None:
+def test_format_command_renders_opensore_subcommand() -> None:
     item = TestCatalogItem(
         id="synthetic:001-replication-lag",
         kind="cli_command",
         display_name="001-replication-lag",
         description="Synthetic scenario.",
-        command=("opensre", "tests", "synthetic", "--scenario", "001-replication-lag"),
+        command=("opensore", "tests", "synthetic", "--scenario", "001-replication-lag"),
         tags=("synthetic",),
         requirements=TestRequirement(env_vars=("ANTHROPIC_API_KEY",)),
     )
 
-    assert "opensre" in format_command(item)
+    assert "opensore" in format_command(item)
     assert "001-replication-lag" in format_command(item)
 
 
@@ -222,7 +222,7 @@ def test_format_command_renders_openclaw_synthetic_subcommand() -> None:
         display_name="OpenClaw synthetic scenario",
         description="Synthetic OpenClaw scenario.",
         command=(
-            "opensre",
+            "opensore",
             "tests",
             "openclaw-synthetic",
             "--scenario",
@@ -286,12 +286,12 @@ def test_run_catalog_item_prints_openclaw_preflight_before_execution(
 
 
 # ---------------------------------------------------------------------------
-# Bundled-binary degradation for ``opensre tests synthetic`` (regression #1078)
+# Bundled-binary degradation for ``opensore tests synthetic`` (regression #1078)
 #
-# ``packaging/opensre.spec`` excludes the ``tests`` tree from PyInstaller
+# ``packaging/opensore.spec`` excludes the ``tests`` tree from PyInstaller
 # bundles, so ``from tests.synthetic.rds_postgres.run_suite import main``
 # raises ``ModuleNotFoundError`` in a packaged binary. Surface a clean
-# ``OpenSREError`` instead of a raw traceback so users know to run from a
+# ``OpenSoreError`` instead of a raw traceback so users know to run from a
 # source checkout.
 # ---------------------------------------------------------------------------
 
@@ -304,7 +304,7 @@ def test_tests_synthetic_clean_error_when_data_dir_missing(tmp_path: Path) -> No
     runner = CliRunner()
 
     # Point SYNTHETIC_SCENARIOS_DIR at a path that doesn't exist so the
-    # pre-check in ``run_synthetic_suite`` short-circuits to OpenSREError.
+    # pre-check in ``run_synthetic_suite`` short-circuits to OpenSoreError.
     missing = tmp_path / "missing-rds-postgres"
     with unittest.mock.patch("app.cli.tests.discover.SYNTHETIC_SCENARIOS_DIR", missing):
         result = runner.invoke(cli, ["tests", "synthetic", "--scenario", "001-replication-lag"])

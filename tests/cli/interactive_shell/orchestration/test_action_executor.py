@@ -21,7 +21,7 @@ from app.cli.interactive_shell.routing.handle_message_with_agent.orchestration.a
     read_diag,
     run_cd_command,
     run_claude_code_implementation,
-    run_opensre_cli_command,
+    run_opensore_cli_command,
     run_pwd_command,
     run_shell_command,
     run_synthetic_test,
@@ -202,7 +202,7 @@ def test_run_claude_code_implementation_starts_tracked_task(
             assert model is None
             assert workspace
             assert reasoning_effort is None
-            assert "Recent OpenSRE terminal assistant context" in prompt
+            assert "Recent OpenSore terminal assistant context" in prompt
             assert "Process auto-discovery" in prompt
             assert "Do not create a git commit" in prompt
             return CLIInvocation(
@@ -383,7 +383,7 @@ def test_run_shell_command_reports_start_failure(monkeypatch: pytest.MonkeyPatch
     assert session.history[-1] == {"type": "shell", "text": "true", "ok": False}
 
 
-def test_run_opensre_agents_scan_prints_clean_foreground_output(
+def test_run_opensore_agents_scan_prints_clean_foreground_output(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     def _fake_run(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
@@ -405,18 +405,18 @@ def test_run_opensre_agents_scan_prints_clean_foreground_output(
     buf = io.StringIO()
     console = Console(file=buf, force_terminal=False)
 
-    assert run_opensre_cli_command("agents scan", session, console) is True
+    assert run_opensore_cli_command("agents scan", session, console) is True
 
     out = buf.getvalue()
-    assert "$ opensre agents scan" in out
+    assert "$ opensore agents scan" in out
     assert "agent scan" in out
     assert "777 claude-code-777 claude code" in out
     assert "started." not in out
     assert "stdout │" not in out
-    assert session.history[-1] == {"type": "cli_command", "text": "opensre agents scan", "ok": True}
+    assert session.history[-1] == {"type": "cli_command", "text": "opensore agents scan", "ok": True}
 
 
-def test_run_opensre_agents_scan_register_explains_confirmation(
+def test_run_opensore_agents_scan_register_explains_confirmation(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     def _fake_run(command: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
@@ -437,7 +437,7 @@ def test_run_opensre_agents_scan_register_explains_confirmation(
     console = Console(file=buf, force_terminal=False)
 
     assert (
-        run_opensre_cli_command(
+        run_opensore_cli_command(
             "agents scan --register",
             session,
             console,
@@ -453,12 +453,12 @@ def test_run_opensre_agents_scan_register_explains_confirmation(
     assert "stdout │" not in out
     assert session.history[-1] == {
         "type": "cli_command",
-        "text": "opensre agents scan --register",
+        "text": "opensore agents scan --register",
         "ok": True,
     }
 
 
-def test_run_opensre_agents_watch_runs_in_foreground(
+def test_run_opensore_agents_watch_runs_in_foreground(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     popen_kwargs: list[dict[str, object]] = []
@@ -484,7 +484,7 @@ def test_run_opensre_agents_watch_runs_in_foreground(
     console = Console(file=buf, force_terminal=False)
 
     assert (
-        run_opensre_cli_command(
+        run_opensore_cli_command(
             "agents watch 1234",
             session,
             console,
@@ -495,7 +495,7 @@ def test_run_opensre_agents_watch_runs_in_foreground(
     )
 
     out = buf.getvalue()
-    assert "$ opensre agents watch 1234" in out
+    assert "$ opensore agents watch 1234" in out
     assert "watching pid 1234" in out
     assert "pid 1234 exited" in out
     assert "started" not in out
@@ -504,7 +504,7 @@ def test_run_opensre_agents_watch_runs_in_foreground(
     assert session.task_registry.list_recent() == []
     assert session.history[-1] == {
         "type": "cli_command",
-        "text": "opensre agents watch 1234",
+        "text": "opensore agents watch 1234",
         "ok": True,
     }
 
@@ -565,7 +565,7 @@ def test_start_background_cli_task_uses_pty_for_live_terminal_output(
     console = Console(file=buf, force_terminal=True)
 
     task = start_background_cli_task(
-        display_command="opensre tests synthetic --scenario 001-replication-lag",
+        display_command="opensore tests synthetic --scenario 001-replication-lag",
         argv_list=["python", "-m", "app.cli", "tests", "synthetic"],
         session=session,
         console=console,
@@ -622,7 +622,7 @@ def test_start_background_cli_task_falls_back_to_pipes_when_pty_unavailable(
     console = Console(file=buf, force_terminal=True)
 
     task = start_background_cli_task(
-        display_command="opensre tests synthetic --scenario 001-replication-lag",
+        display_command="opensore tests synthetic --scenario 001-replication-lag",
         argv_list=["python", "-m", "app.cli", "tests", "synthetic"],
         session=session,
         console=console,
@@ -727,7 +727,7 @@ def test_start_background_cli_task_reports_spawn_failure(
     console = Console(file=buf, force_terminal=False)
 
     task = start_background_cli_task(
-        display_command="opensre tests synthetic --scenario 001-replication-lag",
+        display_command="opensore tests synthetic --scenario 001-replication-lag",
         argv_list=["python", "-m", "app.cli", "tests", "synthetic"],
         session=session,
         console=console,
@@ -779,7 +779,7 @@ def test_start_background_cli_task_reports_watcher_failure(
     console = Console(file=buf, force_terminal=False)
 
     task = start_background_cli_task(
-        display_command="opensre tests synthetic --scenario 001-replication-lag",
+        display_command="opensore tests synthetic --scenario 001-replication-lag",
         argv_list=["python", "-m", "app.cli", "tests", "synthetic"],
         session=session,
         console=console,
@@ -974,7 +974,7 @@ def test_run_synthetic_test_honours_explicit_scenario(
     )
 
     assert popen_commands[0][-2:] == ["--scenario", "005-failover"]
-    assert "opensre tests synthetic --scenario 005-failover" in buf.getvalue()
+    assert "opensore tests synthetic --scenario 005-failover" in buf.getvalue()
 
 
 def test_run_synthetic_test_all_launches_suite_alias(
@@ -1016,7 +1016,7 @@ def test_run_synthetic_test_all_launches_suite_alias(
     )
 
     assert popen_commands[0][-2:] == ["synthetic", "all"]
-    assert "opensre tests synthetic all" in buf.getvalue()
+    assert "opensore tests synthetic all" in buf.getvalue()
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1063,8 +1063,8 @@ def _capture_popen_kwargs(
 
 def _start_one_task(console: Console) -> None:
     start_background_cli_task(
-        display_command="opensre tests synthetic --scenario 001-replication-lag",
-        argv_list=["opensre", "tests", "synthetic", "--scenario", "001-replication-lag"],
+        display_command="opensore tests synthetic --scenario 001-replication-lag",
+        argv_list=["opensore", "tests", "synthetic", "--scenario", "001-replication-lag"],
         session=ReplSession(),
         console=console,
         kind=TaskKind.SYNTHETIC_TEST,
@@ -1119,7 +1119,7 @@ def test_background_task_preserves_existing_environment(
     We only inject COLUMNS/LINES; everything else (PATH, HOME, virtualenv,
     auth tokens) must reach the synthetic suite unchanged.
     """
-    monkeypatch.setenv("OPENSRE_TEST_MARKER", "preserved-value")
+    monkeypatch.setenv("OPENSORE_TEST_MARKER", "preserved-value")
     captured = _capture_popen_kwargs(monkeypatch)
     console = Console(file=io.StringIO(), force_terminal=False, width=120)
 
@@ -1127,7 +1127,7 @@ def test_background_task_preserves_existing_environment(
 
     env = captured[0].get("env")
     assert isinstance(env, dict)
-    assert env.get("OPENSRE_TEST_MARKER") == "preserved-value"
+    assert env.get("OPENSORE_TEST_MARKER") == "preserved-value"
 
 
 def test_run_synthetic_test_forwards_columns_to_subprocess(
@@ -1193,10 +1193,10 @@ def test_is_interactive_wizard_classifies_command_paths(tokens: list[str], expec
     assert _is_interactive_wizard(tokens) is expected
 
 
-def test_run_opensre_cli_command_refuses_onboard_with_helpful_message(
+def test_run_opensore_cli_command_refuses_onboard_with_helpful_message(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """The LLM-classified path (``cli_exec`` tool) for ``opensre onboard``
+    """The LLM-classified path (``cli_exec`` tool) for ``opensore onboard``
     must not spawn a subprocess — exclusive stdin is not guaranteed when the
     LLM planner is involved. It must instead print a message directing the
     user to the ``/onboard`` slash command, which does have exclusive stdin.
@@ -1228,7 +1228,7 @@ def test_run_opensre_cli_command_refuses_onboard_with_helpful_message(
     console = Console(file=buf, force_terminal=False, width=200)
 
     assert (
-        run_opensre_cli_command(
+        run_opensore_cli_command(
             "onboard",
             session,
             console,
@@ -1240,22 +1240,22 @@ def test_run_opensre_cli_command_refuses_onboard_with_helpful_message(
 
     out = buf.getvalue()
     assert "needs a full terminal" in out
-    assert "opensre onboard" in out
+    assert "opensore onboard" in out
     # Directs user to the slash command (not "exit the shell").
     assert "/onboard" in out
     assert popen_calls == []
     assert run_calls == []
     assert session.history[-1] == {
         "type": "cli_command",
-        "text": "opensre onboard",
+        "text": "opensore onboard",
         "ok": False,
     }
 
 
-def test_run_opensre_cli_command_refuses_integrations_setup_with_helpful_message(
+def test_run_opensore_cli_command_refuses_integrations_setup_with_helpful_message(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """``opensre integrations setup`` via the LLM ``cli_exec`` path must redirect
+    """``opensore integrations setup`` via the LLM ``cli_exec`` path must redirect
     to ``/integrations setup`` (which has exclusive stdin). Same pattern as ``onboard``.
     """
     popen_calls: list[list[str]] = []
@@ -1277,7 +1277,7 @@ def test_run_opensre_cli_command_refuses_integrations_setup_with_helpful_message
     console = Console(file=buf, force_terminal=False, width=200)
 
     assert (
-        run_opensre_cli_command(
+        run_opensore_cli_command(
             "integrations setup",
             session,
             console,
@@ -1289,22 +1289,22 @@ def test_run_opensre_cli_command_refuses_integrations_setup_with_helpful_message
 
     out = buf.getvalue()
     assert "needs a full terminal" in out
-    assert "opensre integrations setup" in out
+    assert "opensore integrations setup" in out
     # Directs user to the slash command (not "exit the shell").
     assert "/integrations setup" in out
     assert popen_calls == []
     assert run_calls == []
     assert session.history[-1] == {
         "type": "cli_command",
-        "text": "opensre integrations setup",
+        "text": "opensore integrations setup",
         "ok": False,
     }
 
 
-def test_run_opensre_cli_command_skips_confirmation_for_investigate(
+def test_run_opensore_cli_command_skips_confirmation_for_investigate(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """``opensre investigate`` is the primary REPL purpose — no Proceed? prompt."""
+    """``opensore investigate`` is the primary REPL purpose — no Proceed? prompt."""
     confirm_calls: list[str] = []
     start_calls: list[list[str]] = []
 
@@ -1325,7 +1325,7 @@ def test_run_opensre_cli_command_skips_confirmation_for_investigate(
     console = Console(file=buf, force_terminal=False)
 
     assert (
-        run_opensre_cli_command(
+        run_opensore_cli_command(
             "investigate -i alert.json",
             session,
             console,
@@ -1344,7 +1344,7 @@ def test_run_opensre_cli_command_skips_confirmation_for_investigate(
     assert "may change local config" not in buf.getvalue()
 
 
-def test_run_opensre_cli_command_allows_integrations_list_without_blocking(
+def test_run_opensore_cli_command_allows_integrations_list_without_blocking(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """Only the ``setup`` subcommand under ``integrations`` is the wizard.
@@ -1367,7 +1367,7 @@ def test_run_opensre_cli_command_allows_integrations_list_without_blocking(
     console = Console(file=buf, force_terminal=False)
 
     assert (
-        run_opensre_cli_command(
+        run_opensore_cli_command(
             "integrations list",
             session,
             console,

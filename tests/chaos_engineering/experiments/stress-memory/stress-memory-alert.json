@@ -1,7 +1,7 @@
 {
   "_meta": {
     "purpose": "Synthetic alert for StressChaos memory pressure",
-    "run": "opensre investigate -i tests/chaos_engineering/experiments/stress-memory/stress-memory-alert.json"
+    "run": "opensore investigate -i tests/chaos_engineering/experiments/stress-memory/stress-memory-alert.json"
   },
   "title": "[Triggered] Memory pressure - stress-memory-demo",
   "alert_name": "Datadog monitor: OOM / restarts",

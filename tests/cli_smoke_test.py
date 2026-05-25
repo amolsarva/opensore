@@ -21,7 +21,7 @@ import pytest
 from app.version import get_version
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-_SCRIPT_NAME = "opensre.exe" if os.name == "nt" else "opensre"
+_SCRIPT_NAME = "opensore.exe" if os.name == "nt" else "opensore"
 _ANSI_RE = re.compile(r"\x1b(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")
 _CLEARED_ENV_KEYS = (
     "ANTHROPIC_API_KEY",
@@ -51,8 +51,8 @@ _CLEARED_ENV_KEYS = (
     "NVIDIA_API_KEY",
     "OPENAI_API_KEY",
     "OPENROUTER_API_KEY",
-    "OPENSRE_PROJECT_ENV_PATH",
-    "OPENSRE_RELEASES_API_URL",
+    "OPENSORE_PROJECT_ENV_PATH",
+    "OPENSORE_RELEASES_API_URL",
     "SLACK_WEBHOOK_URL",
     "TRACER_API_URL",
     "TRACER_WEB_APP_URL",
@@ -86,11 +86,11 @@ class CliSandbox:
 
     @property
     def integration_store_path(self) -> Path:
-        return self.home / ".config" / "opensre" / "integrations.json"
+        return self.home / ".config" / "opensore" / "integrations.json"
 
     @property
     def wizard_store_path(self) -> Path:
-        return self.home / ".config" / "opensre" / "opensre.json"
+        return self.home / ".config" / "opensore" / "opensore.json"
 
     def seed_integrations(self, integrations: list[dict[str, object]]) -> None:
         self.integration_store_path.parent.mkdir(parents=True, exist_ok=True)
@@ -123,7 +123,7 @@ def _clean_terminal_output(text: str) -> str:
     return cleaned
 
 
-def _opensre_executable() -> Path:
+def _opensore_executable() -> Path:
     candidates: list[Path] = []
     resolved = shutil.which(_SCRIPT_NAME)
     if resolved:
@@ -137,7 +137,7 @@ def _opensre_executable() -> Path:
     for candidate in candidates:
         if candidate.exists():
             return candidate
-    pytest.skip("installed opensre executable is unavailable in this environment")
+    pytest.skip("installed opensore executable is unavailable in this environment")
     raise AssertionError("pytest.skip should have interrupted control flow")
 
 
@@ -167,12 +167,12 @@ def _cli_env(home: Path, project_env_path: Path) -> dict[str, str]:
     env["PYTHONPATH"] = os.pathsep.join(pythonpath_parts)
     env["HOME"] = str(home)
     env["USERPROFILE"] = str(home)
-    env["OPENSRE_NO_TELEMETRY"] = "1"
-    env["OPENSRE_PROJECT_ENV_PATH"] = str(project_env_path)
+    env["OPENSORE_NO_TELEMETRY"] = "1"
+    env["OPENSORE_PROJECT_ENV_PATH"] = str(project_env_path)
     env["PYTHONUTF8"] = "1"
     env["PYTHONIOENCODING"] = "utf-8"
     env["TERM"] = "xterm-256color"
-    env.pop("OPENSRE_DISABLE_KEYRING", None)
+    env.pop("OPENSORE_DISABLE_KEYRING", None)
     env["PYTHON_KEYRING_BACKEND"] = "tests.shared.keyring_backend.MemoryKeyring"
     return env
 
@@ -195,7 +195,7 @@ def _run_cli(
     timeout: float = 15.0,
     extra_env: dict[str, str] | None = None,
 ) -> CliResult:
-    executable = _opensre_executable()
+    executable = _opensore_executable()
     command = [str(executable), *args]
     if executable.suffix != ".exe" and _is_python_script(executable):
         command = [sys.executable, str(executable), *args]
@@ -274,7 +274,7 @@ def _run_cli_pty(
     timeout: float = 20.0,
     extra_env: dict[str, str] | None = None,
 ) -> CliResult:
-    executable = _opensre_executable()
+    executable = _opensore_executable()
     command = [str(executable), *args]
     if executable.suffix != ".exe" and _is_python_script(executable):
         command = [sys.executable, str(executable), *args]
@@ -365,15 +365,15 @@ def release_api_url() -> str:
         server.server_close()
 
 
-def test_opensre_landing_page_smoke(cli_sandbox: CliSandbox) -> None:
+def test_opensore_landing_page_smoke(cli_sandbox: CliSandbox) -> None:
     result = _run_cli(cli_sandbox)
 
     assert result.exit_code == 0
     assert "Quick start:" in result.stdout
-    assert "opensre investigate -i alert.json" in result.stdout
+    assert "opensore investigate -i alert.json" in result.stdout
 
 
-def test_opensre_help_smoke(cli_sandbox: CliSandbox) -> None:
+def test_opensore_help_smoke(cli_sandbox: CliSandbox) -> None:
     result = _run_cli(cli_sandbox, "-h")
 
     assert result.exit_code == 0
@@ -382,7 +382,7 @@ def test_opensre_help_smoke(cli_sandbox: CliSandbox) -> None:
     assert "update" in result.stdout
 
 
-def test_opensre_version_smoke(cli_sandbox: CliSandbox) -> None:
+def test_opensore_version_smoke(cli_sandbox: CliSandbox) -> None:
     result = _run_cli(cli_sandbox, "--version")
 
     assert result.exit_code == 0
@@ -408,7 +408,7 @@ def test_health_smoke_uses_real_datadog_store_config(cli_sandbox: CliSandbox) ->
     result = _run_cli(cli_sandbox, "health")
 
     assert result.exit_code == 1
-    assert "OpenSRE Health" in result.stdout
+    assert "OpenSore Health" in result.stdout
     assert "datadog" in result.stdout
     assert "Missing API key or application key." in result.stdout
 
@@ -418,7 +418,7 @@ def test_update_check_smoke_uses_local_stub(cli_sandbox: CliSandbox, release_api
         cli_sandbox,
         "update",
         "--check",
-        extra_env={"OPENSRE_RELEASES_API_URL": release_api_url},
+        extra_env={"OPENSORE_RELEASES_API_URL": release_api_url},
     )
 
     assert result.exit_code == 1

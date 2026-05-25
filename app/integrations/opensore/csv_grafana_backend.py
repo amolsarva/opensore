@@ -7,7 +7,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from app.integrations.opensre.grafana_wire_format import (
+from app.integrations.opensore.grafana_wire_format import (
     format_loki_query_range,
     format_mimir_query_range,
     format_ruler_rules,
@@ -85,7 +85,7 @@ def _read_limited_rows(path: Path, max_rows: int) -> tuple[list[str], list[dict[
         return fieldnames, rows
 
 
-class OpenSRECsvGrafanaBackend:
+class OpenSoreCsvGrafanaBackend:
     """Serve local CSV trees under ``telemetry/<date>/{metric,log,trace}/`` as Grafana API shapes."""
 
     def __init__(
@@ -192,7 +192,7 @@ class OpenSRECsvGrafanaBackend:
                     {
                         "date": iso,
                         "message": message[:2000],
-                        "source_type": "opensre_log",
+                        "source_type": "opensore_log",
                         "source_identifier": ident,
                     }
                 )
@@ -262,8 +262,8 @@ class OpenSRECsvGrafanaBackend:
 
     def _default_alert(self) -> dict[str, Any]:
         return {
-            "title": "OpenSRE local telemetry",
+            "title": "OpenSore local telemetry",
             "state": "alerting",
-            "commonLabels": {"alertname": "OpenSREScenario", "pipeline_name": "opensre"},
+            "commonLabels": {"alertname": "OpenSoreScenario", "pipeline_name": "opensore"},
             "commonAnnotations": {"summary": "Synthetic alert wrapper for CSV telemetry"},
         }

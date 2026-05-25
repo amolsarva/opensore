@@ -1,4 +1,4 @@
-"""Documentation-grounding helpers for OpenSRE interactive-shell answers.
+"""Documentation-grounding helpers for OpenSore interactive-shell answers.
 
 The interactive shell is documentation-aware: when a user asks a procedural
 question (e.g. "how do I configure Datadog?", "how do I deploy this?"), we
@@ -9,7 +9,7 @@ current docs instead of model memory.
 Source of truth
 ---------------
 The local ``docs/`` directory at the repository root (the same Mintlify
-content published to ``https://www.opensre.com/docs``). It contains MDX
+content published to ``https://www.opensore.com/docs``). It contains MDX
 pages such as ``datadog.mdx``, ``deployment.mdx``, ``quickstart.mdx``,
 plus subdirectories like ``tutorials/`` and ``use-cases/``.
 
@@ -146,7 +146,7 @@ _QUERY_STOPWORDS = frozenset(
         "help",
         "tell",
         "show",
-        "opensre",
+        "opensore",
         "tracer",
     }
 )

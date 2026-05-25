@@ -1,7 +1,7 @@
 {
   "_meta": {
     "purpose": "Synthetic alert for DNSChaos error demo",
-    "run": "opensre investigate -i tests/chaos_engineering/experiments/dns-error/dns-error-alert.json"
+    "run": "opensore investigate -i tests/chaos_engineering/experiments/dns-error/dns-error-alert.json"
   },
   "title": "[Triggered] DNS resolution failures - dns-error-demo",
   "alert_name": "Datadog monitor: DNS errors from dns-error-demo",

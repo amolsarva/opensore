@@ -7,7 +7,7 @@ in production:
 * :class:`TelegramSink` — formats an incident into a human-readable
   Telegram message and routes it through :class:`AlarmDispatcher` so
   duplicate incidents respect the per-fingerprint cooldown. For
-  ``HIGH``/``CRITICAL`` incidents it can optionally trigger the OpenSRE
+  ``HIGH``/``CRITICAL`` incidents it can optionally trigger the OpenSore
   investigation pipeline and append the resulting root-cause summary to
   the Telegram message before delivery.
 * :func:`make_telegram_sink` — convenience factory returning an

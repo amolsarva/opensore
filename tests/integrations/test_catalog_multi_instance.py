@@ -118,7 +118,7 @@ def test_classify_aws_with_role_arn_in_instance_credentials_works() -> None:
                 "tags": {},
                 "credentials": {
                     "region": "us-east-1",
-                    "role_arn": "arn:aws:iam::123456789012:role/opensre",
+                    "role_arn": "arn:aws:iam::123456789012:role/opensore",
                     "external_id": "ext",
                 },
             }
@@ -126,7 +126,7 @@ def test_classify_aws_with_role_arn_in_instance_credentials_works() -> None:
     }
     resolved = classify_integrations([v2_aws])
     assert "aws" in resolved
-    assert resolved["aws"]["role_arn"] == "arn:aws:iam::123456789012:role/opensre"
+    assert resolved["aws"]["role_arn"] == "arn:aws:iam::123456789012:role/opensore"
     assert resolved["aws"]["external_id"] == "ext"
     assert resolved["aws"]["region"] == "us-east-1"
 

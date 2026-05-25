@@ -1,9 +1,9 @@
 ---
 title: "Sentry"
-description: "Connect Sentry so OpenSRE can surface error trends and issue details during investigations"
+description: "Connect Sentry so OpenSore can surface error trends and issue details during investigations"
 ---
 
-OpenSRE queries Sentry to retrieve recent issues, error events, and stack traces — correlating application errors with infrastructure alerts to identify root causes faster.
+OpenSore queries Sentry to retrieve recent issues, error events, and stack traces — correlating application errors with infrastructure alerts to identify root causes faster.
 
 ## Prerequisites
 
@@ -15,7 +15,7 @@ OpenSRE queries Sentry to retrieve recent issues, error events, and stack traces
 ### Option 1: Interactive CLI
 
 ```bash
-opensre integrations setup
+opensore integrations setup
 ```
 
 Select **Sentry** when prompted and provide your organization slug and auth token.
@@ -79,7 +79,7 @@ The organization slug appears in your Sentry URL: `https://sentry.io/organizatio
 ## Verify
 
 ```bash
-opensre integrations verify sentry
+opensore integrations verify sentry
 ```
 
 Expected output:
@@ -93,22 +93,22 @@ Detail: Sentry validated for org your-org; issues API responded successfully wit
 
 | Variable | Default | Description |
 | --- | --- | --- |
-| `OPENSRE_SENTRY_DSN` | — | Override the bundled Sentry DSN |
-| `OPENSRE_SENTRY_DISABLED` | `0` | Set to `1` to disable Sentry entirely |
-| `OPENSRE_SENTRY_LOGGING_DISABLED` | `0` | Set to `1` to disable automatic forwarding of `logger.error` and `logger.exception` calls to Sentry as events, without affecting `capture_exception` |
+| `OPENSORE_SENTRY_DSN` | — | Override the bundled Sentry DSN |
+| `OPENSORE_SENTRY_DISABLED` | `0` | Set to `1` to disable Sentry entirely |
+| `OPENSORE_SENTRY_LOGGING_DISABLED` | `0` | Set to `1` to disable automatic forwarding of `logger.error` and `logger.exception` calls to Sentry as events, without affecting `capture_exception` |
 
 ## Verify Error Reporting
 
-Send one test event to confirm OpenSRE can report runtime errors:
+Send one test event to confirm OpenSore can report runtime errors:
 
 ```bash
-opensre debug sentry
+opensore debug sentry
 ```
 
 For a custom or self-hosted project, set the DSN first:
 
 ```bash
-OPENSRE_SENTRY_DSN=https://public-key@example.ingest.sentry.io/123 opensre debug sentry
+OPENSORE_SENTRY_DSN=https://public-key@example.ingest.sentry.io/123 opensore debug sentry
 ```
 
 ```text

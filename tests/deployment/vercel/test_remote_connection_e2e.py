@@ -2,7 +2,7 @@
 
 Validates that the ``RemoteAgentClient`` can reach a real Vercel deployment,
 perform preflight checks, and hit the health / ok endpoints — the same flow
-used by ``opensre remote`` CLI commands.
+used by ``opensore remote`` CLI commands.
 
 Requires ``VERCEL_API_TOKEN``.
 Run with::
@@ -20,7 +20,7 @@ Environment variables
 
 Refs
 ~~~~
-- GitHub issue: https://github.com/Tracer-Cloud/opensre/issues/390
+- GitHub issue: https://github.com/Tracer-Cloud/opensore/issues/390
 - Follow-up to #273 (Vercel deploy) and #302 (CLI remote connection).
 """
 
@@ -80,7 +80,7 @@ class TestVercelRemoteConnection:
         )
         body = resp.json()
         assert body["status"] == "ok"
-        assert body["service"] == "opensre"
+        assert body["service"] == "opensore"
         logger.info("Raw health reachable: %s", body)
 
     def test_ok_endpoint_reachable(self, vercel_deployment: dict[str, Any]) -> None:
@@ -192,7 +192,7 @@ class TestVercelRemoteConnection:
 
     def test_invalid_url_preflight_error(self) -> None:
         """Preflight against a valid host but wrong path still gives diagnostics."""
-        # Use example.com which exists but doesn't run OpenSRE.
+        # Use example.com which exists but doesn't run OpenSore.
         client = RemoteAgentClient("https://example.com")
         result = client.preflight()
 

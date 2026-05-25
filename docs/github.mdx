@@ -1,9 +1,9 @@
 ---
 title: "GitHub"
-description: "Connect GitHub so OpenSRE can correlate recent commits and code changes with incidents"
+description: "Connect GitHub so OpenSore can correlate recent commits and code changes with incidents"
 ---
 
-OpenSRE connects to GitHub via the GitHub MCP server to search code, browse recent commits, inspect files, and trace changes correlated with alerts — helping identify which deployment or code change triggered an incident.
+OpenSore connects to GitHub via the GitHub MCP server to search code, browse recent commits, inspect files, and trace changes correlated with alerts — helping identify which deployment or code change triggered an incident.
 
 ## Prerequisites
 
@@ -15,7 +15,7 @@ OpenSRE connects to GitHub via the GitHub MCP server to search code, browse rece
 ### Option 1: Interactive CLI
 
 ```bash
-opensre integrations setup
+opensore integrations setup
 ```
 
 Select **GitHub** when prompted.
@@ -81,7 +81,7 @@ For GitHub Enterprise Server, set `GITHUB_MCP_URL` to your enterprise MCP endpoi
 ## Verify
 
 ```bash
-opensre integrations verify github
+opensore integrations verify github
 ```
 
 Expected output:
@@ -103,5 +103,5 @@ Detail: GitHub MCP validated for your-username; discovered 18 tools including re
 ## Security best practices
 
 - Use a **fine-grained personal access token** with read-only repository access.
-- Limit token scope to the repositories OpenSRE needs to inspect.
+- Limit token scope to the repositories OpenSore needs to inspect.
 - Store the token in `.env`, not in source code.

@@ -100,7 +100,7 @@ def switch_llm_provider(
         )
         console.print(
             f"[{DIM}]set it with[/] [bold]export {provider.api_key_env}=<your-key>[/bold] "
-            f"[{DIM}]or run[/] [bold]opensre onboard[/bold] "
+            f"[{DIM}]or run[/] [bold]opensore onboard[/bold] "
             f"[{DIM}]to save it to the keyring, then rerun this command.[/]"
         )
         return False
@@ -312,7 +312,7 @@ def _prompt_custom_model_id(console: Console, provider_value: str = "provider") 
     console.print()
     console.print(
         f"[{DIM}]Enter a model ID for {escape(provider_value)}. "
-        "The provider will validate availability when OpenSRE sends a request.[/]"
+        "The provider will validate availability when OpenSore sends a request.[/]"
     )
     try:
         value = console.input(f"[{HIGHLIGHT}]model ID> [/]").strip()

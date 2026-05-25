@@ -1,4 +1,4 @@
-"""Zero-config local LLM setup command: opensre onboard local_llm."""
+"""Zero-config local LLM setup command: opensore onboard local_llm."""
 
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ _console = Console()
 
 
 def run_local_llm_setup() -> int:
-    _console.rule("[bold]OpenSRE · Local LLM Setup[/bold]")
+    _console.rule("[bold]OpenSore · Local LLM Setup[/bold]")
     _console.print(f"[{DIM}]No API key required — runs entirely on your machine.[/]\n")
 
     with _console.status("Detecting hardware...", spinner="dots"):
@@ -39,7 +39,7 @@ def run_local_llm_setup() -> int:
         if not install(_console):
             _console.print(f"[{ERROR}]Ollama installation failed or was skipped.[/]")
             _console.print(
-                "Install manually from https://ollama.com and rerun: [bold]opensre onboard local_llm[/bold]"
+                "Install manually from https://ollama.com and rerun: [bold]opensore onboard local_llm[/bold]"
             )
             return 1
         if not is_installed():
@@ -106,7 +106,7 @@ def run_local_llm_setup() -> int:
     _console.print(f"Store:     [{DIM}]{store_path}[/]")
     _console.print("\nTry it now:")
     _console.print(
-        "  [bold]opensre investigate[/bold]   — launches interactive mode, try a sample alert"
+        "  [bold]opensore investigate[/bold]   — launches interactive mode, try a sample alert"
     )
-    _console.print("  [bold]opensre onboard[/bold]       — configure observability integrations")
+    _console.print("  [bold]opensore onboard[/bold]       — configure observability integrations")
     return 0

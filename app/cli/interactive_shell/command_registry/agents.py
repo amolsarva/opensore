@@ -113,8 +113,8 @@ def _slice_to_utf8_boundary(data: bytes, max_bytes: int) -> bytes:
     return sliced[start:]
 
 
-def _opensre_agent_id() -> str:
-    return f"opensre:{os.getpid()}"
+def _opensore_agent_id() -> str:
+    return f"opensore:{os.getpid()}"
 
 
 def _display_path(path: Path) -> str:
@@ -187,7 +187,7 @@ def _cmd_agents_conflicts(console: Console) -> bool:
     conflicts = detect_conflicts(
         events,
         window_seconds=DEFAULT_WINDOW_SECONDS,
-        opensre_agent_id=_opensre_agent_id(),
+        opensore_agent_id=_opensore_agent_id(),
     )
     console.print(render_conflicts(conflicts))
     return True
@@ -265,7 +265,7 @@ def _cmd_agents_release(session: ReplSession, console: Console, args: list[str])
 
 
 def _cmd_agents_budget(session: ReplSession, console: Console, args: list[str]) -> bool:
-    """View or edit per-agent budgets stored in ``~/.config/opensre/agents.yaml``.
+    """View or edit per-agent budgets stored in ``~/.config/opensore/agents.yaml``.
 
     No args -> render the current budgets as a table. Two args
     (``<agent> <usd>``) -> set ``hourly_budget_usd`` for that agent and
@@ -370,7 +370,7 @@ def _cmd_agents_kill(
         return True
 
     if pid == os.getpid():
-        console.print(f"[{ERROR}]refusing to kill the opensre process itself[/]")
+        console.print(f"[{ERROR}]refusing to kill the opensore process itself[/]")
         session.mark_latest(ok=False, kind="slash")
         return True
 

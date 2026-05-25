@@ -10,11 +10,11 @@ from tests.tools.conftest import BaseToolContract, mock_agent_state
 
 class TestDataDogNodePodsToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return get_pods_on_node.__opensre_registered_tool__
+        return get_pods_on_node.__opensore_registered_tool__
 
 
 def test_is_available_requires_connection_and_node_ip() -> None:
-    rt = get_pods_on_node.__opensre_registered_tool__
+    rt = get_pods_on_node.__opensore_registered_tool__
     assert (
         rt.is_available({"datadog": {"connection_verified": True, "node_ip": "10.0.1.1"}}) is True
     )
@@ -23,7 +23,7 @@ def test_is_available_requires_connection_and_node_ip() -> None:
 
 
 def test_extract_params_maps_fields() -> None:
-    rt = get_pods_on_node.__opensre_registered_tool__
+    rt = get_pods_on_node.__opensore_registered_tool__
     sources = mock_agent_state()
     params = rt.extract_params(sources)
     assert params["node_ip"] == "10.0.1.42"

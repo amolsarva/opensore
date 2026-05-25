@@ -16,7 +16,7 @@
 services:
   rabbitmq:
     image: rabbitmq:3.13-management
-    container_name: opensre-rabbitmq
+    container_name: opensore-rabbitmq
     ports:
       - "5672:5672"      # AMQP
       - "15672:15672"    # Management HTTP API
@@ -32,7 +32,7 @@ services:
 
   publisher:
     image: python:3.13-slim
-    container_name: opensre-rabbitmq-publisher
+    container_name: opensore-rabbitmq-publisher
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -55,7 +55,7 @@ services:
 
   slow_consumer:
     image: python:3.13-slim
-    container_name: opensre-rabbitmq-slow-consumer
+    container_name: opensore-rabbitmq-slow-consumer
     depends_on:
       rabbitmq:
         condition: service_healthy

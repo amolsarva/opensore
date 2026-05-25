@@ -1,7 +1,7 @@
 {
   "_meta": {
     "purpose": "Synthetic alert for network-loss chaos demo",
-    "run": "opensre investigate -i tests/chaos_engineering/experiments/network-loss/network-loss-alert.json"
+    "run": "opensore investigate -i tests/chaos_engineering/experiments/network-loss/network-loss-alert.json"
   },
   "title": "[Triggered] Packet loss / flaky probes - network-loss-demo",
   "alert_name": "Datadog monitor: flaky network-loss-demo",

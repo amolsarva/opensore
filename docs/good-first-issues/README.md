@@ -1,6 +1,6 @@
 # Good First Issues
 
-New to OpenSRE? This page is your starting point.
+New to OpenSore? This page is your starting point.
 
 ## What is a "good first issue"?
 
@@ -16,7 +16,7 @@ They're designed so you can make a real contribution while getting familiar with
 
 Browse issues tagged with the `good first issue` label:
 
-[View good first issues on GitHub](https://github.com/Tracer-Cloud/opensre/issues?q=is%3Aopen+label%3A%22good+first+issue%22)
+[View good first issues on GitHub](https://github.com/Tracer-Cloud/opensore/issues?q=is%3Aopen+label%3A%22good+first+issue%22)
 
 ## How to pick and work on one
 
@@ -37,7 +37,7 @@ Full contribution flow is in [CONTRIBUTING.md](../../CONTRIBUTING.md).
 
 Stuck? Don't guess — ask early.
 
-- **Discord:** [#contribute](https://discord.gg/opensre)
+- **Discord:** [#contribute](https://discord.gg/opensore)
 - **GitHub:** comment directly on the issue
 
 ## A few tips

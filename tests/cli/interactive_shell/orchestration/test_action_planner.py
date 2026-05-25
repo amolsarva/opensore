@@ -8,19 +8,19 @@ import app.cli.interactive_shell.routing.handle_message_with_agent.orchestration
 
 
 def test_plan_cli_actions_health_and_list() -> None:
-    msg = "check opensre health and show connected services"
+    msg = "check opensore health and show connected services"
     assert action_planner_module.map_cli_actions(msg) == ["/health", "/list integrations"]
 
 
 def test_plan_actions_with_unhandled_all_handled() -> None:
-    msg = "check opensre health and show connected services"
+    msg = "check opensore health and show connected services"
     actions, unhandled = action_planner_module.map_actions_with_unhandled(msg)
     assert not unhandled
     assert [a.kind for a in actions] == ["slash", "slash"]
 
 
 def test_plan_terminal_tasks_returns_kinds() -> None:
-    msg = "check opensre health and show connected services"
+    msg = "check opensore health and show connected services"
     assert action_planner_module.map_terminal_tasks(msg) == ["slash", "slash"]
 
 

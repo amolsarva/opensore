@@ -1,4 +1,4 @@
-"""Remote agent client for connecting to deployed OpenSRE HTTP APIs."""
+"""Remote agent client for connecting to deployed OpenSore HTTP APIs."""
 
 from __future__ import annotations
 

@@ -1,21 +1,21 @@
 ---
 title: "Kafka"
-description: "Connect Kafka so OpenSRE can inspect topic health and consumer group lag during investigations"
+description: "Connect Kafka so OpenSore can inspect topic health and consumer group lag during investigations"
 ---
 
-OpenSRE queries Kafka to retrieve topic partition health, consumer group lag, and broker metadata — helping diagnose lag spikes, under-replicated partitions, and consumer group failures during incidents.
+OpenSore queries Kafka to retrieve topic partition health, consumer group lag, and broker metadata — helping diagnose lag spikes, under-replicated partitions, and consumer group failures during incidents.
 
 ## Prerequisites
 
 - Apache Kafka cluster (2.x or later)
-- Network access from the OpenSRE environment to the Kafka brokers
+- Network access from the OpenSore environment to the Kafka brokers
 
 ## Setup
 
 ### Option 1: Interactive CLI
 
 ```bash
-opensre integrations setup
+opensore integrations setup
 ```
 
 Select **Kafka** when prompted and provide your bootstrap servers.
@@ -84,7 +84,7 @@ KAFKA_SASL_PASSWORD=your-api-secret
 
 ## Investigation tools
 
-When OpenSRE investigates a Kafka-related alert, two diagnostic tools are available:
+When OpenSore investigates a Kafka-related alert, two diagnostic tools are available:
 
 - **Topic health** — lists topic partition metadata: leader, replicas, ISR status, and under-replicated partitions
 - **Consumer group lag** — retrieves committed offsets vs high watermarks per partition for a specific consumer group
@@ -94,7 +94,7 @@ All operations are read-only.
 ## Verify
 
 ```bash
-opensre integrations verify kafka
+opensore integrations verify kafka
 ```
 
 Expected output:

@@ -18,7 +18,7 @@ from app.cli.interactive_shell.alert_inbox import (
     IncomingAlert,
     start_alert_listener,
 )
-from app.cli.support.errors import OpenSREError
+from app.cli.support.errors import OpenSoreError
 
 # A Content-Length value guaranteed to trip the listener's pre-auth
 # body cap. Computed from the cap itself so the constant can't drift
@@ -336,7 +336,7 @@ class TestHttpListener:
             sock.close()
 
     def test_bind_non_loopback_without_token_raises(self) -> None:
-        with pytest.raises(OpenSREError, match="non-loopback"):
+        with pytest.raises(OpenSoreError, match="non-loopback"):
             start_alert_listener(AlertInbox(), host="0.0.0.0", port=0, token=None)
 
     def test_unauthorized_post_with_large_body_returns_clean_401(self) -> None:

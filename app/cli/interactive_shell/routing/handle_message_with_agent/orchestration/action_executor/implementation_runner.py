@@ -73,10 +73,10 @@ def _is_context_dependent_implementation_request(request: str) -> bool:
 def _build_claude_code_implementation_prompt(request: str, session: ReplSession) -> str:
     context = _recent_cli_agent_context(session)
     context_block = (
-        f"--- Recent OpenSRE terminal assistant context ---\n{context}\n\n" if context else ""
+        f"--- Recent OpenSore terminal assistant context ---\n{context}\n\n" if context else ""
     )
     return (
-        "You are Claude Code working in the current OpenSRE repository.\n\n"
+        "You are Claude Code working in the current OpenSore repository.\n\n"
         f"{context_block}"
         f"--- User implementation request ---\n{request.strip()}\n\n"
         "--- Rules ---\n"

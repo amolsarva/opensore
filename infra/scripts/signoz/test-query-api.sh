@@ -22,7 +22,7 @@ if [[ -z "${SIGNOZ_API_KEY:-}" ]]; then
 fi
 
 echo "==> Verifying integration"
-uv run opensre integrations verify signoz
+uv run opensore integrations verify signoz
 
 echo ""
 echo "==> Query API smoke (logs, metrics, traces)"

@@ -342,12 +342,12 @@ def test_run_interactive_picker_writes_selection_for_background_mode(monkeypatch
         kind="cli_command",
         display_name="001-replication-lag",
         description="Run synthetic scenario.",
-        command=("opensre", "tests", "synthetic", "--scenario", "001-replication-lag"),
+        command=("opensore", "tests", "synthetic", "--scenario", "001-replication-lag"),
         tags=("synthetic",),
     )
     selection_file = tmp_path / "selection.json"
 
-    monkeypatch.setenv("OPENSRE_TEST_PICKER_SELECTION_FILE", str(selection_file))
+    monkeypatch.setenv("OPENSORE_TEST_PICKER_SELECTION_FILE", str(selection_file))
     monkeypatch.setattr(interactive, "_require_interactive_dependencies", lambda: None)
     monkeypatch.setattr(interactive.sys, "stdin", SimpleNamespace(isatty=lambda: True))
     monkeypatch.setattr(interactive.sys, "stdout", SimpleNamespace(isatty=lambda: True))
@@ -364,8 +364,8 @@ def test_run_interactive_picker_writes_selection_for_background_mode(monkeypatch
         {
             "id": "synthetic:001-replication-lag",
             "display_name": "001-replication-lag",
-            "command": ["opensre", "tests", "synthetic", "--scenario", "001-replication-lag"],
-            "command_display": "opensre tests synthetic --scenario 001-replication-lag",
+            "command": ["opensore", "tests", "synthetic", "--scenario", "001-replication-lag"],
+            "command_display": "opensore tests synthetic --scenario 001-replication-lag",
         }
     ]
 

@@ -12,7 +12,7 @@ from tests.tools.conftest import BaseToolContract
 
 
 def _registered_tool() -> Any:
-    return cast(Any, get_bitbucket_file_contents).__opensre_registered_tool__
+    return cast(Any, get_bitbucket_file_contents).__opensore_registered_tool__
 
 
 class TestBitbucketFileContentsToolContract(BaseToolContract):

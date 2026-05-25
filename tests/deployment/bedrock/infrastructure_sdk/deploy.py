@@ -4,7 +4,7 @@
 Creates:
 - 1 IAM role with bedrock.amazonaws.com trust
 - 1 Bedrock Agent with foundation model
-- 1 Action group (RETURN_CONTROL) with OpenSRE tool definitions
+- 1 Action group (RETURN_CONTROL) with OpenSore tool definitions
 - 1 Agent alias for invocation
 """
 
@@ -28,7 +28,7 @@ REGION = "us-east-1"
 
 
 def deploy() -> dict[str, str]:
-    """Deploy a Bedrock Agent with OpenSRE tool action groups.
+    """Deploy a Bedrock Agent with OpenSore tool action groups.
 
     Returns:
         Dict of output values (agentId, aliasId, roleName, etc.).

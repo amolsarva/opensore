@@ -1,6 +1,6 @@
 # Security Policy
 
-OpenSRE is designed for security-sensitive compute environments. We prioritize transparency, least privilege, and minimizing data exposure.
+OpenSore is designed for security-sensitive compute environments. We prioritize transparency, least privilege, and minimizing data exposure.
 
 ## Trust Center
 
@@ -14,7 +14,7 @@ If you believe you’ve found a security vulnerability in Tracer, please report 
 
 **Please do not open a public GitHub issue** for security vulnerabilities.
 
-Email: support@opensre.com
+Email: support@opensore.com
 
 ### What to include
 
@@ -34,6 +34,6 @@ Please avoid public disclosure until we’ve had a reasonable opportunity to inv
 
 If you need product help or documentation, use:
 
-- Docs: https://opensre.com/docs
-- Book a demo: https://opensre.com
-- Email: support@opensre.com
+- Docs: https://opensore.com/docs
+- Book a demo: https://opensore.com
+- Email: support@opensore.com

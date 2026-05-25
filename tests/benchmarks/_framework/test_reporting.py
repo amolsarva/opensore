@@ -29,21 +29,21 @@ def _write_report_json(run_dir: Path) -> dict:
         "ended_at": "2026-01-01T00:05:00+00:00",
         "per_stratum": {
             "all": {
-                "opensre+llm/claude_sonnet": {"a1": 0.65, "grounding": 0.80},
-                "opensre+llm/gpt_4o": {"a1": 0.52, "grounding": 0.71},
+                "opensore+llm/claude_sonnet": {"a1": 0.65, "grounding": 0.80},
+                "opensore+llm/gpt_4o": {"a1": 0.52, "grounding": 0.71},
             },
             "seen-shape": {
-                "opensre+llm/claude_sonnet": {"a1": 0.78, "grounding": 0.85},
+                "opensore+llm/claude_sonnet": {"a1": 0.78, "grounding": 0.85},
             },
             "unseen-shape": {
-                "opensre+llm/claude_sonnet": {"a1": 0.45, "grounding": 0.70},
+                "opensore+llm/claude_sonnet": {"a1": 0.45, "grounding": 0.70},
             },
         },
         "reported_metrics": ["a1", "grounding"],
         "pre_registration_path": str(run_dir / "prereg.md"),
         "raw_artifacts_dir": str(cases_dir),
-        "negative_results": "On unseen-shape, opensre tied LLM-alone on 3/10 cases.",
-        "coi_disclosure": "Built and run by the opensre team. <test fixture>.",
+        "negative_results": "On unseen-shape, opensore tied LLM-alone on 3/10 cases.",
+        "coi_disclosure": "Built and run by the opensore team. <test fixture>.",
         "cost": {
             "budget_usd": 100.0,
             "total_cost_usd": 12.34,
@@ -72,13 +72,13 @@ def _write_report_json(run_dir: Path) -> dict:
     # One per-case artifact, exercising the case-loading branch
     cell = {
         "case_id": "case-001",
-        "mode": "opensre+llm",
+        "mode": "opensore+llm",
         "llm": "claude_sonnet",
         "run_index": 0,
         "metrics": {"a1": 1.0, "grounding": 0.9},
         "ok": True,
     }
-    (cases_dir / "case-001__opensre+llm__claude_sonnet__0.json").write_text(json.dumps(cell))
+    (cases_dir / "case-001__opensore+llm__claude_sonnet__0.json").write_text(json.dumps(cell))
     return report
 
 
@@ -147,7 +147,7 @@ def test_markdown_contains_negative_results_verbatim(tmp_path: Path) -> None:
     _write_report_json(tmp_path)
     out = render_report_dir(tmp_path, formats=["markdown"])
     md = out["markdown"].read_text()
-    assert "On unseen-shape, opensre tied LLM-alone on 3/10 cases." in md
+    assert "On unseen-shape, opensore tied LLM-alone on 3/10 cases." in md
 
 
 def test_markdown_contains_cost_breakdown(tmp_path: Path) -> None:

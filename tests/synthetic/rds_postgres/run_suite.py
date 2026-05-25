@@ -100,7 +100,7 @@ def run_investigation(
     *,
     resolved_integrations: dict[str, Any] | None = None,
     openclaw_context: dict[str, Any] | None = None,
-    opensre_evaluate: bool = False,
+    opensore_evaluate: bool = False,
 ) -> Any:
     """Lazy-import ``app.pipeline.runners.run_investigation`` (keeps monkeypatch target stable)."""
     from app.pipeline.runners import run_investigation as _impl
@@ -109,7 +109,7 @@ def run_investigation(
         raw_alert,
         resolved_integrations=resolved_integrations,
         openclaw_context=openclaw_context,
-        opensre_evaluate=opensre_evaluate,
+        opensore_evaluate=opensore_evaluate,
     )
 
 

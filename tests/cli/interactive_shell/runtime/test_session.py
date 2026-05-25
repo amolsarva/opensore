@@ -87,10 +87,10 @@ class TestReplSession:
         monkeypatch: pytest.MonkeyPatch,
     ) -> None:
         session = ReplSession()
-        monkeypatch.setattr(const_module, "OPENSRE_HOME_DIR", tmp_path)
+        monkeypatch.setattr(const_module, "OPENSORE_HOME_DIR", tmp_path)
         session.task_registry = TaskRegistry.persistent()
         task = session.task_registry.create(
-            TaskKind.SYNTHETIC_TEST, command="opensre tests synthetic"
+            TaskKind.SYNTHETIC_TEST, command="opensore tests synthetic"
         )
         task.mark_running()
 

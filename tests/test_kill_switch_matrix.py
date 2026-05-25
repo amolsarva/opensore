@@ -4,10 +4,10 @@ The README and `init_sentry` docstring promise:
 
 | Env var                          | PostHog  | Sentry   |
 | -------------------------------- | -------- | -------- |
-| `OPENSRE_NO_TELEMETRY=1`         | disabled | disabled |
+| `OPENSORE_NO_TELEMETRY=1`         | disabled | disabled |
 | `DO_NOT_TRACK=1`                 | disabled | disabled |
-| `OPENSRE_ANALYTICS_DISABLED=1`   | disabled | enabled  |
-| `OPENSRE_SENTRY_DISABLED=1`      | enabled  | disabled |
+| `OPENSORE_ANALYTICS_DISABLED=1`   | disabled | enabled  |
+| `OPENSORE_SENTRY_DISABLED=1`      | enabled  | disabled |
 
 These tests pin the table so a future refactor cannot silently re-route or
 drop one of the flags.
@@ -25,10 +25,10 @@ from app.analytics import provider
 from app.utils import sentry_sdk as sentry_mod
 
 _ENV_VARS = (
-    "OPENSRE_NO_TELEMETRY",
+    "OPENSORE_NO_TELEMETRY",
     "DO_NOT_TRACK",
-    "OPENSRE_ANALYTICS_DISABLED",
-    "OPENSRE_SENTRY_DISABLED",
+    "OPENSORE_ANALYTICS_DISABLED",
+    "OPENSORE_SENTRY_DISABLED",
 )
 
 
@@ -57,10 +57,10 @@ def _sentry_init_call_count(monkeypatch: pytest.MonkeyPatch) -> int:
 @pytest.mark.parametrize(
     ("env_var", "posthog_disabled", "sentry_disabled"),
     [
-        ("OPENSRE_NO_TELEMETRY", True, True),
+        ("OPENSORE_NO_TELEMETRY", True, True),
         ("DO_NOT_TRACK", True, True),
-        ("OPENSRE_ANALYTICS_DISABLED", True, False),
-        ("OPENSRE_SENTRY_DISABLED", False, True),
+        ("OPENSORE_ANALYTICS_DISABLED", True, False),
+        ("OPENSORE_SENTRY_DISABLED", False, True),
     ],
 )
 def test_kill_switch_matrix(

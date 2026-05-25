@@ -14,7 +14,7 @@ SKIP_DIRS = {
     "build",
     "htmlcov",
     "node_modules",
-    "opensre.egg-info",
+    "opensore.egg-info",
     "plans",
     "tasks",
 }

@@ -54,9 +54,9 @@ _HINT = f"  {_D}↑↓ / j k  ·  Space/Enter  ·  Esc to skip{_R}"
 
 
 def _config_dir() -> Path:
-    from app.constants import OPENSRE_HOME_DIR
+    from app.constants import OPENSORE_HOME_DIR
 
-    return OPENSRE_HOME_DIR
+    return OPENSORE_HOME_DIR
 
 
 def _feedback_path() -> Path:
@@ -378,7 +378,7 @@ def prompt_investigation_feedback(
 ) -> None:
     """Prompt for RCA accuracy feedback; never raises.
 
-    Stores each response to ``~/.config/opensre/feedback.jsonl`` and emits
+    Stores each response to ``~/.config/opensore/feedback.jsonl`` and emits
     ``investigation_feedback_submitted`` to PostHog with investigation
     provenance (run_id, alert_name, validity_score, root_cause_category, …)
     and user context (user_id, user_email, org_id when available on

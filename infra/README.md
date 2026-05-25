@@ -1,6 +1,6 @@
 # `infra/`
 
-Infrastructure code for opensre. Most subdirectories are scoped to a single
+Infrastructure code for opensore. Most subdirectories are scoped to a single
 workstream; if you're looking for the bench environment specifically, jump to
 [`infra/bench/`](bench/).
 
@@ -11,7 +11,7 @@ workstream; if you're looking for the bench environment specifically, jump to
 | [`bench/`](bench/) | Terraform module for the **Cloud-OpsBench Phase 1** environment on AWS Fargate. Provisions ECR, ECS, IAM, S3, Secrets Manager, CloudWatch. Triggered from GitHub Actions. |
 | [`scripts/`](scripts/) | One-time bootstrap scripts (e.g. [`bootstrap-bench-state.sh`](scripts/bootstrap-bench-state.sh) for the Terraform state backend). |
 | `docker-compose.*.yml` | Local development environments (database, RabbitMQ, testing). Not related to the AWS bench infra. |
-| `install-proxy/`, `opensre-dataset/` | Other infra utilities (unrelated to bench). |
+| `install-proxy/`, `opensore-dataset/` | Other infra utilities (unrelated to bench). |
 
 ## Cloud-OpsBench infrastructure — resources system design
 
@@ -36,7 +36,7 @@ The bench env provisions a small, focused set of AWS resources. Every resource i
 │ Storage & Observability                                          │
 │ ┌──────────────┐ ┌────────────────┐ ┌────────────────┐          │
 │ │ Secrets Mgr  │ │ S3 results     │ │ CloudWatch     │          │
-│ │ × 4 keys     │ │ versioned      │ │ /ecs/opensre-  │          │
+│ │ × 4 keys     │ │ versioned      │ │ /ecs/opensore-  │          │
 │ └──────────────┘ └────────────────┘ │ bench (30d)    │          │
 │                                      └────────────────┘          │
 │                                                                  │
@@ -47,13 +47,13 @@ The bench env provisions a small, focused set of AWS resources. Every resource i
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-For the full system design — component breakdown, data flows, security model, design decisions, alternatives considered — see [`../opensre-notes/bench-infra-system-design.md`](../../opensre-notes/bench-infra-system-design.md) (outside the repo, per the team's design-doc convention). For an HTML diagram you can open in a browser: [`../opensre-notes/bench-infra-aws-resources.html`](../../opensre-notes/bench-infra-aws-resources.html).
+For the full system design — component breakdown, data flows, security model, design decisions, alternatives considered — see [`../opensore-notes/bench-infra-system-design.md`](../../opensore-notes/bench-infra-system-design.md) (outside the repo, per the team's design-doc convention). For an HTML diagram you can open in a browser: [`../opensore-notes/bench-infra-aws-resources.html`](../../opensore-notes/bench-infra-aws-resources.html).
 
 **4 secrets in Secrets Manager** (LLM API keys + HF token; values seeded out-of-band):
-- `opensre-bench/llm/anthropic_api_key` (Claude)
-- `opensre-bench/llm/openai_api_key` (GPT-4o, GPT-5)
-- `opensre-bench/llm/deepseek_api_key` (DeepSeek-V3.2)
-- `opensre-bench/llm/hf_token` (Hugging Face dataset download)
+- `opensore-bench/llm/anthropic_api_key` (Claude)
+- `opensore-bench/llm/openai_api_key` (GPT-4o, GPT-5)
+- `opensore-bench/llm/deepseek_api_key` (DeepSeek-V3.2)
+- `opensore-bench/llm/hf_token` (Hugging Face dataset download)
 
 **Idle cost:** ~$2/month (Secrets Manager dominates; everything else trivial when no task running).
 **Per-run cost:** dominated by LLM API spend (~$1-1.5K for a full Phase 1 grid); Fargate + storage + logs are <$15 of that.
@@ -78,11 +78,11 @@ The credentials need read access to AWS resources for plan-time introspection (S
 A separate workflow (`.github/workflows/bench.yml`, to land when the Dockerfile does) will:
 
 1. Authenticate with AWS via **GitHub OIDC** (no long-lived credentials)
-2. Assume the `opensre-bench-github-actions` IAM role provisioned in [`iam_oidc.tf`](bench/iam_oidc.tf)
+2. Assume the `opensore-bench-github-actions` IAM role provisioned in [`iam_oidc.tf`](bench/iam_oidc.tf)
 3. Call `aws ecs run-task` to launch a one-off Fargate task
 4. Poll task status; on completion, sync `s3://tracer-cloud-bench-results/runs/<id>/` and upload as workflow artifact
 
-The OIDC role's trust policy is scoped to `repo:Tracer-Cloud/opensre:*`. Tighten to a specific branch or environment for production runs — hint comment in [`iam_oidc.tf`](bench/iam_oidc.tf).
+The OIDC role's trust policy is scoped to `repo:Tracer-Cloud/opensore:*`. Tighten to a specific branch or environment for production runs — hint comment in [`iam_oidc.tf`](bench/iam_oidc.tf).
 
 ### GitHub repository secrets required
 
@@ -99,20 +99,20 @@ The team uses Grafana Cloud for observability. The bench environment integrates 
 
 ### How it works
 
-- Bench logs → CloudWatch (`/ecs/opensre-bench`, 30-day retention). Standard ECS-native `awslogs` driver.
+- Bench logs → CloudWatch (`/ecs/opensore-bench`, 30-day retention). Standard ECS-native `awslogs` driver.
 - Grafana Cloud's web UI is configured (out-of-band) with a CloudWatch data source pointed at this AWS account.
 - The team queries bench logs through their existing Grafana dashboards using LogQL.
 
 ### Setting it up (one-time, Grafana side only)
 
 1. Grafana Cloud → **Connections** → **Add new connection** → **Amazon CloudWatch**
-2. Configure with an AWS access key/role that has read access to `/ecs/opensre-bench`:
+2. Configure with an AWS access key/role that has read access to `/ecs/opensore-bench`:
    - `logs:GetLogEvents`
    - `logs:DescribeLogGroups`
    - `logs:DescribeLogStreams`
    - `logs:StartQuery`, `logs:GetQueryResults` (for Insights queries)
 3. Save the data source
-4. Create a dashboard or use **Explore** with the new data source selected → set the log group to `/ecs/opensre-bench`
+4. Create a dashboard or use **Explore** with the new data source selected → set the log group to `/ecs/opensore-bench`
 
 That's it. No Terraform change in this repo, no new secrets, no sidecar.
 

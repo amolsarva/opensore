@@ -106,7 +106,7 @@ def render_integrations_table(console: Console, results: list[dict[str, str]]) -
     ]
     if not rows:
         repl_print(
-            console, f"[{DIM}]no integrations configured.  try `opensre onboard` to add one.[/]"
+            console, f"[{DIM}]no integrations configured.  try `opensore onboard` to add one.[/]"
         )
         return
     width = _prepare_tty_for_rich(console)
@@ -187,7 +187,7 @@ def print_planned_actions(console: Console, actions: list[PlannedAction]) -> Non
             "slash": "command",
             "synthetic_test": "synthetic test",
             "task_cancel": "cancel task",
-            "cli_command": "opensre",
+            "cli_command": "opensore",
             "implementation": "implementation",
             "assistant_handoff": "assistant handoff",
         }[action.kind]

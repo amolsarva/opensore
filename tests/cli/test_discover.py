@@ -99,10 +99,10 @@ def test_discover_make_targets_applies_comment_and_metadata(
 # ---------------------------------------------------------------------------
 # Bundled-binary degradation (regression for #1078)
 #
-# ``packaging/opensre.spec`` collects only ``app/`` data files, so at runtime
-# in a PyInstaller-bundled ``opensre`` binary the ``tests/`` tree, ``Makefile``,
+# ``packaging/opensore.spec`` collects only ``app/`` data files, so at runtime
+# in a PyInstaller-bundled ``opensore`` binary the ``tests/`` tree, ``Makefile``,
 # and ``tests/e2e/rca`` directory are absent. Each ``discover_*`` helper must
-# return cleanly so ``opensre tests`` and ``opensre tests list`` keep working
+# return cleanly so ``opensore tests`` and ``opensore tests list`` keep working
 # against whatever data files *are* bundled, instead of crashing with
 # ``FileNotFoundError`` from a raw ``iterdir()`` / ``read_text()`` call.
 # ---------------------------------------------------------------------------

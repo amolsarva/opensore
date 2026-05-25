@@ -80,11 +80,11 @@ _CONSUMER_GROUP_ZERO_LAG_RESPONSE = {
 
 class TestKafkaConsumerGroupToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return get_kafka_consumer_group_lag.__opensre_registered_tool__
+        return get_kafka_consumer_group_lag.__opensore_registered_tool__
 
 
 def test_metadata() -> None:
-    rt = get_kafka_consumer_group_lag.__opensre_registered_tool__
+    rt = get_kafka_consumer_group_lag.__opensore_registered_tool__
     assert rt.name == "get_kafka_consumer_group_lag"
     assert rt.source == "kafka"
     assert "investigation" in rt.surfaces
@@ -98,7 +98,7 @@ def test_metadata() -> None:
 
 class TestKafkaConsumerGroupIsAvailable:
     def _rt(self):
-        return get_kafka_consumer_group_lag.__opensre_registered_tool__
+        return get_kafka_consumer_group_lag.__opensore_registered_tool__
 
     def test_true_when_connection_verified(self) -> None:
         assert self._rt().is_available({"kafka": {"connection_verified": True}}) is True
@@ -123,7 +123,7 @@ class TestKafkaConsumerGroupIsAvailable:
 
 class TestKafkaConsumerGroupExtractParams:
     def _rt(self):
-        return get_kafka_consumer_group_lag.__opensre_registered_tool__
+        return get_kafka_consumer_group_lag.__opensore_registered_tool__
 
     def test_extracts_all_connection_fields(self) -> None:
         params = self._rt().extract_params(_KAFKA_SOURCES)

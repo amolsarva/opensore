@@ -498,7 +498,7 @@ def _diagnose_streaming_events() -> Iterator[StreamEvent]:
         "diagnose",
         {
             "name": "diagnose",
-            "data": {"chunk": {"content": "OpenSRE "}},
+            "data": {"chunk": {"content": "OpenSore "}},
             "metadata": {"pipeline_node": "diagnose"},
         },
         kind="on_chat_model_stream",
@@ -572,7 +572,7 @@ class TestStreamRendererDiagnoseStreaming:
         out, _ = capfd.readouterr()
         # Tokens are visible verbatim — not truncated to the 60-char preview
         # the spinner subtext path would use.
-        assert "OpenSRE identified the schema mismatch." in out
+        assert "OpenSore identified the schema mismatch." in out
         # The resolved-dot line uses the canonical node name and timing.
         assert "diagnose_root_cause" in out
 

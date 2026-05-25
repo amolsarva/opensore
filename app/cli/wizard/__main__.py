@@ -1,4 +1,4 @@
-"""Run the OpenSRE quickstart wizard."""
+"""Run the OpenSore quickstart wizard."""
 
 from __future__ import annotations
 

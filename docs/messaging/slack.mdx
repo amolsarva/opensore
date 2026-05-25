@@ -17,7 +17,7 @@ The Slack integration delivers investigation findings to a Slack channel using a
 ## Step 1: Create a Slack incoming webhook
 
 1. Visit [https://api.slack.com/apps](https://api.slack.com/apps) and click **Create New App → From scratch**.
-2. Name the app (e.g. `OpenSRE`) and pick your workspace.
+2. Name the app (e.g. `OpenSore`) and pick your workspace.
 3. In the left sidebar, open **Incoming Webhooks** and toggle the feature **On**.
 4. Click **Add New Webhook to Workspace**.
 5. Pick the channel where findings should be posted and click **Allow**.
@@ -33,32 +33,32 @@ Treat this URL like a password — anyone holding it can post to your channel. I
 
 ---
 
-## Step 2: Configure the integration in OpenSRE
+## Step 2: Configure the integration in OpenSore
 
 You have two equivalent paths:
 
 <Tabs>
   <Tab title="Direct setup command (recommended)">
     ```bash
-    opensre integrations setup slack
+    opensore integrations setup slack
     ```
-    Paste the webhook URL when prompted. The credentials are persisted to `~/.config/opensre/integrations.json`.
+    Paste the webhook URL when prompted. The credentials are persisted to `~/.config/opensore/integrations.json`.
   </Tab>
   <Tab title="Manual env var">
     Add to `.env`:
     ```bash
     SLACK_WEBHOOK_URL=https://hooks.slack.com/services/<workspace-id>/<binding-id>/<secret>
     ```
-    OpenSRE reads this at startup as a fallback when no Slack entry exists in `~/.config/opensre/integrations.json`. If you have previously run `opensre integrations setup slack`, remove that entry first (`opensre integrations remove slack`) or the env var will be ignored.
+    OpenSore reads this at startup as a fallback when no Slack entry exists in `~/.config/opensore/integrations.json`. If you have previously run `opensore integrations setup slack`, remove that entry first (`opensore integrations remove slack`) or the env var will be ignored.
   </Tab>
   <Tab title="Onboarding wizard">
     ```bash
-    opensre onboard
+    opensore onboard
     ```
     Select **Slack** and paste your webhook URL. The wizard validates the URL via a probe request.
 
     <Note>
-    The wizard's Slack step currently validates the URL but does not persist it. After the wizard completes, run `opensre integrations setup slack` (or set `SLACK_WEBHOOK_URL` in `.env`) so the credentials are saved.
+    The wizard's Slack step currently validates the URL but does not persist it. After the wizard completes, run `opensore integrations setup slack` (or set `SLACK_WEBHOOK_URL` in `.env`) so the credentials are saved.
     </Note>
   </Tab>
 </Tabs>
@@ -68,13 +68,13 @@ You have two equivalent paths:
 ## Step 3: Verify
 
 ```bash
-opensre integrations verify slack
+opensore integrations verify slack
 ```
 
 A successful run reports the integration as `passed` — but this only confirms the webhook URL is configured. It does **not** post anything to Slack. To also confirm delivery actually works, add the `--send-slack-test` flag:
 
 ```bash
-opensre integrations verify slack --send-slack-test
+opensore integrations verify slack --send-slack-test
 ```
 
 This posts a small test message to the configured channel. Expected failure modes are listed below.
@@ -82,7 +82,7 @@ This posts a small test message to the configured channel. Expected failure mode
 You can also trigger a real investigation against a bundled fixture:
 
 ```bash
-opensre investigate --input tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json
+opensore investigate --input tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json
 ```
 
 Findings should appear in the configured channel.
@@ -99,7 +99,7 @@ Findings should appear in the configured channel.
 
 ## Troubleshooting
 
-**`error: webhook_url is required.` from `opensre integrations setup slack`**
+**`error: webhook_url is required.` from `opensore integrations setup slack`**
 
 The setup command was given an empty value. Re-run and paste the full URL including the `https://` prefix.
 

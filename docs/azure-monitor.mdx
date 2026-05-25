@@ -1,16 +1,16 @@
 ---
 title: "Azure Monitor"
-description: "Connect Azure Monitor Log Analytics so OpenSRE can pull KQL log evidence during investigations"
+description: "Connect Azure Monitor Log Analytics so OpenSore can pull KQL log evidence during investigations"
 ---
 
-OpenSRE queries Azure Monitor Log Analytics through the public Query REST API to surface relevant logs during alert investigations. Each query is bounded by a `take` clause so result sets stay capped at a safe row limit.
+OpenSore queries Azure Monitor Log Analytics through the public Query REST API to surface relevant logs during alert investigations. Each query is bounded by a `take` clause so result sets stay capped at a safe row limit.
 
 ## Prerequisites
 
 - Azure subscription with at least one **Log Analytics Workspace** collecting logs
 - A **Microsoft Entra ID (Azure AD) app registration** authorized to query the workspace
 - The **Log Analytics Reader** role granted on the workspace (or its resource group / subscription) to the app's service principal
-- Network access from the OpenSRE environment to `https://api.loganalytics.io` (or the sovereign cloud equivalent) over HTTPS
+- Network access from the OpenSore environment to `https://api.loganalytics.io` (or the sovereign cloud equivalent) over HTTPS
 
 ## Setup
 
@@ -34,11 +34,11 @@ AZURE_MAX_RESULTS=100                          # optional, capped at 200
 | `AZURE_LOG_ANALYTICS_ENDPOINT` | `https://api.loganalytics.io` | Override for sovereign clouds (e.g. `https://api.loganalytics.azure.us` for Azure Government) |
 | `AZURE_TENANT_ID` | — | Microsoft Entra ID tenant ID (informational; useful for multi-tenant audits) |
 | `AZURE_SUBSCRIPTION_ID` | — | Azure subscription ID (informational) |
-| `AZURE_MAX_RESULTS` | `100` | Per-query row cap; OpenSRE clamps to a hard maximum of `200` |
+| `AZURE_MAX_RESULTS` | `100` | Per-query row cap; OpenSore clamps to a hard maximum of `200` |
 
 ### Option 2: Persistent store
 
-Credentials are persisted to `~/.config/opensre/integrations.json` with `0o600` permissions:
+Credentials are persisted to `~/.config/opensore/integrations.json` with `0o600` permissions:
 
 ```json
 {
@@ -71,7 +71,7 @@ Credentials are persisted to `~/.config/opensre/integrations.json` with `0o600` 
 ### 2. Register an Azure AD application
 
 1. Open **Microsoft Entra ID** → **App registrations** → **New registration**.
-2. Give the app a name (e.g. `opensre-log-analytics`) and register it as a single-tenant app.
+2. Give the app a name (e.g. `opensore-log-analytics`) and register it as a single-tenant app.
 3. From the app's **Overview** page, copy the **Application (client) ID** and the **Directory (tenant) ID**.
 4. Open **Certificates & secrets** → **New client secret**, copy the **secret value** (it is shown only once).
 
@@ -97,7 +97,7 @@ Set the resulting token as `AZURE_LOG_ANALYTICS_TOKEN`. Tokens expire (usually a
 
 ## Investigation tool
 
-OpenSRE exposes one tool against an Azure Monitor workspace:
+OpenSore exposes one tool against an Azure Monitor workspace:
 
 ### `query_azure_monitor_logs`
 
@@ -105,16 +105,16 @@ OpenSRE exposes one tool against an Azure Monitor workspace:
 
 Arguments the planner supplies:
 
-- **`query`** — KQL query text. If omitted, OpenSRE falls back to `AppTraces | order by TimeGenerated desc | take <limit>`.
+- **`query`** — KQL query text. If omitted, OpenSore falls back to `AppTraces | order by TimeGenerated desc | take <limit>`.
 - **`time_range_minutes`** — sent as the `timespan` (`PT<N>M`); defaults to `60`.
 - **`limit`** — per-query row cap; defaults to `50` and is clamped to `max_results` (hard limit `200`).
 
-OpenSRE always appends a `| take <limit>` clause to the query if one is not present, so the workspace never returns more rows than the configured cap.
+OpenSore always appends a `| take <limit>` clause to the query if one is not present, so the workspace never returns more rows than the configured cap.
 
 ## Verify
 
 ```bash
-opensre integrations verify azure
+opensore integrations verify azure
 ```
 
 Expected output:
@@ -124,7 +124,7 @@ SERVICE   SOURCE      STATUS   DETAIL
 azure     local env   passed   Azure Log Analytics credentials are configured for workspace 00000000-0000-0000-0000-000000000000 at https://api.loganalytics.io
 ```
 
-The verify step is a credential-shape check — it does not call the workspace. To exercise the live path, point OpenSRE at a synthetic alert that names `azure` as the source and inspect the resulting evidence.
+The verify step is a credential-shape check — it does not call the workspace. To exercise the live path, point OpenSore at a synthetic alert that names `azure` as the source and inspect the resulting evidence.
 
 ## Example KQL queries
 
@@ -171,8 +171,8 @@ AppDependencies
 
 ## Security best practices
 
-- Use a **dedicated app registration** for OpenSRE — do not reuse a personal token or a broadly-scoped service principal.
-- Grant only **Log Analytics Reader** on the workspace; OpenSRE only needs read access to query data.
+- Use a **dedicated app registration** for OpenSore — do not reuse a personal token or a broadly-scoped service principal.
+- Grant only **Log Analytics Reader** on the workspace; OpenSore only needs read access to query data.
 - Keep the client secret out of source control — store it in `.env` or in a secret manager and only export it long enough to mint a token.
 - **Rotate the bearer token** before its 60-minute expiry. Long-lived deployments should re-mint the token from the client secret on a schedule rather than pasting a static token into `.env`.
-- The integration is **read-only**: OpenSRE only issues `POST /v1/workspaces/<id>/query` requests with a `take`-bounded KQL string.
+- The integration is **read-only**: OpenSore only issues `POST /v1/workspaces/<id>/query` requests with a `take`-bounded KQL string.

@@ -3,14 +3,14 @@ title: "AWS RDS"
 description: "Investigate AWS RDS instance health and recent events during incidents"
 ---
 
-OpenSRE uses AWS RDS to investigate database instance health and surface recent operational events — failovers, maintenance windows, parameter changes, and backup activity — when an alert fires against a managed RDS database.
+OpenSore uses AWS RDS to investigate database instance health and surface recent operational events — failovers, maintenance windows, parameter changes, and backup activity — when an alert fires against a managed RDS database.
 
 All RDS API calls are read-only and routed through the shared `aws_sdk_client` allowlist, so the integration cannot mutate your RDS resources.
 
 ## Prerequisites
 
 - AWS credentials configured per the [AWS integration](/aws) (role ARN recommended)
-- An RDS DB instance you want OpenSRE to investigate
+- An RDS DB instance you want OpenSore to investigate
 - IAM permissions for the two RDS describe actions listed below
 
 ## Setup
@@ -24,7 +24,7 @@ AWS_REGION=us-east-1
 
 | Variable | Default | Description |
 | --- | --- | --- |
-| `RDS_DB_INSTANCE_IDENTIFIER` | — | Required. The DB instance identifier OpenSRE should investigate. |
+| `RDS_DB_INSTANCE_IDENTIFIER` | — | Required. The DB instance identifier OpenSore should investigate. |
 | `AWS_REGION` | `us-east-1` | AWS region the instance lives in. Used by both the integration config and per-tool param extraction. |
 | `RDS_REGION` | `us-east-1` | Fallback used only when `AWS_REGION` is not set. |
 
@@ -82,7 +82,7 @@ Both tools become available to the planner whenever `rds.db_instance_identifier`
 
 ## Upstream correlation validation
 
-OpenSRE also includes a deterministic upstream-correlation smoke validation path for no-trace-ID RDS CPU spike investigations.
+OpenSore also includes a deterministic upstream-correlation smoke validation path for no-trace-ID RDS CPU spike investigations.
 
 This allows validating correlation output locally without requiring live Datadog credentials or full LLM investigation setup.
 
@@ -91,7 +91,7 @@ This allows validating correlation output locally without requiring live Datadog
 Run:
 
 ```bash
-opensre tests upstream-correlation-smoke
+opensore tests upstream-correlation-smoke
 ```
 
 Expected output includes separate sections for:
@@ -115,7 +115,7 @@ Most likely causal driver(s):
 For machine-readable output:
 
 ```bash
-opensre tests upstream-correlation-smoke --json
+opensore tests upstream-correlation-smoke --json
 ```
 
 ### Live investigation validation
@@ -137,7 +137,7 @@ Recommended alert fields:
 Then run a live investigation:
 
 ```bash
-opensre investigate
+opensore investigate
 ```
 
 When runtime evidence is available, the final report includes:

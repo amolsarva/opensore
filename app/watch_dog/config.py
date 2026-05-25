@@ -71,7 +71,7 @@ def parse_byte_size(value: int | float | str) -> int:
 
 
 class WatchdogConfig(StrictConfigModel):
-    """Validated configuration for ``opensre watchdog``."""
+    """Validated configuration for ``opensore watchdog``."""
 
     pid: int | None = Field(default=None, ge=1)
     name: str | None = None

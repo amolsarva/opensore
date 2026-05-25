@@ -12,7 +12,7 @@ _DEMO_ALERT_FILENAME = "alert.json"
 
 
 def bundled_demo_alert_path() -> Path | None:
-    """Return the packaged demo alert used by ``opensre investigate -i alert.json``."""
+    """Return the packaged demo alert used by ``opensore investigate -i alert.json``."""
     candidate = Path(__file__).resolve().parents[1] / "fixtures" / _DEMO_ALERT_FILENAME
     if candidate.is_file():
         return candidate

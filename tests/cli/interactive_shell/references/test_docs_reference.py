@@ -42,26 +42,26 @@ def _seed_docs(root: Path) -> None:
         '---\ntitle: "Datadog"\n---\n\n'
         "### Step 1: Create API Key\n\n"
         "In Datadog, create an API Key under organizational settings.\n\n"
-        "### Step 2: Configure OpenSRE\n\n"
+        "### Step 2: Configure OpenSore\n\n"
         "Set DD_API_KEY and DD_APP_KEY in your environment.\n",
     )
     _write_doc(
         root,
         "deployment.mdx",
         '---\ntitle: "Deployment"\n---\n\n'
-        "OpenSRE can deploy to Railway or EC2.\n\n"
-        "Use `opensre remote` to connect to a deployed agent.\n",
+        "OpenSore can deploy to Railway or EC2.\n\n"
+        "Use `opensore remote` to connect to a deployed agent.\n",
     )
     _write_doc(
         root,
         "quickstart.mdx",
-        '---\ntitle: "Quickstart"\n---\n\nInstall OpenSRE and run your first investigation.\n',
+        '---\ntitle: "Quickstart"\n---\n\nInstall OpenSore and run your first investigation.\n',
     )
     _write_doc(
         root,
         "tutorials/investigating-task-failures.mdx",
         "# Investigating task failures\n\n"
-        "Walk through how to investigate a failed task using OpenSRE.\n",
+        "Walk through how to investigate a failed task using OpenSore.\n",
     )
     # Asset content under skip dirs MUST be excluded from the index.
     _write_doc(root, "images/datadog.mdx", "should be skipped")
@@ -119,10 +119,10 @@ class TestQueryTokens:
         assert "do" not in tokens
         assert "i" not in tokens
 
-    def test_drops_opensre_brand_token(self) -> None:
-        # Every doc mentions "opensre" so it would otherwise dominate ranking.
-        tokens = _query_tokens("how do I install opensre")
-        assert "opensre" not in tokens
+    def test_drops_opensore_brand_token(self) -> None:
+        # Every doc mentions "opensore" so it would otherwise dominate ranking.
+        tokens = _query_tokens("how do I install opensore")
+        assert "opensore" not in tokens
         assert "install" in tokens
 
     def test_keeps_two_letter_tokens(self) -> None:

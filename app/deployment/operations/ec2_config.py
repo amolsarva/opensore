@@ -1,4 +1,4 @@
-"""Local state for the managed EC2 OpenSRE deployment."""
+"""Local state for the managed EC2 OpenSore deployment."""
 
 from __future__ import annotations
 
@@ -7,9 +7,9 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
-from app.constants import OPENSRE_HOME_DIR
+from app.constants import OPENSORE_HOME_DIR
 
-_REMOTE_OUTPUTS_DIR = OPENSRE_HOME_DIR / "deployments"
+_REMOTE_OUTPUTS_DIR = OPENSORE_HOME_DIR / "deployments"
 _REMOTE_OUTPUTS_FILE = "tracer-ec2-remote.json"
 
 

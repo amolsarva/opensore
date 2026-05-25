@@ -6,16 +6,16 @@
 
   Scenario: OpenClaw is installed locally. A fault-injection script stops the
   gateway process (`openclaw gateway stop` or `pkill -f "openclaw gateway"`).
-  All subsequent `opensre integrations verify openclaw` calls return
+  All subsequent `opensore integrations verify openclaw` calls return
   "Connection closed" and MCP bridge tools become unreachable.
 
   To reproduce the alert manually:
     1. Start OpenClaw: openclaw gateway start
-    2. Verify it works: opensre integrations verify openclaw
+    2. Verify it works: opensore integrations verify openclaw
     3. Inject fault:    openclaw gateway stop   (or: pkill -f "openclaw gateway")
-    4. Trigger alert:   opensre integrations verify openclaw
+    4. Trigger alert:   opensore integrations verify openclaw
        → should print: "Connection closed. Hint: Check `openclaw gateway status`..."
-    5. Feed alert JSON below to OpenSRE for RCA.
+    5. Feed alert JSON below to OpenSore for RCA.
 
   Required fields in ## Alert Metadata JSON:
     commonLabels.severity      → passed as severity to the agent
@@ -29,7 +29,7 @@ OpenClaw local host (stdio MCP transport)
 **Firing**
 
 The OpenClaw MCP gateway process has stopped responding on the host machine.
-`opensre integrations verify openclaw` is returning:
+`opensore integrations verify openclaw` is returning:
 ```
 OpenClaw bridge validation failed: Connection closed.
 Hint: The `openclaw mcp serve` bridge needs a running OpenClaw Gateway.
@@ -68,7 +68,7 @@ Annotations:
   },
   "commonAnnotations": {
     "summary": "OpenClaw MCP gateway process is not running. All MCP bridge calls returning 'Connection closed'.",
-    "description": "The openclaw gateway process stopped responding at 08:42 UTC. opensre tried to connect via 'openclaw mcp serve' stdio transport and received 'Connection closed' on every attempt. Last successful heartbeat was 8 minutes ago. Engineers cannot use OpenClaw's AI assistant and no new MCP sessions can be established.",
+    "description": "The openclaw gateway process stopped responding at 08:42 UTC. opensore tried to connect via 'openclaw mcp serve' stdio transport and received 'Connection closed' on every attempt. Last successful heartbeat was 8 minutes ago. Engineers cannot use OpenClaw's AI assistant and no new MCP sessions can be established.",
     "error": "Connection closed",
     "command": "openclaw mcp serve",
     "transport": "stdio",
@@ -117,9 +117,9 @@ openclaw gateway stop 2>/dev/null || pkill -f "openclaw gateway" 2>/dev/null || 
 
 echo "[inject] Verifying fault is active..."
 sleep 1
-opensre integrations verify openclaw && echo "ERROR: gateway still up" && exit 1 || true
+opensore integrations verify openclaw && echo "ERROR: gateway still up" && exit 1 || true
 
 echo "[inject] Fault confirmed. Gateway is down."
-echo "[inject] Run 'opensre investigate' with the alert JSON above to get RCA."
+echo "[inject] Run 'opensore investigate' with the alert JSON above to get RCA."
 echo "[inject] To restore: openclaw gateway start"
 ```

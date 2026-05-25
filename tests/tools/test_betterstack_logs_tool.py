@@ -10,11 +10,11 @@ from tests.tools.conftest import BaseToolContract
 
 class TestBetterStackLogsToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return query_betterstack_logs.__opensre_registered_tool__
+        return query_betterstack_logs.__opensore_registered_tool__
 
 
 def test_metadata() -> None:
-    rt = query_betterstack_logs.__opensre_registered_tool__
+    rt = query_betterstack_logs.__opensore_registered_tool__
     assert rt.name == "query_betterstack_logs"
     assert rt.source == "betterstack"
     assert "investigation" in rt.surfaces

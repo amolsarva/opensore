@@ -14,7 +14,7 @@ If at runtime the cumulative cost exceeds the configured budget, the next
 publishes a partial-completion report (not silently overrunning the budget).
 
 Pricing table is a frozen dict in this module. Unknown models raise
-``UnknownModel`` rather than silently defaulting to a wrong number — opensre
+``UnknownModel`` rather than silently defaulting to a wrong number — opensore
 should know what every model in the benchmark grid costs before running.
 
 Prices below are Feb 2026 published rates; check provider pages before

@@ -92,16 +92,16 @@ class TestTtyParagraphRender:
         result = stream_to_console(
             console,
             label="assistant",
-            chunks=_yield_chunks(["Run **opensre", " investigate** to start."]),
+            chunks=_yield_chunks(["Run **opensore", " investigate** to start."]),
         )
 
         output = _strip_ansi(buf.getvalue())
-        assert result == "Run **opensre investigate** to start."
+        assert result == "Run **opensore investigate** to start."
         # Bullet row marker pinned above the rendered paragraph.
         assert "●" in output
         # End-of-stream force-flush rendered Markdown — ``**`` stripped.
-        assert "**opensre" not in output
-        assert "opensre investigate" in output
+        assert "**opensore" not in output
+        assert "opensore investigate" in output
 
     def test_renders_first_paragraph_before_second_completes(self) -> None:
         """A complete paragraph (``\\n\\n``) flushes immediately, even

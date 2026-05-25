@@ -1,4 +1,4 @@
-"""Build an alert from captured failure context and invoke the OpenSRE
+"""Build an alert from captured failure context and invoke the OpenSore
 investigation pipeline.
 
 Sits between :mod:`use_case` (which captures the failure) and the
@@ -71,7 +71,7 @@ def run_openclaw_investigation(
     handle: OpenClawHandle,
     failure_context: dict[str, Any],
 ) -> dict[str, Any]:
-    """Build an alert from ``failure_context`` and run the OpenSRE pipeline.
+    """Build an alert from ``failure_context`` and run the OpenSore pipeline.
 
     Wraps :func:`run_investigation_cli` inside a ``@traceable`` block with
     metadata that identifies it as an OpenClaw e2e run (handle PIDs,

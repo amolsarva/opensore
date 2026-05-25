@@ -10,11 +10,11 @@ from tests.tools.conftest import BaseToolContract, mock_agent_state
 
 class TestGitHubRepositoryTreeToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return get_github_repository_tree.__opensre_registered_tool__
+        return get_github_repository_tree.__opensore_registered_tool__
 
 
 def test_is_available_requires_owner_repo() -> None:
-    rt = get_github_repository_tree.__opensre_registered_tool__
+    rt = get_github_repository_tree.__opensore_registered_tool__
     assert (
         rt.is_available({"github": {"connection_verified": True, "owner": "org", "repo": "repo"}})
         is True
@@ -24,7 +24,7 @@ def test_is_available_requires_owner_repo() -> None:
 
 
 def test_extract_params_maps_fields() -> None:
-    rt = get_github_repository_tree.__opensre_registered_tool__
+    rt = get_github_repository_tree.__opensore_registered_tool__
     sources = mock_agent_state()
     params = rt.extract_params(sources)
     assert params["owner"] == "my-org"

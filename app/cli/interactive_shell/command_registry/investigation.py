@@ -21,7 +21,7 @@ from app.cli.interactive_shell.ui.choice_menu import (
     repl_section_break,
     repl_tty_interactive,
 )
-from app.cli.support.errors import OpenSREError
+from app.cli.support.errors import OpenSoreError
 from app.cli.support.exception_reporting import report_exception
 from app.llm_reasoning_effort import apply_reasoning_effort
 
@@ -129,7 +129,7 @@ def _cmd_investigate_file(session: ReplSession, console: Console, args: list[str
         session.record("alert", args[0], ok=False)
         session.mark_latest(ok=False, kind="slash")
         return True
-    except OpenSREError as exc:
+    except OpenSoreError as exc:
         task.mark_failed(str(exc))
         console.print(f"[{ERROR}]investigation failed:[/] {escape(str(exc))}")
         if exc.suggestion:

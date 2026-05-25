@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Download OpenRCA-style alert JSON from the Hugging Face OpenSRE dataset (streaming).
+"""Download OpenRCA-style alert JSON from the Hugging Face OpenSore dataset (streaming).
 
-Requires: ``pip install 'opensre[opensre-hub]'`` (or dev extra) and Hub auth if the dataset is gated.
+Requires: ``pip install 'opensore[opensore-hub]'`` (or dev extra) and Hub auth if the dataset is gated.
 
 The Hub glob yields alerts in dataset order; use ``--index`` to skip to the Nth alert (0-based), or
 ``--export-dir`` + ``--limit`` to save many alerts as numbered files.
@@ -9,15 +9,15 @@ The Hub glob yields alerts in dataset order; use ``--index`` to skip to the Nth 
 Examples::
 
   # First alert in prefix (default)
-  python infra/opensre-dataset/fetch_opensre_hub_alert.py --prefix Bank/query_alerts -o /tmp/a.json
+  python infra/opensore-dataset/fetch_opensore_hub_alert.py --prefix Bank/query_alerts -o /tmp/a.json
 
   # Third alert (skip 0,1 then take next)
-  python infra/opensre-dataset/fetch_opensre_hub_alert.py --prefix Bank/query_alerts --index 2 -o /tmp/third.json
+  python infra/opensore-dataset/fetch_opensore_hub_alert.py --prefix Bank/query_alerts --index 2 -o /tmp/third.json
 
   # First 20 alerts under a directory
-  python infra/opensre-dataset/fetch_opensre_hub_alert.py --prefix Bank/query_alerts --export-dir ./bank_alerts --limit 20
+  python infra/opensore-dataset/fetch_opensore_hub_alert.py --prefix Bank/query_alerts --export-dir ./bank_alerts --limit 20
 
-  # Valid prefixes on tracer-cloud/opensre include:
+  # Valid prefixes on tracer-cloud/opensore include:
   #   Bank/query_alerts  Market/cloudbed-1/query_alerts  Market/cloudbed-2/query_alerts
   #   Telecom/query_alerts
 """
@@ -54,7 +54,7 @@ def main() -> int:
         "--output",
         "-o",
         default="",
-        help="Write one alert JSON here (default: /tmp/opensre-hub-alert.json). Ignored if --export-dir is set.",
+        help="Write one alert JSON here (default: /tmp/opensore-hub-alert.json). Ignored if --export-dir is set.",
     )
     parser.add_argument(
         "--export-dir",
@@ -72,13 +72,13 @@ def main() -> int:
     parser.add_argument(
         "--strip-scoring-points",
         action="store_true",
-        help="Strip scoring_points from the saved JSON (not recommended for opensre investigate --evaluate).",
+        help="Strip scoring_points from the saved JSON (not recommended for opensore investigate --evaluate).",
     )
     args = parser.parse_args()
 
-    from app.integrations.opensre.hf_remote import stream_opensre_query_alerts
+    from app.integrations.opensore.hf_remote import stream_opensore_query_alerts
 
-    stream = stream_opensre_query_alerts(
+    stream = stream_opensore_query_alerts(
         query_alerts_prefix=args.prefix,
         strip_scoring_points=args.strip_scoring_points,
     )
@@ -115,7 +115,7 @@ def main() -> int:
         print("No alert at this index.", file=sys.stderr)
         return 1
 
-    out = Path(args.output or "/tmp/opensre-hub-alert.json").expanduser()
+    out = Path(args.output or "/tmp/opensore-hub-alert.json").expanduser()
     out.write_text(json.dumps(alert, indent=2) + "\n", encoding="utf-8")
     print(out)
     return 0

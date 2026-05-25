@@ -1,7 +1,7 @@
 {
   "_meta": {
     "purpose": "Local CrashLoopBackOff demo; pair with crashloop-demo.yaml on kind",
-    "run": "opensre investigate -i tests/chaos_engineering/experiments/crashloop/crashloop-demo-alert.json"
+    "run": "opensore investigate -i tests/chaos_engineering/experiments/crashloop/crashloop-demo-alert.json"
   },
   "title": "[Triggered] Pod CrashLoopBackOff - crashloop-demo",
   "alert_name": "Datadog monitor: Pod crashloop-demo CrashLoopBackOff",

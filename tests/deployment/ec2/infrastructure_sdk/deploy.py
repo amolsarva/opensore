@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Deploy OpenSRE on an EC2 instance with Docker.
+"""Deploy OpenSore on an EC2 instance with Docker.
 
 Creates:
 - 1 IAM role + instance profile for EC2
 - 1 Security group allowing port 8000 (HTTP health API)
-- 1 EC2 instance running the OpenSRE Docker container
+- 1 EC2 instance running the OpenSore Docker container
 """
 
 from __future__ import annotations
@@ -32,7 +32,7 @@ REGION = DEFAULT_REGION
 
 
 def deploy() -> dict[str, str]:
-    """Deploy OpenSRE on EC2 with Docker.
+    """Deploy OpenSore on EC2 with Docker.
 
     Returns:
         Dict of output values (InstanceId, PublicIpAddress, SecurityGroupId, etc.).
@@ -56,9 +56,9 @@ def deploy() -> dict[str, str]:
     sg = create_security_group(
         name=f"{STACK_NAME}-sg",
         vpc_id=vpc["vpc_id"],
-        description="Allow OpenSRE HTTP health port for deployment tests",
+        description="Allow OpenSore HTTP health port for deployment tests",
         ingress_rules=[
-            {"port": 8000, "cidr": "0.0.0.0/0", "description": "OpenSRE HTTP"},
+            {"port": 8000, "cidr": "0.0.0.0/0", "description": "OpenSore HTTP"},
             {"port": 22, "cidr": "0.0.0.0/0", "description": "SSH debug access"},
         ],
         stack_name=STACK_NAME,
@@ -121,7 +121,7 @@ def deploy() -> dict[str, str]:
     print(f"  - Public IP: {public_ip}")
 
     # 8. Wait for health (Docker build + container start takes time)
-    print("Waiting for OpenSRE container health (may take 5-10 minutes)...")
+    print("Waiting for OpenSore container health (may take 5-10 minutes)...")
     wait_for_health(public_ip)
     print("  - Health: OK")
 

@@ -96,7 +96,7 @@ def test_openai_llm_client_adds_reasoning_effort_for_reasoning_models(monkeypatc
         lambda env_var: "stored-openai-key" if env_var == "OPENAI_API_KEY" else "",
     )
     monkeypatch.setattr(llm_client, "OpenAI", _FakeOpenAI)
-    monkeypatch.setenv("OPENSRE_REASONING_EFFORT", "xhigh")
+    monkeypatch.setenv("OPENSORE_REASONING_EFFORT", "xhigh")
 
     client = llm_client.OpenAILLMClient(model="gpt-5.2")
     kwargs = client._build_request_kwargs("hello")
@@ -111,7 +111,7 @@ def test_openai_llm_client_omits_reasoning_effort_for_non_reasoning_models(monke
         lambda env_var: "stored-openai-key" if env_var == "OPENAI_API_KEY" else "",
     )
     monkeypatch.setattr(llm_client, "OpenAI", _FakeOpenAI)
-    monkeypatch.setenv("OPENSRE_REASONING_EFFORT", "high")
+    monkeypatch.setenv("OPENSORE_REASONING_EFFORT", "high")
 
     client = llm_client.OpenAILLMClient(model="gpt-4.1-mini")
     kwargs = client._build_request_kwargs("hello")

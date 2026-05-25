@@ -1,6 +1,6 @@
 """EC2 instance management for deployment tests.
 
-Launches an EC2 instance with Docker, runs the OpenSRE container, and
+Launches an EC2 instance with Docker, runs the OpenSore container, and
 exposes the FastAPI health app on port 8000.
 """
 
@@ -40,13 +40,13 @@ def get_latest_al2023_ami(region: str = DEFAULT_REGION) -> str:
     return str(resp["Parameter"]["Value"])
 
 
-ECR_IMAGE_URI = "395261708130.dkr.ecr.us-east-1.amazonaws.com/opensre:latest"
+ECR_IMAGE_URI = "395261708130.dkr.ecr.us-east-1.amazonaws.com/opensore:latest"
 ECR_REGION = "us-east-1"
 ECR_ACCOUNT_ID = "395261708130"
 
 
 def generate_user_data(env_vars: dict[str, str] | None = None) -> str:
-    """Generate a cloud-init user data script that pulls from ECR and runs OpenSRE.
+    """Generate a cloud-init user data script that pulls from ECR and runs OpenSore.
 
     The script:
     1. Installs Docker and AWS CLI
@@ -60,7 +60,7 @@ def generate_user_data(env_vars: dict[str, str] | None = None) -> str:
 
     return f"""\
 #!/bin/bash
-exec > /var/log/opensre-deploy.log 2>&1
+exec > /var/log/opensore-deploy.log 2>&1
 set -euo pipefail
 
 echo "=== Installing Docker ==="
@@ -81,11 +81,11 @@ for i in 1 2 3 4 5; do
   sleep 10
 done
 
-echo "=== Pulling OpenSRE image from ECR ==="
+echo "=== Pulling OpenSore image from ECR ==="
 docker pull {ECR_IMAGE_URI}
 
 echo "=== Starting container ==="
-docker run -d --name opensre -p 8000:8000 --restart=unless-stopped {env_flags} {ECR_IMAGE_URI}
+docker run -d --name opensore -p 8000:8000 --restart=unless-stopped {env_flags} {ECR_IMAGE_URI}
 
 echo "=== Deployment complete ==="
 """
@@ -120,7 +120,7 @@ def create_instance_profile(
         resp = iam.create_role(
             RoleName=role_name,
             AssumeRolePolicyDocument=json.dumps(ec2_trust_policy),
-            Description="EC2 instance role for OpenSRE deployment tests",
+            Description="EC2 instance role for OpenSore deployment tests",
             Tags=tags,
         )
         role_arn = resp["Role"]["Arn"]

@@ -1,4 +1,4 @@
-"""Source-file chunking primitives for future RAG over the OpenSRE codebase.
+"""Source-file chunking primitives for future RAG over the OpenSore codebase.
 
 This module delivers chunking only — no persistence, embeddings, repo walking,
 or cache invalidation. Each chunker is a pure function: it reads the passed-in

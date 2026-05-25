@@ -1,21 +1,21 @@
 ---
 title: "OpenClaw"
-description: "Connect OpenSRE to OpenClaw for native context lookup and RCA write-back"
+description: "Connect OpenSore to OpenClaw for native context lookup and RCA write-back"
 ---
 
-OpenSRE integrates with OpenClaw in a native, one-way support loop:
+OpenSore integrates with OpenClaw in a native, one-way support loop:
 
-- OpenSRE can search recent OpenClaw conversations during an investigation.
-- OpenSRE can read full OpenClaw threads for extra engineering context.
-- OpenSRE writes completed RCA findings back into OpenClaw through the OpenClaw bridge.
+- OpenSore can search recent OpenClaw conversations during an investigation.
+- OpenSore can read full OpenClaw threads for extra engineering context.
+- OpenSore writes completed RCA findings back into OpenClaw through the OpenClaw bridge.
 
-OpenSRE no longer ships a separate `opensre-mcp` command. You do not need to register OpenSRE itself as an MCP server inside OpenClaw.
+OpenSore no longer ships a separate `opensore-mcp` command. You do not need to register OpenSore itself as an MCP server inside OpenClaw.
 
 ## Setup
 
 ### 0. Preflight the local OpenClaw CLI
 
-Before you onboard OpenClaw in OpenSRE, make sure the OpenClaw CLI itself is healthy in the same shell:
+Before you onboard OpenClaw in OpenSore, make sure the OpenClaw CLI itself is healthy in the same shell:
 
 ```bash
 node -v
@@ -38,28 +38,28 @@ node -v
 openclaw --help
 ```
 
-`nvm alias default 22` only affects future shells. It does not switch the current shell that launches `uv run opensre`.
+`nvm alias default 22` only affects future shells. It does not switch the current shell that launches `uv run opensore`.
 
-### 1. Install and configure OpenSRE locally
+### 1. Install and configure OpenSore locally
 
 ```bash
 make install
-uv run opensre onboard
+uv run opensore onboard
 ```
 
-### 2. Configure the OpenSRE → OpenClaw bridge
+### 2. Configure the OpenSore → OpenClaw bridge
 
 Use the guided wizard:
 
 ```bash
-uv run opensre onboard
+uv run opensore onboard
 ```
 
 Or use the direct integration setup command:
 
 ```bash
-uv run opensre integrations setup openclaw
-uv run opensre integrations verify openclaw
+uv run opensore integrations setup openclaw
+uv run opensore integrations verify openclaw
 ```
 
 Recommended bridge settings:
@@ -75,8 +75,8 @@ OPENCLAW_MCP_ARGS="mcp serve"
 From the repo root:
 
 ```bash
-uv run opensre integrations verify openclaw
-uv run opensre health
+uv run opensore integrations verify openclaw
+uv run opensore health
 ```
 
 ### 4. Run a smoke test
@@ -84,7 +84,7 @@ uv run opensre health
 Use the bundled OpenClaw fixture directly:
 
 ```bash
-uv run opensre investigate -i tests/fixtures/openclaw_test_alert.json
+uv run opensore investigate -i tests/fixtures/openclaw_test_alert.json
 ```
 
 If verification still fails, the next manual checks are:
@@ -92,19 +92,19 @@ If verification still fails, the next manual checks are:
 ```bash
 openclaw gateway status
 openclaw gateway run
-uv run opensre integrations verify openclaw
+uv run opensore integrations verify openclaw
 ```
 
 ## Write-back behavior
 
-After every completed investigation, OpenSRE attempts to write the full RCA report back into OpenClaw.
+After every completed investigation, OpenSore attempts to write the full RCA report back into OpenClaw.
 
-- If the investigation state contains an `openclaw_context.conversation_id`, OpenSRE first tries to append the result to that conversation.
-- Otherwise, OpenSRE creates a new OpenClaw conversation containing the RCA report, root cause, remediation steps, and confidence score.
+- If the investigation state contains an `openclaw_context.conversation_id`, OpenSore first tries to append the result to that conversation.
+- Otherwise, OpenSore creates a new OpenClaw conversation containing the RCA report, root cause, remediation steps, and confidence score.
 
 ## Investigation behavior
 
-When OpenClaw is configured, OpenSRE now prefers the high-signal conversation actions first:
+When OpenClaw is configured, OpenSore now prefers the high-signal conversation actions first:
 
 - `search_openclaw_conversations` to find recent related context
 - `get_openclaw_conversation` to read the full thread
@@ -125,10 +125,10 @@ For accurate RCA, also configure at least one of these:
 A good local validation sequence is:
 
 ```bash
-uv run opensre integrations verify openclaw
-uv run opensre integrations verify grafana
-uv run opensre integrations verify github
-uv run opensre investigate -i tests/fixtures/openclaw_test_alert.json
+uv run opensore integrations verify openclaw
+uv run opensore integrations verify grafana
+uv run opensore integrations verify github
+uv run opensore investigate -i tests/fixtures/openclaw_test_alert.json
 ```
 
 Contributor-facing regression coverage for this path lives in:
@@ -151,10 +151,10 @@ Contributor-facing regression coverage for this path lives in:
 ## Troubleshooting
 
 - `OpenClaw bridge validation failed: Node.js ... is required`: switch the current shell to Node `22.12+` or newer. With `nvm`: `nvm install 22 && nvm use 22 && nvm alias default 22`. With Homebrew: `brew install node@22 && brew link --overwrite node@22`. Then re-run `openclaw --help` before retrying onboarding.
-- `uv run opensre integrations verify openclaw` fails against `http://127.0.0.1:18789/`: that URL is the OpenClaw Control UI/Gateway, not the MCP bridge. Use `stdio` mode with `openclaw mcp serve`.
+- `uv run opensore integrations verify openclaw` fails against `http://127.0.0.1:18789/`: that URL is the OpenClaw Control UI/Gateway, not the MCP bridge. Use `stdio` mode with `openclaw mcp serve`.
 - `search_openclaw_conversations` or write-back fails with `Connection closed` or `ECONNREFUSED`: the OpenClaw Gateway is not running. Check `openclaw gateway status`, then run `openclaw gateway run`.
 - `Command not found: openclaw`: install the OpenClaw CLI or point `OPENCLAW_MCP_COMMAND` at the full executable path.
 
 ## End-to-end tests
 
-The OpenClaw e2e suite lives at [`tests/e2e/openclaw/`](https://github.com/Tracer-Cloud/opensre/tree/main/tests/e2e/openclaw). See its [README](https://github.com/Tracer-Cloud/opensre/tree/main/tests/e2e/openclaw/README.md) for prerequisites, how to run the suite, scenario layout, and CI behavior.
+The OpenClaw e2e suite lives at [`tests/e2e/openclaw/`](https://github.com/Tracer-Cloud/opensore/tree/main/tests/e2e/openclaw). See its [README](https://github.com/Tracer-Cloud/opensore/tree/main/tests/e2e/openclaw/README.md) for prerequisites, how to run the suite, scenario layout, and CI behavior.

@@ -37,7 +37,7 @@ from tests.shared.infrastructure_sdk.resources.vpc import (
 STACK_NAME = "tracer-ec2-hello"
 REGION = DEFAULT_REGION
 HELLO_WORLD_DIR = Path(__file__).resolve().parent.parent / "hello_world"
-ECR_REPO_NAME = "opensre"
+ECR_REPO_NAME = "opensore"
 
 
 def deploy() -> dict[str, str]:

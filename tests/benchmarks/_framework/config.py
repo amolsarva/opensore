@@ -52,7 +52,7 @@ class BenchmarkConfig(BaseModel):
     Example minimal YAML::
 
         benchmark: cloudopsbench
-        modes: [opensre+llm]
+        modes: [opensore+llm]
         llms: [claude-4-sonnet]
         model_versions:
           claude-4-sonnet: claude-sonnet-4-5-20250929
@@ -223,9 +223,9 @@ def load_config(path: Path) -> BenchmarkConfig:
 
     # Honor a few env-var overrides used in CI (override workers + budget
     # without editing the file)
-    if env_workers := os.environ.get("OPENSRE_BENCH_WORKERS"):
+    if env_workers := os.environ.get("OPENSORE_BENCH_WORKERS"):
         raw["workers"] = int(env_workers)
-    if env_budget := os.environ.get("OPENSRE_BENCH_COST_BUDGET_USD"):
+    if env_budget := os.environ.get("OPENSORE_BENCH_COST_BUDGET_USD"):
         raw["cost_budget_usd"] = float(env_budget)
 
     return BenchmarkConfig.model_validate(raw)

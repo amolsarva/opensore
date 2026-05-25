@@ -120,7 +120,7 @@ _NODE_EVENT_TYPE: dict[str, str] = {
     "merge_hypotheses": "MERGE",
     "investigation_agent": "INVEST",
     "diagnose_root_cause": "DIAG",
-    "opensre_llm_eval": "DIAG",
+    "opensore_llm_eval": "DIAG",
     "publish_findings": "DIAG",
 }
 
@@ -131,7 +131,7 @@ _NODE_PHASE: dict[str, str] = {
     "merge_hypotheses": "DIAGNOSE",
     "investigation_agent": "INVESTIGATE",
     "diagnose_root_cause": "DIAGNOSE",
-    "opensre_llm_eval": "DIAGNOSE",
+    "opensore_llm_eval": "DIAGNOSE",
     "publish_findings": "PUBLISH",
 }
 

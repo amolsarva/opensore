@@ -11,7 +11,7 @@ from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
-from app.integrations.opensre.constants import OPENSRE_HF_DATASET_ID
+from app.integrations.opensore.constants import OPENSORE_HF_DATASET_ID
 
 _MONTH_RE = re.compile(
     r"\b(January|February|March|April|May|June|July|August|September|October|November|December)"
@@ -38,8 +38,8 @@ _MONTHS: dict[str, int] = {
 
 def _hub_import_error(name: str) -> ImportError:
     return ImportError(
-        f"{name} is required for Hugging Face OpenSRE helpers. "
-        "Install with: pip install 'opensre[opensre-hub]'"
+        f"{name} is required for Hugging Face OpenSore helpers. "
+        "Install with: pip install 'opensore[opensore-hub]'"
     )
 
 
@@ -94,7 +94,7 @@ def telemetry_date_folder_from_text(*texts: str) -> str | None:
     return None
 
 
-def infer_opensre_telemetry_relative(raw_alert: dict[str, Any]) -> str | None:
+def infer_opensore_telemetry_relative(raw_alert: dict[str, Any]) -> str | None:
     """Derive ``<Prefix>/telemetry/YYYY_MM_DD`` when annotations omit ``*_telemetry_relative``."""
     labels_raw = raw_alert.get("commonLabels")
     labels: dict[str, Any] = labels_raw if isinstance(labels_raw, dict) else {}
@@ -153,7 +153,7 @@ def extract_openrca_scoring_points(alert: dict[str, Any]) -> str:
     return "\n\n".join(chunks).strip()
 
 
-def stream_opensre_query_alerts(
+def stream_opensore_query_alerts(
     *,
     query_alerts_prefix: str,
     dataset_id: str | None = None,
@@ -163,14 +163,14 @@ def stream_opensre_query_alerts(
     """Yield alert dicts from ``<prefix>/*.json`` using Hugging Face ``datasets`` streaming.
 
     By default **does not** strip ``scoring_points`` so saved alerts work with
-    ``opensre investigate --evaluate``. Pass ``strip_scoring_points=True`` for a stream
+    ``opensore investigate --evaluate``. Pass ``strip_scoring_points=True`` for a stream
     with rubric removed (e.g. publishing blind fixtures). Investigations still strip
     rubric from the in-graph ``raw_alert`` when ``--evaluate`` is off — see
     :func:`app.state.factory.make_initial_state`.
     """
     load_dataset = _load_dataset_loader()
-    repo = (dataset_id or OPENSRE_HF_DATASET_ID).strip()
-    rev = (revision or os.environ.get("OPENSRE_HF_REVISION") or "main").strip()
+    repo = (dataset_id or OPENSORE_HF_DATASET_ID).strip()
+    rev = (revision or os.environ.get("OPENSORE_HF_REVISION") or "main").strip()
     prefix = query_alerts_prefix.strip().strip("/")
     url = f"hf://datasets/{repo}@{rev}/{prefix}/*.json"
     ds = load_dataset("json", data_files=url, streaming=True, split="train")
@@ -182,13 +182,13 @@ def stream_opensre_query_alerts(
 
 
 def default_hf_cache_dir() -> Path:
-    root = os.environ.get("OPENSRE_HF_CACHE", "").strip()
+    root = os.environ.get("OPENSORE_HF_CACHE", "").strip()
     if root:
         return Path(root).expanduser()
-    return Path.home() / ".cache" / "opensre" / "hf"
+    return Path.home() / ".cache" / "opensore" / "hf"
 
 
-def materialize_opensre_telemetry_from_hub(
+def materialize_opensore_telemetry_from_hub(
     *,
     dataset_id: str,
     telemetry_relative: str,
@@ -200,7 +200,7 @@ def materialize_opensre_telemetry_from_hub(
     rel = telemetry_relative.strip().strip("/")
     if not rel:
         raise ValueError("telemetry_relative must be non-empty")
-    rev = (revision or os.environ.get("OPENSRE_HF_REVISION") or "main").strip()
+    rev = (revision or os.environ.get("OPENSORE_HF_REVISION") or "main").strip()
     base = cache_dir or default_hf_cache_dir()
     dest = (base / dataset_id.replace("/", "__") / rev).resolve()
     dest.mkdir(parents=True, exist_ok=True)

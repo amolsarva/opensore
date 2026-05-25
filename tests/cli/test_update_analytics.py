@@ -1,4 +1,4 @@
-"""Verify ``opensre update`` emits the expected ``update_*`` events."""
+"""Verify ``opensore update`` emits the expected ``update_*`` events."""
 
 from __future__ import annotations
 

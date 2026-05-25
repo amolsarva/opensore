@@ -75,9 +75,9 @@ def test_extra_regex_policy_activates_new_kind_without_code_change() -> None:
     ctx = MaskingContext(
         policy=MaskingPolicy.from_env(
             {
-                "OPENSRE_MASK_ENABLED": "true",
-                "OPENSRE_MASK_KINDS": "",  # use defaults
-                "OPENSRE_MASK_EXTRA_REGEX": '{"run_name": "([a-z]+-[a-z]+-[a-z]+)"}',
+                "OPENSORE_MASK_ENABLED": "true",
+                "OPENSORE_MASK_KINDS": "",  # use defaults
+                "OPENSORE_MASK_EXTRA_REGEX": '{"run_name": "([a-z]+-[a-z]+-[a-z]+)"}',
             }
         )
     )

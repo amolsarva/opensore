@@ -9,7 +9,7 @@ import pytest
 
 @pytest.fixture(autouse=True)
 def _enable_masking(monkeypatch) -> None:
-    monkeypatch.setenv("OPENSRE_MASK_ENABLED", "true")
+    monkeypatch.setenv("OPENSORE_MASK_ENABLED", "true")
 
 
 def _state_with_masking() -> dict[str, object]:

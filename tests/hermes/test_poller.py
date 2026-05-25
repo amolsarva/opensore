@@ -352,7 +352,7 @@ class TestMaxLines:
 class TestMissingFile:
     def test_missing_file_returns_empty_at_start_cursor(self, tmp_path: Path) -> None:
         """Polling a path that doesn't exist yet must not raise — the
-        opensre hermes watch command relies on this so it can start
+        opensore hermes watch command relies on this so it can start
         before logs/errors.log appears."""
         ghost = tmp_path / "does-not-exist.log"
         poll = hermes_poller.poll_hermes_logs(ghost, hermes_poller.HermesLogCursor.at_start(ghost))

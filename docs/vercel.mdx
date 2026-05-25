@@ -1,9 +1,9 @@
 ---
 title: "Vercel"
-description: "Connect Vercel so OpenSRE can check deployment status and runtime logs during investigations"
+description: "Connect Vercel so OpenSore can check deployment status and runtime logs during investigations"
 ---
 
-OpenSRE queries Vercel to retrieve deployment status and runtime logs — helping identify whether a recent deployment caused an incident or surface errors from serverless function executions.
+OpenSore queries Vercel to retrieve deployment status and runtime logs — helping identify whether a recent deployment caused an incident or surface errors from serverless function executions.
 
 ## Prerequisites
 
@@ -15,7 +15,7 @@ OpenSRE queries Vercel to retrieve deployment status and runtime logs — helpin
 ### Option 1: Interactive CLI
 
 ```bash
-opensre integrations setup
+opensore integrations setup
 ```
 
 Select **Vercel** when prompted and provide your API token.
@@ -57,7 +57,7 @@ VERCEL_TEAM_ID=team_xxxxxxxxx   # optional, for team accounts
 
 1. In Vercel, go to **Account Settings** → **Tokens**
 2. Click **Create Token**
-3. Give it a name (e.g., `opensre`) and set the scope to **Full Account** or a specific team
+3. Give it a name (e.g., `opensore`) and set the scope to **Full Account** or a specific team
 4. Copy the token
 
 <Info>
@@ -67,7 +67,7 @@ For team accounts, find your Team ID in **Team Settings** → **General** → **
 ## Verify
 
 ```bash
-opensre integrations verify vercel
+opensore integrations verify vercel
 ```
 
 Expected output:
@@ -88,6 +88,6 @@ Detail: Connected to Vercel API and listed 5 project(s)
 
 ## Security best practices
 
-- Create a **dedicated read-only token** for OpenSRE — do not reuse deployment tokens.
+- Create a **dedicated read-only token** for OpenSore — do not reuse deployment tokens.
 - Store the token in `.env`, not in source code.
 - Rotate tokens periodically.

@@ -11,7 +11,7 @@ import click
 from app.cli.commands.remote_health import _save_remote_base_url, run_remote_health_check
 from app.cli.interactive_shell.ui.theme import BRAND, DIM, ERROR, HIGHLIGHT, WARNING
 from app.cli.support.context import is_json_output, is_yes
-from app.cli.support.errors import OpenSREError
+from app.cli.support.errors import OpenSoreError
 
 if TYPE_CHECKING:
     from app.remote.client import PreflightResult, RemoteAgentClient
@@ -41,10 +41,10 @@ def _load_remote_client(ctx: click.Context, *, missing_url_hint: str) -> RemoteA
 
     resolved_url = _context_value(ctx, "url") or load_remote_url()
     if not resolved_url:
-        raise OpenSREError(
+        raise OpenSoreError(
             "No remote URL configured.",
             suggestion=missing_url_hint,
-            docs_url="https://github.com/Tracer-Cloud/opensre#remote-agent",
+            docs_url="https://github.com/Tracer-Cloud/opensore#remote-agent",
         )
 
     return RemoteAgentClient(resolved_url, api_key=_context_value(ctx, "api_key"))
@@ -78,20 +78,20 @@ def _browse_investigations(ctx: click.Context, style: Any, questionary: Any, con
 
     client = _load_remote_client(
         ctx,
-        missing_url_hint="Pass --url or run 'opensre remote health <url>'.",
+        missing_url_hint="Pass --url or run 'opensore remote health <url>'.",
     )
     try:
         investigations = client.list_investigations()
         _save_remote_base_url(client)
     except httpx.TimeoutException as exc:
-        raise OpenSREError(
+        raise OpenSoreError(
             f"Connection timed out: {exc}",
             suggestion="Check network connectivity and verify the remote agent is running.",
         ) from exc
     except Exception as exc:
-        raise OpenSREError(
+        raise OpenSoreError(
             f"Failed to list investigations: {exc}",
-            suggestion="Run 'opensre remote health' to verify the remote agent.",
+            suggestion="Run 'opensore remote health' to verify the remote agent.",
         ) from exc
 
     if not investigations:
@@ -537,7 +537,7 @@ def _run_streamed_investigation(ctx: click.Context, raw_alert: dict[str, Any]) -
 
     client = _load_remote_client(
         ctx,
-        missing_url_hint="Pass --url or run 'opensre remote health <url>'.",
+        missing_url_hint="Pass --url or run 'opensore remote health <url>'.",
     )
     try:
         events = client.stream_investigate(raw_alert)
@@ -547,19 +547,19 @@ def _run_streamed_investigation(ctx: click.Context, raw_alert: dict[str, Any]) -
         if exc.response.status_code == 404:
             _handle_stream_404(ctx, client, raw_alert)
             return
-        raise OpenSREError(
+        raise OpenSoreError(
             f"Remote investigation failed: HTTP {exc.response.status_code}",
-            suggestion="Run 'opensre remote health' to verify the remote agent.",
+            suggestion="Run 'opensore remote health' to verify the remote agent.",
         ) from exc
     except httpx.TimeoutException as exc:
-        raise OpenSREError(
+        raise OpenSoreError(
             f"Connection timed out reaching {client.base_url}.",
             suggestion="Check network connectivity and verify the remote agent is running.",
         ) from exc
     except Exception as exc:
-        raise OpenSREError(
+        raise OpenSoreError(
             f"Remote investigation failed: {exc}",
-            suggestion="Run 'opensre remote health' to verify the remote agent.",
+            suggestion="Run 'opensore remote health' to verify the remote agent.",
         ) from exc
 
 
@@ -585,21 +585,21 @@ def _handle_stream_404(
 
     if preflight.ok and preflight.supports_investigate:
         version_hint = f" (v{preflight.version})" if preflight.version else ""
-        raise OpenSREError(
+        raise OpenSoreError(
             f"Live investigation streaming is unavailable on this server{version_hint}.",
             suggestion=(
                 "Redeploy the latest remote server to stream live investigation events. "
-                "Use 'opensre remote investigate --no-stream' only if you explicitly "
+                "Use 'opensore remote investigate --no-stream' only if you explicitly "
                 "want the legacy blocking request."
             ),
         )
 
     version_hint = f" (v{preflight.version})" if preflight.version else ""
-    raise OpenSREError(
+    raise OpenSoreError(
         f"Endpoint /investigate/stream not found on server{version_hint}.",
         suggestion=(
             "The remote server may need updating. "
-            "Redeploy with the latest version or use 'opensre remote trigger'."
+            "Redeploy with the latest version or use 'opensore remote trigger'."
         ),
     )
 
@@ -616,7 +616,7 @@ def _run_threads_api_investigation(ctx: click.Context, raw_alert: dict[str, Any]
 
     client = _load_remote_client(
         ctx,
-        missing_url_hint="Pass --url or run 'opensre remote health <url>'.",
+        missing_url_hint="Pass --url or run 'opensore remote health <url>'.",
     )
     try:
         events = client.trigger_investigation(raw_alert)
@@ -632,19 +632,19 @@ def _run_threads_api_investigation(ctx: click.Context, raw_alert: dict[str, Any]
             console.print()
             _run_streamed_investigation(ctx, raw_alert)
             return
-        raise OpenSREError(
+        raise OpenSoreError(
             f"Remote investigation failed: HTTP {exc.response.status_code}",
-            suggestion="Run 'opensre remote health' to verify the remote agent.",
+            suggestion="Run 'opensore remote health' to verify the remote agent.",
         ) from exc
     except httpx.TimeoutException as exc:
-        raise OpenSREError(
+        raise OpenSoreError(
             f"Connection timed out reaching {client.base_url}.",
             suggestion="Check network connectivity and verify the remote agent is running.",
         ) from exc
     except Exception as exc:
-        raise OpenSREError(
+        raise OpenSoreError(
             f"Remote investigation failed: {exc}",
-            suggestion="Run 'opensre remote health' to verify the remote agent.",
+            suggestion="Run 'opensore remote health' to verify the remote agent.",
         ) from exc
 
 
@@ -653,7 +653,7 @@ def _run_threads_api_investigation(ctx: click.Context, raw_alert: dict[str, Any]
     "--url", default=None, help="Remote agent base URL (e.g. 1.2.3.4 or http://host:2024)."
 )
 @click.option(
-    "--api-key", default=None, envvar="OPENSRE_API_KEY", help="API key for the remote agent."
+    "--api-key", default=None, envvar="OPENSORE_API_KEY", help="API key for the remote agent."
 )
 @click.pass_context
 def remote(ctx: click.Context, url: str | None, api_key: str | None) -> None:
@@ -664,11 +664,11 @@ def remote(ctx: click.Context, url: str | None, api_key: str | None) -> None:
 
     if ctx.invoked_subcommand is None:
         if is_yes() or is_json_output():
-            raise OpenSREError(
+            raise OpenSoreError(
                 "No subcommand provided.",
                 suggestion=(
-                    "Use 'opensre remote health', 'opensre remote trigger', "
-                    "'opensre remote investigate', or 'opensre remote pull'."
+                    "Use 'opensore remote health', 'opensore remote trigger', "
+                    "'opensore remote investigate', or 'opensore remote pull'."
                 ),
             )
         _run_remote_interactive(ctx)
@@ -803,7 +803,7 @@ def remote_health(ctx: click.Context, output_json: bool) -> None:
     """Check the health of a remote deployed agent."""
     client = _load_remote_client(
         ctx,
-        missing_url_hint="Pass a URL or run 'opensre remote health <url>'.",
+        missing_url_hint="Pass a URL or run 'opensore remote health <url>'.",
     )
     run_remote_health_check(
         base_url=client.base_url,
@@ -826,7 +826,7 @@ def remote_trigger(ctx: click.Context, alert_json: str | None, detach: bool) -> 
 
     client = _load_remote_client(
         ctx,
-        missing_url_hint="Pass --url or run 'opensre remote trigger --url <host>'.",
+        missing_url_hint="Pass --url or run 'opensore remote trigger --url <host>'.",
     )
     if detach:
         click.echo("Detach mode is not yet supported; streaming inline.")
@@ -835,14 +835,14 @@ def remote_trigger(ctx: click.Context, alert_json: str | None, detach: bool) -> 
         StreamRenderer().render_stream(events)
         _save_remote_base_url(client)
     except httpx.TimeoutException as exc:
-        raise OpenSREError(
+        raise OpenSoreError(
             f"Connection timed out reaching {client.base_url}.",
             suggestion="Check network connectivity and verify the remote agent is running.",
         ) from exc
     except Exception as exc:
-        raise OpenSREError(
+        raise OpenSoreError(
             f"Remote investigation failed: {exc}",
-            suggestion="Run 'opensre remote health' to verify the remote agent.",
+            suggestion="Run 'opensore remote health' to verify the remote agent.",
         ) from exc
 
 
@@ -874,7 +874,7 @@ def remote_investigate(
         raw_alert = _sample_alert_payload()
         click.echo("  Using sample alert: etl-daily-orders-failure (critical)")
     else:
-        raise OpenSREError(
+        raise OpenSoreError(
             "No alert payload provided.",
             suggestion="Pass --alert-json '{...}' or use --sample for a demo payload.",
         )
@@ -891,7 +891,7 @@ def _run_blocking_investigation(ctx: click.Context, raw_alert: dict[str, Any]) -
 
     client = _load_remote_client(
         ctx,
-        missing_url_hint="Pass --url or run 'opensre remote health <url>'.",
+        missing_url_hint="Pass --url or run 'opensore remote health <url>'.",
     )
 
     click.echo("Sending investigation request (this may take a few minutes)...")
@@ -899,14 +899,14 @@ def _run_blocking_investigation(ctx: click.Context, raw_alert: dict[str, Any]) -
         result = client.investigate(raw_alert)
         _save_remote_base_url(client)
     except httpx.TimeoutException as exc:
-        raise OpenSREError(
+        raise OpenSoreError(
             f"Connection timed out: {exc}",
-            suggestion="The remote agent may be overloaded. Try again or check 'opensre remote health'.",
+            suggestion="The remote agent may be overloaded. Try again or check 'opensore remote health'.",
         ) from exc
     except Exception as exc:
-        raise OpenSREError(
+        raise OpenSoreError(
             f"Remote investigation failed: {exc}",
-            suggestion="Run 'opensre remote health' to verify the remote agent.",
+            suggestion="Run 'opensore remote health' to verify the remote agent.",
         ) from exc
 
     click.echo(f"\n  Investigation ID: {result.get('id', 'N/A')}")
@@ -931,20 +931,20 @@ def remote_pull(ctx: click.Context, latest: bool, pull_all: bool, output_dir: st
 
     client = _load_remote_client(
         ctx,
-        missing_url_hint="Pass --url or run 'opensre remote health <url>'.",
+        missing_url_hint="Pass --url or run 'opensore remote health <url>'.",
     )
     try:
         investigations = client.list_investigations()
         _save_remote_base_url(client)
     except httpx.TimeoutException as exc:
-        raise OpenSREError(
+        raise OpenSoreError(
             f"Connection timed out: {exc}",
             suggestion="Check network connectivity and verify the remote agent is running.",
         ) from exc
     except Exception as exc:
-        raise OpenSREError(
+        raise OpenSoreError(
             f"Failed to list investigations: {exc}",
-            suggestion="Run 'opensre remote health' to verify the remote agent.",
+            suggestion="Run 'opensore remote health' to verify the remote agent.",
         ) from exc
 
     if not investigations:
@@ -955,7 +955,7 @@ def remote_pull(ctx: click.Context, latest: bool, pull_all: bool, output_dir: st
         click.echo(f"Found {len(investigations)} investigation(s):\n")
         for investigation in investigations:
             click.echo(f"  {investigation['id']}  ({investigation.get('created_at', '?')})")
-        click.echo("\nUse --latest or --all to download, or run:\n  opensre remote pull --latest")
+        click.echo("\nUse --latest or --all to download, or run:\n  opensore remote pull --latest")
         return
 
     output_path = Path(output_dir)

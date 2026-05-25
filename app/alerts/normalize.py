@@ -1,4 +1,4 @@
-"""Canonical OpenSRE alert payload normalization.
+"""Canonical OpenSore alert payload normalization.
 
 This module converts source-specific alert fields into a stable in-memory
 shape so downstream nodes can consume one format regardless of origin.
@@ -83,7 +83,7 @@ def _first_present(*values: Any) -> Any:
 
 
 def normalize_alert_payload(raw_alert: dict[str, Any]) -> dict[str, Any]:
-    """Normalize an alert payload to canonical OpenSRE alert format.
+    """Normalize an alert payload to canonical OpenSore alert format.
 
     The returned payload preserves original fields and also adds:
     - ``commonLabels`` / ``commonAnnotations`` as dictionaries
@@ -153,7 +153,7 @@ def normalize_alert_payload(raw_alert: dict[str, Any]) -> dict[str, Any]:
         normalized["pid"] = pid
 
     canonical_alert = {
-        "schema": "opensre.alert.v1",
+        "schema": "opensore.alert.v1",
         "alert_name": _to_text(
             _first_present(
                 normalized.get("alert_name"),

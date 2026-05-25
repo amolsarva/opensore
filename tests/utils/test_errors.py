@@ -8,7 +8,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from app.utils.errors import (
-    OpenSRESilentFallback,
+    OpenSoreSilentFallback,
     report_and_reraise,
     report_and_swallow,
     report_exception,
@@ -17,7 +17,7 @@ from app.utils.errors import (
 
 @pytest.fixture(autouse=True)
 def _disable_sentry(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("OPENSRE_NO_TELEMETRY", "1")
+    monkeypatch.setenv("OPENSORE_NO_TELEMETRY", "1")
 
 
 def _mock_logger() -> MagicMock:
@@ -169,6 +169,6 @@ class TestReportAndReraise:
         mock_log.error.assert_called_once()
 
 
-class TestOpenSRESilentFallback:
+class TestOpenSoreSilentFallback:
     def test_is_a_warning(self) -> None:
-        assert issubclass(OpenSRESilentFallback, Warning)
+        assert issubclass(OpenSoreSilentFallback, Warning)

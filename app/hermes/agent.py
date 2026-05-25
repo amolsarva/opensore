@@ -133,7 +133,7 @@ class HermesAgent:
     def process(self, lines: Iterable[str]) -> list[HermesIncident]:
         """Run the parser/classifier pipeline over an explicit line sequence.
 
-        Useful for one-shot scans (``opensre hermes scan``) and unit tests
+        Useful for one-shot scans (``opensore hermes scan``) and unit tests
         without the polling thread.
         """
         emitted: list[HermesIncident] = []

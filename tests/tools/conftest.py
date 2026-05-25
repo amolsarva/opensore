@@ -117,8 +117,8 @@ def mock_agent_state(overrides: dict | None = None) -> dict[str, Any]:
         "postgresql": {
             "host": "localhost",
             "port": 5432,
-            "database": "opensre_test",
-            "username": "opensre",
+            "database": "opensore_test",
+            "username": "opensore",
             "password": "test123",
             "ssl_mode": "prefer",
         },
@@ -138,8 +138,8 @@ def mock_agent_state(overrides: dict | None = None) -> dict[str, Any]:
         "mysql": {
             "host": "localhost",
             "port": 3306,
-            "database": "opensre_test",
-            "username": "opensre",
+            "database": "opensore_test",
+            "username": "opensore",
             "password": "test123",
             "ssl_mode": "preferred",
         },
@@ -225,7 +225,7 @@ class BaseToolContract:
 
     Subclasses must implement ``get_tool_under_test()`` which returns either:
     - A BaseTool instance (class-based tools), or
-    - A RegisteredTool (function-based tools, accessed via func.__opensre_registered_tool__)
+    - A RegisteredTool (function-based tools, accessed via func.__opensore_registered_tool__)
 
     The mixin handles both patterns uniformly.
 
@@ -241,7 +241,7 @@ class BaseToolContract:
 
         class TestMyTool(BaseToolContract):
             def get_tool_under_test(self):
-                return my_func.__opensre_registered_tool__
+                return my_func.__opensore_registered_tool__
     """
 
     def get_tool_under_test(self) -> Any:

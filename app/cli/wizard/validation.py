@@ -97,7 +97,7 @@ def _check_ollama(host: str, model: str) -> ValidationResult:
             chat_url,
             json={
                 "model": model,
-                "messages": [{"role": "user", "content": "Reply with exactly: OpenSRE ready"}],
+                "messages": [{"role": "user", "content": "Reply with exactly: OpenSore ready"}],
                 "max_tokens": 24,
             },
             timeout=60.0,
@@ -133,7 +133,7 @@ def validate_provider_credentials(
             anthropic_response = anthropic_client.messages.create(
                 model=model,
                 max_tokens=24,
-                messages=[{"role": "user", "content": "Reply with exactly: OpenSRE ready"}],
+                messages=[{"role": "user", "content": "Reply with exactly: OpenSore ready"}],
             )
             sample_text = "".join(
                 block.text
@@ -151,13 +151,13 @@ def validate_provider_credentials(
         if provider.value == "openai" and model.startswith(("o1", "o3", "o4", "gpt-5")):
             openai_response = openai_client.chat.completions.create(
                 model=model,
-                messages=[{"role": "user", "content": "Reply with exactly: OpenSRE ready"}],
+                messages=[{"role": "user", "content": "Reply with exactly: OpenSore ready"}],
                 max_completion_tokens=24,
             )
         else:
             openai_response = openai_client.chat.completions.create(
                 model=model,
-                messages=[{"role": "user", "content": "Reply with exactly: OpenSRE ready"}],
+                messages=[{"role": "user", "content": "Reply with exactly: OpenSore ready"}],
                 max_tokens=24,
             )
         sample_text = (openai_response.choices[0].message.content or "").strip()

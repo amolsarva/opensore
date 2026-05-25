@@ -26,7 +26,7 @@ def _pull_request(
     return PullRequestSummary(
         number=number,
         title=title,
-        url=f"https://github.com/Tracer-Cloud/opensre/pull/{number}",
+        url=f"https://github.com/Tracer-Cloud/opensore/pull/{number}",
         author_login=author_display_name.lower(),
         author_display_name=author_display_name,
         merged_at=datetime(2026, 4, 2, 18, 30, tzinfo=UTC),
@@ -69,9 +69,9 @@ def test_name_looks_like_bot_filters_action_accounts() -> None:
 
 
 def test_github_repo_api_url_keeps_owner_repo_segments() -> None:
-    url = _github_repo_api_url("Tracer-Cloud/opensre", "pulls?state=closed")
+    url = _github_repo_api_url("Tracer-Cloud/opensore", "pulls?state=closed")
 
-    assert url == "https://api.github.com/repos/Tracer-Cloud/opensre/pulls?state=closed"
+    assert url == "https://api.github.com/repos/Tracer-Cloud/opensore/pulls?state=closed"
 
 
 def test_build_fallback_highlights_uses_titles() -> None:
@@ -97,7 +97,7 @@ def test_summarize_highlights_falls_back_when_llm_fails(monkeypatch) -> None:
     monkeypatch.setattr("app.integrations.daily_update.get_llm_for_reasoning", _raise)
 
     highlights, fallback_used = summarize_highlights(
-        "Tracer-Cloud/opensre",
+        "Tracer-Cloud/opensore",
         compute_daily_window(london_date=date(2026, 4, 2)),
         pull_requests,
     )
@@ -108,7 +108,7 @@ def test_summarize_highlights_falls_back_when_llm_fails(monkeypatch) -> None:
 
 def test_render_outputs_include_expected_sections() -> None:
     update = build_daily_update(
-        "Tracer-Cloud/opensre",
+        "Tracer-Cloud/opensore",
         compute_daily_window(london_date=date(2026, 4, 2)),
         (
             _pull_request(
@@ -127,12 +127,12 @@ def test_render_outputs_include_expected_sections() -> None:
     assert "Alice and Bob \U0001f64f\U0001f680" in markdown
     assert "## Main updates shipped (April 2, 2026)" in markdown
     assert "## Source pull requests" in markdown
-    assert "[#101](https://github.com/Tracer-Cloud/opensre/pull/101)" in markdown
+    assert "[#101](https://github.com/Tracer-Cloud/opensore/pull/101)" in markdown
 
 
 def test_build_daily_update_uses_empty_day_fallback() -> None:
     update = build_daily_update(
-        "Tracer-Cloud/opensre",
+        "Tracer-Cloud/opensore",
         compute_daily_window(london_date=date(2026, 4, 2)),
         (),
     )

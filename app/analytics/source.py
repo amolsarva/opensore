@@ -42,10 +42,10 @@ _API_SOURCES: Final[frozenset[EntrypointSource]] = frozenset(
 
 def is_test_run() -> bool:
     """Return True when the current process should be tagged as test traffic."""
-    if os.getenv("OPENSRE_INVESTIGATION_SOURCE", "").strip().lower() == "test":
+    if os.getenv("OPENSORE_INVESTIGATION_SOURCE", "").strip().lower() == "test":
         return True
 
-    if os.getenv("OPENSRE_IS_TEST", "0").strip() == "1":
+    if os.getenv("OPENSORE_IS_TEST", "0").strip() == "1":
         return True
 
     if os.getenv("PYTEST_CURRENT_TEST"):
@@ -61,7 +61,7 @@ def is_test_run() -> bool:
 def resolve_environment_tag() -> str:
     """Resolve coarse environment classification for analytics slicing."""
     raw = (
-        (os.getenv("OPENSRE_ANALYTICS_ENV") or os.getenv("ENV") or os.getenv("ENVIRONMENT") or "")
+        (os.getenv("OPENSORE_ANALYTICS_ENV") or os.getenv("ENV") or os.getenv("ENVIRONMENT") or "")
         .strip()
         .lower()
     )

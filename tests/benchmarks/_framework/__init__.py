@@ -1,9 +1,9 @@
-"""Reusable benchmark framework for opensre.
+"""Reusable benchmark framework for opensore.
 
 Architecture: a benchmark framework with pluggable adapters per benchmark
 suite. CloudOpsBench is the first adapter; OpenRCA and ToolCallBench follow.
 
-See design: ``~/DevBox/opensre-notes/opensre-benchmark-framework.md``.
+See design: ``~/DevBox/opensore-notes/opensore-benchmark-framework.md``.
 
 Modules:
     adapters    Abstract ``BenchmarkAdapter`` ABC + typed data contracts.

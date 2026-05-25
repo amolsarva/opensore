@@ -1,4 +1,4 @@
-# Pre-registration — Cloud-OpsBench v1 (opensre+LLM vs paper LLM-alone baselines)
+# Pre-registration — Cloud-OpsBench v1 (opensore+LLM vs paper LLM-alone baselines)
 #
 # COMMIT THIS BEFORE THE RUN. Integrity Mechanism 1 enforced by
 # IntegrityGuard.pre_flight — the framework refuses to start a production run
@@ -19,13 +19,13 @@ target_corpus:
   hf_revision: main                    # YAUHEN: pin to specific HF commit SHA
   paper: arXiv:2603.00468v1
   case_count: 452
-opensre_sha: REPLACE_AT_COMMIT_TIME    # YAUHEN: stamp `git rev-parse HEAD`
+opensore_sha: REPLACE_AT_COMMIT_TIME    # YAUHEN: stamp `git rev-parse HEAD`
 framework_version: 0.1.0
 
 # --------------------------------------------------------------------------- #
 # Per-model hypotheses — what we expect, why, before seeing any data           #
 # --------------------------------------------------------------------------- #
-# Each hypothesis names ONE failure mode the paper identified + the opensre
+# Each hypothesis names ONE failure mode the paper identified + the opensore
 # mechanism that should address it + the expected lift. Lift values are A@1
 # unless noted. confidence is 0.0–1.0; cost_to_implement is engineer-days
 # (0 because all four mechanisms are already shipped — these are predictions,
@@ -40,7 +40,7 @@ hypotheses:
       "Speculative shortcuts" — claims a root cause from generic alert
       keywords rather than evidence (paper § 4.5).
     mechanism: |
-      opensre's evidence-gathering pipeline requires verified tool output
+      opensore's evidence-gathering pipeline requires verified tool output
       at each stage gate. Speculative leaps with no tool calls are blocked
       at the planner/verifier transition. ZTDR should fall to near 0; A@1
       lifts as evidence-grounded diagnoses replace speculation.
@@ -49,11 +49,11 @@ hypotheses:
       a1: 0.15                         # YAUHEN: edit if you want a different target
       ztdr_reduction: 0.30             # absolute drop in ZTDR (0.32 → ~0.02)
     expected_regression:
-      steps: 1.5                       # opensre's stage gates add steps; honest cost
+      steps: 1.5                       # opensore's stage gates add steps; honest cost
     confidence: 0.70                   # YAUHEN: adjust — high because mechanism is direct
     cost_to_implement: 0
     notes: |
-      Highest-confidence lift. Failure mode (speculation) maps 1:1 to opensre
+      Highest-confidence lift. Failure mode (speculation) maps 1:1 to opensore
       structural strength (evidence-gating). Risk: if the bench-corpus alert
       keywords are too specific, Claude may not need to speculate.
 
@@ -65,7 +65,7 @@ hypotheses:
       trajectories among large models but lowest A@1. "Premature convergence":
       stops investigating too early (paper § 4.3).
     mechanism: |
-      opensre's stage-gated investigation requires meeting evidence
+      opensore's stage-gated investigation requires meeting evidence
       thresholds before transitioning to final diagnosis. Early termination
       is blocked by the planner. Steps should rise; A@1 follows.
     target_a1: 0.65                    # YAUHEN: confirm — paper 0.49 → target 0.65 (+0.16)
@@ -89,7 +89,7 @@ hypotheses:
       Coverage=0.77 (below DeepSeek's 0.88). "Relevance-Centric Strategy" —
       precise tool selection but narrow exploration (paper § 4.4).
     mechanism: |
-      opensre's planner prompts coverage-style exploration before commitment.
+      opensore's planner prompts coverage-style exploration before commitment.
       Coverage should rise toward DeepSeek's 0.88; A@1 follows as more
       ground-truth tools get exercised.
     target_a1: 0.78                    # YAUHEN: confirm — paper 0.67 → target 0.78 (+0.11)
@@ -111,11 +111,11 @@ hypotheses:
     paper_failure_mode: |
       No clear failure mode — DeepSeek is the paper SOTA (A@1=0.73, 10 steps,
       Coverage=0.88, RAR=0.11 functional self-correction). Already does what
-      opensre is designed to enforce structurally.
+      opensore is designed to enforce structurally.
     mechanism: |
-      opensre may not add much on top of a model that already explores
+      opensore may not add much on top of a model that already explores
       thoroughly and self-corrects. Expected lift comes from edge cases where
-      DeepSeek's open-loop exploration misses what opensre's stage gates
+      DeepSeek's open-loop exploration misses what opensore's stage gates
       catch — primarily the Performance category (paper A@1<0.36).
     target_a1: 0.78                    # YAUHEN: confirm — paper 0.73 → target 0.78 (+0.05, modest)
     expected_lift:
@@ -125,7 +125,7 @@ hypotheses:
     cost_to_implement: 0
     notes: |
       Modest target. Near-ceiling for the corpus. Negative result here
-      (lift ≤ 0.02) would be the cleanest evidence that opensre doesn't
+      (lift ≤ 0.02) would be the cleanest evidence that opensore doesn't
       benefit already-strong agents — a publishable finding either way.
 
 # --------------------------------------------------------------------------- #
@@ -136,7 +136,7 @@ hypotheses:
 expected_failures:
   - "DeepSeek-V3.2 lift will be ≤ 0.05 — paper-leader near ceiling"
   - "On the Performance category (paper A@1 < 0.36 universal), no model will reach A@1 ≥ 0.50"
-  - "On the Admission category (paper A@1 < 0.36 universal), opensre's stage gates may slow down small-context models without helping accuracy — runs_per_case variance will be visible"
+  - "On the Admission category (paper A@1 < 0.36 universal), opensore's stage gates may slow down small-context models without helping accuracy — runs_per_case variance will be visible"
   - "Per-cell cost_usd will be 0 (per-cell delta capture is documented TODO); aggregate cost in report.json.cost is authoritative"
   - "Validity metrics (citation_grounding, entity_existence, kubectl_actionability) may drop slightly for models that wander more — that's a real cost of broader exploration, not a regression to hide"
 
@@ -167,7 +167,7 @@ stopping_rules:
     within absolute 0.03, AND (b) generalization_gate.ship_threshold holds,
     AND (c) no expected_failure has been silently ignored in the report.
   abort: |
-    Cycle aborts if: (a) cost_budget_usd exceeded, OR (b) opensre_sha drift
+    Cycle aborts if: (a) cost_budget_usd exceeded, OR (b) opensore_sha drift
     detected mid-run, OR (c) model_versions mismatch caught by pre-flight,
     OR (d) >20% of cells fail with `ok=False`.
   partial: |
@@ -198,12 +198,12 @@ contamination_check:
 # --------------------------------------------------------------------------- #
 coi_disclosure: |
   This benchmark run was authored, executed, and interpreted by Yauhen
-  Bichel, who is also the primary author of opensre. This is a structural
+  Bichel, who is also the primary author of opensore. This is a structural
   conflict of interest mitigated by: (a) this pre-registration committed
   before the run, (b) per-stratum reporting (seen-shape vs unseen-shape),
   (c) required negative-results section, (d) external replication of at
   least one cell before any public claim, (e) standardization-by-pinning
-  of every parameter that affects results (model_version, opensre_sha,
+  of every parameter that affects results (model_version, opensore_sha,
   HF dataset revision, seed). Reviewers are encouraged to reproduce any
   cell independently using the artifacts published in raw_artifacts_dir.
 

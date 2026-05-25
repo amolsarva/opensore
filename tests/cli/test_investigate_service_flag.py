@@ -62,7 +62,7 @@ def test_service_flag_invokes_runtime_investigation(monkeypatch) -> None:
     mock_build.assert_called_once_with("my-svc", slack_thread_ref=None, slack_bot_token=None)
     mock_run.assert_called_once()
     kwargs = mock_run.call_args.kwargs
-    assert set(kwargs) == {"raw_alert", "opensre_evaluate"}
+    assert set(kwargs) == {"raw_alert", "opensore_evaluate"}
     assert kwargs["raw_alert"]["service"]["provider"] == "railway"
 
 
@@ -118,14 +118,14 @@ def test_service_flag_rejects_other_input_modes(conflict_flag, conflict_value) -
 
 
 def test_service_flag_surfaces_errors_from_payload_builder() -> None:
-    from app.cli.support.errors import OpenSREError
+    from app.cli.support.errors import OpenSoreError
 
     runner = CliRunner()
     with (
         patch("app.cli.commands.general.track_investigation") as mock_tracking,
         patch(
             "app.remote.runtime_alert.build_runtime_alert_payload",
-            side_effect=OpenSREError("unknown service", suggestion="add it"),
+            side_effect=OpenSoreError("unknown service", suggestion="add it"),
         ),
         patch("app.cli.investigation.run_investigation_cli"),
     ):

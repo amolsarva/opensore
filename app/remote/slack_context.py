@@ -1,7 +1,7 @@
 """Read a Slack thread's messages for inclusion in runtime investigations.
 
 This module provides a narrow helper — not a full Slack integration. It lets
-``opensre investigate --service <name> --slack-thread <ref>`` pull the text
+``opensore investigate --service <name> --slack-thread <ref>`` pull the text
 of a specific Slack thread so the investigation agent has that conversational
 context alongside service logs and health.
 """

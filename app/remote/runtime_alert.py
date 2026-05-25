@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from app.cli.support.errors import OpenSREError
+from app.cli.support.errors import OpenSoreError
 from app.cli.wizard.store import load_named_remotes, load_remote_ops_config
 from app.deployment.operations.health import poll_deployment_health
 from app.remote.ops import (
@@ -78,7 +78,7 @@ def build_runtime_alert_payload(
     """
     name = (service_name or "").strip()
     if not name:
-        raise OpenSREError(
+        raise OpenSoreError(
             "Service name is required.",
             suggestion="Pass --service <name> with a configured remote name.",
         )
@@ -86,11 +86,11 @@ def build_runtime_alert_payload(
     named = load_named_remotes()
     if name not in named:
         available = ", ".join(sorted(named)) or "(none configured)"
-        raise OpenSREError(
+        raise OpenSoreError(
             f"No remote named '{name}' is configured.",
             suggestion=(
                 f"Configured remotes: {available}. "
-                f"Deploy with 'opensre deploy' or add one with 'opensre remote'."
+                f"Deploy with 'opensore deploy' or add one with 'opensore remote'."
             ),
         )
 
@@ -102,20 +102,20 @@ def build_runtime_alert_payload(
     try:
         provider = resolve_remote_ops_provider(provider_name)
     except RemoteOpsError as exc:
-        raise OpenSREError(
+        raise OpenSoreError(
             f"Unsupported remote ops provider '{provider_name}': {exc}",
-            suggestion="Run 'opensre remote ops status' to reconfigure the provider.",
+            suggestion="Run 'opensore remote ops status' to reconfigure the provider.",
         ) from exc
     scope = RemoteServiceScope(provider=provider_name, project=project, service=service)
 
     try:
         status = provider.status(scope)
     except RemoteOpsError as exc:
-        raise OpenSREError(
+        raise OpenSoreError(
             f"Failed to fetch deployment status for '{name}': {exc}",
             suggestion=(
                 "Verify the remote ops provider is configured correctly "
-                "('opensre remote ops status' to check)."
+                "('opensore remote ops status' to check)."
             ),
         ) from exc
 

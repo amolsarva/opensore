@@ -1,4 +1,4 @@
-"""CLI commands for LLM/env config and local ~/.config/opensre/config.yml."""
+"""CLI commands for LLM/env config and local ~/.config/opensore/config.yml."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from typing import Any
 
 import click
 
-from app.constants import OPENSRE_HOME_DIR
+from app.constants import OPENSORE_HOME_DIR
 
 _SUPPORTED_LAYOUTS = {"classic", "pinned"}
 _SUPPORTED_KEYS = ("interactive.enabled", "interactive.layout")
@@ -22,7 +22,7 @@ def _masked(value: str | None) -> str:
 
 
 def _emit_llm_config() -> None:
-    """Print current LLM provider and model from environment (legacy `opensre config`)."""
+    """Print current LLM provider and model from environment (legacy `opensore config`)."""
     from app.cli.support.context import is_json_output
     from app.config import (
         get_configured_llm_provider,
@@ -70,12 +70,12 @@ def _emit_llm_config() -> None:
     if key_env:
         click.echo(f"{key_env:<16}: {_masked(key_value)}")
     click.echo()
-    click.echo("To change LLM settings, run: opensre onboard")
-    click.echo("Local CLI YAML: opensre config show / opensre config set …")
+    click.echo("To change LLM settings, run: opensore onboard")
+    click.echo("Local CLI YAML: opensore config show / opensore config set …")
 
 
 def _config_path() -> Path:
-    return OPENSRE_HOME_DIR / "config.yml"
+    return OPENSORE_HOME_DIR / "config.yml"
 
 
 def _load_config() -> dict[str, Any]:
@@ -147,14 +147,14 @@ def _set_nested_key(data: dict[str, Any], dotted_key: str, value: Any) -> dict[s
 @click.group(name="config", invoke_without_command=True)
 @click.pass_context
 def config_command(ctx: click.Context) -> None:
-    """LLM/environment config by default; subcommands manage ~/.config/opensre/config.yml."""
+    """LLM/environment config by default; subcommands manage ~/.config/opensore/config.yml."""
     if ctx.invoked_subcommand is None:
         _emit_llm_config()
 
 
 @config_command.command(name="show")
 def config_show() -> None:
-    """Show local ~/.config/opensre/config.yml values."""
+    """Show local ~/.config/opensore/config.yml values."""
     from app.cli.support.context import is_json_output
 
     payload = _load_config()
@@ -174,7 +174,7 @@ def config_show() -> None:
 @click.argument("key")
 @click.argument("value")
 def config_set(key: str, value: str) -> None:
-    """Set one local config key in ~/.config/opensre/config.yml."""
+    """Set one local config key in ~/.config/opensore/config.yml."""
     key = key.strip()
     coerced = _coerce_value(key, value)
     data = _load_config()

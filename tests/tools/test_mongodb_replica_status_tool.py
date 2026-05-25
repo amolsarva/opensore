@@ -10,11 +10,11 @@ from tests.tools.conftest import BaseToolContract
 
 class TestMongoDBReplicaStatusToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return get_mongodb_replica_status.__opensre_registered_tool__
+        return get_mongodb_replica_status.__opensore_registered_tool__
 
 
 def test_metadata() -> None:
-    rt = get_mongodb_replica_status.__opensre_registered_tool__
+    rt = get_mongodb_replica_status.__opensore_registered_tool__
     assert rt.name == "get_mongodb_replica_status"
     assert rt.source == "mongodb"
 

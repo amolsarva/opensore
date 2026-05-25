@@ -1,11 +1,11 @@
-"""``opensre watchdog`` process-threshold monitor."""
+"""``opensore watchdog`` process-threshold monitor."""
 
 from __future__ import annotations
 
 import click
 from pydantic import ValidationError
 
-from app.cli.support.errors import OpenSREError
+from app.cli.support.errors import OpenSoreError
 from app.watch_dog.config import WatchdogConfig
 from app.watch_dog.runner import run_watchdog
 
@@ -80,7 +80,7 @@ def watchdog_command(
             }
         )
     except ValidationError as exc:
-        raise OpenSREError(
+        raise OpenSoreError(
             "Invalid watchdog configuration.",
             suggestion=_validation_suggestion(exc),
         ) from exc

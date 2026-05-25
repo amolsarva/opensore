@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from app.cli.interactive_shell.routing.handle_message_with_agent.orchestration.action_executor import (
-    run_opensre_cli_command,
+    run_opensore_cli_command,
 )
 from app.cli.interactive_shell.routing.handle_message_with_agent.orchestration.execution_tier import (
     ExecutionTier,
@@ -23,7 +23,7 @@ def execute_cli_command_action(args: dict[str, Any], ctx: ToolContext) -> bool:
     payload = str(args.get("payload", "")).strip()
     if not payload:
         return False
-    run_opensre_cli_command(
+    run_opensore_cli_command(
         payload,
         ctx.session,
         ctx.console,
@@ -36,7 +36,7 @@ def execute_cli_command_action(args: dict[str, Any], ctx: ToolContext) -> bool:
 TOOL_ENTRY = ToolEntry(
     name="cli_exec",
     description=(
-        "Run an `opensre` CLI subcommand payload (without the leading `opensre ` prefix). "
+        "Run an `opensore` CLI subcommand payload (without the leading `opensore ` prefix). "
         "Prefer allowed operational families such as health/status/list/show/integrations/"
         "synthetic checks; avoid unrelated or dangerous payloads."
     ),
@@ -44,9 +44,9 @@ TOOL_ENTRY = ToolEntry(
         properties={
             "payload": string_property(
                 description=(
-                    "CLI payload passed to `opensre` without the leading command prefix "
+                    "CLI payload passed to `opensore` without the leading command prefix "
                     "(for example: `integrations list`, `health`, `synthetic run ...`). "
-                    "Must not start with `opensre `."
+                    "Must not start with `opensore `."
                 ),
                 min_length=1,
             )

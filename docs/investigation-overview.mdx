@@ -2,33 +2,33 @@
 title: "Investigations overview"
 ---
 
-Use this workflow when running OpenSRE via the local `opensre` binary.
+Use this workflow when running OpenSore via the local `opensore` binary.
 
 You can work in two ways:
 
-- **Interactive prompt shell** — run `opensre` with no subcommand (TTY) to enter the REPL: describe incidents conversationally, stream investigations, and use slash commands.
-- **Direct investigation** — run `opensre investigate` from your terminal with `-i` pointing at an alert payload (or `--interactive` to pick a file in the UI). The process runs and exits when the investigation completes.
+- **Interactive prompt shell** — run `opensore` with no subcommand (TTY) to enter the REPL: describe incidents conversationally, stream investigations, and use slash commands.
+- **Direct investigation** — run `opensore investigate` from your terminal with `-i` pointing at an alert payload (or `--interactive` to pick a file in the UI). The process runs and exits when the investigation completes.
 
 ## 1) Start an investigation
 
-### Interactive shell (`opensre`)
+### Interactive shell (`opensore`)
 
-From a terminal with stdin and stdout attached (`opensre` detects a TTY), run:
+From a terminal with stdin and stdout attached (`opensore` detects a TTY), run:
 
 ```bash
-opensre
+opensore
 ```
 
 Then describe the incident or paste alert context at the prompt. Use `/help` for slash commands and `/exit` when finished.
 
-When `LLM_PROVIDER` is `openai` or `codex`, `/effort` sets how much reasoning the model applies for that REPL session (`low`, `medium`, `high`, `xhigh`, or `max`). Run `/effort` with no arguments to print the current level and usage; `/status` includes the same field. Other providers ignore this setting (the shell prints a hint). You can also set `OPENSRE_REASONING_EFFORT` to `low`, `medium`, `high`, or `xhigh` in the environment for non-interactive defaults.
+When `LLM_PROVIDER` is `openai` or `codex`, `/effort` sets how much reasoning the model applies for that REPL session (`low`, `medium`, `high`, `xhigh`, or `max`). Run `/effort` with no arguments to print the current level and usage; `/status` includes the same field. Other providers ignore this setting (the shell prints a hint). You can also set `OPENSORE_REASONING_EFFORT` to `low`, `medium`, `high`, or `xhigh` in the environment for non-interactive defaults.
 
-### Direct investigation (`opensre investigate`)
+### Direct investigation (`opensore investigate`)
 
-Pass an alert payload to `opensre investigate`:
+Pass an alert payload to `opensore investigate`:
 
 ```bash
-opensre investigate -i tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json
+opensore investigate -i tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json
 ```
 
 You can also use `--interactive` to pick an input file from your terminal UI.
@@ -44,10 +44,10 @@ A local run produces structured RCA artifacts such as:
 If you want a single machine-readable output file, pass:
 
 ```bash
-opensre investigate -i <alert-file> --output ./rca.json
+opensore investigate -i <alert-file> --output ./rca.json
 ```
 
-## 3) Understand what OpenSRE analyzed
+## 3) Understand what OpenSore analyzed
 
 Each run captures:
 
@@ -64,7 +64,7 @@ to drill into specific hypotheses or evidence sections).
 
 ## Slack reports
 
-If you've configured the Slack integration, OpenSRE can publish a concise incident summary into Slack after the
+If you've configured the Slack integration, OpenSore can publish a concise incident summary into Slack after the
 local investigation completes.
 
 <Frame>

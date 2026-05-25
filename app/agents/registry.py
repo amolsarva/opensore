@@ -9,11 +9,11 @@ from dataclasses import asdict, dataclass, field, replace
 from datetime import UTC, datetime
 from pathlib import Path
 
-from app.constants import OPENSRE_HOME_DIR
+from app.constants import OPENSORE_HOME_DIR
 
 logger = logging.getLogger(__name__)
 
-_DEFAULT_REGISTRY_PATH = OPENSRE_HOME_DIR / "agents.jsonl"
+_DEFAULT_REGISTRY_PATH = OPENSORE_HOME_DIR / "agents.jsonl"
 
 
 @dataclass(frozen=True)
@@ -59,7 +59,7 @@ class AgentRecord:
 class AgentRegistry:
     """JSONL-backed registry of locally running AI agent processes.
 
-    Persists to ``~/.config/opensre/agents.jsonl`` by default.  The file is
+    Persists to ``~/.config/opensore/agents.jsonl`` by default.  The file is
     append-only for ``register`` and fully rewritten on ``forget`` / ``clear``.
     """
 

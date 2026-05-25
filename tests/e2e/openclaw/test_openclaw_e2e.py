@@ -1,7 +1,7 @@
-"""OpenClaw E2E tests — feed real OpenClaw error scenarios into the OpenSRE investigation pipeline.
+"""OpenClaw E2E tests — feed real OpenClaw error scenarios into the OpenSore investigation pipeline.
 
 Each test loads an alert fixture that describes a real OpenClaw failure mode, runs it through
-the OpenSRE investigation workflow (mocking only network transport), and asserts that the
+the OpenSore investigation workflow (mocking only network transport), and asserts that the
 pipeline produces a coherent RCA: alert fields parsed, not treated as noise, root cause
 diagnosed, and remediation steps generated.
 
@@ -104,7 +104,7 @@ def _minimal_investigation_state(
 class TestOpenClawGatewayUnavailable:
     """
     Scenario: The openclaw gateway process crashed.  All stdio MCP calls fail with
-    'Connection closed'.  OpenSRE must:
+    'Connection closed'.  OpenSore must:
       - parse the alert correctly (not treat it as noise)
       - resolve openclaw as a source
       - diagnose the root cause as a crashed gateway process
@@ -203,7 +203,7 @@ class TestOpenClawGatewayUnavailable:
 class TestOpenClawMCPAuthFailure:
     """
     Scenario: The bearer token stored in OPENCLAW_MCP_AUTH_TOKEN has expired or been
-    rotated.  Every HTTP MCP call returns 401.  OpenSRE must:
+    rotated.  Every HTTP MCP call returns 401.  OpenSore must:
       - parse the alert (not noise — HTTP 401 is a real config failure)
       - produce an RCA identifying the expired/invalid token as root cause
       - recommend rotating OPENCLAW_MCP_AUTH_TOKEN as remediation
@@ -293,7 +293,7 @@ class TestOpenClawStdioCommandNotFound:
     """
     Scenario: The deployment is configured with OPENCLAW_MCP_COMMAND=openclaw-mcp but
     that binary was removed in openclaw v2.1.0.  The correct invocation is
-    'openclaw mcp serve'.  OpenSRE must:
+    'openclaw mcp serve'.  OpenSore must:
       - recognise FileNotFoundError on 'openclaw-mcp' as a known legacy-command failure
       - produce a remediation hint pointing to 'openclaw mcp serve'
       - not treat the alert as noise
@@ -382,7 +382,7 @@ class TestOpenClawWriteBackFailure:
     Scenario: After a successful RCA investigation, publish_findings calls
     send_openclaw_report() which in turn calls conversations_create on the MCP bridge.
     The bridge returns is_error=True ('OpenClaw tool call failed.').
-    OpenSRE must:
+    OpenSore must:
       - return (False, error_message) from send_openclaw_report
       - log a warning but NOT raise
       - the Slack delivery must have already succeeded (non-fatal failure)
@@ -609,10 +609,10 @@ class TestOpenClawConnectionVerifiedBug:
 
         sources = {"openclaw": _openclaw_stdio_resolved()}
 
-        assert list_openclaw_bridge_tools.__opensre_registered_tool__.is_available(sources) is True
-        assert call_openclaw_bridge_tool.__opensre_registered_tool__.is_available(sources) is True
+        assert list_openclaw_bridge_tools.__opensore_registered_tool__.is_available(sources) is True
+        assert call_openclaw_bridge_tool.__opensore_registered_tool__.is_available(sources) is True
         assert (
-            search_openclaw_conversations.__opensre_registered_tool__.is_available(sources) is True
+            search_openclaw_conversations.__opensore_registered_tool__.is_available(sources) is True
         )
 
     def test_bridge_tools_unavailable_when_connection_verified_absent(self) -> None:
@@ -632,10 +632,10 @@ class TestOpenClawConnectionVerifiedBug:
             }
         }
 
-        assert list_openclaw_bridge_tools.__opensre_registered_tool__.is_available(sources) is False
-        assert call_openclaw_bridge_tool.__opensre_registered_tool__.is_available(sources) is False
+        assert list_openclaw_bridge_tools.__opensore_registered_tool__.is_available(sources) is False
+        assert call_openclaw_bridge_tool.__opensore_registered_tool__.is_available(sources) is False
         assert (
-            search_openclaw_conversations.__opensre_registered_tool__.is_available(sources) is False
+            search_openclaw_conversations.__opensore_registered_tool__.is_available(sources) is False
         )
 
     def test_extract_params_maps_url_key_not_openclaw_url(self) -> None:
@@ -645,7 +645,7 @@ class TestOpenClawConnectionVerifiedBug:
         """
         from app.tools.OpenClawMCPTool import call_openclaw_bridge_tool
 
-        params = call_openclaw_bridge_tool.__opensre_registered_tool__.extract_params(
+        params = call_openclaw_bridge_tool.__opensore_registered_tool__.extract_params(
             {
                 "openclaw": {
                     "connection_verified": True,

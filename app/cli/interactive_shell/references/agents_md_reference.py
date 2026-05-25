@@ -1,7 +1,7 @@
-"""AGENTS.md grounding helpers for OpenSRE interactive-shell answers.
+"""AGENTS.md grounding helpers for OpenSore interactive-shell answers.
 
 The conversational interactive-shell assistant grounds answers on the
-``opensre --help`` reference (via :mod:`app.cli.interactive_shell.references.cli_reference`)
+``opensore --help`` reference (via :mod:`app.cli.interactive_shell.references.cli_reference`)
 and, for procedural questions, excerpts from ``docs/`` (via
 :mod:`app.cli.interactive_shell.references.docs_reference`). Neither surface includes
 internal repo-map content, so the assistant cannot answer questions like

@@ -1,7 +1,7 @@
 {
   "_meta": {
     "purpose": "Local pod-failure chaos demo; pair with pod-failure-demo + pod-failure-chaos on kind",
-    "run": "opensre investigate -i tests/chaos_engineering/experiments/pod-failure/pod-failure-alert.json"
+    "run": "opensore investigate -i tests/chaos_engineering/experiments/pod-failure/pod-failure-alert.json"
   },
   "title": "[Triggered] Pod failing - pod-failure-demo",
   "alert_name": "Datadog monitor: Pod pod-failure-demo not ready",

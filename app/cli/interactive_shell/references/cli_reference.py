@@ -1,4 +1,4 @@
-"""Reference text for OpenSRE interactive-shell CLI answers."""
+"""Reference text for OpenSore interactive-shell CLI answers."""
 
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ _MAX_REFERENCE_CHARS = 28_000
 # Heuristic: truncated or failed reference output must not be cached or the
 # assistant would keep an empty reference for the whole process.
 _MIN_CACHEABLE_CLI_REFERENCE_CHARS = 80
-_CLI_REFERENCE_SENTINEL = "=== opensre --help ==="
+_CLI_REFERENCE_SENTINEL = "=== opensore --help ==="
 
 
 def _is_cacheable_cli_reference(text: str) -> bool:
@@ -54,7 +54,7 @@ def _current_cli_signature() -> str:
 
     cmd_names = ",".join(sorted(cli.commands.keys()))
     slash_names = ",".join(sorted(SLASH_COMMANDS.keys()))
-    return f"opensre={get_version()}|commands={cmd_names}|slash={slash_names}"
+    return f"opensore={get_version()}|commands={cmd_names}|slash={slash_names}"
 
 
 def _format_param(param: click.Parameter) -> str:
@@ -89,7 +89,7 @@ def _format_command_reference(
     """Render Click command metadata without invoking help callbacks.
 
     ``click.Command.get_help()`` eventually calls ``format_help()``. The root
-    OpenSRE group overrides that path to render via Rich's live console, which
+    OpenSore group overrides that path to render via Rich's live console, which
     can leak into the interactive terminal when the assistant builds grounding
     context. This renderer inspects command objects directly instead.
     """
@@ -135,16 +135,16 @@ def _build_cli_reference_text_uncached() -> str:
 
     parts: list[str] = []
 
-    parts.append("=== opensre --help ===\n")
-    parts.append(_format_command_reference(cli, path="opensre"))
+    parts.append("=== opensore --help ===\n")
+    parts.append(_format_command_reference(cli, path="opensore"))
 
-    with click.Context(cli, info_name="opensre") as ctx:
+    with click.Context(cli, info_name="opensore") as ctx:
         for name in sorted(cli.commands.keys()):
             command = cli.get_command(ctx, name)
             if command is None or command.hidden:
                 continue
-            parts.append(f"\n=== opensre {name} --help ===\n")
-            parts.append(_format_command_reference(command, path=f"opensre {name}"))
+            parts.append(f"\n=== opensore {name} --help ===\n")
+            parts.append(_format_command_reference(command, path=f"opensore {name}"))
 
     parts.append("\n=== Interactive-shell slash commands ===\n")
     parts.append(_interactive_shell_slash_hints())
@@ -172,8 +172,8 @@ def _interactive_shell_slash_hints() -> str:
     lines.extend(
         [
             "",
-            "Non-interactive investigation: `opensre investigate` with stdin, file, or flags.",
-            "Launch the interactive shell: `opensre` (requires a TTY).",
+            "Non-interactive investigation: `opensore investigate` with stdin, file, or flags.",
+            "Launch the interactive shell: `opensore` (requires a TTY).",
         ]
     )
     return "\n".join(lines)
@@ -200,7 +200,7 @@ def get_cli_reference_cache_stats() -> dict[str, Any]:
 
 
 def build_cli_reference_text() -> str:
-    """Assemble ``opensre`` and subcommand ``--help`` output for LLM grounding.
+    """Assemble ``opensore`` and subcommand ``--help`` output for LLM grounding.
 
     Cached process-locally while the command registry signature matches.
     """

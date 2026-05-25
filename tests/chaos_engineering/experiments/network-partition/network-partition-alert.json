@@ -1,7 +1,7 @@
 {
   "_meta": {
     "purpose": "Synthetic alert for NetworkChaos partition (client cannot reach server)",
-    "run": "opensre investigate -i tests/chaos_engineering/experiments/network-partition/network-partition-alert.json"
+    "run": "opensore investigate -i tests/chaos_engineering/experiments/network-partition/network-partition-alert.json"
   },
   "title": "[Triggered] Network partition - client to server",
   "alert_name": "Datadog monitor: partition client connectivity",

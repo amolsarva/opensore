@@ -6,14 +6,14 @@ import sys
 
 from app.version import PACKAGE_NAME, get_version
 
-_RELEASES_API = "https://api.github.com/repos/Tracer-Cloud/opensre/releases/latest"
-_INSTALL_SCRIPT = "https://install.opensre.com"
-_INSTALL_SCRIPT_PS1 = "https://install.opensre.com"
-_RELEASE_URL = "https://github.com/Tracer-Cloud/opensre/releases/tag/v{}"
+_RELEASES_API = "https://api.github.com/repos/Tracer-Cloud/opensore/releases/latest"
+_INSTALL_SCRIPT = "https://install.opensore.com"
+_INSTALL_SCRIPT_PS1 = "https://install.opensore.com"
+_RELEASE_URL = "https://github.com/Tracer-Cloud/opensore/releases/tag/v{}"
 
 
 def _releases_api_url() -> str:
-    return os.getenv("OPENSRE_RELEASES_API_URL", _RELEASES_API)
+    return os.getenv("OPENSORE_RELEASES_API_URL", _RELEASES_API)
 
 
 def _fetch_latest_version() -> str:
@@ -75,7 +75,7 @@ def development_install_doctor_version_detail(current: str) -> str | None:
     """If this process looks like a local checkout, return the doctor line (skip release compare).
 
     Editable installs (`pip install -e` / ``uv sync`` on a git checkout) and ``uv run``
-    children set signals we use so ``opensre doctor`` does not warn vs GitHub releases.
+    children set signals we use so ``opensore doctor`` does not warn vs GitHub releases.
     """
     labels: list[str] = []
     if _is_editable_install():
@@ -97,21 +97,21 @@ def _upgrade_via_install_script(version: str) -> int:
                 "powershell",
                 "-NoProfile",
                 "-Command",
-                f"$env:OPENSRE_VERSION='{version}'; irm {_INSTALL_SCRIPT_PS1} | iex",
+                f"$env:OPENSORE_VERSION='{version}'; irm {_INSTALL_SCRIPT_PS1} | iex",
             ],
             check=False,
         )
     else:
         result = subprocess.run(
             ["bash", "-c", f"curl -fsSL {_INSTALL_SCRIPT} | bash"],
-            env={**os.environ, "OPENSRE_VERSION": version},
+            env={**os.environ, "OPENSORE_VERSION": version},
             check=False,
         )
     return result.returncode
 
 
 def run_update(*, check_only: bool = False, yes: bool = False) -> int:
-    # To skip this check in CI or automated environments, set OPENSRE_NO_UPDATE_CHECK=1.
+    # To skip this check in CI or automated environments, set OPENSORE_NO_UPDATE_CHECK=1.
     current = get_version()
 
     try:
@@ -125,7 +125,7 @@ def run_update(*, check_only: bool = False, yes: bool = False) -> int:
         return 1
 
     if not _is_update_available(current, latest):
-        print(f"  opensre {current} is already up to date.")
+        print(f"  opensore {current} is already up to date.")
         return 0
 
     print(f"  current: {current}")
@@ -159,8 +159,8 @@ def run_update(*, check_only: bool = False, yes: bool = False) -> int:
     else:
         print(f"  install script failed (exit {rc}).", file=sys.stderr)
         if _is_windows():
-            hint = f'$env:OPENSRE_VERSION="{latest}"; irm {_INSTALL_SCRIPT_PS1} | iex'
+            hint = f'$env:OPENSORE_VERSION="{latest}"; irm {_INSTALL_SCRIPT_PS1} | iex'
         else:
-            hint = f"curl -fsSL {_INSTALL_SCRIPT} | OPENSRE_VERSION={latest} bash"
+            hint = f"curl -fsSL {_INSTALL_SCRIPT} | OPENSORE_VERSION={latest} bash"
         print(f"  to retry manually, run:\n    {hint}", file=sys.stderr)
     return rc

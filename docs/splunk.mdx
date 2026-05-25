@@ -1,9 +1,9 @@
 ---
 title: "Splunk"
-description: "Connect Splunk so OpenSRE can search logs using SPL during investigations"
+description: "Connect Splunk so OpenSore can search logs using SPL during investigations"
 ---
 
-OpenSRE queries Splunk using the REST API to surface relevant log evidence during alert investigations — searching indexes with SPL, correlating error patterns with incidents, and identifying root causes.
+OpenSore queries Splunk using the REST API to surface relevant log evidence during alert investigations — searching indexes with SPL, correlating error patterns with incidents, and identifying root causes.
 
 ## Prerequisites
 
@@ -16,7 +16,7 @@ OpenSRE queries Splunk using the REST API to surface relevant log evidence durin
 ### Option 1: Interactive CLI
 
 ```bash
-opensre integrations setup
+opensore integrations setup
 ```
 
 Select **Splunk** when prompted and provide your REST API base URL and bearer token.
@@ -78,13 +78,13 @@ When `SPLUNK_INSTANCES` is set it overrides the single-instance `SPLUNK_URL` / `
 
 ## Generating a bearer token
 
-OpenSRE uses bearer tokens — not basic auth and not HEC tokens. To generate one:
+OpenSore uses bearer tokens — not basic auth and not HEC tokens. To generate one:
 
 **Via the Splunk UI:**
 
 1. Go to **Settings** → **Tokens**
 2. Click **New Token**
-3. Set a name (e.g. `opensre`) and an expiry date
+3. Set a name (e.g. `opensore`) and an expiry date
 4. Copy the generated token
 
 **Via the REST API** (replace `<PASSWORD>` with your admin password):
@@ -93,7 +93,7 @@ OpenSRE uses bearer tokens — not basic auth and not HEC tokens. To generate on
 curl -sk -u admin:<PASSWORD> \
   https://splunk.corp.com:8089/services/authorization/tokens \
   -X POST \
-  --data-urlencode "name=opensre" \
+  --data-urlencode "name=opensore" \
   --data-urlencode "expires_on=+90d" \
   --data-urlencode "output_mode=json" \
   | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['entry'][0]['content']['token'])"
@@ -107,7 +107,7 @@ The token needs the `search` capability. The `admin` role includes this by defau
 ## Verify
 
 ```bash
-opensre integrations verify splunk
+opensore integrations verify splunk
 ```
 
 Expected output:
@@ -120,7 +120,7 @@ Detail: Connected to Splunk 9.x.x
 
 ## How queries are generated
 
-OpenSRE builds SPL queries deterministically from the alert payload — the LLM selects which tool to call but never writes the query itself. This keeps investigations reproducible and auditable.
+OpenSore builds SPL queries deterministically from the alert payload — the LLM selects which tool to call but never writes the query itself. This keeps investigations reproducible and auditable.
 
 Query construction priority:
 
@@ -146,7 +146,7 @@ To pass a specific SPL query through an alert, set `commonAnnotations.splunk_que
 ## Test with the built-in alert template
 
 ```bash
-opensre investigate --template splunk
+opensore investigate --template splunk
 ```
 
 This runs a synthetic investigation using a pre-built alert fixture — no live alert infrastructure needed.
@@ -160,13 +160,13 @@ This runs a synthetic investigation using a pre-built alert fixture — no live 
 | `HTTP 403 Forbidden` | Token lacks `search` capability — check the role assigned to the token |
 | Empty search results | Data may not have been ingested yet, or the index name is wrong |
 | `Connection refused` on port 8089 | Splunk management port may be firewalled; confirm network access |
-| `opensre integrations verify` fails | Check `SPLUNK_URL` includes the protocol and port (`https://host:8089`) |
+| `opensore integrations verify` fails | Check `SPLUNK_URL` includes the protocol and port (`https://host:8089`) |
 
 ## Security best practices
 
 - Use a **read-only bearer token** — never use an admin token in production.
 - Store `SPLUNK_TOKEN` in `.env` or the credential store, not in source code or CI logs.
-- Prefer a dedicated `opensre` service account with only the `search` capability.
+- Prefer a dedicated `opensore` service account with only the `search` capability.
 - For enterprise self-signed certificates, set `SPLUNK_CA_BUNDLE` to the CA bundle path rather than disabling verification entirely.
 - Set `SPLUNK_VERIFY_SSL=false` only in local or dev environments when you cannot supply a CA bundle.
 - Rotate tokens on a schedule and revoke them when no longer needed.

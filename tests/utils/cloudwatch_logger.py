@@ -19,8 +19,8 @@ from tests.utils.cloudwatch_helpers import (
 
 def _log_group_prefix() -> str:
     """Return the CloudWatch log group prefix, allowing staged migration overrides."""
-    value = os.getenv("CLOUDWATCH_LOG_GROUP_PREFIX", "/opensre/ai-investigations").strip()
-    return value.rstrip("/") or "/opensre/ai-investigations"
+    value = os.getenv("CLOUDWATCH_LOG_GROUP_PREFIX", "/opensore/ai-investigations").strip()
+    return value.rstrip("/") or "/opensore/ai-investigations"
 
 
 def _build_logs_client(region: str):

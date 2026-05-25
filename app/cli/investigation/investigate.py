@@ -31,7 +31,7 @@ def _check_llm_settings() -> None:
     """Validate LLM settings early and surface misconfiguration as a structured error."""
     from pydantic import ValidationError
 
-    from app.cli.support.errors import OpenSREError
+    from app.cli.support.errors import OpenSoreError
 
     try:
         resolve_llm_settings()
@@ -43,18 +43,18 @@ def _check_llm_settings() -> None:
             msg = str(original) if isinstance(original, Exception) else errors[0]["msg"]
         else:
             msg = str(exc)
-        raise OpenSREError(
+        raise OpenSoreError(
             msg,
-            suggestion="Run `opensre onboard` to configure your LLM provider and API credentials.",
+            suggestion="Run `opensore onboard` to configure your LLM provider and API credentials.",
         ) from exc
 
 
 def _reraise_investigation_failure(exc: BaseException) -> NoReturn:
     """Map investigation runtime failures to structured CLI errors."""
     if isinstance(exc, _InvestigationPumpCancelled):
-        from app.cli.support.errors import OpenSREError
+        from app.cli.support.errors import OpenSoreError
 
-        raise OpenSREError(
+        raise OpenSoreError(
             "Investigation streaming stopped before completion.",
             suggestion="The run was cancelled or closed early. Retry if you still need results.",
         ) from exc
@@ -65,7 +65,7 @@ def _reraise_investigation_failure(exc: BaseException) -> NoReturn:
 def _call_run_investigation(
     *,
     raw_alert: dict[str, Any],
-    opensre_evaluate: bool = False,
+    opensore_evaluate: bool = False,
     investigation_metadata: tuple[str, str, str] | None = None,
 ) -> AgentState:
     """Import the heavy investigation runner only when execution starts."""
@@ -73,7 +73,7 @@ def _call_run_investigation(
 
     return run_investigation(
         raw_alert,
-        opensre_evaluate=opensre_evaluate,
+        opensore_evaluate=opensore_evaluate,
         investigation_metadata=investigation_metadata,
     )
 
@@ -116,7 +116,7 @@ def resolve_investigation_context(
 def run_investigation_cli(
     *,
     raw_alert: dict[str, Any],
-    opensre_evaluate: bool = False,
+    opensore_evaluate: bool = False,
     investigation_metadata: tuple[str, str, str] | None = None,
 ) -> dict[str, Any]:
     """Run the investigation and return the CLI-facing JSON payload.
@@ -128,7 +128,7 @@ def run_investigation_cli(
     try:
         state = _call_run_investigation(
             raw_alert=raw_alert,
-            opensre_evaluate=opensre_evaluate,
+            opensore_evaluate=opensore_evaluate,
             investigation_metadata=investigation_metadata,
         )
     except Exception as exc:
@@ -143,12 +143,12 @@ def run_investigation_cli(
     }
     if state.get("evidence_entries"):
         out["tool_calls"] = state["evidence_entries"]
-    if opensre_evaluate:
-        ev = state.get("opensre_llm_eval")
+    if opensore_evaluate:
+        ev = state.get("opensore_llm_eval")
         if isinstance(ev, dict) and ev:
-            out["opensre_llm_eval"] = ev
-        elif not (state.get("opensre_eval_rubric") or "").strip():
-            out["opensre_llm_eval"] = {
+            out["opensore_llm_eval"] = ev
+        elif not (state.get("opensore_eval_rubric") or "").strip():
+            out["opensore_llm_eval"] = {
                 "skipped": True,
                 "reason": (
                     "No scoring_points on this alert — nothing to judge against "
@@ -156,7 +156,7 @@ def run_investigation_cli(
                 ),
             }
         else:
-            out["opensre_llm_eval"] = {
+            out["opensore_llm_eval"] = {
                 "skipped": True,
                 "reason": "Evaluate was enabled but no judge output was recorded.",
             }

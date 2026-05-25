@@ -120,9 +120,9 @@ uv run python -m pytest tests/services/test_agent_llm_client.py tests/agent/test
 When touching a specific provider, also verify end-to-end with that provider configured:
 
 ```bash
-uv run opensre
+uv run opensore
 # /investigate <fixture.json>   # interactive shell
-# or: opensre investigate -i <fixture.json>
+# or: opensore investigate -i <fixture.json>
 ```
 
 Use the same `LLM_PROVIDER` / model users report in issues; unit tests alone are not enough for

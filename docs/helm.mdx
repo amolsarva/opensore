@@ -1,9 +1,9 @@
 ---
 title: "Helm (CLI)"
-description: "Connect Helm 3 so OpenSRE can list releases, inspect status and history, and read rendered values and manifests during Kubernetes investigations"
+description: "Connect Helm 3 so OpenSore can list releases, inspect status and history, and read rendered values and manifests during Kubernetes investigations"
 ---
 
-OpenSRE runs the **Helm 3** command-line client on the machine where the agent executes. It uses **read-only** subcommands (`helm list`, `helm status`, `helm history`, `helm get values`, `helm get manifest`) with explicit `--kube-context` and `--kubeconfig` flags so investigations target the same cluster your engineers use.
+OpenSore runs the **Helm 3** command-line client on the machine where the agent executes. It uses **read-only** subcommands (`helm list`, `helm status`, `helm history`, `helm get values`, `helm get manifest`) with explicit `--kube-context` and `--kubeconfig` flags so investigations target the same cluster your engineers use.
 
 <Note>
   **Helm 2 is not supported.** Verification checks `helm version --client` and requires a Helm **3.x** client.
@@ -17,7 +17,7 @@ OpenSRE runs the **Helm 3** command-line client on the machine where the agent e
 
 ## Setup
 
-Configure Helm like other local integrations: environment variables and/or `~/.config/opensre/integrations.json`.
+Configure Helm like other local integrations: environment variables and/or `~/.config/opensore/integrations.json`.
 
 ### Option 1: Environment variables
 
@@ -52,7 +52,7 @@ HELM_MANIFEST_MAX_CHARS=600000
 
 ### Option 2: Persistent store
 
-Add an active `helm` record to `~/.config/opensre/integrations.json`:
+Add an active `helm` record to `~/.config/opensore/integrations.json`:
 
 ```json
 {
@@ -78,14 +78,14 @@ Add an active `helm` record to `~/.config/opensre/integrations.json`:
 ## Verify
 
 ```bash
-opensre integrations verify helm
+opensore integrations verify helm
 ```
 
 A passing check runs `helm version --client` (must report Helm 3) and a minimal `helm list -A --max 1 -o json` against your cluster to validate JSON output and reachability.
 
 ## Usage in investigations
 
-When Helm is configured, OpenSRE adds a `helm` entry to `detect_sources` only if the alert shows **Helm-specific** context — avoiding generic “deployment” noise.
+When Helm is configured, OpenSore adds a `helm` entry to `detect_sources` only if the alert shows **Helm-specific** context — avoiding generic “deployment” noise.
 
 **Annotations** (including top-level enriched fields merged into annotations):
 
@@ -124,7 +124,7 @@ Example minimal alert:
 Then run:
 
 ```bash
-opensre investigate -i alert.json
+opensore investigate -i alert.json
 ```
 
 ## Investigation tools

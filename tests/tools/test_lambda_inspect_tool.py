@@ -10,18 +10,18 @@ from tests.tools.conftest import BaseToolContract, mock_agent_state
 
 class TestLambdaInspectToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return inspect_lambda_function.__opensre_registered_tool__
+        return inspect_lambda_function.__opensore_registered_tool__
 
 
 def test_is_available_requires_function_name() -> None:
-    rt = inspect_lambda_function.__opensre_registered_tool__
+    rt = inspect_lambda_function.__opensore_registered_tool__
     assert rt.is_available({"lambda": {"function_name": "my-fn"}}) is True
     assert rt.is_available({"lambda": {}}) is False
     assert rt.is_available({}) is False
 
 
 def test_extract_params_maps_fields() -> None:
-    rt = inspect_lambda_function.__opensre_registered_tool__
+    rt = inspect_lambda_function.__opensore_registered_tool__
     sources = mock_agent_state()
     params = rt.extract_params(sources)
     assert params["function_name"] == "my-lambda-function"

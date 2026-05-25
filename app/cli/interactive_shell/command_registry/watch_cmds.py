@@ -22,7 +22,7 @@ from app.cli.interactive_shell.ui import (
     WARNING,
     repl_table,
 )
-from app.cli.support.errors import OpenSREError
+from app.cli.support.errors import OpenSoreError
 from app.watch_dog.alarms import AlarmDispatcher, load_credentials_from_env
 from app.watch_dog.monitor import start_watchdog_daemon_thread
 
@@ -199,7 +199,7 @@ def _cmd_watch(session: ReplSession, console: Console, args: list[str]) -> bool:
 
     try:
         creds = load_credentials_from_env()
-    except OpenSREError as exc:
+    except OpenSoreError as exc:
         console.print(f"[{ERROR}]{escape(str(exc))}[/]")
         return True
 

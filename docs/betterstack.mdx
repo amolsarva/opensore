@@ -1,23 +1,23 @@
 ---
 title: "Better Stack Telemetry"
-description: "Connect Better Stack so OpenSRE can pull log evidence from your Telemetry sources during investigations"
+description: "Connect Better Stack so OpenSore can pull log evidence from your Telemetry sources during investigations"
 ---
 
-OpenSRE uses Better Stack's ClickHouse SQL Query API to read log evidence during investigations. It queries the configured source via `remote(<source>_logs)` for recent rows and `s3Cluster(primary, <source>_s3)` for historical rows, bounded by the alert window.
+OpenSore uses Better Stack's ClickHouse SQL Query API to read log evidence during investigations. It queries the configured source via `remote(<source>_logs)` for recent rows and `s3Cluster(primary, <source>_s3)` for historical rows, bounded by the alert window.
 
 ## Prerequisites
 
 - A Better Stack account with at least one **Telemetry source** collecting logs
 - A **ClickHouse HTTP client** credential pair (username + password) generated from the dashboard
 - The **region-specific query endpoint** for your workspace (e.g. `https://eu-nbg-2-connect.betterstackdata.com`)
-- Network access from the OpenSRE environment to that endpoint over HTTPS
+- Network access from the OpenSore environment to that endpoint over HTTPS
 
 ## Setup
 
 ### Option 1: Interactive CLI
 
 ```bash
-opensre integrations setup betterstack
+opensore integrations setup betterstack
 ```
 
 You will be prompted for the query endpoint, username, password, and an optional comma-separated list of source IDs (planner hint).
@@ -42,7 +42,7 @@ BETTERSTACK_SOURCES=t123456_myapp,t123456_gateway
 
 ### Option 3: Persistent store
 
-Credentials are persisted to `~/.config/opensre/integrations.json` with `0o600` permissions:
+Credentials are persisted to `~/.config/opensore/integrations.json` with `0o600` permissions:
 
 ```json
 {
@@ -67,14 +67,14 @@ Credentials are persisted to `~/.config/opensre/integrations.json` with `0o600` 
 
 From the Better Stack dashboard:
 
-1. Open **Telemetry** and pick the source you want OpenSRE to query.
+1. Open **Telemetry** and pick the source you want OpenSore to query.
 2. In the source sidebar, open **Integrations** → **Connect ClickHouse HTTP client**.
 3. Copy the generated **username**, **password**, and **query endpoint**. The endpoint's subdomain encodes the region (e.g. `eu-nbg-2-connect`, `us-connect`).
-4. The **base source ID** (e.g. `t123456_myapp`) is shown above the integration panel and is the value to supply for `BETTERSTACK_SOURCES`. Use the base name only — OpenSRE appends `_logs` and `_s3` internally.
+4. The **base source ID** (e.g. `t123456_myapp`) is shown above the integration panel and is the value to supply for `BETTERSTACK_SOURCES`. Use the base name only — OpenSore appends `_logs` and `_s3` internally.
 
 ## Investigation tool
 
-OpenSRE exposes one tool against a Better Stack source:
+OpenSore exposes one tool against a Better Stack source:
 
 ### `query_betterstack_logs`
 
@@ -110,7 +110,7 @@ When an alert carries a `betterstack_source` annotation, the planner wires it th
 ## Verify
 
 ```bash
-opensre integrations verify betterstack
+opensore integrations verify betterstack
 ```
 
 Expected output:
@@ -134,8 +134,8 @@ The verify step issues a cheap probe (`SELECT 1 FORMAT JSONEachRow`) against the
 
 ## Security best practices
 
-- Use a **dedicated ClickHouse HTTP client credential** for OpenSRE — not your personal dashboard login.
-- Keep the credential pair out of source control — use `.env` or the persistent store (`~/.config/opensre/integrations.json`).
-- The integration is **read-only**: OpenSRE only issues `SELECT` statements against `remote(...)` and `s3Cluster(...)` table functions.
+- Use a **dedicated ClickHouse HTTP client credential** for OpenSore — not your personal dashboard login.
+- Keep the credential pair out of source control — use `.env` or the persistent store (`~/.config/opensore/integrations.json`).
+- The integration is **read-only**: OpenSore only issues `SELECT` statements against `remote(...)` and `s3Cluster(...)` table functions.
 - Source identifiers are allowlisted against `^[A-Za-z0-9_]+$` before being interpolated into SQL, preventing identifier-injection attacks from the alert payload.
 - Rotate credentials periodically via the Better Stack dashboard.

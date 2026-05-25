@@ -1,7 +1,7 @@
 """Terminal renderer for remote agent streaming events.
 
 Reuses spinner and label patterns from app.cli.support.output so that remote
-investigation output looks identical to a local ``opensre investigate`` run.
+investigation output looks identical to a local ``opensore investigate`` run.
 
 Handles both ``stream_mode: ["updates"]`` (legacy node-level) and
 ``stream_mode: ["events"]`` (fine-grained tool/LLM callbacks).

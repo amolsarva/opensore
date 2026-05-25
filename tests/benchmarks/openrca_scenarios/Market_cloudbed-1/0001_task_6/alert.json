@@ -1,9 +1,9 @@
 {
   "_meta": {
     "purpose": "Root cause analysis query from OpenRCA Market/cloudbed-1 benchmark",
-    "dataset": "https://huggingface.co/datasets/tracer-cloud/opensre",
+    "dataset": "https://huggingface.co/datasets/tracer-cloud/opensore",
     "telemetry_relative": "Market/cloudbed-1/telemetry/2022_03_20",
-    "note": "Set OPENSRE_DATASET_ROOT or OPENRCA_DATASET_ROOT to your local clone; do not commit scoring into alert.json for fair runs."
+    "note": "Set OPENSORE_DATASET_ROOT or OPENRCA_DATASET_ROOT to your local clone; do not commit scoring into alert.json for fair runs."
   },
   "title": "[Triggered] RCA task task_6 — Market/cloudbed-1",
   "alert_name": "OpenRCA monitor: task_6 (Market/cloudbed-1)",

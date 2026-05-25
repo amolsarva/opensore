@@ -12,8 +12,8 @@
 1. Fork and clone:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/opensre.git
-cd opensre
+git clone https://github.com/YOUR_USERNAME/opensore.git
+cd opensore
 ```
 
 2. Install uv if needed:
@@ -136,13 +136,13 @@ uv run pytest -n auto -v --cov=app --cov-report=term-missing \
 - Use **`uv run`** from the repo root.
 - Re-run **`uv sync --frozen --extra dev`**.
 
-### `opensre` does not pick up local code edits
+### `opensore` does not pick up local code edits
 
-`make install` installs this repo in **editable** mode into `.venv`, but another **`opensre`** may appear earlier on **`PATH`** (installer binary, version manager, `~/.local/bin`, etc.).
+`make install` installs this repo in **editable** mode into `.venv`, but another **`opensore`** may appear earlier on **`PATH`** (installer binary, version manager, `~/.local/bin`, etc.).
 
-1. Prefer **`uv run opensre …`** from the repository root.
+1. Prefer **`uv run opensore …`** from the repository root.
 2. Or run **`eval "$(./scripts/dev-path.sh)"`** then **`hash -r`** (see script for behavior).
-3. Or prepend the venv: `export PATH="$(pwd)/.venv/bin:$PATH"` (macOS/Linux), then **`hash -r`** / new shell, and confirm **`which opensre`** points at **`<repo>/.venv/bin/opensre`**.
+3. Or prepend the venv: `export PATH="$(pwd)/.venv/bin:$PATH"` (macOS/Linux), then **`hash -r`** / new shell, and confirm **`which opensore`** points at **`<repo>/.venv/bin/opensore`**.
 
 ---
 
@@ -158,20 +158,20 @@ If those pass, you are ready to develop. Contribution flow: **[CONTRIBUTING.md](
 
 ## Connecting OpenClaw
 
-OpenSRE no longer exposes a separate `opensre-mcp` server. Instead, OpenSRE connects to the OpenClaw bridge directly to read recent conversation context and write RCA findings back into OpenClaw.
+OpenSore no longer exposes a separate `opensore-mcp` server. Instead, OpenSore connects to the OpenClaw bridge directly to read recent conversation context and write RCA findings back into OpenClaw.
 
 ### 1. Configure observability
 
 Run the full wizard once (**recommended**):
 
 ```bash
-uv run opensre onboard
+uv run opensore onboard
 ```
 
 To add or reconfigure a **single** integration non-interactively:
 
 ```bash
-uv run opensre integrations setup <service>
+uv run opensore integrations setup <service>
 ```
 
 ### 2. Configure the OpenClaw bridge
@@ -179,8 +179,8 @@ uv run opensre integrations setup <service>
 Use the wizard or the direct setup flow:
 
 ```bash
-uv run opensre integrations setup openclaw
-uv run opensre integrations verify openclaw
+uv run opensore integrations setup openclaw
+uv run opensore integrations verify openclaw
 ```
 
 Recommended local settings:
@@ -194,10 +194,10 @@ OPENCLAW_MCP_ARGS="mcp serve"
 ### 3. Run a test
 
 ```bash
-uv run opensre investigate -i tests/fixtures/openclaw_test_alert.json
+uv run opensore investigate -i tests/fixtures/openclaw_test_alert.json
 ```
 
-### 4. Optional: OpenSRE calls OpenClaw during RCA
+### 4. Optional: OpenSore calls OpenClaw during RCA
 
 ```bash
 export OPENCLAW_MCP_MODE=stdio
@@ -208,5 +208,5 @@ export OPENCLAW_MCP_ARGS="mcp serve"
 Keep the OpenClaw gateway running while you investigate, then verify:
 
 ```bash
-opensre integrations verify openclaw
+opensore integrations verify openclaw
 ```

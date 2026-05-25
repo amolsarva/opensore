@@ -10,18 +10,18 @@ from tests.tools.conftest import BaseToolContract, mock_agent_state
 
 class TestDataDogEventsToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return query_datadog_events.__opensre_registered_tool__
+        return query_datadog_events.__opensore_registered_tool__
 
 
 def test_is_available_requires_connection_verified() -> None:
-    rt = query_datadog_events.__opensre_registered_tool__
+    rt = query_datadog_events.__opensore_registered_tool__
     assert rt.is_available({"datadog": {"connection_verified": True}}) is True
     assert rt.is_available({"datadog": {}}) is False
     assert rt.is_available({}) is False
 
 
 def test_extract_params_maps_fields() -> None:
-    rt = query_datadog_events.__opensre_registered_tool__
+    rt = query_datadog_events.__opensore_registered_tool__
     sources = mock_agent_state()
     params = rt.extract_params(sources)
     assert params["api_key"] == "dd_api_key_test"

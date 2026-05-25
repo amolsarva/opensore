@@ -143,7 +143,7 @@ def _render_markdown(report: dict[str, Any], cells: list[dict[str, Any]]) -> str
     lines.append("")
     lines.append(
         f"_config hash:_ `{report.get('config_hash', '?')}`  ·  "
-        f"_opensre SHA:_ `{report.get('opensre_sha', '?')}`"
+        f"_opensore SHA:_ `{report.get('opensore_sha', '?')}`"
     )
     lines.append("")
     lines.append(f"**Started:** {report.get('started_at', '?')}  ")
@@ -225,7 +225,7 @@ def _render_markdown(report: dict[str, Any], cells: list[dict[str, Any]]) -> str
         lines.append("")
 
     # --- Negative results section (Mechanism 9) ---
-    lines.append("## Negative results — where opensre lost or tied")
+    lines.append("## Negative results — where opensore lost or tied")
     lines.append("")
     negative = (report.get("negative_results") or "").strip()
     lines.append("```")
@@ -350,7 +350,7 @@ def _render_html(report: dict[str, Any], cells: list[dict[str, Any]]) -> str:
     parts.append(f"<h1>Benchmark Run — {esc(report.get('run_id', '(unknown)'))}</h1>")
     parts.append('<dl class="meta">')
     parts.append(f"<dt>Config hash</dt><dd><code>{esc(report.get('config_hash', '?'))}</code></dd>")
-    parts.append(f"<dt>opensre SHA</dt><dd><code>{esc(report.get('opensre_sha', '?'))}</code></dd>")
+    parts.append(f"<dt>opensore SHA</dt><dd><code>{esc(report.get('opensore_sha', '?'))}</code></dd>")
     parts.append(f"<dt>Started</dt><dd>{esc(report.get('started_at', '?'))}</dd>")
     parts.append(f"<dt>Ended</dt><dd>{esc(report.get('ended_at', '?'))}</dd>")
     cost = report.get("cost", {})
@@ -427,7 +427,7 @@ def _render_html(report: dict[str, Any], cells: list[dict[str, Any]]) -> str:
         parts.append("</tbody></table>")
 
     # Negative results
-    parts.append("<h2>Negative results — where opensre lost or tied</h2>")
+    parts.append("<h2>Negative results — where opensore lost or tied</h2>")
     negative = (report.get("negative_results") or "").strip()
     parts.append(f"<pre>{esc(negative or '(none recorded)')}</pre>")
 

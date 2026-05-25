@@ -16,7 +16,7 @@ class _FakeBatchJobsClient(AWSBatchJobsMixin):
 
     def __init__(self, response: dict[str, Any]) -> None:
         super().__init__(
-            base_url="https://opensre.com",
+            base_url="https://opensore.com",
             org_id="test-org-123",
             jwt_token="token",
         )
@@ -31,7 +31,7 @@ class _FakeBatchJobsClientWithCapture(AWSBatchJobsMixin):
 
     def __init__(self) -> None:
         super().__init__(
-            base_url="https://opensre.com",
+            base_url="https://opensore.com",
             org_id="test-org-123",
             jwt_token="token",
         )

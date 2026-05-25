@@ -53,7 +53,7 @@ _REPO_PROBE_NO_ARG_TOOLS: tuple[str, ...] = (
 
 # Default cap on repos captured from one MCP list/search call (display + verify).
 # Keeps responses and terminal output bounded; not a GitHub API limit. Override with
-# OPENSRE_GITHUB_MCP_REPO_PROBE_LIMIT (integer, clamped 5..500).
+# OPENSORE_GITHUB_MCP_REPO_PROBE_LIMIT (integer, clamped 5..500).
 _DEFAULT_REPO_PROBE_LIMIT = 50
 
 _GITHUB_MCP_DISPLAY_LEVELS = frozenset({"summary", "standard", "full"})
@@ -381,7 +381,7 @@ def format_github_mcp_validation_cli_report(result: GitHubMCPValidationResult) -
     if result.repo_access_probe_limit_applied:
         lines.append(
             f"Stored up to {result.repo_access_probe_limit_applied} repos from this response "
-            "(set OPENSRE_GITHUB_MCP_REPO_PROBE_LIMIT to change the cap)."
+            "(set OPENSORE_GITHUB_MCP_REPO_PROBE_LIMIT to change the cap)."
         )
     return "\n".join(lines)
 
@@ -427,7 +427,7 @@ async def _open_github_mcp_session(config: GitHubMCPConfig) -> AsyncIterator[Cli
             if not config.command:
                 raise ValueError(
                     "Invalid GitHub MCP config: mode=stdio requires command "
-                    "(set OPENSRE_GITHUB_MCP_COMMAND or pass command "
+                    "(set OPENSORE_GITHUB_MCP_COMMAND or pass command "
                     "in config)."
                 )
             server_params = StdioServerParameters(
@@ -453,7 +453,7 @@ async def _open_github_mcp_session(config: GitHubMCPConfig) -> AsyncIterator[Cli
             if not config.url:
                 raise ValueError(
                     "Invalid GitHub MCP config: mode=sse requires url "
-                    "(set OPENSRE_GITHUB_MCP_URL, "
+                    "(set OPENSORE_GITHUB_MCP_URL, "
                     "for example https://.../sse)."
                 )
             session_url = _remote_github_mcp_session_url(config.url)
@@ -470,7 +470,7 @@ async def _open_github_mcp_session(config: GitHubMCPConfig) -> AsyncIterator[Cli
                 raise ValueError(
                     "Invalid GitHub MCP config: "
                     "mode=streamable-http requires url "
-                    "(set OPENSRE_GITHUB_MCP_URL)."
+                    "(set OPENSORE_GITHUB_MCP_URL)."
                 )
             session_url = _remote_github_mcp_session_url(config.url)
             read_timeout = max(60.0, config.timeout_seconds)
@@ -650,7 +650,7 @@ def _owners_from_repo_full_names(names: Sequence[str]) -> tuple[str, ...]:
 
 
 def _repo_probe_capture_limit() -> int:
-    raw = os.getenv("OPENSRE_GITHUB_MCP_REPO_PROBE_LIMIT", "").strip()
+    raw = os.getenv("OPENSORE_GITHUB_MCP_REPO_PROBE_LIMIT", "").strip()
     if not raw:
         return _DEFAULT_REPO_PROBE_LIMIT
     try:

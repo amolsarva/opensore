@@ -60,7 +60,7 @@ def run_watchdog(
             if max_cpu is not None and snap.cpu_percent >= max_cpu:
                 detail = f"{snap.cpu_percent:.1f}% (threshold {max_cpu:g}%)"
                 msg = (
-                    f"OpenSRE watchdog: PID {watched_pid} exceeded max_cpu — {detail} "
+                    f"OpenSore watchdog: PID {watched_pid} exceeded max_cpu — {detail} "
                     f"(task {task.task_id})"
                 )
                 if dispatcher.dispatch("max_cpu", msg):
@@ -69,7 +69,7 @@ def run_watchdog(
             if max_rss_mib is not None and snap.rss_mb >= max_rss_mib:
                 detail = f"{snap.rss_mb:.1f}MiB (threshold {max_rss_mib:g}MiB)"
                 msg = (
-                    f"OpenSRE watchdog: PID {watched_pid} exceeded max_rss — {detail} "
+                    f"OpenSore watchdog: PID {watched_pid} exceeded max_rss — {detail} "
                     f"(task {task.task_id})"
                 )
                 if dispatcher.dispatch("max_rss", msg):
@@ -78,7 +78,7 @@ def run_watchdog(
             if max_runtime_seconds is not None and runtime_s >= max_runtime_seconds:
                 detail = f"runtime {runtime_s:.0f}s (threshold {max_runtime_seconds:g}s)"
                 msg = (
-                    f"OpenSRE watchdog: PID {watched_pid} exceeded max_runtime — {detail} "
+                    f"OpenSore watchdog: PID {watched_pid} exceeded max_runtime — {detail} "
                     f"(task {task.task_id})"
                 )
                 if dispatcher.dispatch("max_runtime", msg):

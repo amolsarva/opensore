@@ -356,7 +356,7 @@ _INTEGRATIONS_FIRST_ARGS: tuple[tuple[str, str], ...] = (
 
 _MCP_FIRST_ARGS: tuple[tuple[str, str], ...] = (
     ("list", "list connected MCP servers"),
-    ("connect", "add an MCP server via opensre integrations setup"),
+    ("connect", "add an MCP server via opensore integrations setup"),
     ("disconnect", "remove an MCP server"),
 )
 

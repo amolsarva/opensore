@@ -164,7 +164,7 @@ def test_dispatch_one_turn_nitro_prompt_uses_cli_agent_actions_not_cli_help(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     nitro_prompt = (
-        "I want to deploy OpenSRE on a remote EC2 Nitro instance, and then I want to send\n"
+        "I want to deploy OpenSore on a remote EC2 Nitro instance, and then I want to send\n"
         'it an investigation. Can you please deploy the instance and send it "hello world"?'
     )
     action_calls: list[str] = []
@@ -229,7 +229,7 @@ def test_dispatch_one_turn_nitro_prompt_executes_remote_then_investigation(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     nitro_prompt = (
-        "I want to deploy OpenSRE on a remote EC2 Nitro instance, and then I want to send\n"
+        "I want to deploy OpenSore on a remote EC2 Nitro instance, and then I want to send\n"
         'it an investigation. Can you please deploy the instance and send it "hello world"?'
     )
     call_order: list[str] = []
@@ -302,7 +302,7 @@ class TestDispatchSpinnerRouting:
             # The router typo-corrects single-edit bare aliases before dispatch.
             "testts",
             "hlep",
-            "opensre investigate -i alert.json",
+            "opensore investigate -i alert.json",
         ],
     )
     def test_slash_dispatches_do_not_show_assistant_spinner(self, text: str) -> None:

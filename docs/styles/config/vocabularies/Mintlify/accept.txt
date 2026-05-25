@@ -115,9 +115,9 @@ rollout
 timespan
 vhost
 vhosts
-# OpenSRE product / stack (deployment, FAQ, contributor-facing docs)
-OpenSRE
-opensre
+# OpenSore product / stack (deployment, FAQ, contributor-facing docs)
+OpenSore
+opensore
 ASGI
 Dockerfile
 FastAPI

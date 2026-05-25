@@ -27,7 +27,7 @@ def debug_sentry_command() -> None:
     import sentry_sdk
 
     event_id = capture_exception(
-        RuntimeError("OpenSRE Sentry debug smoke test"),
+        RuntimeError("OpenSore Sentry debug smoke test"),
         context="debug.sentry",
         tags={"debug": "true", "surface": "debug"},
     )

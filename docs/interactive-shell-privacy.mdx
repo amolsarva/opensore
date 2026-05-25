@@ -1,18 +1,18 @@
 ---
 title: 'Interactive Shell Privacy'
-description: 'How OpenSRE redacts secrets from your command history, and the controls you have over persistence'
+description: 'How OpenSore redacts secrets from your command history, and the controls you have over persistence'
 ---
 
 ## Overview
 
-The OpenSRE interactive shell persists every line you type to a history file so up-arrow recall and `/history` work across sessions. Incident prompts can include sensitive identifiers and tokens, so the shell:
+The OpenSore interactive shell persists every line you type to a history file so up-arrow recall and `/history` work across sessions. Incident prompts can include sensitive identifiers and tokens, so the shell:
 
 - redacts known token shapes before each entry is written to disk
 - supports disabling persistence entirely (memory-only mode)
 - caps how many entries are kept (oldest pruned)
 - offers a one-shot `/history clear` to wipe the file on demand
 
-The history file lives at `~/.config/opensre/interactive_history`.
+The history file lives at `~/.config/opensore/interactive_history`.
 
 ## Defaults
 
@@ -40,7 +40,7 @@ The built-in pattern set targets token shapes that are unique enough to keep fal
 | `password` | `--password=…`, `password=…` |
 | `private_key` | PEM-encoded private keys |
 
-Redaction applies only to **persistent history**. The line you typed is still passed to OpenSRE's normal pipeline as you typed it.
+Redaction applies only to **persistent history**. The line you typed is still passed to OpenSore's normal pipeline as you typed it.
 
 ## Slash commands
 
@@ -58,16 +58,16 @@ Redaction applies only to **persistent history**. The line you typed is still pa
 Settings resolve from (highest wins):
 
 1. Environment variables
-2. The `interactive.history` block in `~/.config/opensre/config.yml`
+2. The `interactive.history` block in `~/.config/opensore/config.yml`
 3. Built-in defaults
 
 ### Environment variables
 
 | Variable | Default | Effect |
 | --- | --- | --- |
-| `OPENSRE_HISTORY_ENABLED` | `1` | Set to `0`/`false`/`off` to skip persistence entirely (in-memory only). |
-| `OPENSRE_HISTORY_REDACT` | `1` | Set to `0`/`false`/`off` to disable redaction (raw `FileHistory`). |
-| `OPENSRE_HISTORY_MAX_ENTRIES` | `5000` | Non-negative integer. `0` disables the cap (unlimited). |
+| `OPENSORE_HISTORY_ENABLED` | `1` | Set to `0`/`false`/`off` to skip persistence entirely (in-memory only). |
+| `OPENSORE_HISTORY_REDACT` | `1` | Set to `0`/`false`/`off` to disable redaction (raw `FileHistory`). |
+| `OPENSORE_HISTORY_MAX_ENTRIES` | `5000` | Non-negative integer. `0` disables the cap (unlimited). |
 
 ### Config file
 
@@ -81,10 +81,10 @@ interactive:
 
 ## Threat model
 
-The history file is **plain text on local disk** at `~/.config/opensre/interactive_history`, with the user's default file permissions. Built-in redaction targets common token shapes only — it is not a substitute for proper secret handling. Treat the file as confidential and be aware:
+The history file is **plain text on local disk** at `~/.config/opensore/interactive_history`, with the user's default file permissions. Built-in redaction targets common token shapes only — it is not a substitute for proper secret handling. Treat the file as confidential and be aware:
 
 - A determined attacker with read access to your home directory can still read pre-existing entries written before redaction was enabled.
 - Redaction cannot detect tokens that look like normal text (for example a natural-language password). Don't paste secrets you wouldn't be comfortable seeing in a system log.
 - Custom redaction patterns are not yet supported in v1. If you need to redact internal token shapes, use `/history off` for that session and run `/history clear` afterwards.
 
-For the strongest posture: set `OPENSRE_HISTORY_ENABLED=0`, accept the loss of cross-session up-arrow recall, and rely on the in-memory ring instead.
+For the strongest posture: set `OPENSORE_HISTORY_ENABLED=0`, accept the loss of cross-session up-arrow recall, and rely on the in-memory ring instead.

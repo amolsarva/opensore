@@ -1,9 +1,9 @@
 ---
 title: "Coralogix"
-description: "Connect Coralogix so OpenSRE can query logs during investigations"
+description: "Connect Coralogix so OpenSore can query logs during investigations"
 ---
 
-OpenSRE queries Coralogix using DataPrime to surface relevant logs during alert investigations — correlating log patterns with incidents and identifying root causes.
+OpenSore queries Coralogix using DataPrime to surface relevant logs during alert investigations — correlating log patterns with incidents and identifying root causes.
 
 ## Prerequisites
 
@@ -15,7 +15,7 @@ OpenSRE queries Coralogix using DataPrime to surface relevant logs during alert 
 ### Option 1: Interactive CLI
 
 ```bash
-opensre integrations setup
+opensore integrations setup
 ```
 
 Select **Coralogix** when prompted and provide your API key and endpoint.
@@ -79,7 +79,7 @@ CORALOGIX_SUBSYSTEM_NAME=my-service           # optional filter
 ## Verify
 
 ```bash
-opensre integrations verify coralogix
+opensore integrations verify coralogix
 ```
 
 Expected output:

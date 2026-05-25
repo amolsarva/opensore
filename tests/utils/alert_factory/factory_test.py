@@ -92,10 +92,10 @@ def test_create_alert_backwards_compatibility():
 
 def test_fire_alert_to_remote_platform():
     """Test firing alert to a configured remote investigation stream URL."""
-    endpoint = os.getenv("OPENSRE_REMOTE_RUN_URL")
+    endpoint = os.getenv("OPENSORE_REMOTE_RUN_URL")
 
     if not endpoint or "localhost" in endpoint:
-        pytest.skip("Remote OPENSRE_REMOTE_RUN_URL not configured")
+        pytest.skip("Remote OPENSORE_REMOTE_RUN_URL not configured")
 
     timestamp = datetime.now(UTC).isoformat()
 

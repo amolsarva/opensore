@@ -1,6 +1,6 @@
-# OpenSRE Documentation
+# OpenSore Documentation
 
-This directory contains the source for the OpenSRE documentation, powered by [Mintlify](https://mintlify.com).
+This directory contains the source for the OpenSore documentation, powered by [Mintlify](https://mintlify.com).
 
 ## Local Development
 

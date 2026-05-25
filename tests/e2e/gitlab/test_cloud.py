@@ -250,7 +250,7 @@ def test_gitlab_post_mr_note():
     mr_iid_from_annotation = annotations["mr_iid"]
 
     config = _gitlab_config(access_token, base_url)
-    body = "[opensre e2e test] Automated RCA comment — safe to ignore."
+    body = "[opensore e2e test] Automated RCA comment — safe to ignore."
     result = post_gitlab_mr_note(
         config=config,
         project_id=project_id_from_annotation,

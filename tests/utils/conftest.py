@@ -29,7 +29,7 @@ def get_test_config() -> dict:
     return {
         "aws_region": os.getenv("AWS_REGION", "us-east-1"),
         "remote_run_stream_url": os.getenv(
-            "OPENSRE_REMOTE_RUN_URL",
+            "OPENSORE_REMOTE_RUN_URL",
             "http://localhost:8123/runs/stream",
         ),
     }
@@ -37,11 +37,11 @@ def get_test_config() -> dict:
 
 # Default stream URLs for optional remote investigation harness tests.
 REMOTE_RUN_LOCAL_STREAM_URL = os.getenv(
-    "OPENSRE_REMOTE_RUN_LOCAL_URL",
+    "OPENSORE_REMOTE_RUN_LOCAL_URL",
     "http://127.0.0.1:2024/runs/stream",
 )
 _REMOTE_DEFAULT = os.getenv(
-    "OPENSRE_REMOTE_RUN_URL",
+    "OPENSORE_REMOTE_RUN_URL",
     "https://tracer-agent-2026-e09h3n0zulnlz1-lwyjk39e.us-central1.run.app/agent/runs/stream",
 )
 REMOTE_RUN_REMOTE_STREAM_URL = _REMOTE_DEFAULT

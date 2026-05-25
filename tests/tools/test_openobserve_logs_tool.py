@@ -24,11 +24,11 @@ from tests.tools.conftest import BaseToolContract, MockHttpxResponse
 
 class TestOpenObserveLogsToolContract(BaseToolContract):
     def get_tool_under_test(self) -> Any:
-        return query_openobserve_logs.__opensre_registered_tool__
+        return query_openobserve_logs.__opensore_registered_tool__
 
 
 def _rt() -> Any:
-    return query_openobserve_logs.__opensre_registered_tool__
+    return query_openobserve_logs.__opensore_registered_tool__
 
 
 def test_is_available_true_with_api_token() -> None:

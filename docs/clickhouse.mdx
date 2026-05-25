@@ -1,14 +1,14 @@
 ---
 title: "ClickHouse"
-description: "Connect ClickHouse so OpenSRE can inspect query activity and system health during investigations"
+description: "Connect ClickHouse so OpenSore can inspect query activity and system health during investigations"
 ---
 
-OpenSRE queries ClickHouse system tables to surface slow queries, active connections, replica status, and table statistics — helping diagnose database performance issues during alert investigations.
+OpenSore queries ClickHouse system tables to surface slow queries, active connections, replica status, and table statistics — helping diagnose database performance issues during alert investigations.
 
 ## Prerequisites
 
 - ClickHouse 21.x or later
-- Network access from the OpenSRE environment to your ClickHouse instance
+- Network access from the OpenSore environment to your ClickHouse instance
 - A user with read access to system tables
 
 ## Setup
@@ -16,7 +16,7 @@ OpenSRE queries ClickHouse system tables to surface slow queries, active connect
 ### Option 1: Interactive CLI
 
 ```bash
-opensre integrations setup
+opensore integrations setup
 ```
 
 Select **ClickHouse** when prompted and provide your host and credentials.
@@ -57,7 +57,7 @@ CLICKHOUSE_SECURE=false   # set to true for HTTPS
         "host": "your-clickhouse-host",
         "port": 8443,
         "database": "default",
-        "username": "opensre_readonly",
+        "username": "opensore_readonly",
         "password": "your-password",
         "secure": true
       }
@@ -69,14 +69,14 @@ CLICKHOUSE_SECURE=false   # set to true for HTTPS
 ## Creating a read-only user
 
 ```sql
-CREATE USER opensre_readonly IDENTIFIED BY 'secure-password';
-GRANT SELECT ON system.* TO opensre_readonly;
-GRANT SELECT ON default.* TO opensre_readonly;
+CREATE USER opensore_readonly IDENTIFIED BY 'secure-password';
+GRANT SELECT ON system.* TO opensore_readonly;
+GRANT SELECT ON default.* TO opensore_readonly;
 ```
 
 ## Investigation tools
 
-When OpenSRE investigates a ClickHouse-related alert, three diagnostic tools are available:
+When OpenSore investigates a ClickHouse-related alert, three diagnostic tools are available:
 
 - **Query activity** — reads `system.query_log` to surface recent slow and failed queries
 - **System health** — reads `system.metrics` for active connections, query count, replica status, and uptime
@@ -87,7 +87,7 @@ All operations are read-only.
 ## Verify
 
 ```bash
-opensre integrations verify clickhouse
+opensore integrations verify clickhouse
 ```
 
 Expected output:
@@ -105,10 +105,10 @@ Detail: Connected to ClickHouse 23.8.1; database: default
 | **Connection refused** | Check host, port, and firewall. Use port `8443` with `CLICKHOUSE_SECURE=true` |
 | **Authentication failed** | Verify username and password |
 | **SSL error** | Set `CLICKHOUSE_SECURE=true` and use port `8443` |
-| **Access denied on system tables** | Grant `SELECT ON system.*` to the OpenSRE user |
+| **Access denied on system tables** | Grant `SELECT ON system.*` to the OpenSore user |
 
 ## Security best practices
 
-- Create a **dedicated read-only user** with access only to `system.*` and the databases OpenSRE needs.
+- Create a **dedicated read-only user** with access only to `system.*` and the databases OpenSore needs.
 - Use **HTTPS** (`CLICKHOUSE_SECURE=true`) in production.
 - Store credentials in `.env`, not in source code.

@@ -10,18 +10,18 @@ from tests.tools.conftest import BaseToolContract, mock_agent_state
 
 class TestGoogleDocsCreateReportToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return create_google_docs_incident_report.__opensre_registered_tool__
+        return create_google_docs_incident_report.__opensore_registered_tool__
 
 
 def test_is_available_requires_configured() -> None:
-    rt = create_google_docs_incident_report.__opensre_registered_tool__
+    rt = create_google_docs_incident_report.__opensore_registered_tool__
     assert rt.is_available({"google_docs": {"configured": True}}) is True
     assert rt.is_available({"google_docs": {}}) is False
     assert rt.is_available({}) is False
 
 
 def test_extract_params_maps_fields() -> None:
-    rt = create_google_docs_incident_report.__opensre_registered_tool__
+    rt = create_google_docs_incident_report.__opensore_registered_tool__
     sources = mock_agent_state()
     params = rt.extract_params(sources)
     assert params["credentials_file"] == "/path/to/credentials.json"

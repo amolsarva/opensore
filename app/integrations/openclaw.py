@@ -252,9 +252,9 @@ def _openclaw_cli_preflight_issue(config: OpenClawConfig) -> str | None:
         f"OpenClaw CLI requires Node.js {required} but the current shell is using {current}.",
         (
             "Run `nvm install 22` if Node 22 is not installed yet.",
-            "Run `nvm use 22` in the same shell where you launch OpenSRE.",
+            "Run `nvm use 22` in the same shell where you launch OpenSore.",
             "Verify `node -v` shows 22.12 or newer and `openclaw --help` succeeds.",
-            "Then run `openclaw gateway status` and `uv run opensre integrations verify openclaw` again.",
+            "Then run `openclaw gateway status` and `uv run opensore integrations verify openclaw` again.",
             "`nvm alias default 22` only affects future shells; it does not switch the current shell.",
         ),
     )
@@ -330,7 +330,7 @@ def describe_openclaw_error(
                     "Check `openclaw gateway status`.",
                     "Start it with `openclaw gateway run` for a foreground session.",
                     "Or install/start the background service with `openclaw gateway install` then `openclaw gateway start`.",
-                    "Re-run `uv run opensre integrations verify openclaw` after the gateway is healthy.",
+                    "Re-run `uv run opensore integrations verify openclaw` after the gateway is healthy.",
                 ),
             )
         )

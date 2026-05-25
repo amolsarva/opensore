@@ -6,7 +6,7 @@ sampler accessor returns ``None``. ``0`` versus ``-`` is meaningful
 in ``tokens/min``: ``0`` is observed-but-idle, ``-`` is unobservable
 (no meter for this provider, or the JSONL is unreadable, or the
 sampler task is not running — e.g. non-interactive
-``opensre agents list``).
+``opensore agents list``).
 
 This module lives outside ``app/agents/`` so collectors don't pull
 in Rich.

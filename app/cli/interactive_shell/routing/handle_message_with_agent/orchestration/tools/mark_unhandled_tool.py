@@ -41,7 +41,7 @@ TOOL_ENTRY = ToolEntry(
         "Signal that part of the user's request could not be mapped to an "
         "executable tool. Call this in addition to any matched tool calls "
         "whenever the prompt contains a clause (joined by 'and', 'then', "
-        "etc.) that is nonsensical, ambiguous, or outside OpenSRE's scope. "
+        "etc.) that is nonsensical, ambiguous, or outside OpenSore's scope. "
         'MUST be called for partial-handling requests like "show me '
         'connected services and sing a song" — emitting the matched '
         "slash_invoke alone is treated as a fully-handled request and "
@@ -53,7 +53,7 @@ TOOL_ENTRY = ToolEntry(
                 description=(
                     "Brief description of which portion of the request "
                     "was not mapped and why (e.g. \"'sing a song' is not "
-                    'an executable OpenSRE operation").'
+                    'an executable OpenSore operation").'
                 ),
                 min_length=1,
             )

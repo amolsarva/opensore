@@ -1,4 +1,4 @@
-"""Tests for legacy `opensre integrations setup github` flow."""
+"""Tests for legacy `opensore integrations setup github` flow."""
 
 from __future__ import annotations
 
@@ -40,12 +40,12 @@ def test_setup_github_prints_connected_and_saves_on_validation_success(
             ok=True,
             detail=(
                 "OK @devuser; repos=2; owners=Tracer-Cloud,acme; "
-                "examples=Tracer-Cloud/opensre,acme/demo; mcp_tools=9"
+                "examples=Tracer-Cloud/opensore,acme/demo; mcp_tools=9"
             ),
             authenticated_user="devuser",
             repo_access_count=2,
             repo_access_scope_owners=("Tracer-Cloud", "acme"),
-            repo_access_samples=("Tracer-Cloud/opensre", "acme/demo"),
+            repo_access_samples=("Tracer-Cloud/opensore", "acme/demo"),
         ),
     )
 
@@ -62,7 +62,7 @@ def test_setup_github_prints_connected_and_saves_on_validation_success(
     assert "Configuration validation: succeeded" in out
     assert "@devuser" in out
     assert "Repositories returned" in out
-    assert "Tracer-Cloud/opensre" in out
+    assert "Tracer-Cloud/opensore" in out
     assert saved == [
         (
             "github",

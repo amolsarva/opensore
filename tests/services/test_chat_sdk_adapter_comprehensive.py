@@ -500,14 +500,14 @@ def test_anthropic_single_tool_use_response(monkeypatch: pytest.MonkeyPatch) -> 
     with patch("anthropic.Anthropic") as cls:
         client = MagicMock()
         client.messages.create.return_value = _anthropic_response(
-            tool_uses=[{"id": "tu1", "name": "search", "args": {"query": "opensre"}}]
+            tool_uses=[{"id": "tu1", "name": "search", "args": {"query": "opensore"}}]
         )
         cls.return_value = client
 
         turn = adapter.invoke([{"role": "user", "content": "search it"}])
 
     assert turn["content"] == ""
-    assert turn["tool_calls"] == [{"id": "tu1", "name": "search", "args": {"query": "opensre"}}]
+    assert turn["tool_calls"] == [{"id": "tu1", "name": "search", "args": {"query": "opensore"}}]
 
 
 def test_anthropic_multi_tool_use_response(monkeypatch: pytest.MonkeyPatch) -> None:

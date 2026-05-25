@@ -3,7 +3,7 @@ title: "LLM Providers"
 description: "Supported LLM APIs and CLIs, environment variables, and how to switch between them."
 ---
 
-OpenSRE is provider-agnostic: bring your own model. Selection is controlled by the `LLM_PROVIDER` environment variable, with per-provider API key and model overrides. Defaults are tracked in [`app/config.py`](https://github.com/Tracer-Cloud/opensre/blob/main/app/config.py) and routing lives in [`app/services/llm_client.py`](https://github.com/Tracer-Cloud/opensre/blob/main/app/services/llm_client.py).
+OpenSore is provider-agnostic: bring your own model. Selection is controlled by the `LLM_PROVIDER` environment variable, with per-provider API key and model overrides. Defaults are tracked in [`app/config.py`](https://github.com/Tracer-Cloud/opensore/blob/main/app/config.py) and routing lives in [`app/services/llm_client.py`](https://github.com/Tracer-Cloud/opensore/blob/main/app/services/llm_client.py).
 
 ## Quick reference
 
@@ -21,7 +21,7 @@ OpenSRE is provider-agnostic: bring your own model. Selection is controlled by t
 | Claude Code CLI| `claude-code`| `claude login` (CLI)            | Claude Code CLI default                       | Claude Code CLI default                         |
 | GitHub Copilot CLI| `copilot`| `copilot login` or `gh auth login` (CLI) | Copilot CLI default                           | Copilot CLI default                             |
 
-OpenSRE distinguishes two model slots per provider:
+OpenSore distinguishes two model slots per provider:
 
 - **Reasoning model** — full-capability model used for diagnosis, claim validation, and multi-step analysis.
 - **Toolcall model** — lightweight, lower-cost model used for tool selection and routing.
@@ -38,7 +38,7 @@ export OPENAI_API_KEY=sk-...
 Or run the onboarding wizard, which writes the same values to `.env`:
 
 ```bash
-opensre onboard
+opensore onboard
 ```
 
 In the interactive shell, `/model` shows curated quick-pick choices for common models. Providers
@@ -170,11 +170,11 @@ export OLLAMA_HOST=http://localhost:11434
 export OLLAMA_MODEL=llama3.2
 ```
 
-Run any local model exposed by an [Ollama](https://ollama.com/) daemon. No API key required — OpenSRE talks to Ollama's OpenAI-compatible endpoint at `${OLLAMA_HOST}/v1`.
+Run any local model exposed by an [Ollama](https://ollama.com/) daemon. No API key required — OpenSore talks to Ollama's OpenAI-compatible endpoint at `${OLLAMA_HOST}/v1`.
 
 ## CLI providers (subprocess)
 
-CLI-backed providers shell out to a vendor CLI instead of an HTTP API. They authenticate via the vendor's own login command; OpenSRE detects the binary on `PATH` (or via an explicit env var) and reuses the existing session.
+CLI-backed providers shell out to a vendor CLI instead of an HTTP API. They authenticate via the vendor's own login command; OpenSore detects the binary on `PATH` (or via an explicit env var) and reuses the existing session.
 
 ### OpenAI Codex
 
@@ -187,7 +187,7 @@ export CODEX_MODEL=
 export CODEX_BIN=
 ```
 
-Requires the [OpenAI Codex CLI](https://github.com/openai/codex). If `CODEX_MODEL` is unset, OpenSRE omits `-m` so `codex exec` uses the CLI's currently configured model. If `CODEX_BIN` is unset, the binary is resolved via `PATH` and known install locations.
+Requires the [OpenAI Codex CLI](https://github.com/openai/codex). If `CODEX_MODEL` is unset, OpenSore omits `-m` so `codex exec` uses the CLI's currently configured model. If `CODEX_BIN` is unset, the binary is resolved via `PATH` and known install locations.
 
 ### Claude Code
 
@@ -200,7 +200,7 @@ export CLAUDE_CODE_MODEL=
 export CLAUDE_CODE_BIN=
 ```
 
-Requires the [Claude Code CLI](https://github.com/anthropics/claude-code) (`npm i -g @anthropic-ai/claude-code`). If `CLAUDE_CODE_MODEL` is unset, OpenSRE omits the `--model` flag and the CLI uses its configured default. If `CLAUDE_CODE_BIN` is unset, the binary is resolved via `PATH` and known install locations.
+Requires the [Claude Code CLI](https://github.com/anthropics/claude-code) (`npm i -g @anthropic-ai/claude-code`). If `CLAUDE_CODE_MODEL` is unset, OpenSore omits the `--model` flag and the CLI uses its configured default. If `CLAUDE_CODE_BIN` is unset, the binary is resolved via `PATH` and known install locations.
 
 ### GitHub Copilot
 
@@ -222,13 +222,13 @@ export COPILOT_BIN=
 # export GITHUB_TOKEN=
 ```
 
-Requires the [GitHub Copilot CLI](https://docs.github.com/copilot/how-tos/use-copilot-agents/use-copilot-cli) (`npm i -g @github/copilot`). Login uses the interactive `/login` slash command or `copilot login`. OpenSRE detects auth in this order: (1) `COPILOT_GITHUB_TOKEN` / `GH_TOKEN` / `GITHUB_TOKEN` env, (2) [`gh auth status`](https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/authenticate-copilot-cli#authenticating-with-github-cli) when `gh` is on `PATH` (including `✓ Logged in to github.com account …`, `- Active account: true`, or a supported `- Token:` prefix: `gho_`, `github_pat_`, `ghu_` per Copilot docs — not `ghp_`), with `gh auth status --hostname …` when `COPILOT_GH_HOST` or `GH_HOST` targets a non-`github.com` host. It does **not** read plaintext `$COPILOT_HOME/config.json` (keychain-backed installs may omit it; mis-parsing arbitrary JSON risks false positives). If nothing matches, detection reports `logged_in=None` and the runner verifies at invoke time. If `COPILOT_MODEL` is unset, OpenSRE omits `--model`. Invocations run as `copilot -p PROMPT --no-color --no-ask-user --silent` so they never block on user input. **BYOK / `COPILOT_OFFLINE`:** GitHub auth may be unnecessary; a `None` probe can still be fine if Copilot is configured for offline or external providers only.
+Requires the [GitHub Copilot CLI](https://docs.github.com/copilot/how-tos/use-copilot-agents/use-copilot-cli) (`npm i -g @github/copilot`). Login uses the interactive `/login` slash command or `copilot login`. OpenSore detects auth in this order: (1) `COPILOT_GITHUB_TOKEN` / `GH_TOKEN` / `GITHUB_TOKEN` env, (2) [`gh auth status`](https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/authenticate-copilot-cli#authenticating-with-github-cli) when `gh` is on `PATH` (including `✓ Logged in to github.com account …`, `- Active account: true`, or a supported `- Token:` prefix: `gho_`, `github_pat_`, `ghu_` per Copilot docs — not `ghp_`), with `gh auth status --hostname …` when `COPILOT_GH_HOST` or `GH_HOST` targets a non-`github.com` host. It does **not** read plaintext `$COPILOT_HOME/config.json` (keychain-backed installs may omit it; mis-parsing arbitrary JSON risks false positives). If nothing matches, detection reports `logged_in=None` and the runner verifies at invoke time. If `COPILOT_MODEL` is unset, OpenSore omits `--model`. Invocations run as `copilot -p PROMPT --no-color --no-ask-user --silent` so they never block on user input. **BYOK / `COPILOT_OFFLINE`:** GitHub auth may be unnecessary; a `None` probe can still be fine if Copilot is configured for offline or external providers only.
 
-See [`app/integrations/llm_cli/AGENTS.md`](https://github.com/Tracer-Cloud/opensre/blob/main/app/integrations/llm_cli/AGENTS.md) for the adapter pattern used to add new CLI providers.
+See [`app/integrations/llm_cli/AGENTS.md`](https://github.com/Tracer-Cloud/opensore/blob/main/app/integrations/llm_cli/AGENTS.md) for the adapter pattern used to add new CLI providers.
 
 ## Reasoning effort (interactive shell)
 
-In the TTY REPL (`opensre` with no subcommand), `/effort` stores a **session** preference for how strongly reasoning models should think before answering. It applies only when `LLM_PROVIDER` is **`openai`** (HTTP API) or **`codex`** (Codex CLI); other providers ignore the setting and the shell notes that.
+In the TTY REPL (`opensore` with no subcommand), `/effort` stores a **session** preference for how strongly reasoning models should think before answering. It applies only when `LLM_PROVIDER` is **`openai`** (HTTP API) or **`codex`** (Codex CLI); other providers ignore the setting and the shell notes that.
 
 | Input | Sent to the model |
 | ----- | ----------------- |
@@ -240,18 +240,18 @@ Run `/effort` alone to show the current choice (or `(default)` when unset) and t
 Outside the REPL, optional defaults use the environment variable:
 
 ```bash
-export OPENSRE_REASONING_EFFORT=high   # low | medium | high | xhigh
+export OPENSORE_REASONING_EFFORT=high   # low | medium | high | xhigh
 ```
 
-Session `/effort` overrides this for interactive runs. Implementation: [`app/llm_reasoning_effort.py`](https://github.com/Tracer-Cloud/opensre/blob/main/app/llm_reasoning_effort.py).
+Session `/effort` overrides this for interactive runs. Implementation: [`app/llm_reasoning_effort.py`](https://github.com/Tracer-Cloud/opensore/blob/main/app/llm_reasoning_effort.py).
 
 ## Switching providers at runtime
 
-OpenSRE caches LLM clients on first use. To switch providers within a single process (tests, benchmarks), call `reset_llm_singletons()` from `app.services.llm_client` after updating the env vars; otherwise a fresh process picks up the new `LLM_PROVIDER` automatically.
+OpenSore caches LLM clients on first use. To switch providers within a single process (tests, benchmarks), call `reset_llm_singletons()` from `app.services.llm_client` after updating the env vars; otherwise a fresh process picks up the new `LLM_PROVIDER` automatically.
 
 ## Where this lives in the code
 
-- Provider literals and defaults: [`app/config.py`](https://github.com/Tracer-Cloud/opensre/blob/main/app/config.py) (`LLMProvider`, `LLMSettings`).
-- Runtime routing: [`app/services/llm_client.py`](https://github.com/Tracer-Cloud/opensre/blob/main/app/services/llm_client.py) (`_create_llm_client`).
-- API-backed provider guide: [`app/services/AGENTS.md`](https://github.com/Tracer-Cloud/opensre/blob/main/app/services/AGENTS.md).
-- CLI-backed provider guide: [`app/integrations/llm_cli/AGENTS.md`](https://github.com/Tracer-Cloud/opensre/blob/main/app/integrations/llm_cli/AGENTS.md).
+- Provider literals and defaults: [`app/config.py`](https://github.com/Tracer-Cloud/opensore/blob/main/app/config.py) (`LLMProvider`, `LLMSettings`).
+- Runtime routing: [`app/services/llm_client.py`](https://github.com/Tracer-Cloud/opensore/blob/main/app/services/llm_client.py) (`_create_llm_client`).
+- API-backed provider guide: [`app/services/AGENTS.md`](https://github.com/Tracer-Cloud/opensore/blob/main/app/services/AGENTS.md).
+- CLI-backed provider guide: [`app/integrations/llm_cli/AGENTS.md`](https://github.com/Tracer-Cloud/opensore/blob/main/app/integrations/llm_cli/AGENTS.md).

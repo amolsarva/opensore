@@ -35,8 +35,8 @@ def _die(message: str) -> None:
 
 def _repair_hint() -> str:
     return (
-        "Run 'opensre integrations verify vercel' to confirm the token, or "
-        "'opensre integrations setup vercel' to replace it."
+        "Run 'opensore integrations verify vercel' to confirm the token, or "
+        "'opensore integrations setup vercel' to replace it."
     )
 
 

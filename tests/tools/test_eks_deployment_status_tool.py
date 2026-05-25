@@ -10,11 +10,11 @@ from tests.tools.conftest import BaseToolContract, mock_agent_state
 
 class TestEKSDeploymentStatusToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return get_eks_deployment_status.__opensre_registered_tool__
+        return get_eks_deployment_status.__opensore_registered_tool__
 
 
 def test_is_available_requires_deployment() -> None:
-    rt = get_eks_deployment_status.__opensre_registered_tool__
+    rt = get_eks_deployment_status.__opensore_registered_tool__
     assert (
         rt.is_available(
             {"eks": {"connection_verified": True, "cluster_name": "c1", "deployment": "my-dep"}}
@@ -26,7 +26,7 @@ def test_is_available_requires_deployment() -> None:
 
 
 def test_extract_params_maps_fields() -> None:
-    rt = get_eks_deployment_status.__opensre_registered_tool__
+    rt = get_eks_deployment_status.__opensore_registered_tool__
     sources = mock_agent_state()
     params = rt.extract_params(sources)
     assert params["cluster_name"] == "my-cluster"

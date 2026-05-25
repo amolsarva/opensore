@@ -1,6 +1,6 @@
 """Tool-registry catalog generator for the interactive shell.
 
-The OpenSRE tool registry (:mod:`app.tools.registry`) auto-discovers tools
+The OpenSore tool registry (:mod:`app.tools.registry`) auto-discovers tools
 under ``app/tools/`` and exposes them via :func:`get_registered_tools`. Each
 :class:`~app.tools.registered_tool.RegisteredTool` carries rich metadata —
 ``name``, ``description``, ``surfaces``, ``input_schema``, ``source``, and

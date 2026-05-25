@@ -1,6 +1,6 @@
 """Standalone CLI for the benchmark framework.
 
-Invoke from the opensre repo root with:
+Invoke from the opensore repo root with:
 
     uv run python -m tests.benchmarks._framework.cli <command> [args]
 
@@ -12,9 +12,9 @@ Subcommands:
     run-stub <config.yml>       Same as run but uses a fake LLM (no API cost)
                                 — useful for testing the wiring
 
-The CLI is deliberately standalone — not a subcommand of opensre's main CLI —
-so the framework stays decoupled from opensre's CLI dispatcher. A future
-``opensre bench`` subcommand can wrap this if user-facing surfacing is needed.
+The CLI is deliberately standalone — not a subcommand of opensore's main CLI —
+so the framework stays decoupled from opensore's CLI dispatcher. A future
+``opensore bench`` subcommand can wrap this if user-facing surfacing is needed.
 
 Exit codes:
     0   success
@@ -212,7 +212,7 @@ def _cmd_report(args: argparse.Namespace) -> int:
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="bench",
-        description="Standalone CLI for the opensre benchmark framework.",
+        description="Standalone CLI for the opensore benchmark framework.",
     )
     sub = parser.add_subparsers(dest="cmd", required=True, metavar="command")
 

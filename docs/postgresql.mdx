@@ -1,14 +1,14 @@
 ---
 title: "PostgreSQL"
-description: "Connect PostgreSQL so OpenSRE can diagnose database issues during investigations"
+description: "Connect PostgreSQL so OpenSore can diagnose database issues during investigations"
 ---
 
-OpenSRE uses PostgreSQL diagnostics to investigate database-related alerts — checking server health, surfacing slow queries, monitoring replication status, and analyzing table statistics.
+OpenSore uses PostgreSQL diagnostics to investigate database-related alerts — checking server health, surfacing slow queries, monitoring replication status, and analyzing table statistics.
 
 ## Prerequisites
 
 - PostgreSQL 10+ (12+ recommended for full `pg_stat_statements` support)
-- Network access from the OpenSRE environment to your PostgreSQL instance
+- Network access from the OpenSore environment to your PostgreSQL instance
 - A read-only user with access to system views
 
 ## Setup
@@ -16,7 +16,7 @@ OpenSRE uses PostgreSQL diagnostics to investigate database-related alerts — c
 ### Option 1: Interactive CLI
 
 ```bash
-opensre integrations setup
+opensore integrations setup
 ```
 
 Select **PostgreSQL** when prompted and provide your host, database, and credentials.
@@ -29,7 +29,7 @@ Add to your `.env`:
 POSTGRESQL_HOST=your-postgresql-host
 POSTGRESQL_PORT=5432
 POSTGRESQL_DATABASE=your-database
-POSTGRESQL_USERNAME=opensre_readonly
+POSTGRESQL_USERNAME=opensore_readonly
 POSTGRESQL_PASSWORD=your-password
 POSTGRESQL_SSL_MODE=prefer   # prefer, require, or disable
 ```
@@ -45,7 +45,7 @@ POSTGRESQL_SSL_MODE=prefer   # prefer, require, or disable
 
 ### Option 3: Persistent store
 
-Integrations are automatically persisted to `~/.config/opensre/integrations.json`:
+Integrations are automatically persisted to `~/.config/opensore/integrations.json`:
 
 ```json
 {
@@ -59,7 +59,7 @@ Integrations are automatically persisted to `~/.config/opensre/integrations.json
         "host": "prod-primary.postgres.example.com",
         "port": 5432,
         "database": "application_db",
-        "username": "opensre_readonly",
+        "username": "opensore_readonly",
         "password": "your-password",
         "ssl_mode": "prefer"
       }
@@ -72,16 +72,16 @@ Integrations are automatically persisted to `~/.config/opensre/integrations.json
 
 ```sql
 -- Create the user
-CREATE USER opensre_readonly WITH PASSWORD 'secure-password';
+CREATE USER opensore_readonly WITH PASSWORD 'secure-password';
 
 -- Grant access to system views
-GRANT pg_monitor TO opensre_readonly;
+GRANT pg_monitor TO opensore_readonly;
 
 -- Grant access to the target database
-GRANT CONNECT ON DATABASE application_db TO opensre_readonly;
+GRANT CONNECT ON DATABASE application_db TO opensore_readonly;
 \c application_db
-GRANT USAGE ON SCHEMA public TO opensre_readonly;
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO opensre_readonly;
+GRANT USAGE ON SCHEMA public TO opensore_readonly;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO opensore_readonly;
 ```
 
 <Info>
@@ -105,7 +105,7 @@ CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
 
 ## Investigation tools
 
-When OpenSRE investigates a PostgreSQL-related alert, five diagnostic tools are available:
+When OpenSore investigates a PostgreSQL-related alert, five diagnostic tools are available:
 
 ### Server status
 
@@ -124,7 +124,7 @@ Uses `pg_is_in_recovery()` to reliably detect replica vs primary. On a primary, 
 Reads `pg_stat_statements` to surface queries with the highest mean execution time. Results include call count, total/mean/min/max execution time (in ms with sub-millisecond precision), rows returned, and buffer cache hit percentage.
 
 <Info>
-Slow query data requires the `pg_stat_statements` extension to be installed and loaded via `shared_preload_libraries`. OpenSRE returns an informative message if the extension is not available.
+Slow query data requires the `pg_stat_statements` extension to be installed and loaded via `shared_preload_libraries`. OpenSore returns an informative message if the extension is not available.
 </Info>
 
 ### Table statistics
@@ -134,7 +134,7 @@ Reads `pg_stat_user_tables` and `pg_class` for a given schema (default `public`)
 ## Verify
 
 ```bash
-opensre integrations verify postgresql
+opensore integrations verify postgresql
 ```
 
 Expected output:
@@ -152,7 +152,7 @@ Detail: Connected to PostgreSQL 16.1; target database: application_db
 | **Connection refused** | Verify host, port, and firewall rules. Check `listen_addresses` in `postgresql.conf` and `pg_hba.conf` for the connecting host. |
 | **Authentication failed** | Confirm username and password. Check `pg_hba.conf` for the correct auth method (`md5`, `scram-sha-256`). |
 | **SSL error** | Set `POSTGRESQL_SSL_MODE=disable` to test without SSL, or `require` to enforce it. |
-| **Permission denied on pg_stat_activity** | Grant `pg_monitor` role to the OpenSRE user. |
+| **Permission denied on pg_stat_activity** | Grant `pg_monitor` role to the OpenSore user. |
 | **pg_stat_statements not found** | Add `pg_stat_statements` to `shared_preload_libraries`, restart PostgreSQL, then run `CREATE EXTENSION pg_stat_statements;`. |
 | **Replication shows replica, not primary** | Expected — the tool correctly identifies the server as a replica and returns a note. Connect to the primary for replication lag details. |
 

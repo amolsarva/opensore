@@ -3,14 +3,14 @@ title: "Twilio SMS"
 description: "Deliver investigation findings via Twilio SMS as a standalone, independently configurable channel."
 ---
 
-OpenSRE's Twilio integration delivers investigation findings via **SMS**
+OpenSore's Twilio integration delivers investigation findings via **SMS**
 using the Twilio Messaging API. It is configured independently of the
 existing `whatsapp` integration, though both can share the same Twilio
 account credentials.
 
 <Note>
 WhatsApp delivery is owned entirely by the separate `whatsapp` integration
-(`opensre integrations setup whatsapp`) — see the [WhatsApp](/messaging/whatsapp)
+(`opensore integrations setup whatsapp`) — see the [WhatsApp](/messaging/whatsapp)
 page. The `twilio` integration documented here is SMS-only. For voice
 paging on critical incidents, route through PagerDuty or Opsgenie, which
 provide voice escalation with proper acknowledgement.
@@ -30,7 +30,7 @@ provide voice escalation with proper acknowledgement.
 ### Via CLI wizard (recommended)
 
 ```bash
-opensre integrations setup twilio
+opensore integrations setup twilio
 ```
 
 You'll be prompted for:
@@ -65,7 +65,7 @@ present. The legacy `whatsapp` record is bootstrapped independently from
 ## Step 2: Verify
 
 ```bash
-opensre integrations verify twilio
+opensore integrations verify twilio
 ```
 
 A passing verification confirms:
@@ -91,7 +91,7 @@ verification returns `failed` with a message telling you to set a
 Trigger a real investigation against a bundled fixture:
 
 ```bash
-opensre investigate --input tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json
+opensore investigate --input tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json
 ```
 
 When the investigation finishes, the RCA summary is truncated to the SMS
@@ -120,7 +120,7 @@ via SMS and returns the Twilio Message SID for traceability.
 
 ## Troubleshooting
 
-### `opensre integrations verify twilio` errors
+### `opensore integrations verify twilio` errors
 
 | Detail | Likely cause |
 | --- | --- |

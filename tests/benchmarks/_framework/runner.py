@@ -16,10 +16,10 @@ Two entry points:
     Stamps results with ``dev_mode=True`` so they can't be silently
     promoted to a real report.
 
-opensre+LLM mode wires opensre's ``run_investigation`` against the adapter's
+opensore+LLM mode wires opensore's ``run_investigation`` against the adapter's
 integrations. ``llm_alone`` mode is Phase B; ``run()`` raises if requested.
 
-llm_dispatch is not yet implemented — the runner uses whatever LLM opensre
+llm_dispatch is not yet implemented — the runner uses whatever LLM opensore
 is configured with via env vars. ``RunResult.model_version`` is set to
 ``"(unpinned)"`` accordingly; a future llm_dispatch.py will enable per-cell
 model selection with version pinning.
@@ -101,8 +101,8 @@ class BenchmarkRunner:
 
     v1 limitations (will lift as later modules ship):
       - Serial execution (parallel comes when worker-pool tested)
-      - opensre+llm mode only (llm_alone is Phase B)
-      - No per-cell LLM dispatch (uses opensre's configured LLM)
+      - opensore+llm mode only (llm_alone is Phase B)
+      - No per-cell LLM dispatch (uses opensore's configured LLM)
       - Stratum reporting is `all` only until Phase D tagging adds seen/unseen
     """
 
@@ -119,7 +119,7 @@ class BenchmarkRunner:
         self.integrity = integrity_guard or IntegrityGuard()
         self.cost = cost_tracker or CostTracker(budget_usd=config.cost_budget_usd)
         self.dispatcher = dispatcher or LLMDispatcher()
-        self._opensre_sha = _git_sha()
+        self._opensore_sha = _git_sha()
 
     # ----------------------------------------------------------------------- #
     # Public API                                                              #
@@ -152,7 +152,7 @@ class BenchmarkRunner:
         if "llm_alone" in self.config.modes:
             raise NotImplementedError(
                 "llm_alone mode is Phase B of the task scope — see "
-                "opensre-benchmark-task-scope.md. Run with modes=['opensre+llm'] only."
+                "opensore-benchmark-task-scope.md. Run with modes=['opensore+llm'] only."
             )
 
         # Pre-flight: verify every LLM in config is registered AND that its
@@ -186,13 +186,13 @@ class BenchmarkRunner:
         print(f"  loaded {len(cases)} case(s)")
 
         # Register the cost-accounting hook so every successful LLM call
-        # inside opensre's agent feeds CostTracker. Cleared in finally so
+        # inside opensore's agent feeds CostTracker. Cleared in finally so
         # the hook doesn't leak into other test code that imports llm_client.
         from app.services.llm_client import set_usage_hook
 
         set_usage_hook(self.cost.add)
 
-        # Serialize across LLMs (opensre's LLM client is a module-level
+        # Serialize across LLMs (opensore's LLM client is a module-level
         # singleton — swapping mid-flight would race). Parallel within a
         # single LLM activation.
         try:
@@ -338,11 +338,11 @@ class BenchmarkRunner:
     ) -> _CellResult:
         """Execute one (case × mode × llm × run) cell."""
         # Late import — keeps the rest of the framework importable without
-        # opensre's full dep tree loaded.
+        # opensore's full dep tree loaded.
         from app.pipeline.runners import run_investigation
 
         alert = self.adapter.build_alert(case)
-        integrations = self.adapter.build_opensre_integrations(case)
+        integrations = self.adapter.build_opensore_integrations(case)
         started = datetime.now(UTC)
         t0 = time.monotonic()
         ok = True
@@ -379,10 +379,10 @@ class BenchmarkRunner:
             case_id=case.case_id,
             mode=mode,
             llm=llm,
-            # Pinned via llm_dispatch — what opensre's LLM client actually resolved to,
+            # Pinned via llm_dispatch — what opensore's LLM client actually resolved to,
             # not what the user wrote in YAML (those must match by pre-flight check).
             model_version=spec.reasoning_model,
-            opensre_sha=self._opensre_sha,
+            opensore_sha=self._opensore_sha,
             started_at=started.isoformat(),
             ended_at=ended.isoformat(),
             ok=ok,
@@ -508,7 +508,7 @@ def _build_negative_results(cells: list[_CellResult], adapter: BenchmarkAdapter)
     if not losses:
         return ""
     lines = [
-        f"opensre lost or tied on {len(losses)} of {len(cells)} cell(s) (adapter={adapter.name}):"
+        f"opensore lost or tied on {len(losses)} of {len(cells)} cell(s) (adapter={adapter.name}):"
     ]
     for c in losses[:50]:  # cap output
         lines.append(
@@ -527,7 +527,7 @@ def _hash_config(config: BenchmarkConfig) -> str:
 
 
 def _git_sha() -> str:
-    """opensre git SHA for the running code. Used in RunResult for reproducibility."""
+    """opensore git SHA for the running code. Used in RunResult for reproducibility."""
     try:
         result = subprocess.run(
             ["git", "rev-parse", "--short", "HEAD"],
@@ -566,7 +566,7 @@ def _cell_to_dict(case: BenchmarkCase, run: RunResult, score: CaseScore) -> dict
             "mode": run.mode,
             "llm": run.llm,
             "model_version": run.model_version,
-            "opensre_sha": run.opensre_sha,
+            "opensore_sha": run.opensore_sha,
             "started_at": run.started_at,
             "ended_at": run.ended_at,
             "ok": run.ok,
@@ -601,6 +601,6 @@ def _report_to_dict(report: BenchmarkReport, cost: CostTracker) -> dict[str, Any
         if report.pre_registration_path
         else None,
         "cost": cost.summary(),
-        "opensre_sha": _git_sha(),
+        "opensore_sha": _git_sha(),
         "host": {"user": os.environ.get("USER", ""), "cwd": str(Path.cwd())},
     }

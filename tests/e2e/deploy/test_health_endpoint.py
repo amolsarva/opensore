@@ -19,7 +19,7 @@ def _find_free_port() -> int:
 
 def test_container_startup_and_health_endpoint_available(deploy_image_tag: str) -> None:
     host_port = _find_free_port()
-    container_name = f"opensre-deploy-health-{uuid.uuid4().hex[:8]}"
+    container_name = f"opensore-deploy-health-{uuid.uuid4().hex[:8]}"
     run = subprocess.run(
         [
             "docker",

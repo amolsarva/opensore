@@ -25,7 +25,7 @@ from tests.e2e.openclaw.infrastructure_sdk.local import OpenClawHandle
 
 # Tool we call to exercise the bridge. ``conversations_list`` is the
 # OpenClaw MCP tool name (``search_openclaw_conversations`` is the
-# OpenSRE-side wrapper name in
+# OpenSore-side wrapper name in
 # :mod:`app.tools.OpenClawMCPTool`). We hit it raw here so the test
 # exercises the same code path as a real investigation, without going
 # through the agent's tool selection.
@@ -114,7 +114,7 @@ def drive_openclaw_conversation(handle: OpenClawHandle) -> dict[str, Any]:
     # Pre-flight config validation. ``validate_openclaw_config`` catches
     # the Control-UI-vs-MCP-bridge misconfiguration (and similar) before
     # we attempt a tool call, surfacing the same hint a user would see
-    # from ``opensre integrations verify``. For stdio configs this is a
+    # from ``opensore integrations verify``. For stdio configs this is a
     # pass-through.
     validation = validate_openclaw_config(config)
     if not validation.ok:

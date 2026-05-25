@@ -1,22 +1,22 @@
 ---
 title: "incident.io"
-description: "Connect incident.io so OpenSRE can read incident context, updates, and metadata during investigations"
+description: "Connect incident.io so OpenSore can read incident context, updates, and metadata during investigations"
 ---
 
-OpenSRE can use incident.io as incident context during RCA. The integration can list live incidents, fetch full incident metadata, read incident updates, and append final findings to the incident summary through the supported incident edit API.
+OpenSore can use incident.io as incident context during RCA. The integration can list live incidents, fetch full incident metadata, read incident updates, and append final findings to the incident summary through the supported incident edit API.
 
 ## Prerequisites
 
 - incident.io account
 - incident.io API key with read access to incidents and incident updates
-- Write permission if you want OpenSRE to append findings to incident summaries
+- Write permission if you want OpenSore to append findings to incident summaries
 
 ## Setup
 
 ### Interactive CLI
 
 ```bash
-opensre integrations setup incident_io
+opensore integrations setup incident_io
 ```
 
 ### Environment variables
@@ -33,23 +33,23 @@ INCIDENT_IO_API_KEY=your-api-key
 ## Verify
 
 ```bash
-opensre integrations verify incident_io
+opensore integrations verify incident_io
 ```
 
 Verification performs a minimal `GET /v2/incidents` request.
 
 ## Investigation Behavior
 
-When an alert includes an incident.io incident ID or URL, OpenSRE makes the `incident_io_incidents` action available with `action="context"`. That reads:
+When an alert includes an incident.io incident ID or URL, OpenSore makes the `incident_io_incidents` action available with `action="context"`. That reads:
 
 - incident metadata from `GET /v2/incidents/{id}`
 - incident updates from `GET /v2/incident_updates?incident_id={id}`
 
-If no incident ID is present, OpenSRE can use `action="list"` to list live incidents.
+If no incident ID is present, OpenSore can use `action="list"` to list live incidents.
 
 ## Write-Back
 
-OpenSRE does not create native timeline events. incident.io's public v2 API supports editing incidents, so OpenSRE write-back uses:
+OpenSore does not create native timeline events. incident.io's public v2 API supports editing incidents, so OpenSore write-back uses:
 
 ```text
 POST /v2/incidents/{id}/actions/edit

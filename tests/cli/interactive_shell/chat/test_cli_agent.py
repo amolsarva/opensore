@@ -241,7 +241,7 @@ class TestAssistantOutputRendering:
     def test_table_markdown_is_rendered_as_table(self, monkeypatch: Any) -> None:
         markdown = (
             "| Command | What it does |\n|---|---|\n"
-            "| `opensre` | Start the interactive shell (TTY) |\n"
+            "| `opensore` | Start the interactive shell (TTY) |\n"
         )
         _patch_llm(monkeypatch, markdown)
         session = ReplSession()
@@ -253,7 +253,7 @@ class TestAssistantOutputRendering:
         assert "|---|---|" not in output
         assert "Command" in output
         assert "What it does" in output
-        assert "opensre" in output
+        assert "opensore" in output
 
     def test_response_is_recorded_in_session_history(self, monkeypatch: Any) -> None:
         _patch_llm(monkeypatch, "Sure thing.")
@@ -271,16 +271,16 @@ class TestAssistantOutputRendering:
         answer_cli_agent("what command do I use?", session, console)
         output = _strip_ansi(buf.getvalue()).casefold()
         assert "which command to use" in output
-        assert "opensre investigate" in output
-        assert "opensre --help" in output
+        assert "opensore investigate" in output
+        assert "opensore --help" in output
         assert session.cli_agent_messages[-2:] == [
             ("user", "what command do I use?"),
             (
                 "assistant",
-                "If you're asking which command to use, start with `opensre investigate` "
+                "If you're asking which command to use, start with `opensore investigate` "
                 "for incidents and paste alert text, JSON, or a concrete incident "
                 "description into this interactive shell.\n\n"
-                "If you want a full command list, run `opensre --help`.",
+                "If you want a full command list, run `opensore --help`.",
             ),
         ]
 

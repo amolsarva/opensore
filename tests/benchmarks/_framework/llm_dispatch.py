@@ -1,11 +1,11 @@
 """Per-cell LLM provider selection + version pinning enforcement.
 
-opensre's LLM client is a module-level singleton built from env vars
+opensore's LLM client is a module-level singleton built from env vars
 (``LLM_PROVIDER``, ``ANTHROPIC_API_KEY``, ``ANTHROPIC_REASONING_MODEL``,
 etc.). To run the benchmark grid across multiple LLMs we need to switch
 between them. Two pragmatic constraints:
 
-  1. **Serialize across LLMs, parallel within.** opensre's singleton
+  1. **Serialize across LLMs, parallel within.** opensore's singleton
      pattern is not thread-safe for per-cell LLM swaps; trying to run
      Claude cell and GPT cell simultaneously races on
      ``_create_llm_client``. So the runner groups cells by LLM and
@@ -14,11 +14,11 @@ between them. Two pragmatic constraints:
   2. **Pin every model version.** ``verify_model_version`` runs in
      pre-flight — refuses if a registered spec's model doesn't match
      ``config.model_versions[<llm>]``. Prevents silent drift between
-     what the YAML says and what opensre actually calls.
+     what the YAML says and what opensore actually calls.
 
-Token tracking is NOT yet wired here. opensre's LLM client tracks per-call
+Token tracking is NOT yet wired here. opensore's LLM client tracks per-call
 usage internally, but exposing it to the framework's CostTracker is a
-follow-up. Until then, ``CostTracker`` records nothing for opensre+LLM
+follow-up. Until then, ``CostTracker`` records nothing for opensore+LLM
 cells and the report shows ``cost_usd=0`` — documented gap, not silent.
 
 Usage from the runner::
@@ -45,14 +45,14 @@ from enum import StrEnum
 
 
 class LLMProvider(StrEnum):
-    """opensre's supported LLM providers (matches ``LLM_PROVIDER`` env var)."""
+    """opensore's supported LLM providers (matches ``LLM_PROVIDER`` env var)."""
 
     ANTHROPIC = "anthropic"
     OPENAI = "openai"
     BEDROCK = "bedrock"
     # DeepSeek + Qwen go through openai-compatible APIs from third-party hosts
     OPENAI_COMPATIBLE = "openai_compatible"
-    OPENSRE_DEFAULT = "opensre_default"
+    OPENSORE_DEFAULT = "opensore_default"
 
 
 # --------------------------------------------------------------------------- #
@@ -65,7 +65,7 @@ class LLMSpec:
     """How to dispatch a given LLM name.
 
     ``reasoning_model`` / ``classification_model`` / ``toolcall_model``
-    mirror opensre's three-tier LLM split. For benchmark purposes,
+    mirror opensore's three-tier LLM split. For benchmark purposes,
     pinning ``reasoning_model`` is what matters; the other two follow.
     """
 
@@ -82,7 +82,7 @@ class LLMSpec:
 
 # Registry of known LLMs. Add entries here when the benchmark grid grows.
 # Pinned model versions match the paper's per-provider snapshots — see
-# ``opensre-benchmark-framework.md`` Targets-per-model table.
+# ``opensore-benchmark-framework.md`` Targets-per-model table.
 LLM_SPECS: dict[str, LLMSpec] = {
     # Anthropic — paper used Claude-4-Sonnet
     "claude-4-sonnet": LLMSpec(
@@ -131,10 +131,10 @@ LLM_SPECS: dict[str, LLMSpec] = {
     # Default escape hatch — keeps existing env-var config without override
     "claude-default": LLMSpec(
         name="claude-default",
-        provider=LLMProvider.OPENSRE_DEFAULT,
-        reasoning_model="(opensre-default)",
-        classification_model="(opensre-default)",
-        toolcall_model="(opensre-default)",
+        provider=LLMProvider.OPENSORE_DEFAULT,
+        reasoning_model="(opensore-default)",
+        classification_model="(opensore-default)",
+        toolcall_model="(opensore-default)",
         api_key_env=None,
     ),
 }
@@ -189,18 +189,18 @@ class MissingAPIKey(RuntimeError):
 class LLMDispatcher:
     """Activates one LLM at a time for the runner.
 
-    The dispatcher is the framework's single contact point with opensre's
+    The dispatcher is the framework's single contact point with opensore's
     LLM-client state. Activation:
       1. Snapshot current env vars
       2. Set provider + model-version env vars for the chosen LLM
-      3. Call opensre's ``reset_llm_singletons()`` to force re-creation
+      3. Call opensore's ``reset_llm_singletons()`` to force re-creation
       4. Yield (runner executes cells)
       5. On exit: restore env, reset singletons again
 
     Not thread-safe across activations: only one cell-batch should be
     inside ``activate()`` at a time. The runner is structured to serialize
     LLM switches; within an active LLM, parallel cells share the same
-    singleton (safe per opensre's own design).
+    singleton (safe per opensore's own design).
     """
 
     # Env vars the dispatcher touches. Snapshot + restore these on enter/exit.
@@ -234,11 +234,11 @@ class LLMDispatcher:
     def verify_model_version(cls, llm_name: str, configured: str) -> None:
         """Refuse if configured model_version disagrees with the spec.
 
-        Skipped for ``OPENSRE_DEFAULT`` provider (the escape hatch) — that
-        case uses whatever opensre is configured for, no pinning.
+        Skipped for ``OPENSORE_DEFAULT`` provider (the escape hatch) — that
+        case uses whatever opensore is configured for, no pinning.
         """
         spec = cls.spec(llm_name)
-        if spec.provider == LLMProvider.OPENSRE_DEFAULT:
+        if spec.provider == LLMProvider.OPENSORE_DEFAULT:
             return
         if configured != spec.reasoning_model:
             raise ModelVersionMismatch(llm_name, configured, spec.reasoning_model)
@@ -249,7 +249,7 @@ class LLMDispatcher:
 
     @contextmanager
     def activate(self, llm_name: str) -> Iterator[LLMSpec]:
-        """Temporarily configure opensre to use ``llm_name``.
+        """Temporarily configure opensore to use ``llm_name``.
 
         Yields the spec so the caller can record `model_version` in
         RunResult rows. On exit, restores the prior env + resets singletons.
@@ -258,11 +258,11 @@ class LLMDispatcher:
         snapshot = self._snapshot_env()
         try:
             self._apply_spec(spec)
-            self._reset_opensre_singletons()
+            self._reset_opensore_singletons()
             yield spec
         finally:
             self._restore_env(snapshot)
-            self._reset_opensre_singletons()
+            self._reset_opensore_singletons()
 
     # ----------------------------------------------------------------------- #
     # Internals                                                               #
@@ -282,7 +282,7 @@ class LLMDispatcher:
 
     def _apply_spec(self, spec: LLMSpec) -> None:
         """Set env vars to match the spec."""
-        if spec.provider == LLMProvider.OPENSRE_DEFAULT:
+        if spec.provider == LLMProvider.OPENSORE_DEFAULT:
             # Use whatever's already set — explicit escape hatch
             return
 
@@ -314,9 +314,9 @@ class LLMDispatcher:
                     os.environ["OPENAI_API_KEY"] = key_value
 
     @staticmethod
-    def _reset_opensre_singletons() -> None:
-        """Force opensre to rebuild its LLM client from the new env on next call."""
-        # Late import — keeps llm_dispatch.py importable without opensre deps
+    def _reset_opensore_singletons() -> None:
+        """Force opensore to rebuild its LLM client from the new env on next call."""
+        # Late import — keeps llm_dispatch.py importable without opensore deps
         from app.services.llm_client import reset_llm_singletons
 
         reset_llm_singletons()

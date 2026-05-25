@@ -18,11 +18,11 @@ REASONING_EFFORT_OPTIONS: tuple[ReasoningEffortChoice, ...] = (
     "max",
 )
 
-_RUNTIME_ENV_KEY = "OPENSRE_REASONING_EFFORT"
+_RUNTIME_ENV_KEY = "OPENSORE_REASONING_EFFORT"
 _RUNTIME_VALUES = frozenset({"low", "medium", "high", "xhigh"})
 
 _reasoning_effort_session: ContextVar[str | None] = ContextVar(
-    "opensre_reasoning_effort_session", default=None
+    "opensore_reasoning_effort_session", default=None
 )
 
 
@@ -57,7 +57,7 @@ def get_active_reasoning_effort() -> str | None:
     """Return the runtime reasoning-effort value for this logical context.
 
     Order: in-REPL session override (``apply_reasoning_effort``), then
-    ``OPENSRE_REASONING_EFFORT`` in the process environment.
+    ``OPENSORE_REASONING_EFFORT`` in the process environment.
     """
     session = _reasoning_effort_session.get()
     if session is not None:
@@ -108,7 +108,7 @@ def apply_reasoning_effort(choice: ReasoningEffortChoice | None) -> Iterator[Non
     """Temporarily expose a session effort override to downstream model clients.
 
     ``choice is None`` means defer to shell/env defaults: do not clear
-    ``OPENSRE_REASONING_EFFORT`` or mutate the process environment.
+    ``OPENSORE_REASONING_EFFORT`` or mutate the process environment.
 
     Non-None choices use a :class:`contextvars.ContextVar` so concurrent REPL or
     CLI invocations on different threads/tasks do not race on ``os.environ``.

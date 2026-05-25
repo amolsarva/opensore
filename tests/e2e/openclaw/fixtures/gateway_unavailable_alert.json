@@ -3,7 +3,7 @@
   "groupKey": "{}:{alertname=\"OpenClawGatewayUnavailable\"}",
   "truncatedAlerts": 0,
   "status": "firing",
-  "receiver": "opensre-webhook",
+  "receiver": "opensore-webhook",
   "groupLabels": {
     "alertname": "OpenClawGatewayUnavailable"
   },

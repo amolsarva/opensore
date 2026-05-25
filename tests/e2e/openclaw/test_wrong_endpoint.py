@@ -62,7 +62,7 @@ def test_wrong_endpoint_use_case_captures_validation_hint() -> None:
 @pytest.mark.skipif(not openclaw_cli_available(), reason=OPENCLAW_CLI_SKIP_REASON)
 @pytest.mark.skipif(not llm_credentials_present(), reason=LLM_CREDENTIAL_SKIP_REASON)
 def test_wrong_endpoint_investigation_steers_user_to_stdio() -> None:
-    """Run the full OpenSRE investigation against the captured
+    """Run the full OpenSore investigation against the captured
     misconfiguration. Asserts the RCA names OpenClaw + flags the
     Control-UI mistake + recommends switching to the stdio bridge.
 

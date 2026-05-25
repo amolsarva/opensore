@@ -20,14 +20,14 @@ from app.analytics.events import Event
 def _reset_anonymous_id_cache(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Iterator[None]:
     provider.shutdown_analytics(flush=False)
     provider._instance = None
-    monkeypatch.delenv("OPENSRE_NO_TELEMETRY", raising=False)
+    monkeypatch.delenv("OPENSORE_NO_TELEMETRY", raising=False)
     provider._cached_anonymous_id = None
     provider._cached_identity_persistence = "unknown"
     provider._first_run_marker_created_this_process = False
     provider._pending_user_id_load_failures.clear()
     monkeypatch.setattr(provider, "_event_log_state", provider._EventLogState())
     monkeypatch.setattr(provider, "_FIRST_RUN_PATH", tmp_path / "installed")
-    legacy_dir = tmp_path / "legacy-opensre"
+    legacy_dir = tmp_path / "legacy-opensore"
     monkeypatch.setattr(provider, "_LEGACY_CONFIG_DIR", legacy_dir)
     monkeypatch.setattr(provider, "_LEGACY_ANONYMOUS_ID_PATH", legacy_dir / "anonymous_id")
     monkeypatch.setattr(provider, "_LEGACY_FIRST_RUN_PATH", legacy_dir / "installed")
@@ -102,7 +102,7 @@ def test_capture_first_run_if_needed_uses_same_install_guard(monkeypatch, tmp_pa
 def test_capture_install_detected_initializes_identity_before_install_marker(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    monkeypatch.delenv("OPENSRE_ANALYTICS_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_ANALYTICS_DISABLED", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
     monkeypatch.setattr(provider, "_CONFIG_DIR", tmp_path)
     monkeypatch.setattr(provider, "_ANONYMOUS_ID_PATH", tmp_path / "anonymous_id")
@@ -125,7 +125,7 @@ def test_capture_install_detected_initializes_identity_before_install_marker(
 def test_analytics_send_failure_is_reported_to_sentry(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    monkeypatch.delenv("OPENSRE_ANALYTICS_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_ANALYTICS_DISABLED", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
     monkeypatch.setattr(provider, "_CONFIG_DIR", tmp_path)
     monkeypatch.setattr(provider, "_ANONYMOUS_ID_PATH", tmp_path / "anonymous_id")
@@ -164,7 +164,7 @@ def test_analytics_send_failure_is_reported_to_sentry(
 def test_analytics_capture_failure_releases_pending_counter(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    monkeypatch.delenv("OPENSRE_ANALYTICS_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_ANALYTICS_DISABLED", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
     monkeypatch.setattr(provider, "_CONFIG_DIR", tmp_path)
     monkeypatch.setattr(provider, "_ANONYMOUS_ID_PATH", tmp_path / "anonymous_id")
@@ -210,7 +210,7 @@ def test_composite_fingerprint_hashes_stable_local_and_ci_signals(
     monkeypatch.setattr(provider.platform, "node", lambda: "Build-Host-01")
     monkeypatch.setattr(provider.Path, "home", lambda: tmp_path / "jan")
     monkeypatch.setenv("USER", "jan")
-    monkeypatch.setenv("GITHUB_REPOSITORY", "opensre/tracer-agent")
+    monkeypatch.setenv("GITHUB_REPOSITORY", "opensore/tracer-agent")
 
     first = provider._build_composite_fingerprint()
     second = provider._build_composite_fingerprint()
@@ -220,7 +220,7 @@ def test_composite_fingerprint_hashes_stable_local_and_ci_signals(
     assert len(first.value) == 32
     assert "jan" not in first.value
     assert "Build-Host-01" not in first.value
-    assert "opensre/tracer-agent" not in first.value
+    assert "opensore/tracer-agent" not in first.value
 
 
 def test_composite_fingerprint_changes_when_stable_machine_identity_changes(
@@ -263,7 +263,7 @@ def test_analytics_reuses_disk_identity_across_process_cache_resets(
 def test_analytics_events_from_same_instance_share_exact_distinct_id(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    monkeypatch.delenv("OPENSRE_ANALYTICS_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_ANALYTICS_DISABLED", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
     monkeypatch.setattr(provider, "_CONFIG_DIR", tmp_path)
     monkeypatch.setattr(provider, "_ANONYMOUS_ID_PATH", tmp_path / "anonymous_id")
@@ -289,16 +289,16 @@ def test_analytics_events_from_same_instance_share_exact_distinct_id(
 def test_existing_install_missing_anonymous_id_captures_posthog_error(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    monkeypatch.delenv("OPENSRE_ANALYTICS_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_ANALYTICS_DISABLED", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
     monkeypatch.setattr(provider, "_CONFIG_DIR", tmp_path)
     monkeypatch.setattr(provider, "_ANONYMOUS_ID_PATH", tmp_path / "anonymous_id")
     monkeypatch.setattr(provider, "_FIRST_RUN_PATH", tmp_path / "installed")
-    monkeypatch.setattr(provider, "_LEGACY_CONFIG_DIR", tmp_path / ".opensre")
+    monkeypatch.setattr(provider, "_LEGACY_CONFIG_DIR", tmp_path / ".opensore")
     monkeypatch.setattr(
-        provider, "_LEGACY_ANONYMOUS_ID_PATH", tmp_path / ".opensre" / "anonymous_id"
+        provider, "_LEGACY_ANONYMOUS_ID_PATH", tmp_path / ".opensore" / "anonymous_id"
     )
-    monkeypatch.setattr(provider, "_LEGACY_FIRST_RUN_PATH", tmp_path / ".opensre" / "installed")
+    monkeypatch.setattr(provider, "_LEGACY_FIRST_RUN_PATH", tmp_path / ".opensore" / "installed")
     monkeypatch.setattr(provider.atexit, "register", lambda _func: None)
     (tmp_path / "installed").touch()
     posted_payloads = _stub_httpx_client(monkeypatch)
@@ -314,8 +314,8 @@ def test_existing_install_missing_anonymous_id_captures_posthog_error(
     assert len(user_id_errors) == 1
     properties = user_id_errors[0]["properties"]
     assert properties["reason"] == "missing_anonymous_id"
-    assert properties["config_dir"] == "~/.config/opensre"
-    assert properties["anonymous_id_path"] == "~/.config/opensre/anonymous_id"
+    assert properties["config_dir"] == "~/.config/opensore"
+    assert properties["anonymous_id_path"] == "~/.config/opensore/anonymous_id"
     assert properties["config_dir_existed"] is True
     assert properties["install_marker_existed"] is True
     assert properties["anonymous_id_path_existed"] is False
@@ -325,7 +325,7 @@ def test_existing_install_missing_anonymous_id_captures_posthog_error(
 def test_first_run_missing_anonymous_id_does_not_capture_posthog_error(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    monkeypatch.delenv("OPENSRE_ANALYTICS_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_ANALYTICS_DISABLED", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
     monkeypatch.setattr(provider, "_CONFIG_DIR", tmp_path)
     monkeypatch.setattr(provider, "_ANONYMOUS_ID_PATH", tmp_path / "anonymous_id")
@@ -347,8 +347,8 @@ def test_first_run_missing_anonymous_id_does_not_capture_posthog_error(
 def test_legacy_anonymous_id_is_loaded_into_config_path(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    config_dir = tmp_path / ".config" / "opensre"
-    legacy_dir = tmp_path / ".opensre"
+    config_dir = tmp_path / ".config" / "opensore"
+    legacy_dir = tmp_path / ".opensore"
     legacy_id = "11111111-2222-3333-4444-555555555555"
     legacy_dir.mkdir()
     (legacy_dir / "installed").touch()
@@ -436,7 +436,7 @@ while not start_file.exists():
 
 print(provider._compute_anonymous_identity().distinct_id, flush=True)
 """
-    env = os.environ | {"OPENSRE_ANALYTICS_DISABLED": "1"}
+    env = os.environ | {"OPENSORE_ANALYTICS_DISABLED": "1"}
     processes = [
         subprocess.Popen(
             [sys.executable, "-c", script, str(tmp_path), str(start_file)],
@@ -463,7 +463,7 @@ print(provider._compute_anonymous_identity().distinct_id, flush=True)
 def test_insert_id_is_stable_for_same_one_time_event(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    monkeypatch.delenv("OPENSRE_ANALYTICS_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_ANALYTICS_DISABLED", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
     monkeypatch.setattr(provider, "_CONFIG_DIR", tmp_path)
     monkeypatch.setattr(provider, "_ANONYMOUS_ID_PATH", tmp_path / "anonymous_id")
@@ -501,10 +501,10 @@ def test_install_main_reuses_shared_install_guard(monkeypatch) -> None:
     assert captured == [{"install_source": "make_install", "entrypoint": "make install"}]
 
 
-def test_analytics_disabled_when_opensre_analytics_disabled_opt_out(
+def test_analytics_disabled_when_opensore_analytics_disabled_opt_out(
     monkeypatch, tmp_path: Path
 ) -> None:
-    monkeypatch.setenv("OPENSRE_ANALYTICS_DISABLED", "1")
+    monkeypatch.setenv("OPENSORE_ANALYTICS_DISABLED", "1")
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
     monkeypatch.setattr(provider, "_CONFIG_DIR", tmp_path)
     monkeypatch.setattr(provider, "_ANONYMOUS_ID_PATH", tmp_path / "anonymous_id")
@@ -532,7 +532,7 @@ def test_analytics_disabled_when_opensre_analytics_disabled_opt_out(
 
 def test_analytics_disabled_when_do_not_track_opt_out(monkeypatch, tmp_path: Path) -> None:
     monkeypatch.setenv("DO_NOT_TRACK", "1")
-    monkeypatch.delenv("OPENSRE_ANALYTICS_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_ANALYTICS_DISABLED", raising=False)
     monkeypatch.setattr(provider, "_CONFIG_DIR", tmp_path)
     monkeypatch.setattr(provider, "_ANONYMOUS_ID_PATH", tmp_path / "anonymous_id")
 
@@ -663,7 +663,7 @@ def test_write_text_atomic_replaces_existing_file_and_removes_temp(tmp_path: Pat
 
 
 def test_install_detected_gets_stable_insert_id(monkeypatch, tmp_path: Path) -> None:
-    monkeypatch.delenv("OPENSRE_ANALYTICS_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_ANALYTICS_DISABLED", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
     monkeypatch.setattr(provider, "_CONFIG_DIR", tmp_path)
     monkeypatch.setattr(provider, "_ANONYMOUS_ID_PATH", tmp_path / "anonymous_id")
@@ -681,7 +681,7 @@ def test_install_detected_gets_stable_insert_id(monkeypatch, tmp_path: Path) -> 
 
 
 def test_recurring_events_do_not_get_insert_id(monkeypatch, tmp_path: Path) -> None:
-    monkeypatch.delenv("OPENSRE_ANALYTICS_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_ANALYTICS_DISABLED", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
     monkeypatch.setattr(provider, "_CONFIG_DIR", tmp_path)
     monkeypatch.setattr(provider, "_ANONYMOUS_ID_PATH", tmp_path / "anonymous_id")
@@ -699,7 +699,7 @@ def test_recurring_events_do_not_get_insert_id(monkeypatch, tmp_path: Path) -> N
 def test_identity_persistence_property_marks_none_when_disk_unavailable(
     monkeypatch, tmp_path: Path
 ) -> None:
-    monkeypatch.delenv("OPENSRE_ANALYTICS_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_ANALYTICS_DISABLED", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
     monkeypatch.setattr(provider, "_CONFIG_DIR", tmp_path)
     monkeypatch.setattr(provider, "_ANONYMOUS_ID_PATH", tmp_path / "anonymous_id")
@@ -770,7 +770,7 @@ def test_capture_install_detected_if_needed_handles_exclusive_create_race(
 def test_shutdown_is_idempotent_and_capture_after_shutdown_is_noop(
     monkeypatch, tmp_path: Path
 ) -> None:
-    monkeypatch.delenv("OPENSRE_ANALYTICS_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_ANALYTICS_DISABLED", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
     monkeypatch.setattr(provider, "_CONFIG_DIR", tmp_path)
     monkeypatch.setattr(provider, "_ANONYMOUS_ID_PATH", tmp_path / "anonymous_id")
@@ -818,8 +818,8 @@ def test_shutdown_is_idempotent_and_capture_after_shutdown_is_noop(
 def test_analytics_post_shutdown_capture_is_safe_noop(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    monkeypatch.delenv("OPENSRE_NO_TELEMETRY", raising=False)
-    monkeypatch.delenv("OPENSRE_ANALYTICS_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_NO_TELEMETRY", raising=False)
+    monkeypatch.delenv("OPENSORE_ANALYTICS_DISABLED", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
     monkeypatch.setattr(provider, "_CONFIG_DIR", tmp_path)
     monkeypatch.setattr(provider, "_ANONYMOUS_ID_PATH", tmp_path / "anonymous_id")
@@ -845,8 +845,8 @@ def test_shutdown_analytics_is_noop_when_singleton_not_initialized(monkeypatch) 
 def test_analytics_is_disabled_when_no_telemetry_env_var_is_set(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """OPENSRE_NO_TELEMETRY=1 must opt out; smoke tests rely on it."""
-    monkeypatch.setenv("OPENSRE_NO_TELEMETRY", "1")
+    """OPENSORE_NO_TELEMETRY=1 must opt out; smoke tests rely on it."""
+    monkeypatch.setenv("OPENSORE_NO_TELEMETRY", "1")
 
     analytics = provider.Analytics()
 
@@ -857,7 +857,7 @@ def test_event_log_path_resolves_under_config_dir(monkeypatch, tmp_path: Path) -
     """The local event log lives next to ``anonymous_id`` and ``analytics_errors.log``.
 
     Centralizing telemetry artifacts under ``_CONFIG_DIR`` avoids leaking a
-    ``posthog_events.txt`` into every shell where the user runs ``opensre``.
+    ``posthog_events.txt`` into every shell where the user runs ``opensore``.
     """
     monkeypatch.setattr(provider, "_CONFIG_DIR", tmp_path)
     assert provider._event_log_path() == tmp_path / "posthog_events.txt"
@@ -874,7 +874,7 @@ def test_event_log_writes_to_config_dir_not_cwd(monkeypatch, tmp_path: Path) -> 
     cwd = tmp_path / "cwd"
     cwd.mkdir()
 
-    monkeypatch.setenv("OPENSRE_ANALYTICS_LOG_EVENTS", "1")
+    monkeypatch.setenv("OPENSORE_ANALYTICS_LOG_EVENTS", "1")
     monkeypatch.setattr(provider, "_CONFIG_DIR", config_dir)
     monkeypatch.setattr(provider, "_event_log_state", provider._EventLogState())
     monkeypatch.chdir(cwd)
@@ -887,10 +887,10 @@ def test_event_log_writes_to_config_dir_not_cwd(monkeypatch, tmp_path: Path) -> 
 
 def test_event_log_creates_config_dir_on_first_write(monkeypatch, tmp_path: Path) -> None:
     """``_CONFIG_DIR`` may not exist on a fresh install — first write must mkdir it."""
-    config_dir = tmp_path / "fresh-install" / ".config" / "opensre"
+    config_dir = tmp_path / "fresh-install" / ".config" / "opensore"
     assert not config_dir.exists()
 
-    monkeypatch.setenv("OPENSRE_ANALYTICS_LOG_EVENTS", "1")
+    monkeypatch.setenv("OPENSORE_ANALYTICS_LOG_EVENTS", "1")
     monkeypatch.setattr(provider, "_CONFIG_DIR", config_dir)
     monkeypatch.setattr(provider, "_event_log_state", provider._EventLogState())
 
@@ -911,7 +911,7 @@ def test_event_log_counter_does_not_drift_when_writes_are_suppressed(
     ``_EVENT_LOG_MAX_LINES`` failed attempts. ``_append_log_line`` must bail
     out before the counter touches the cap on a write that didn't succeed.
     """
-    monkeypatch.setenv("OPENSRE_ANALYTICS_LOG_EVENTS", "1")
+    monkeypatch.setenv("OPENSORE_ANALYTICS_LOG_EVENTS", "1")
     monkeypatch.setattr(provider, "_CONFIG_DIR", tmp_path)
     monkeypatch.setattr(provider, "_EVENT_LOG_MAX_LINES", 3)
     monkeypatch.setattr(provider, "_event_log_state", provider._EventLogState())
@@ -935,7 +935,7 @@ def test_event_log_counter_increments_only_on_successful_write(monkeypatch, tmp_
     ``contextlib.suppress`` pattern around the write could silently regress
     the counter-drift fix even with the no-write guard above passing.
     """
-    monkeypatch.setenv("OPENSRE_ANALYTICS_LOG_EVENTS", "1")
+    monkeypatch.setenv("OPENSORE_ANALYTICS_LOG_EVENTS", "1")
     monkeypatch.setattr(provider, "_CONFIG_DIR", tmp_path)
     monkeypatch.setattr(provider, "_event_log_state", provider._EventLogState())
 
@@ -949,7 +949,7 @@ def test_capture_coerces_invalid_property_values(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     """capture must accept str/bool, coerce numerics, drop None, and reject objects."""
-    monkeypatch.delenv("OPENSRE_ANALYTICS_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_ANALYTICS_DISABLED", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
     monkeypatch.setattr(provider, "_CONFIG_DIR", tmp_path)
     monkeypatch.setattr(provider, "_ANONYMOUS_ID_PATH", tmp_path / "anonymous_id")

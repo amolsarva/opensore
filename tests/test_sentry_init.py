@@ -22,21 +22,21 @@ def _reset_sentry_module_state(monkeypatch: pytest.MonkeyPatch) -> None:
     builder with an empty list keeps every test working; the one test that
     asserts integrations were wired overrides this in its own body.
 
-    Also clears the global ``OPENSRE_SENTRY_DISABLED`` flag set by conftest so
+    Also clears the global ``OPENSORE_SENTRY_DISABLED`` flag set by conftest so
     that ``_before_send`` unit tests can exercise the scrubbing/filtering logic.
     Tests that need the disable flag re-set it via ``monkeypatch.setenv``.
     """
     sentry_mod._init_sentry_once.cache_clear()
     sentry_mod._reset_scope_tags_state_for_tests()
     monkeypatch.setattr(sentry_mod, "_build_sentry_integrations", lambda: [])
-    monkeypatch.delenv("OPENSRE_SENTRY_DISABLED", raising=False)
-    monkeypatch.delenv("OPENSRE_NO_TELEMETRY", raising=False)
+    monkeypatch.delenv("OPENSORE_SENTRY_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_NO_TELEMETRY", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
 
 
 def test_init_sentry_noops_when_disabled(monkeypatch) -> None:
     sentry_mod._init_sentry_once.cache_clear()
-    monkeypatch.setenv("OPENSRE_SENTRY_DISABLED", "1")
+    monkeypatch.setenv("OPENSORE_SENTRY_DISABLED", "1")
     init_mock = MagicMock()
     monkeypatch.setitem(sys.modules, "sentry_sdk", SimpleNamespace(init=init_mock))
 
@@ -47,10 +47,10 @@ def test_init_sentry_noops_when_disabled(monkeypatch) -> None:
 
 def test_init_sentry_is_idempotent_for_same_config(monkeypatch) -> None:
     sentry_mod._init_sentry_once.cache_clear()
-    monkeypatch.delenv("OPENSRE_SENTRY_DISABLED", raising=False)
-    monkeypatch.delenv("OPENSRE_NO_TELEMETRY", raising=False)
+    monkeypatch.delenv("OPENSORE_SENTRY_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_NO_TELEMETRY", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
-    monkeypatch.delenv("OPENSRE_SENTRY_DSN", raising=False)
+    monkeypatch.delenv("OPENSORE_SENTRY_DSN", raising=False)
     monkeypatch.delenv("SENTRY_DSN", raising=False)
     monkeypatch.setenv("SENTRY_ERROR_SAMPLE_RATE", "0.25")
     monkeypatch.setenv("SENTRY_TRACES_SAMPLE_RATE", "0.5")
@@ -72,10 +72,10 @@ def test_init_sentry_is_idempotent_for_same_config(monkeypatch) -> None:
 
 def test_init_sentry_allows_dsn_override(monkeypatch) -> None:
     sentry_mod._init_sentry_once.cache_clear()
-    monkeypatch.delenv("OPENSRE_SENTRY_DISABLED", raising=False)
-    monkeypatch.delenv("OPENSRE_NO_TELEMETRY", raising=False)
+    monkeypatch.delenv("OPENSORE_SENTRY_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_NO_TELEMETRY", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
-    monkeypatch.setenv("OPENSRE_SENTRY_DSN", "https://override@sentry.invalid/1")
+    monkeypatch.setenv("OPENSORE_SENTRY_DSN", "https://override@sentry.invalid/1")
     init_mock = MagicMock()
     monkeypatch.setitem(sys.modules, "sentry_sdk", SimpleNamespace(init=init_mock))
 
@@ -86,10 +86,10 @@ def test_init_sentry_allows_dsn_override(monkeypatch) -> None:
 
 def test_init_sentry_invalid_sample_rate_fallbacks(monkeypatch) -> None:
     sentry_mod._init_sentry_once.cache_clear()
-    monkeypatch.delenv("OPENSRE_SENTRY_DISABLED", raising=False)
-    monkeypatch.delenv("OPENSRE_NO_TELEMETRY", raising=False)
+    monkeypatch.delenv("OPENSORE_SENTRY_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_NO_TELEMETRY", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
-    monkeypatch.delenv("OPENSRE_SENTRY_DSN", raising=False)
+    monkeypatch.delenv("OPENSORE_SENTRY_DSN", raising=False)
     monkeypatch.delenv("SENTRY_DSN", raising=False)
     monkeypatch.setenv("SENTRY_ERROR_SAMPLE_RATE", "invalid_value")
     monkeypatch.setenv("SENTRY_TRACES_SAMPLE_RATE", "invalid_value")
@@ -106,10 +106,10 @@ def test_init_sentry_invalid_sample_rate_fallbacks(monkeypatch) -> None:
 
 def test_init_sentry_sample_rates_are_clamped(monkeypatch) -> None:
     sentry_mod._init_sentry_once.cache_clear()
-    monkeypatch.delenv("OPENSRE_SENTRY_DISABLED", raising=False)
-    monkeypatch.delenv("OPENSRE_NO_TELEMETRY", raising=False)
+    monkeypatch.delenv("OPENSORE_SENTRY_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_NO_TELEMETRY", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
-    monkeypatch.delenv("OPENSRE_SENTRY_DSN", raising=False)
+    monkeypatch.delenv("OPENSORE_SENTRY_DSN", raising=False)
     monkeypatch.delenv("SENTRY_DSN", raising=False)
     monkeypatch.setenv("SENTRY_ERROR_SAMPLE_RATE", "2")
     monkeypatch.setenv("SENTRY_TRACES_SAMPLE_RATE", "-1")
@@ -123,8 +123,8 @@ def test_init_sentry_sample_rates_are_clamped(monkeypatch) -> None:
 
 
 def test_capture_exception_is_best_effort(monkeypatch) -> None:
-    monkeypatch.delenv("OPENSRE_SENTRY_DISABLED", raising=False)
-    monkeypatch.delenv("OPENSRE_NO_TELEMETRY", raising=False)
+    monkeypatch.delenv("OPENSORE_SENTRY_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_NO_TELEMETRY", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
     capture_mock = MagicMock(side_effect=RuntimeError("sentry unavailable"))
     monkeypatch.setitem(
@@ -139,8 +139,8 @@ def test_capture_exception_is_best_effort(monkeypatch) -> None:
 
 
 def test_capture_exception_attaches_context(monkeypatch) -> None:
-    monkeypatch.delenv("OPENSRE_SENTRY_DISABLED", raising=False)
-    monkeypatch.delenv("OPENSRE_NO_TELEMETRY", raising=False)
+    monkeypatch.delenv("OPENSORE_SENTRY_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_NO_TELEMETRY", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
     capture_mock = MagicMock()
     tags: dict[str, str] = {}
@@ -174,16 +174,16 @@ def test_capture_exception_attaches_context(monkeypatch) -> None:
 
     capture_mock.assert_called_once()
     assert tags == {
-        "opensre.context": "interactive_shell.cli_agent.stream",
+        "opensore.context": "interactive_shell.cli_agent.stream",
         "surface": "interactive_shell",
     }
     assert extras == {"turn": 3}
 
 
-def test_init_sentry_noops_when_opensre_no_telemetry(monkeypatch) -> None:
+def test_init_sentry_noops_when_opensore_no_telemetry(monkeypatch) -> None:
     sentry_mod._init_sentry_once.cache_clear()
-    monkeypatch.delenv("OPENSRE_SENTRY_DISABLED", raising=False)
-    monkeypatch.setenv("OPENSRE_NO_TELEMETRY", "1")
+    monkeypatch.delenv("OPENSORE_SENTRY_DISABLED", raising=False)
+    monkeypatch.setenv("OPENSORE_NO_TELEMETRY", "1")
     init_mock = MagicMock()
     monkeypatch.setitem(sys.modules, "sentry_sdk", SimpleNamespace(init=init_mock))
 
@@ -194,8 +194,8 @@ def test_init_sentry_noops_when_opensre_no_telemetry(monkeypatch) -> None:
 
 def test_init_sentry_noops_when_do_not_track(monkeypatch) -> None:
     sentry_mod._init_sentry_once.cache_clear()
-    monkeypatch.delenv("OPENSRE_SENTRY_DISABLED", raising=False)
-    monkeypatch.delenv("OPENSRE_NO_TELEMETRY", raising=False)
+    monkeypatch.delenv("OPENSORE_SENTRY_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_NO_TELEMETRY", raising=False)
     monkeypatch.setenv("DO_NOT_TRACK", "1")
     init_mock = MagicMock()
     monkeypatch.setitem(sys.modules, "sentry_sdk", SimpleNamespace(init=init_mock))
@@ -207,8 +207,8 @@ def test_init_sentry_noops_when_do_not_track(monkeypatch) -> None:
 
 def test_init_sentry_dsn_env_overrides_constant(monkeypatch) -> None:
     sentry_mod._init_sentry_once.cache_clear()
-    monkeypatch.delenv("OPENSRE_SENTRY_DISABLED", raising=False)
-    monkeypatch.delenv("OPENSRE_NO_TELEMETRY", raising=False)
+    monkeypatch.delenv("OPENSORE_SENTRY_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_NO_TELEMETRY", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
     custom_dsn = "https://abc@example.ingest.sentry.io/12345"
     monkeypatch.setenv("SENTRY_DSN", custom_dsn)
@@ -222,8 +222,8 @@ def test_init_sentry_dsn_env_overrides_constant(monkeypatch) -> None:
 
 def test_init_sentry_release_tag_uses_get_version(monkeypatch) -> None:
     sentry_mod._init_sentry_once.cache_clear()
-    monkeypatch.delenv("OPENSRE_SENTRY_DISABLED", raising=False)
-    monkeypatch.delenv("OPENSRE_NO_TELEMETRY", raising=False)
+    monkeypatch.delenv("OPENSORE_SENTRY_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_NO_TELEMETRY", raising=False)
     monkeypatch.delenv("DO_NOT_TRACK", raising=False)
     monkeypatch.setattr("app.version.get_version", lambda: "9.9.9")
     init_mock = MagicMock()
@@ -231,7 +231,7 @@ def test_init_sentry_release_tag_uses_get_version(monkeypatch) -> None:
 
     sentry_mod.init_sentry()
 
-    assert init_mock.call_args.kwargs["release"] == "opensre@9.9.9"
+    assert init_mock.call_args.kwargs["release"] == "opensore@9.9.9"
 
 
 def test_before_send_filters_sensitive_request_headers() -> None:
@@ -240,7 +240,7 @@ def test_before_send_filters_sensitive_request_headers() -> None:
             "headers": {
                 "Authorization": "Bearer secret-token",
                 "Cookie": "session=abc",
-                "User-Agent": "opensre/1",
+                "User-Agent": "opensore/1",
             },
             "cookies": {"session": "abc"},
         },
@@ -251,7 +251,7 @@ def test_before_send_filters_sensitive_request_headers() -> None:
     headers = event["request"]["headers"]
     assert headers["Authorization"] == "[Filtered]"
     assert headers["Cookie"] == "[Filtered]"
-    assert headers["User-Agent"] == "opensre/1"
+    assert headers["User-Agent"] == "opensore/1"
     assert event["request"]["cookies"] == "[Filtered]"
 
 
@@ -263,7 +263,7 @@ def test_before_send_drops_event_when_dsn_is_empty(monkeypatch) -> None:
 
 
 def test_before_send_drops_event_when_sentry_disabled(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("OPENSRE_SENTRY_DISABLED", "1")
+    monkeypatch.setenv("OPENSORE_SENTRY_DISABLED", "1")
 
     assert sentry_mod._before_send({"message": "boom"}, {}) is None
 
@@ -492,10 +492,10 @@ def test_before_breadcrumb_leaves_other_categories_alone() -> None:
 
 def _clear_kill_switches(monkeypatch) -> None:
     for env in (
-        "OPENSRE_SENTRY_DISABLED",
-        "OPENSRE_NO_TELEMETRY",
+        "OPENSORE_SENTRY_DISABLED",
+        "OPENSORE_NO_TELEMETRY",
         "DO_NOT_TRACK",
-        "OPENSRE_SENTRY_DSN",
+        "OPENSORE_SENTRY_DSN",
         "SENTRY_DSN",
     ):
         monkeypatch.delenv(env, raising=False)
@@ -567,14 +567,14 @@ def test_init_sentry_sets_max_breadcrumbs(monkeypatch) -> None:
 def test_init_sentry_sets_scope_tags(monkeypatch) -> None:
     sentry_mod._init_sentry_once.cache_clear()
     _clear_kill_switches(monkeypatch)
-    monkeypatch.setenv("OPENSRE_DEPLOYMENT_METHOD", "railway")
+    monkeypatch.setenv("OPENSORE_DEPLOYMENT_METHOD", "railway")
     _, tag_mock = _install_full_sentry_mock(monkeypatch)
 
     sentry_mod.init_sentry(entrypoint="webapp")
 
     tag_calls = {call.args for call in tag_mock.call_args_list}
     assert ("entrypoint", "webapp") in tag_calls
-    assert ("opensre.runtime", "hosted") in tag_calls
+    assert ("opensore.runtime", "hosted") in tag_calls
     assert ("deployment_method", "railway") in tag_calls
 
 
@@ -597,7 +597,7 @@ def test_init_sentry_runtime_tag_is_cli_for_cli_entrypoint(monkeypatch) -> None:
     sentry_mod.init_sentry(entrypoint="cli")
 
     tag_calls = {call.args for call in tag_mock.call_args_list}
-    assert ("opensre.runtime", "cli") in tag_calls
+    assert ("opensore.runtime", "cli") in tag_calls
 
 
 def test_init_sentry_runtime_tag_is_hosted_for_webapp_entrypoint(monkeypatch) -> None:
@@ -608,7 +608,7 @@ def test_init_sentry_runtime_tag_is_hosted_for_webapp_entrypoint(monkeypatch) ->
     sentry_mod.init_sentry(entrypoint="webapp")
 
     tag_calls = {call.args for call in tag_mock.call_args_list}
-    assert ("opensre.runtime", "hosted") in tag_calls
+    assert ("opensore.runtime", "hosted") in tag_calls
 
 
 def test_init_sentry_runtime_tag_is_cli_when_entrypoint_unknown(monkeypatch) -> None:
@@ -619,13 +619,13 @@ def test_init_sentry_runtime_tag_is_cli_when_entrypoint_unknown(monkeypatch) -> 
     sentry_mod.init_sentry()
 
     tag_calls = {call.args for call in tag_mock.call_args_list}
-    assert ("opensre.runtime", "cli") in tag_calls
+    assert ("opensore.runtime", "cli") in tag_calls
 
 
 def test_init_sentry_deployment_method_defaults_to_local(monkeypatch) -> None:
     sentry_mod._init_sentry_once.cache_clear()
     _clear_kill_switches(monkeypatch)
-    monkeypatch.delenv("OPENSRE_DEPLOYMENT_METHOD", raising=False)
+    monkeypatch.delenv("OPENSORE_DEPLOYMENT_METHOD", raising=False)
     _, tag_mock = _install_full_sentry_mock(monkeypatch)
 
     sentry_mod.init_sentry(entrypoint="cli")
@@ -703,7 +703,7 @@ def test_before_breadcrumb_filters_http_headers() -> None:
             "headers": {
                 "Authorization": "Bearer secret",
                 "Cookie": "session=abc",
-                "User-Agent": "opensre/1",
+                "User-Agent": "opensore/1",
             },
         },
     }
@@ -713,7 +713,7 @@ def test_before_breadcrumb_filters_http_headers() -> None:
     headers = crumb["data"]["headers"]
     assert headers["Authorization"] == "[Filtered]"
     assert headers["Cookie"] == "[Filtered]"
-    assert headers["User-Agent"] == "opensre/1"
+    assert headers["User-Agent"] == "opensore/1"
 
 
 def test_before_breadcrumb_filters_aiohttp_headers() -> None:
@@ -862,7 +862,7 @@ def test_before_send_keeps_non_llm_runtime_errors() -> None:
 def test_init_sentry_skips_scope_tags_when_dsn_empty(monkeypatch) -> None:
     sentry_mod._init_sentry_once.cache_clear()
     _clear_kill_switches(monkeypatch)
-    monkeypatch.setenv("OPENSRE_SENTRY_DSN", "")
+    monkeypatch.setenv("OPENSORE_SENTRY_DSN", "")
     monkeypatch.setenv("SENTRY_DSN", "")
     monkeypatch.setattr(sentry_mod, "SENTRY_DSN", "")
     _, tag_mock = _install_full_sentry_mock(monkeypatch)
@@ -964,7 +964,7 @@ def test_init_sentry_ignore_errors_includes_keyboard_interrupt(monkeypatch) -> N
 
 
 def test_build_sentry_integrations_excludes_logging_when_disabled(monkeypatch) -> None:
-    monkeypatch.setenv("OPENSRE_SENTRY_LOGGING_DISABLED", "1")
+    monkeypatch.setenv("OPENSORE_SENTRY_LOGGING_DISABLED", "1")
 
     integrations = _REAL_BUILD_INTEGRATIONS()
 
@@ -975,7 +975,7 @@ def test_build_sentry_integrations_excludes_logging_when_disabled(monkeypatch) -
 
 
 def test_build_sentry_integrations_includes_logging_by_default(monkeypatch) -> None:
-    monkeypatch.delenv("OPENSRE_SENTRY_LOGGING_DISABLED", raising=False)
+    monkeypatch.delenv("OPENSORE_SENTRY_LOGGING_DISABLED", raising=False)
 
     integrations = _REAL_BUILD_INTEGRATIONS()
 

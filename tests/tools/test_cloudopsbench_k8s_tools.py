@@ -17,7 +17,7 @@ class _Backend:
 
 
 def _tool_params(tool_func: Any, sources: dict[str, dict[str, Any]]) -> dict[str, Any]:
-    return tool_func.__opensre_registered_tool__.extract_params(sources)
+    return tool_func.__opensore_registered_tool__.extract_params(sources)
 
 
 def test_recent_logs_extracts_its_own_service_name() -> None:

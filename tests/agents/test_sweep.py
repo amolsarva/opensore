@@ -20,7 +20,7 @@ _DEAD_PID = 2**31 - 1
 @pytest.fixture
 def isolated_registry(tmp_path: Path) -> AgentRegistry:
     """An ``AgentRegistry`` writing to a tmp dir so tests don't touch
-    the developer's real ``~/.config/opensre/agents.jsonl``."""
+    the developer's real ``~/.config/opensore/agents.jsonl``."""
     return AgentRegistry(path=tmp_path / "agents.jsonl")
 
 
@@ -43,7 +43,7 @@ def test_dead_pid_record_is_forgotten(isolated_registry: AgentRegistry, tmp_path
 def test_live_pid_record_is_kept(isolated_registry: AgentRegistry, tmp_path: Path) -> None:
     """The current Python process is alive; its record must not be pruned."""
     self_pid = os.getpid()
-    isolated_registry.register(AgentRecord(name="opensre", pid=self_pid, command="opensre"))
+    isolated_registry.register(AgentRecord(name="opensore", pid=self_pid, command="opensore"))
 
     result = sweep_module.sweep(isolated_registry, lock_dir=tmp_path / "no-such-dir")
 
@@ -137,7 +137,7 @@ def test_idempotent_second_run_is_a_noop(isolated_registry: AgentRegistry, tmp_p
     nothing because the first already cleaned up. This is the contract
     the issue spec leans on for safe boot-time invocation."""
     isolated_registry.register(AgentRecord(name="ghost", pid=_DEAD_PID, command="bin"))
-    isolated_registry.register(AgentRecord(name="opensre", pid=os.getpid(), command="opensre"))
+    isolated_registry.register(AgentRecord(name="opensore", pid=os.getpid(), command="opensore"))
 
     first = sweep_module.sweep(isolated_registry, lock_dir=tmp_path / "no-such-dir")
     second = sweep_module.sweep(isolated_registry, lock_dir=tmp_path / "no-such-dir")

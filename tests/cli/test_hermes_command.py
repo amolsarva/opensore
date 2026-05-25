@@ -1,4 +1,4 @@
-"""Integration tests for ``opensre hermes watch`` CLI wiring.
+"""Integration tests for ``opensore hermes watch`` CLI wiring.
 
 These tests assert the command parses cleanly and the correlator
 wiring is selectable. The watcher's actual tail loop is covered by

@@ -1,9 +1,9 @@
 ---
 title: "Mac Personal Agent Quickstart"
-description: "Install OpenSRE on macOS and configure a low-cost LLM plus WhatsApp or iMessage."
+description: "Install OpenSore on macOS and configure a low-cost LLM plus WhatsApp or iMessage."
 ---
 
-This path is for using OpenSRE as a local personal agent instead of an incident-response demo.
+This path is for using OpenSore as a local personal agent instead of an incident-response demo.
 
 ## 1. Install
 
@@ -11,14 +11,14 @@ From the repo root while developing:
 
 ```bash
 make install
-uv run opensre personal doctor
+uv run opensore personal doctor
 ```
 
 For an installed release:
 
 ```bash
-curl -fsSL https://install.opensre.com | bash
-opensre personal doctor
+curl -fsSL https://install.opensore.com | bash
+opensore personal doctor
 ```
 
 ## 2. Configure a low-cost LLM
@@ -26,7 +26,7 @@ opensre personal doctor
 Run:
 
 ```bash
-uv run opensre onboard
+uv run opensore onboard
 ```
 
 Choose one of these starting points:
@@ -42,29 +42,29 @@ Choose one of these starting points:
 Then verify:
 
 ```bash
-uv run opensre doctor
+uv run opensore doctor
 ```
 
 ## 3. Configure WhatsApp
 
-OpenSRE currently supports Twilio-backed WhatsApp delivery. Inbound WhatsApp message handling is on the personal-agent roadmap.
+OpenSore currently supports Twilio-backed WhatsApp delivery. Inbound WhatsApp message handling is on the personal-agent roadmap.
 
 ```bash
-uv run opensre integrations setup whatsapp
-uv run opensre integrations verify whatsapp
-uv run opensre messaging pair --platform whatsapp
-uv run opensre personal doctor
+uv run opensore integrations setup whatsapp
+uv run opensore integrations verify whatsapp
+uv run opensore messaging pair --platform whatsapp
+uv run opensore personal doctor
 ```
 
 ## 4. Configure iMessage
 
-iMessage is not implemented as a native OpenSRE channel yet. For now, use the OpenClaw bridge if you already run OpenClaw or a compatible local gateway:
+iMessage is not implemented as a native OpenSore channel yet. For now, use the OpenClaw bridge if you already run OpenClaw or a compatible local gateway:
 
 ```bash
-uv run opensre integrations setup openclaw
-uv run opensre integrations verify openclaw
-uv run opensre messaging pair --platform imessage
-uv run opensre personal doctor
+uv run opensore integrations setup openclaw
+uv run opensore integrations verify openclaw
+uv run opensore messaging pair --platform imessage
+uv run opensore personal doctor
 ```
 
 Native macOS iMessage support needs a dedicated bridge because Apple does not provide a normal server-side iMessage bot API.
@@ -74,7 +74,7 @@ Native macOS iMessage support needs a dedicated bridge because Apple does not pr
 For the current repo, start with the interactive shell:
 
 ```bash
-uv run opensre
+uv run opensore
 ```
 
 For the personal-agent target, track the remaining work in [Personal Agent Roadmap](/personal-agent-roadmap).

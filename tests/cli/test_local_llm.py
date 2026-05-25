@@ -227,7 +227,7 @@ def test_validate_ollama_returns_failure_when_inference_fails(monkeypatch) -> No
 
 def test_validate_ollama_returns_success_on_valid_inference(monkeypatch) -> None:
     monkeypatch.setattr(httpx, "get", lambda *_a, **_kw: _tags_response(["llama3.2:latest"]))
-    monkeypatch.setattr(httpx, "post", lambda *_a, **_kw: _chat_response("OpenSRE ready"))
+    monkeypatch.setattr(httpx, "post", lambda *_a, **_kw: _chat_response("OpenSore ready"))
 
     result = validate_provider_credentials(
         provider=PROVIDER_BY_VALUE["ollama"],
@@ -236,7 +236,7 @@ def test_validate_ollama_returns_success_on_valid_inference(monkeypatch) -> None
     )
 
     assert result.ok is True
-    assert result.sample_response == "OpenSRE ready"
+    assert result.sample_response == "OpenSore ready"
 
 
 @pytest.mark.parametrize(
@@ -251,7 +251,7 @@ def test_validate_ollama_returns_success_on_valid_inference(monkeypatch) -> None
 def test_validate_ollama_exact_tag_matching(monkeypatch, model, available, should_pass) -> None:
     monkeypatch.setattr(httpx, "get", lambda *_a, **_kw: _tags_response(available))
     if should_pass:
-        monkeypatch.setattr(httpx, "post", lambda *_a, **_kw: _chat_response("OpenSRE ready"))
+        monkeypatch.setattr(httpx, "post", lambda *_a, **_kw: _chat_response("OpenSore ready"))
 
     result = validate_provider_credentials(
         provider=PROVIDER_BY_VALUE["ollama"],

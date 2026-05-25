@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Destroy the remote OpenSRE EC2 deployment and clean up resources."""
+"""Destroy the remote OpenSore EC2 deployment and clean up resources."""
 
 from __future__ import annotations
 

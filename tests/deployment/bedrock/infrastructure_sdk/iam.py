@@ -53,7 +53,7 @@ def create_bedrock_agent_role(
         response = iam_client.create_role(
             RoleName=name,
             AssumeRolePolicyDocument=json.dumps(BEDROCK_TRUST_POLICY),
-            Description="Bedrock Agent execution role for OpenSRE deployment tests",
+            Description="Bedrock Agent execution role for OpenSore deployment tests",
             Tags=tags,
         )
         role_arn = response["Role"]["Arn"]

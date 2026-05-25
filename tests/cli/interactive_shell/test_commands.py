@@ -233,9 +233,9 @@ class TestDispatchSlash:
     ) -> None:
         import app.constants as const_module
 
-        monkeypatch.setattr(const_module, "OPENSRE_HOME_DIR", tmp_path)
+        monkeypatch.setattr(const_module, "OPENSORE_HOME_DIR", tmp_path)
         history = FileHistory(str(tmp_path / "interactive_history"))
-        history.store_string("opensre health")
+        history.store_string("opensore health")
         history.store_string("/list integrations")
 
         session = ReplSession()
@@ -245,7 +245,7 @@ class TestDispatchSlash:
         assert dispatch_slash("/history", session, console) is True
         output = buf.getvalue()
         assert "Command history" in output
-        assert "opensre health" in output
+        assert "opensore health" in output
         assert "/list integrations" in output
         assert "current session only" not in output
 
@@ -408,7 +408,7 @@ class TestListCommand:
         )
         console, buf = _capture()
         dispatch_slash("/list integrations", ReplSession(), console)
-        assert "opensre onboard" in buf.getvalue()
+        assert "opensore onboard" in buf.getvalue()
 
 
 # ---------------------------------------------------------------------------
@@ -701,7 +701,7 @@ class TestModelCommand:
         monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
         # Keyring lookups in CI / sandboxes are flaky; force the helper into
         # the env-only path so the test is deterministic.
-        monkeypatch.setenv("OPENSRE_DISABLE_KEYRING", "1")
+        monkeypatch.setenv("OPENSORE_DISABLE_KEYRING", "1")
         # LLM_PROVIDER must not be rewritten by a rejected switch — capture
         # what it was before so we can assert it is unchanged.
         monkeypatch.setenv("LLM_PROVIDER", "gemini")
@@ -1003,7 +1003,7 @@ class TestVersionCommand:
         console, buf = _capture()
         dispatch_slash("/version", ReplSession(), console)
         output = buf.getvalue()
-        assert "opensre" in output
+        assert "opensore" in output
         assert "python" in output
         assert "os" in output
 
@@ -1130,10 +1130,10 @@ class TestInvestigateFileCommand:
             "region": "us-east-1",
         }
 
-    def test_investigate_opensre_error_marks_task_failed(
+    def test_investigate_opensore_error_marks_task_failed(
         self, tmp_path: object, monkeypatch: object
     ) -> None:
-        from app.cli.support.errors import OpenSREError
+        from app.cli.support.errors import OpenSoreError
 
         alert_file = tmp_path / "alert.json"  # type: ignore[operator]
         alert_file.write_text('{"alert_name": "test"}', encoding="utf-8")  # type: ignore[union-attr]
@@ -1143,7 +1143,7 @@ class TestInvestigateFileCommand:
             context_overrides: object = None,
             cancel_requested: object = None,
         ) -> dict[str, object]:
-            raise OpenSREError("bad config")
+            raise OpenSoreError("bad config")
 
         monkeypatch.setattr("app.cli.investigation.run_investigation_for_session", _raise)
         session = ReplSession()
@@ -1168,7 +1168,7 @@ class TestHistoryCommand:
     ) -> None:
         import app.constants as const_module
 
-        monkeypatch.setattr(const_module, "OPENSRE_HOME_DIR", tmp_path)
+        monkeypatch.setattr(const_module, "OPENSORE_HOME_DIR", tmp_path)
         console, buf = _capture()
         dispatch_slash("/history", ReplSession(), console)
         assert "no history" in buf.getvalue()
@@ -1180,7 +1180,7 @@ class TestHistoryCommand:
     ) -> None:
         import app.constants as const_module
 
-        monkeypatch.setattr(const_module, "OPENSRE_HOME_DIR", tmp_path)
+        monkeypatch.setattr(const_module, "OPENSORE_HOME_DIR", tmp_path)
         history = FileHistory(str(tmp_path / "interactive_history"))
         history.store_string("pod crash in prod")
         history.store_string("/status")
@@ -1199,7 +1199,7 @@ class TestHistoryCommand:
     ) -> None:
         import app.constants as const_module
 
-        monkeypatch.setattr(const_module, "OPENSRE_HOME_DIR", tmp_path)
+        monkeypatch.setattr(const_module, "OPENSORE_HOME_DIR", tmp_path)
         session = ReplSession()
         session.record("alert", "bad input", ok=False)
         console, buf = _capture()
@@ -1489,7 +1489,7 @@ class TestRunCliCommand:
             return subprocess.CompletedProcess(
                 cmd,
                 0,
-                stdout="  opensre 1.0.0 is already up to date.\n",
+                stdout="  opensore 1.0.0 is already up to date.\n",
                 stderr="",
             )
 
@@ -1647,7 +1647,7 @@ class TestCliDelegatedCommands:
 
         assert started == [
             (
-                "opensre tests synthetic --scenario 001-replication-lag",
+                "opensore tests synthetic --scenario 001-replication-lag",
                 [
                     sys.executable,
                     "-m",
@@ -1689,8 +1689,8 @@ class TestCliDelegatedCommands:
             env = kwargs["env"]
             assert isinstance(env, dict)
             selection_path.write_text(
-                '[{"command": ["opensre", "tests", "synthetic"], '
-                '"command_display": "opensre tests synthetic"}]',
+                '[{"command": ["opensore", "tests", "synthetic"], '
+                '"command_display": "opensore tests synthetic"}]',
                 encoding="utf-8",
             )
 
@@ -1709,7 +1709,7 @@ class TestCliDelegatedCommands:
 
         dispatch_slash("/tests", ReplSession(), Console())
 
-        assert started == ["opensre tests synthetic"]
+        assert started == ["opensore tests synthetic"]
         assert not selection_path.exists()
 
     def test_tests_flag_first_invocation_delegates_to_cli(self, monkeypatch: object) -> None:

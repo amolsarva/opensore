@@ -275,7 +275,7 @@ def build_cli_invoked_properties(
 ) -> Properties:
     """Build a structured ``cli_invoked`` payload for any CLI surface.
 
-    Used by ``opensre`` (Click-driven) and the ``python -m app.*`` entrypoints
+    Used by ``opensore`` (Click-driven) and the ``python -m app.*`` entrypoints
     so all three end up with the same property names. Records command names
     only — never raw argv values, option values, paths, URLs, or secrets.
     """

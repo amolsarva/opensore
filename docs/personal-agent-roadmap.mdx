@@ -1,9 +1,9 @@
 ---
 title: "Personal Agent Roadmap"
-description: "What OpenSRE is today, what is missing, and how to turn it into a Mac-first messaging agent."
+description: "What OpenSore is today, what is missing, and how to turn it into a Mac-first messaging agent."
 ---
 
-OpenSRE is currently an AI SRE and incident-response framework. It is strongest at alert ingestion, root-cause analysis, observability tools, cloud infrastructure, and posting investigation results back to team systems.
+OpenSore is currently an AI SRE and incident-response framework. It is strongest at alert ingestion, root-cause analysis, observability tools, cloud infrastructure, and posting investigation results back to team systems.
 
 The OpenClaw-like goal is different: a local-first personal agent that is easy to install on a Mac, cheap to run with hosted or local LLMs, and reachable from everyday chat apps such as WhatsApp and iMessage.
 
@@ -14,7 +14,7 @@ What already exists:
 - Interactive CLI and onboarding with multiple LLM providers.
 - Hosted LLM support for Anthropic, OpenAI, Gemini, OpenRouter, Bedrock, NVIDIA, and Ollama.
 - Local CLI provider support for Codex, Claude Code, Gemini CLI, OpenCode, Cursor, Kimi, and Copilot.
-- Integration store under `~/.config/opensre/integrations.json`.
+- Integration store under `~/.config/opensore/integrations.json`.
 - Messaging delivery for Slack, Telegram, WhatsApp through Twilio, and SMS through Twilio.
 - Discord inbound slash-command flow.
 - Messaging identity policies with pairing and allowlists.
@@ -45,9 +45,9 @@ What is still missing for the personal-agent target:
 ### Install and first run
 
 - One-command Mac install that verifies Xcode command line tools, Homebrew, `uv`, Python, and shell profile setup.
-- `opensre personal doctor` as the default post-install check.
-- `opensre personal start` to run the local gateway.
-- `opensre personal launch-agent install` to start on login.
+- `opensore personal doctor` as the default post-install check.
+- `opensore personal start` to run the local gateway.
+- `opensore personal launch-agent install` to start on login.
 - Minimal `.env` template for personal mode.
 - A no-observability quickstart that does not mention Grafana, Datadog, Kubernetes, or RCA fixtures.
 - Troubleshooting output that explains exactly which app permission or token is missing.
@@ -117,7 +117,7 @@ What is still missing for the personal-agent target:
 
 ### Product polish
 
-- `opensre personal doctor` in the README quickstart.
+- `opensore personal doctor` in the README quickstart.
 - `docs/macos-personal-agent-quickstart`.
 - Screenshots or terminal recordings for first-run setup.
 - A sample "send me a daily brief on WhatsApp" workflow.

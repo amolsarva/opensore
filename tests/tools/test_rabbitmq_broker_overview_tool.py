@@ -10,11 +10,11 @@ from tests.tools.conftest import BaseToolContract
 
 class TestRabbitMQBrokerOverviewToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return get_rabbitmq_broker_overview.__opensre_registered_tool__
+        return get_rabbitmq_broker_overview.__opensore_registered_tool__
 
 
 def test_metadata() -> None:
-    rt = get_rabbitmq_broker_overview.__opensre_registered_tool__
+    rt = get_rabbitmq_broker_overview.__opensore_registered_tool__
     assert rt.name == "get_rabbitmq_broker_overview"
     assert rt.source == "rabbitmq"
 

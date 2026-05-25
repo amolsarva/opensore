@@ -1,10 +1,10 @@
 services:
   postgres-test:
     image: postgres:16
-    container_name: opensre-postgres-test
+    container_name: opensore-postgres-test
     environment:
-      POSTGRES_DB: opensre_test
-      POSTGRES_USER: opensre
+      POSTGRES_DB: opensore_test
+      POSTGRES_USER: opensore
       POSTGRES_PASSWORD: test123
     ports:
       - "5433:5432"
@@ -20,17 +20,17 @@ services:
                -c log_destination=stderr
                -c logging_collector=on
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U opensre -d opensre_test"]
+      test: ["CMD-SHELL", "pg_isready -U opensore -d opensore_test"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   mysql-test:
     image: mysql:8.0
-    container_name: opensre-mysql-test
+    container_name: opensore-mysql-test
     environment:
-      MYSQL_DATABASE: opensre_test
-      MYSQL_USER: opensre
+      MYSQL_DATABASE: opensore_test
+      MYSQL_USER: opensore
       MYSQL_PASSWORD: test123
       MYSQL_ROOT_PASSWORD: root123
     ports:
@@ -56,7 +56,7 @@ services:
           "-h",
           "localhost",
           "-u",
-          "opensre",
+          "opensore",
           "-ptest123",
         ]
       interval: 10s

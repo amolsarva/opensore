@@ -2,7 +2,7 @@
 
 Provides ``terminate()`` — a SIGTERM-then-SIGKILL helper used by the
 ``/agents kill`` slash command to stop a runaway local AI agent from
-within the opensre interactive shell.
+within the opensore interactive shell.
 """
 
 from __future__ import annotations

@@ -28,7 +28,7 @@ def test_discover_agent_processes_matches_known_agent_commands(
         discovery,
         "_current_process_rows",
         lambda: [
-            ProcessRow(pid=10, command="opensre"),
+            ProcessRow(pid=10, command="opensore"),
             ProcessRow(pid=101, command="claude chat"),
             ProcessRow(pid=102, command="claude code"),
             ProcessRow(
@@ -163,7 +163,7 @@ def test_discover_agent_processes_matches_bare_claude_cli(
         discovery,
         "_current_process_rows",
         lambda: [
-            ProcessRow(pid=10, command="opensre"),
+            ProcessRow(pid=10, command="opensore"),
             ProcessRow(pid=501, command="claude"),
             ProcessRow(pid=502, command="/Users/me/.npm-global/bin/claude"),
         ],
@@ -185,7 +185,7 @@ def test_discover_agent_processes_matches_claude_cli_flag_variants(
         discovery,
         "_current_process_rows",
         lambda: [
-            ProcessRow(pid=10, command="opensre"),
+            ProcessRow(pid=10, command="opensore"),
             ProcessRow(pid=601, command="claude --resume abc-123"),
             ProcessRow(pid=602, command="claude --prefill 'demo prompt'"),
             ProcessRow(pid=603, command="claude --print 'one shot'"),
@@ -217,7 +217,7 @@ def test_discover_agent_processes_matches_claude_cli_equals_form_flags(
         discovery,
         "_current_process_rows",
         lambda: [
-            ProcessRow(pid=10, command="opensre"),
+            ProcessRow(pid=10, command="opensore"),
             ProcessRow(pid=651, command="claude --resume=abc-123"),
             ProcessRow(pid=652, command="claude --prefill=demo"),
             ProcessRow(pid=653, command="claude --print=one-shot"),
@@ -559,7 +559,7 @@ def test_ignores_non_codex_process_from_codex_named_directory() -> None:
                 ppid=4200,
                 command=(
                     "/workspace/project-with-codex-in-name/.venv/bin/python "
-                    "/workspace/project-with-codex-in-name/.venv/bin/opensre"
+                    "/workspace/project-with-codex-in-name/.venv/bin/opensore"
                 ),
             )
         ],
@@ -582,7 +582,7 @@ def test_scan_all_ignores_non_codex_process_from_codex_named_directory(
                 ppid=4200,
                 command=(
                     "/workspace/project-with-codex-in-name/.venv/bin/python "
-                    "/workspace/project-with-codex-in-name/.venv/bin/opensre"
+                    "/workspace/project-with-codex-in-name/.venv/bin/opensore"
                 ),
             )
         ],
@@ -641,7 +641,7 @@ def test_discover_agent_processes_deduplicates_codex_wrapper_child_in_all_mode(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     rows = [
-        ProcessRow(pid=10, command="opensre"),
+        ProcessRow(pid=10, command="opensore"),
         ProcessRow(pid=801, ppid=1, command="node /Users/me/.local/bin/codex"),
         ProcessRow(
             pid=802,

@@ -9,7 +9,7 @@ from typing import cast
 import psutil
 import pytest
 
-from app.cli.support.errors import OpenSREError
+from app.cli.support.errors import OpenSoreError
 from app.watch_dog.config import WatchdogConfig
 from app.watch_dog.process_monitor import ProcessMonitor
 
@@ -116,7 +116,7 @@ def test_process_monitor_requires_pick_first_for_multiple_name_matches(
         lambda _attrs: iter([_FakeProcess(20, "claude"), _FakeProcess(10, "claude")]),
     )
 
-    with pytest.raises(OpenSREError, match="Multiple processes"):
+    with pytest.raises(OpenSoreError, match="Multiple processes"):
         ProcessMonitor(WatchdogConfig(name="claude", max_cpu=90))
 
     monitor = ProcessMonitor(WatchdogConfig(name="claude", pick_first=True, max_cpu=90))

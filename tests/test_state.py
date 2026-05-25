@@ -20,9 +20,9 @@ def test_make_initial_state_validates_and_sets_defaults() -> None:
     assert raw_alert["source"] == "grafana"
     assert raw_alert["commonLabels"] == {}
     assert raw_alert["commonAnnotations"] == {}
-    assert raw_alert["canonical_alert"]["schema"] == "opensre.alert.v1"
+    assert raw_alert["canonical_alert"]["schema"] == "opensore.alert.v1"
     assert state["planned_actions"] == []
-    assert state.get("opensre_evaluate") is False
+    assert state.get("opensore_evaluate") is False
 
 
 def test_make_initial_state_investigation_metadata_override() -> None:
@@ -45,9 +45,9 @@ def test_make_initial_state_strips_rubric_when_not_evaluate() -> None:
     }
     state = make_initial_state(
         raw_alert=raw,
-        opensre_evaluate=False,
+        opensore_evaluate=False,
     )
-    assert not (state.get("opensre_eval_rubric") or "").strip()
+    assert not (state.get("opensore_eval_rubric") or "").strip()
     ra = state["raw_alert"]
     assert isinstance(ra, dict)
     assert "scoring_points" not in (ra.get("commonAnnotations") or {})
@@ -60,10 +60,10 @@ def test_make_initial_state_evaluate_strips_scoring_points() -> None:
     }
     state = make_initial_state(
         raw_alert=raw,
-        opensre_evaluate=True,
+        opensore_evaluate=True,
     )
-    assert state["opensre_evaluate"] is True
-    assert "rubric text" in (state.get("opensre_eval_rubric") or "")
+    assert state["opensore_evaluate"] is True
+    assert "rubric text" in (state.get("opensore_eval_rubric") or "")
     ra = state["raw_alert"]
     assert isinstance(ra, dict)
     assert "scoring_points" not in (ra.get("commonAnnotations") or {})

@@ -7,11 +7,11 @@ from typing import NoReturn
 
 def reraise_cli_runtime_error(exc: BaseException) -> NoReturn:
     """Convert CLI auth/setup failures to structured CLI UX errors."""
-    from app.cli.support.errors import OpenSREError
+    from app.cli.support.errors import OpenSoreError
     from app.integrations.llm_cli.errors import CLIAuthenticationRequired
 
     if isinstance(exc, CLIAuthenticationRequired):
-        raise OpenSREError(
+        raise OpenSoreError(
             f"{exc.provider} CLI is not authenticated.",
             suggestion=f"{exc.auth_hint} ({exc.detail})",
         ) from exc
@@ -19,17 +19,17 @@ def reraise_cli_runtime_error(exc: BaseException) -> NoReturn:
     if isinstance(exc, RuntimeError):
         msg = str(exc).lower()
         if "cli not found" in msg or "not found on path" in msg:
-            raise OpenSREError(
+            raise OpenSoreError(
                 "CLI tool is not installed or not found.",
                 suggestion=str(exc),
             ) from exc
         if "anthropic" in msg and "model" in msg and "was not found" in msg:
-            raise OpenSREError(
+            raise OpenSoreError(
                 str(exc),
                 suggestion="Verify your model name in ANTHROPIC_REASONING_MODEL or ANTHROPIC_TOOLCALL_MODEL environment variables.",
             ) from exc
         if "bedrock model" in msg and "not available for your account" in msg:
-            raise OpenSREError(
+            raise OpenSoreError(
                 str(exc),
                 suggestion=(
                     "Enable access to the configured Bedrock model in the AWS region, "

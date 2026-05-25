@@ -1,26 +1,26 @@
 {
-  "name": "@tracer-cloud/opensre-docs",
+  "name": "@tracer-cloud/opensore-docs",
   "private": true,
   "version": "1.0.0",
-  "description": "Mintlify documentation site for OpenSRE.",
+  "description": "Mintlify documentation site for OpenSore.",
   "scripts": {
     "dev": "mint dev",
     "update": "mint update"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Tracer-Cloud/opensre.git",
+    "url": "git+https://github.com/Tracer-Cloud/opensore.git",
     "directory": "docs"
   },
   "keywords": [
-    "opensre",
+    "opensore",
     "tracer",
     "docs",
     "mintlify"
   ],
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/Tracer-Cloud/opensre/issues"
+    "url": "https://github.com/Tracer-Cloud/opensore/issues"
   },
-  "homepage": "https://github.com/Tracer-Cloud/opensre/tree/main/docs#readme"
+  "homepage": "https://github.com/Tracer-Cloud/opensore/tree/main/docs#readme"
 }

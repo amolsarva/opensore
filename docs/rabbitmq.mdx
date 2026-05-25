@@ -1,9 +1,9 @@
 ---
 title: "RabbitMQ"
-description: "Connect RabbitMQ so OpenSRE can diagnose queue backlogs, consumer issues, and broker health during investigations"
+description: "Connect RabbitMQ so OpenSore can diagnose queue backlogs, consumer issues, and broker health during investigations"
 ---
 
-OpenSRE uses the RabbitMQ Management HTTP API to investigate message-bus incidents — checking queue backlogs, consumer health, broker-wide resource usage, cluster partition state, and connection patterns.
+OpenSore uses the RabbitMQ Management HTTP API to investigate message-bus incidents — checking queue backlogs, consumer health, broker-wide resource usage, cluster partition state, and connection patterns.
 
 ## Prerequisites
 
@@ -12,7 +12,7 @@ OpenSRE uses the RabbitMQ Management HTTP API to investigate message-bus inciden
   ```bash
   rabbitmq-plugins enable rabbitmq_management
   ```
-- Network access from the OpenSRE environment to the Management API port (default **15672**)
+- Network access from the OpenSore environment to the Management API port (default **15672**)
 - A user with at least the **`monitoring`** tag (read-only access to all management endpoints)
 
 ## Setup
@@ -20,7 +20,7 @@ OpenSRE uses the RabbitMQ Management HTTP API to investigate message-bus inciden
 ### Option 1: Interactive CLI
 
 ```bash
-opensre integrations setup rabbitmq
+opensore integrations setup rabbitmq
 ```
 
 You will be prompted for host, management port, username, password, vhost, and whether to enable SSL.
@@ -32,7 +32,7 @@ Add to your `.env`:
 ```bash
 RABBITMQ_HOST=rmq.example.com
 RABBITMQ_MANAGEMENT_PORT=15672
-RABBITMQ_USERNAME=opensre_ro
+RABBITMQ_USERNAME=opensore_ro
 RABBITMQ_PASSWORD=...
 RABBITMQ_VHOST=/
 RABBITMQ_SSL=false
@@ -51,7 +51,7 @@ RABBITMQ_VERIFY_SSL=true
 
 ### Option 3: Persistent store
 
-Credentials are automatically persisted to `~/.config/opensre/integrations.json` with `0o600` permissions:
+Credentials are automatically persisted to `~/.config/opensore/integrations.json` with `0o600` permissions:
 
 ```json
 {
@@ -64,7 +64,7 @@ Credentials are automatically persisted to `~/.config/opensre/integrations.json`
       "credentials": {
         "host": "rmq.example.com",
         "management_port": 15672,
-        "username": "opensre_ro",
+        "username": "opensore_ro",
         "password": "...",
         "vhost": "/",
         "ssl": false,
@@ -77,17 +77,17 @@ Credentials are automatically persisted to `~/.config/opensre/integrations.json`
 
 ## Recommended user setup
 
-Create a dedicated monitoring user so OpenSRE has read-only access:
+Create a dedicated monitoring user so OpenSore has read-only access:
 
 ```bash
 # Create user
-rabbitmqctl add_user opensre_ro strong-password
+rabbitmqctl add_user opensore_ro strong-password
 
 # Grant the monitoring tag (read-only management API access)
-rabbitmqctl set_user_tags opensre_ro monitoring
+rabbitmqctl set_user_tags opensore_ro monitoring
 
 # Grant read-only permissions on the target vhost
-rabbitmqctl set_permissions -p / opensre_ro "^$" "^$" ".*"
+rabbitmqctl set_permissions -p / opensore_ro "^$" "^$" ".*"
 ```
 
 The `monitoring` tag grants read access to all management endpoints without the ability to publish, consume, create, or delete any resources. The permissions line grants no configure or write access (`^$` matches nothing), and read access to all resources (`.*`).
@@ -105,7 +105,7 @@ Set `RABBITMQ_VERIFY_SSL=false` only when connecting to brokers with self-signed
 
 ## Investigation tools
 
-When OpenSRE investigates a RabbitMQ-related alert, five diagnostic tools are available:
+When OpenSore investigates a RabbitMQ-related alert, five diagnostic tools are available:
 
 ### Queue backlog
 
@@ -130,7 +130,7 @@ Lists active connections sorted by receive byte rate. Reports user, vhost, proto
 ## Verify
 
 ```bash
-opensre integrations verify rabbitmq
+opensore integrations verify rabbitmq
 ```
 
 Expected output:
@@ -144,10 +144,10 @@ rabbitmq   local env    passed    Connected to RabbitMQ 3.13.0 (cluster: rabbit@
 
 | Symptom | Fix |
 | --- | --- |
-| **Connection refused on port 15672** | Verify the management plugin is enabled (`rabbitmq-plugins enable rabbitmq_management`) and that the port is reachable from the OpenSRE host. |
+| **Connection refused on port 15672** | Verify the management plugin is enabled (`rabbitmq-plugins enable rabbitmq_management`) and that the port is reachable from the OpenSore host. |
 | **Management API not found (404)** | The `rabbitmq_management` plugin is not enabled. Run `rabbitmq-plugins enable rabbitmq_management` and restart the broker if needed. |
 | **Authentication failed (401)** | Confirm the username/password and that the user exists (`rabbitmqctl list_users`). |
-| **Forbidden (403)** | The user lacks sufficient tags. Grant at least `monitoring`: `rabbitmqctl set_user_tags opensre_ro monitoring`. |
+| **Forbidden (403)** | The user lacks sufficient tags. Grant at least `monitoring`: `rabbitmqctl set_user_tags opensore_ro monitoring`. |
 | **SSL: CERTIFICATE_VERIFY_FAILED** | The server certificate is not trusted by the system CA bundle. Install the correct CA or set `RABBITMQ_VERIFY_SSL=false` in trusted networks. |
 | **Queues/consumers from other vhosts appear** | Check that `RABBITMQ_VHOST` is set correctly. Queue and consumer queries are scoped to this vhost. Connection stats are filtered client-side. |
 | **Empty consumer list** | Confirm consumers are connected to queues on the configured vhost. Check with `rabbitmqctl list_consumers -p /your-vhost`. |
@@ -158,4 +158,4 @@ rabbitmq   local env    passed    Connected to RabbitMQ 3.13.0 (cluster: rabbit@
 - Always enable **TLS** when the Management API is exposed over the network.
 - Keep passwords out of source control — use `.env` or the persistent store.
 - Rotate credentials periodically.
-- The Management API is **read-only** from OpenSRE's perspective — no messages are published, consumed, or deleted.
+- The Management API is **read-only** from OpenSore's perspective — no messages are published, consumed, or deleted.

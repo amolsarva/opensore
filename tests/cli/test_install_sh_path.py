@@ -137,8 +137,8 @@ def test_install_sh_success_screen_has_visual_structure() -> None:
 
     assert result.returncode == 0, result.stderr
     assert "--------------------------------------------" in output
-    assert "Success: Welcome to OpenSRE" in output
-    assert "opensre v2026.4.1 installed successfully" in output
+    assert "Success: Welcome to OpenSore" in output
+    assert "opensore v2026.4.1 installed successfully" in output
     assert "Next steps:" in output
 
 
@@ -221,7 +221,7 @@ def test_creates_rc_file_when_missing(tmp_path: Path) -> None:
 def test_marker_comment_present(tmp_path: Path) -> None:
     _run(tmp_path, shell="/bin/zsh")
     content = (tmp_path / "home" / ".zshrc").read_text()
-    assert "# Added by opensre installer" in content
+    assert "# Added by opensore installer" in content
 
 
 def test_post_install_message_mentions_source(tmp_path: Path) -> None:
@@ -241,7 +241,7 @@ def test_readds_export_when_marker_present_but_line_removed(tmp_path: Path) -> N
     home = tmp_path / "home"
     home.mkdir(exist_ok=True)
     zshrc = home / ".zshrc"
-    zshrc.write_text("# Added by opensre installer\n")
+    zshrc.write_text("# Added by opensore installer\n")
 
     result = _run(tmp_path, shell="/bin/zsh")
     assert result.returncode == 0, result.stderr
@@ -259,7 +259,7 @@ def _find_post_install_start_line() -> int:
 
     We look for the first line of the version-print block that immediately
     follows the ``install_binary`` call — i.e. the ``if [ "$INSTALL_CHANNEL"``
-    line that opens the "Installed opensre ..." log statement.  Everything from
+    line that opens the "Installed opensore ..." log statement.  Everything from
     that line to EOF is the post-install output block that we want to run in
     tests.
     """
@@ -318,12 +318,12 @@ def _run_post_install(
 
         # 2. Stub side-effect functions — no binary or network calls
         install_binary()               {{ :; }}
-        get_binary_path_from_archive() {{ printf '/tmp/fake-opensre\\n'; }}
+        get_binary_path_from_archive() {{ printf '/tmp/fake-opensore\\n'; }}
         verify_binary_version()        {{ printf '%s\\n' "${{2:-{installed_version}}}"; }}
         run_with_privilege()           {{ "$@"; }}
 
         # 3. Set every variable the output block reads
-        BIN_NAME="opensre"
+        BIN_NAME="opensore"
         INSTALL_DIR="{idir}"
         INSTALL_CHANNEL="{install_channel}"
         installed_version="{installed_version}"
@@ -350,9 +350,9 @@ def test_install_sh_contains_onboarding_hint() -> None:
     install.sh even if the subprocess-based tests are somehow still passing.
     """
     source = INSTALL_SH.read_text()
-    assert "${BIN_NAME:-opensre} onboard" in source, (
+    assert "${BIN_NAME:-opensore} onboard" in source, (
         "install.sh does not contain the onboarding hint "
-        "(expected ``${BIN_NAME:-opensre} onboard`` in Next steps output)."
+        "(expected ``${BIN_NAME:-opensore} onboard`` in Next steps output)."
     )
 
 
@@ -370,7 +370,7 @@ def test_onboarding_hint_shown_when_path_not_set(tmp_path: Path) -> None:
     """Hint appears on a first install where configure_path writes the rc file."""
     result = _run_post_install(tmp_path, shell="/bin/zsh", dir_already_on_path=False)
     assert result.returncode == 0, result.stderr
-    assert "opensre onboard" in result.stdout + result.stderr
+    assert "opensore onboard" in result.stdout + result.stderr
 
 
 def test_onboarding_hint_shown_when_path_already_set(tmp_path: Path) -> None:
@@ -382,14 +382,14 @@ def test_onboarding_hint_shown_when_path_already_set(tmp_path: Path) -> None:
     """
     result = _run_post_install(tmp_path, shell="/bin/zsh", dir_already_on_path=True)
     assert result.returncode == 0, result.stderr
-    assert "opensre onboard" in result.stdout + result.stderr
+    assert "opensore onboard" in result.stdout + result.stderr
 
 
 def test_onboarding_hint_shown_for_bash_linux(tmp_path: Path) -> None:
     """Hint appears on bash/linux installs."""
     result = _run_post_install(tmp_path, shell="/bin/bash", platform="linux")
     assert result.returncode == 0, result.stderr
-    assert "opensre onboard" in result.stdout + result.stderr
+    assert "opensore onboard" in result.stdout + result.stderr
 
 
 def test_onboarding_hint_shown_for_main_channel(tmp_path: Path) -> None:
@@ -401,18 +401,18 @@ def test_onboarding_hint_shown_for_main_channel(tmp_path: Path) -> None:
         installed_version="main",
     )
     assert result.returncode == 0, result.stderr
-    assert "opensre onboard" in result.stdout + result.stderr
+    assert "opensore onboard" in result.stdout + result.stderr
 
 
 def test_onboarding_hint_appears_after_version_line(tmp_path: Path) -> None:
-    """The onboarding hint must appear AFTER the 'Installed opensre v...' line."""
+    """The onboarding hint must appear AFTER the 'Installed opensore v...' line."""
     result = _run_post_install(tmp_path, shell="/bin/zsh", installed_version="2026.4.1")
     assert result.returncode == 0, result.stderr
     output = result.stdout + result.stderr
-    installed_pos = output.find("Installed opensre")
-    onboard_pos = output.find("opensre onboard")
-    assert installed_pos != -1, "'Installed opensre' line missing from output"
-    assert onboard_pos != -1, "'opensre onboard' hint missing from output"
+    installed_pos = output.find("Installed opensore")
+    onboard_pos = output.find("opensore onboard")
+    assert installed_pos != -1, "'Installed opensore' line missing from output"
+    assert onboard_pos != -1, "'opensore onboard' hint missing from output"
     assert onboard_pos > installed_pos, (
         "Onboarding hint must come after the install confirmation line"
     )

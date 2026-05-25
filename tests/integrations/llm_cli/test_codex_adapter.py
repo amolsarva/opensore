@@ -305,7 +305,7 @@ def test_cli_backed_client_passes_reasoning_effort_to_adapter(mock_run: MagicMoc
 
     with (
         patch("app.guardrails.engine.get_guardrail_engine") as gr,
-        patch.dict(os.environ, {"OPENSRE_REASONING_EFFORT": "high"}, clear=False),
+        patch.dict(os.environ, {"OPENSORE_REASONING_EFFORT": "high"}, clear=False),
     ):
         gr.return_value.is_active = False
         client = CLIBackedLLMClient(mock_adapter, model="codex", max_tokens=256)

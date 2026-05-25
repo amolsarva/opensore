@@ -1,4 +1,4 @@
-"""End-to-end test: deploy OpenSRE on EC2 and verify the HTTP health API.
+"""End-to-end test: deploy OpenSore on EC2 and verify the HTTP health API.
 
 Requires deployed infrastructure (see conftest.py / deploy.py).
 Run with: pytest tests/deployment/ec2/ -v -s
@@ -36,10 +36,10 @@ class TestEC2Deployment:
 
 @pytest.mark.e2e
 class TestEC2Health:
-    """Validate that the OpenSRE container is healthy on EC2."""
+    """Validate that the OpenSore container is healthy on EC2."""
 
     def test_health_endpoint(self, ec2_deployment: dict[str, Any]) -> None:
-        """Verify the OpenSRE health endpoint responds."""
+        """Verify the OpenSore health endpoint responds."""
         ip = ec2_deployment["PublicIpAddress"]
         url = f"http://{ip}:8000/health"
 

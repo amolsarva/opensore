@@ -102,7 +102,7 @@ class PromptRecorder:
             "latency_ms": self._latency_ms or int((time.monotonic() - self._start) * 1000),
             "input_tokens": self._input_tokens,
             "output_tokens": self._output_tokens,
-            "opensre_version": get_version(),
+            "opensore_version": get_version(),
         }
         if self._config.local_enabled:
             with contextlib.suppress(OSError):
@@ -132,7 +132,7 @@ class PromptRecorder:
                         "cli_route_kind": self._route_kind,
                         "cli_session_id": self._session_id,
                         "cli_turn_id": self._turn_id,
-                        "opensre_version": get_version(),
+                        "opensore_version": get_version(),
                     }
                 )
 

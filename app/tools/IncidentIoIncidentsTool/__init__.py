@@ -9,13 +9,13 @@ from app.tools.base import BaseTool
 
 
 class IncidentIoIncidentsTool(BaseTool):
-    """Read incident.io incident context and optionally append OpenSRE findings."""
+    """Read incident.io incident context and optionally append OpenSore findings."""
 
     name = "incident_io_incidents"
     source = "incident_io"
     description = (
         "Read incident.io incidents, incident metadata, and incident updates for RCA context. "
-        "Can append OpenSRE findings to the incident summary through the supported edit endpoint."
+        "Can append OpenSore findings to the incident summary through the supported edit endpoint."
     )
     use_cases = [
         "Listing live incident.io incidents related to the current alert",

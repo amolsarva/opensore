@@ -3,7 +3,7 @@
 ## Build and Run commands
 
 - Build `make install` (sets up the project environment via `uv sync` and installs this repo in editable mode)
-- Run **`uv run opensre …`** from the repo root while developing — preferred approach, uses this checkout even if another `opensre` is on your `PATH`.
+- Run **`uv run opensore …`** from the repo root while developing — preferred approach, uses this checkout even if another `opensore` is on your `PATH`.
 - Use **`uv run python …`** for any Python commands.
 
 ## Lint & Format
@@ -72,7 +72,7 @@ Before any push or PR creation, follow the mandatory checklist in [CI.md](CI.md)
 - `app/types/` — Shared typed contracts for evidence, retrieval, and tool-related payloads.
 - `app/utils/` — Cross-cutting utility helpers used across the app and test harnesses.
 - `app/watch_dog/` — Watchdog feature: per-threshold Telegram alarm dispatch with cooldown, sitting on top of `app/utils/telegram_delivery.py`.
-- `app/webapp.py` — Web-facing application entrypoint; the `opensre` CLI is `app/cli/__main__.py`.
+- `app/webapp.py` — Web-facing application entrypoint; the `opensore` CLI is `app/cli/__main__.py`.
 
 `tests/` is organized by capability boundary rather than by framework:
 

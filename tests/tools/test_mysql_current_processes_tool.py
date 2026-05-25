@@ -11,11 +11,11 @@ from tests.tools.conftest import BaseToolContract
 
 class TestMySQLCurrentProcessesToolContract(BaseToolContract):
     def get_tool_under_test(self) -> Any:
-        return get_mysql_current_processes.__opensre_registered_tool__
+        return get_mysql_current_processes.__opensore_registered_tool__
 
 
 def test_metadata() -> None:
-    rt = get_mysql_current_processes.__opensre_registered_tool__
+    rt = get_mysql_current_processes.__opensore_registered_tool__
     assert rt.name == "get_mysql_current_processes"
     assert rt.source == "mysql"
 

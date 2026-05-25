@@ -5,7 +5,7 @@ description: 'Reversible masking of pod, cluster, and account identifiers before
 
 ## Overview
 
-OpenSRE can mask sensitive infrastructure identifiers (pod names, cluster names, hostnames, account IDs, service names, IP addresses, emails) **before** sending text to external LLMs, and restore the originals in any user-facing output (Slack report, problem MD, ingest). This lets teams use external models while keeping raw identifiers private to the investigation runtime.
+OpenSore can mask sensitive infrastructure identifiers (pod names, cluster names, hostnames, account IDs, service names, IP addresses, emails) **before** sending text to external LLMs, and restore the originals in any user-facing output (Slack report, problem MD, ingest). This lets teams use external models while keeping raw identifiers private to the investigation runtime.
 
 Masking is **off by default**. Enable it per investigation via environment variables — no code changes required.
 
@@ -22,9 +22,9 @@ The same identifier always maps to the same placeholder within a single investig
 
 | Variable | Default | Description |
 | --- | --- | --- |
-| `OPENSRE_MASK_ENABLED` | `false` | Master switch. Set to `true` / `1` / `yes` / `on` to activate masking. |
-| `OPENSRE_MASK_KINDS` | `pod,namespace,cluster,hostname,account_id,ip_address,email,service_name` | Comma-separated list of identifier kinds to mask. Unknown kinds are ignored with a warning. Empty value uses all defaults. |
-| `OPENSRE_MASK_EXTRA_REGEX` | *(empty)* | Optional JSON object mapping a label → regex for custom identifiers. Example: `'{"jira_key": "\\\\b[A-Z]+-\\\\d+\\\\b"}'`. Group 1 of the regex, if present, defines the span to mask. |
+| `OPENSORE_MASK_ENABLED` | `false` | Master switch. Set to `true` / `1` / `yes` / `on` to activate masking. |
+| `OPENSORE_MASK_KINDS` | `pod,namespace,cluster,hostname,account_id,ip_address,email,service_name` | Comma-separated list of identifier kinds to mask. Unknown kinds are ignored with a warning. Empty value uses all defaults. |
+| `OPENSORE_MASK_EXTRA_REGEX` | *(empty)* | Optional JSON object mapping a label → regex for custom identifiers. Example: `'{"jira_key": "\\\\b[A-Z]+-\\\\d+\\\\b"}'`. Group 1 of the regex, if present, defines the span to mask. |
 
 Policies are read fresh from the environment at the start of each investigation — changes take effect on the next run without a restart.
 
@@ -54,9 +54,9 @@ Both can be active together: guardrails apply first at the LLM client layer, the
 ## Example
 
 ```bash
-export OPENSRE_MASK_ENABLED=true
-export OPENSRE_MASK_KINDS=pod,namespace,cluster,hostname
-opensre investigate -i tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json
+export OPENSORE_MASK_ENABLED=true
+export OPENSORE_MASK_KINDS=pod,namespace,cluster,hostname
+opensore investigate -i tests/e2e/kubernetes/fixtures/datadog_k8s_alert.json
 ```
 
 During the investigation the LLM sees masked evidence; the final Slack report shows the original pod, namespace, and cluster names.

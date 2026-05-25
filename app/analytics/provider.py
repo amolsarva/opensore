@@ -1,4 +1,4 @@
-"""Analytics transport for the OpenSRE CLI."""
+"""Analytics transport for the OpenSore CLI."""
 
 from __future__ import annotations
 
@@ -24,14 +24,14 @@ import httpx
 
 from app.analytics.events import Event
 from app.cli.wizard.store import get_store_path
-from app.constants import LEGACY_OPENSRE_HOME_DIR
+from app.constants import LEGACY_OPENSORE_HOME_DIR
 from app.constants.posthog import POSTHOG_CAPTURE_API_KEY, POSTHOG_HOST
 from app.version import get_version
 
 _CONFIG_DIR = get_store_path().parent
 _ANONYMOUS_ID_PATH = _CONFIG_DIR / "anonymous_id"
 _FIRST_RUN_PATH = _CONFIG_DIR / "installed"
-_LEGACY_CONFIG_DIR = LEGACY_OPENSRE_HOME_DIR
+_LEGACY_CONFIG_DIR = LEGACY_OPENSORE_HOME_DIR
 _LEGACY_ANONYMOUS_ID_PATH = _LEGACY_CONFIG_DIR / "anonymous_id"
 _LEGACY_FIRST_RUN_PATH = _LEGACY_CONFIG_DIR / "installed"
 
@@ -39,7 +39,7 @@ _QUEUE_SIZE = 128
 _SEND_TIMEOUT = 2.0
 _SHUTDOWN_WAIT = 1.0
 
-_EVENT_LOG_ENV_VAR: Final[str] = "OPENSRE_ANALYTICS_LOG_EVENTS"
+_EVENT_LOG_ENV_VAR: Final[str] = "OPENSORE_ANALYTICS_LOG_EVENTS"
 _EVENT_LOG_FILENAME: Final[str] = "posthog_events.txt"
 _EVENT_LOG_MAX_LINES: Final[int] = 1000
 _ANONYMOUS_ID_LOCK_WAIT_SECONDS: Final[float] = 0.5
@@ -51,7 +51,7 @@ _FALLBACK_FAILURE_LOG_PATH: Path = Path(tempfile.gettempdir()) / _FAILURE_LOG_FI
 _HOME_PATH_RE: Final[re.Pattern[str]] = re.compile(r"/(?:Users|home)/[^/\s]+")
 _FAILURE_MESSAGE_MAX_LEN: Final[int] = 240
 _COMPOSITE_FINGERPRINT_VERSION: Final[str] = "hashed-local-v1"
-_COMPOSITE_FINGERPRINT_NAMESPACE: Final[str] = "opensre-cli-analytics-fingerprint"
+_COMPOSITE_FINGERPRINT_NAMESPACE: Final[str] = "opensore-cli-analytics-fingerprint"
 _CI_FINGERPRINT_ENV_KEYS: Final[tuple[str, ...]] = (
     "GITHUB_REPOSITORY",
     "GITHUB_RUNNER_NAME",
@@ -100,8 +100,8 @@ _ONE_TIME_EVENTS: Final[frozenset[str]] = frozenset({Event.INSTALL_DETECTED.valu
 
 def _is_opted_out() -> bool:
     return (
-        os.getenv("OPENSRE_NO_TELEMETRY", "0") == "1"
-        or os.getenv("OPENSRE_ANALYTICS_DISABLED", "0") == "1"
+        os.getenv("OPENSORE_NO_TELEMETRY", "0") == "1"
+        or os.getenv("OPENSORE_ANALYTICS_DISABLED", "0") == "1"
         or os.getenv("DO_NOT_TRACK", "0") == "1"
     )
 
@@ -146,8 +146,8 @@ def _queue_user_id_load_failure(
     _pending_user_id_load_failures.append(
         {
             "reason": reason,
-            "config_dir": "~/.config/opensre",
-            "anonymous_id_path": "~/.config/opensre/anonymous_id",
+            "config_dir": "~/.config/opensore",
+            "anonymous_id_path": "~/.config/opensore/anonymous_id",
             "config_dir_existed": config_dir_existed,
             "install_marker_existed": install_marker_existed,
             "anonymous_id_path_existed": anonymous_id_path_existed,
@@ -431,7 +431,7 @@ def _build_composite_fingerprint() -> _CompositeFingerprint:
 def _event_logging_enabled() -> bool:
     """Whether the local event log is on. Default is enabled.
 
-    Set ``OPENSRE_ANALYTICS_LOG_EVENTS=0`` to disable. Any value other than
+    Set ``OPENSORE_ANALYTICS_LOG_EVENTS=0`` to disable. Any value other than
     ``"0"`` (including unset, ``"1"``, ``"true"``, etc.) leaves it on.
     """
     return os.getenv(_EVENT_LOG_ENV_VAR, "1") != "0"
@@ -459,10 +459,10 @@ def _event_log_path() -> Path:
     """Resolve the event log path lazily so tests can monkeypatch ``_CONFIG_DIR``.
 
     The log lives next to ``anonymous_id`` and ``analytics_errors.log`` under
-    ``~/.config/opensre/`` (or the equivalent on other platforms) rather than
+    ``~/.config/opensore/`` (or the equivalent on other platforms) rather than
     in the user's current working directory. This prevents a stray
     ``posthog_events.txt`` from showing up in every shell where the user runs
-    ``opensre``, and keeps related telemetry artifacts in one place.
+    ``opensore``, and keeps related telemetry artifacts in one place.
     """
     return _CONFIG_DIR / _EVENT_LOG_FILENAME
 
@@ -535,7 +535,7 @@ def _log_event_line(event: str, properties: Properties) -> None:
 def _log_debug_line(message: str) -> None:
     """Append a non-event diagnostic line (e.g. send retries before exhaustion).
 
-    Only emitted when ``OPENSRE_ANALYTICS_LOG_EVENTS=1`` so the cost is opt-in.
+    Only emitted when ``OPENSORE_ANALYTICS_LOG_EVENTS=1`` so the cost is opt-in.
     Use ``_log_failure`` instead for terminal failures that must always be
     recorded.
     """
@@ -597,7 +597,7 @@ def _log_failure(stage: str, error: BaseException, **extra: object) -> None:
     own diagnostics are broken.
 
     Mirrored to the opt-in debug log so developers running with
-    ``OPENSRE_ANALYTICS_LOG_EVENTS=1`` see failures inline with events.
+    ``OPENSORE_ANALYTICS_LOG_EVENTS=1`` see failures inline with events.
     """
     line = _failure_breadcrumb_line(stage, error, extra)
 
@@ -766,7 +766,7 @@ class Analytics:
     def _ensure_worker(self) -> None:
         if self._worker is not None:
             return
-        worker = threading.Thread(target=self._worker_loop, name="opensre-analytics", daemon=True)
+        worker = threading.Thread(target=self._worker_loop, name="opensore-analytics", daemon=True)
         worker.start()
         self._worker = worker
 
@@ -798,7 +798,7 @@ class Analytics:
         properties: Properties = {
             **item.properties,
             "distinct_id": self._anonymous_id,
-            "$lib": "opensre-cli",
+            "$lib": "opensore-cli",
             "identity_persistence": self._identity_persistence,
         }
         insert_id = _event_insert_id(item.event, self._anonymous_id)
@@ -849,7 +849,7 @@ def shutdown_analytics(*, flush: bool = True) -> None:
 
 
 def capture_install_detected_if_needed(properties: Properties | None = None) -> bool:
-    """Capture ``install_detected`` once per persisted OpenSRE home."""
+    """Capture ``install_detected`` once per persisted OpenSore home."""
     if _path_exists(_FIRST_RUN_PATH):
         return False
     analytics = get_analytics()

@@ -29,7 +29,7 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 
-from app.constants import OPENSRE_HOME_DIR
+from app.constants import OPENSORE_HOME_DIR
 
 _fcntl: types.ModuleType | None
 try:
@@ -44,7 +44,7 @@ else:
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_BUS_SOCKET_PATH: Path = OPENSRE_HOME_DIR / "agents-bus.sock"
+DEFAULT_BUS_SOCKET_PATH: Path = OPENSORE_HOME_DIR / "agents-bus.sock"
 
 #: Bus message wire-format version. Bump when ``BusMessage`` fields change shape.
 BUS_SCHEMA_VERSION: int = 1

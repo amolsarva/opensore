@@ -176,7 +176,7 @@ def _normalize_named_bridge_call(
     """Invoke a named MCP tool and normalise its result.
 
     ``tool_name`` is the MCP-side tool identifier (e.g. ``conversations_get``);
-    ``surface_tool_name`` is the OpenSRE registered tool name that this call
+    ``surface_tool_name`` is the OpenSore registered tool name that this call
     is running on behalf of (e.g. ``get_openclaw_conversation``) so the Sentry
     ``tool_name`` tag matches the tool's declared metadata.
     """

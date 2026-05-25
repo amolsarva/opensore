@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # infra/scripts/signoz/verify.sh
-# Run OpenSRE verification against the local SigNoz stack.
+# Run OpenSore verification against the local SigNoz stack.
 # Run from repo root: bash infra/scripts/signoz/verify.sh
 
 set -euo pipefail
@@ -13,7 +13,7 @@ cd "$REPO_ROOT"
 source "$SCRIPT_DIR/env.sh"
 
 echo "Verifying SigNoz integration ..."
-uv run opensre integrations verify signoz
+uv run opensore integrations verify signoz
 
 echo ""
 echo "Verification complete."

@@ -8,7 +8,7 @@ from tests.tools.conftest import BaseToolContract
 
 class TestSREGuidanceToolContract(BaseToolContract):
     def get_tool_under_test(self):
-        return get_sre_guidance.__opensre_registered_tool__
+        return get_sre_guidance.__opensore_registered_tool__
 
 
 def test_run_with_topic_returns_guidance() -> None:
@@ -32,6 +32,6 @@ def test_run_unknown_topic_doesnt_crash() -> None:
 
 
 def test_metadata_has_knowledge_source() -> None:
-    rt = get_sre_guidance.__opensre_registered_tool__
+    rt = get_sre_guidance.__opensore_registered_tool__
     assert rt.source == "knowledge"
     assert rt.name == "get_sre_guidance"

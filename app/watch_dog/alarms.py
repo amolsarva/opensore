@@ -8,7 +8,7 @@ import threading
 import time
 from dataclasses import dataclass, field
 
-from app.cli.support.errors import OpenSREError
+from app.cli.support.errors import OpenSoreError
 from app.utils.telegram_delivery import post_telegram_message, truncate_for_telegram_html
 from app.utils.truncation import truncate
 
@@ -33,7 +33,7 @@ def load_credentials_from_env(
     """Read TELEGRAM_BOT_TOKEN and TELEGRAM_DEFAULT_CHAT_ID; raise on missing."""
     bot_token = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
     if not bot_token:
-        raise OpenSREError(
+        raise OpenSoreError(
             "TELEGRAM_BOT_TOKEN is not set.",
             suggestion=(
                 "Export TELEGRAM_BOT_TOKEN=<your-bot-token> in your environment "
@@ -50,7 +50,7 @@ def load_credentials_from_env(
     else:
         chat_id = os.getenv("TELEGRAM_DEFAULT_CHAT_ID", "").strip()
     if not chat_id:
-        raise OpenSREError(
+        raise OpenSoreError(
             "Telegram chat id is not set.",
             suggestion=(
                 "Export TELEGRAM_DEFAULT_CHAT_ID=<chat-id> in your environment "

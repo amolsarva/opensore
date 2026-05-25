@@ -1,14 +1,14 @@
 ---
 title: "MariaDB"
-description: "Connect MariaDB so OpenSRE can diagnose database issues during investigations"
+description: "Connect MariaDB so OpenSore can diagnose database issues during investigations"
 ---
 
-OpenSRE uses MariaDB diagnostics to investigate database-related alerts — checking server health, finding slow queries, monitoring replication, and analyzing active threads and InnoDB engine state.
+OpenSore uses MariaDB diagnostics to investigate database-related alerts — checking server health, finding slow queries, monitoring replication, and analyzing active threads and InnoDB engine state.
 
 ## Prerequisites
 
 - MariaDB 10.5+ (10.11 LTS or 11.x recommended)
-- Network access from the OpenSRE environment to your MariaDB instance
+- Network access from the OpenSore environment to your MariaDB instance
 - A database user with at least `SELECT` + `PROCESS` privileges (and `SELECT` on `performance_schema` for slow-query insights)
 
 ## Setup
@@ -16,7 +16,7 @@ OpenSRE uses MariaDB diagnostics to investigate database-related alerts — chec
 ### Option 1: Interactive CLI
 
 ```bash
-opensre integrations setup mariadb
+opensore integrations setup mariadb
 ```
 
 You will be prompted for host, port, database, username, password, and whether to enable SSL.
@@ -29,7 +29,7 @@ Add to your `.env`:
 MARIADB_HOST=db.example.com
 MARIADB_PORT=3306
 MARIADB_DATABASE=production
-MARIADB_USERNAME=opensre_ro
+MARIADB_USERNAME=opensore_ro
 MARIADB_PASSWORD=...
 MARIADB_SSL=true
 ```
@@ -45,7 +45,7 @@ MARIADB_SSL=true
 
 ### Option 3: Persistent store
 
-Credentials are automatically persisted to `~/.config/opensre/integrations.json` with `0o600` permissions:
+Credentials are automatically persisted to `~/.config/opensore/integrations.json` with `0o600` permissions:
 
 ```json
 {
@@ -59,7 +59,7 @@ Credentials are automatically persisted to `~/.config/opensre/integrations.json`
         "host": "db.example.com",
         "port": 3306,
         "database": "production",
-        "username": "opensre_ro",
+        "username": "opensore_ro",
         "password": "...",
         "ssl": true
       }
@@ -70,16 +70,16 @@ Credentials are automatically persisted to `~/.config/opensre/integrations.json`
 
 ## Recommended user setup
 
-Create a dedicated read-only user for OpenSRE so it cannot modify data:
+Create a dedicated read-only user for OpenSore so it cannot modify data:
 
 ```sql
-CREATE USER 'opensre_ro'@'%' IDENTIFIED BY 'strong-password';
-GRANT SELECT, PROCESS, REPLICATION CLIENT ON *.* TO 'opensre_ro'@'%';
-GRANT SELECT ON performance_schema.* TO 'opensre_ro'@'%';
+CREATE USER 'opensore_ro'@'%' IDENTIFIED BY 'strong-password';
+GRANT SELECT, PROCESS, REPLICATION CLIENT ON *.* TO 'opensore_ro'@'%';
+GRANT SELECT ON performance_schema.* TO 'opensore_ro'@'%';
 FLUSH PRIVILEGES;
 ```
 
-The `PROCESS` privilege lets OpenSRE read `information_schema.PROCESSLIST`. `REPLICATION CLIENT` enables `SHOW ALL SLAVES STATUS` / `SHOW SLAVE STATUS`. `SELECT` on `performance_schema` is only needed if you want slow-query insights.
+The `PROCESS` privilege lets OpenSore read `information_schema.PROCESSLIST`. `REPLICATION CLIENT` enables `SHOW ALL SLAVES STATUS` / `SHOW SLAVE STATUS`. `SELECT` on `performance_schema` is only needed if you want slow-query insights.
 
 ## TLS configuration
 
@@ -87,7 +87,7 @@ SSL is enabled by default and uses the system CA bundle to verify the server cer
 
 ## Investigation tools
 
-When OpenSRE investigates a MariaDB-related alert, five diagnostic tools are available:
+When OpenSore investigates a MariaDB-related alert, five diagnostic tools are available:
 
 ### Process list
 
@@ -116,7 +116,7 @@ Runs `SHOW ALL REPLICAS STATUS` (MariaDB multi-source replication; alias: `SHOW 
 ## Verify
 
 ```bash
-opensre integrations verify mariadb
+opensore integrations verify mariadb
 ```
 
 Expected output:
@@ -131,7 +131,7 @@ mariadb   local env    passed    Connected to MariaDB 11.8.6-MariaDB; target dat
 | Symptom | Fix |
 | --- | --- |
 | **Connection refused** | Verify host/port, check firewall rules, and confirm MariaDB is listening on the network interface (`bind-address` in `my.cnf`). |
-| **Access denied for user** | Confirm the username/password and that the user is granted access from the OpenSRE host (`'opensre_ro'@'%'` or a specific IP). |
+| **Access denied for user** | Confirm the username/password and that the user is granted access from the OpenSore host (`'opensore_ro'@'%'` or a specific IP). |
 | **SSL: CERTIFICATE_VERIFY_FAILED** | The server certificate is not trusted by the system CA bundle. Install the correct CA or set `MARIADB_SSL=false` in trusted networks. |
 | **performance_schema is disabled** | Slow-query tool returns an empty list with a note. Enable in `my.cnf`: `performance_schema=ON`. |
 | **SELECT command denied on performance_schema** | Grant `SELECT` on `performance_schema.*` to the user. |

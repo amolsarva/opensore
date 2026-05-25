@@ -443,13 +443,13 @@ def test_validate_github_mcp_config_handles_truthy_non_dict_get_me_structured_co
 
 
 def test_repo_probe_capture_limit_respects_env(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv("OPENSRE_GITHUB_MCP_REPO_PROBE_LIMIT", raising=False)
+    monkeypatch.delenv("OPENSORE_GITHUB_MCP_REPO_PROBE_LIMIT", raising=False)
     assert (
         github_mcp_module._repo_probe_capture_limit() == github_mcp_module._DEFAULT_REPO_PROBE_LIMIT
     )
-    monkeypatch.setenv("OPENSRE_GITHUB_MCP_REPO_PROBE_LIMIT", "120")
+    monkeypatch.setenv("OPENSORE_GITHUB_MCP_REPO_PROBE_LIMIT", "120")
     assert github_mcp_module._repo_probe_capture_limit() == 120
-    monkeypatch.setenv("OPENSRE_GITHUB_MCP_REPO_PROBE_LIMIT", "9999")
+    monkeypatch.setenv("OPENSORE_GITHUB_MCP_REPO_PROBE_LIMIT", "9999")
     assert github_mcp_module._repo_probe_capture_limit() == 500
 
 

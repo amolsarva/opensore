@@ -1,9 +1,9 @@
 ---
 title: "Jira"
-description: "Connect Jira so OpenSRE can create and update incident tickets automatically"
+description: "Connect Jira so OpenSore can create and update incident tickets automatically"
 ---
 
-OpenSRE connects to Jira to create incident tickets, update existing issues, and add investigation findings as comments — keeping your team's workflow in sync with automated investigations.
+OpenSore connects to Jira to create incident tickets, update existing issues, and add investigation findings as comments — keeping your team's workflow in sync with automated investigations.
 
 ## Prerequisites
 
@@ -15,14 +15,14 @@ OpenSRE connects to Jira to create incident tickets, update existing issues, and
 ### Option 1: Interactive CLI
 
 ```bash
-opensre integrations setup
+opensore integrations setup
 ```
 
 Select **Jira** when prompted and provide your base URL, email, API token, and project key.
 
 ### Option 2: Persistent store
 
-Add to `~/.config/opensre/integrations.json`:
+Add to `~/.config/opensore/integrations.json`:
 
 ```json
 {
@@ -54,7 +54,7 @@ Add to `~/.config/opensre/integrations.json`:
 
 1. Go to [id.atlassian.com/manage-profile/security/api-tokens](https://id.atlassian.com/manage-profile/security/api-tokens)
 2. Click **Create API token**
-3. Give it a label (e.g., `opensre`)
+3. Give it a label (e.g., `opensore`)
 4. Copy the token
 
 <Info>
@@ -71,6 +71,6 @@ For Jira Data Center/Server, use a personal access token from **Profile** → **
 
 ## Security best practices
 
-- Use a **dedicated Jira user** for OpenSRE with only the permissions it needs (create and comment on issues).
-- Store credentials in `~/.config/opensre/integrations.json`, not in source code or environment variables.
+- Use a **dedicated Jira user** for OpenSore with only the permissions it needs (create and comment on issues).
+- Store credentials in `~/.config/opensore/integrations.json`, not in source code or environment variables.
 - Rotate the API token periodically.
