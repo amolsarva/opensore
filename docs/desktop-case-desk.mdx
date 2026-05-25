@@ -1,0 +1,68 @@
+---
+title: "Desktop Case Desk"
+description: "Run OpenSore as a native Electron workspace for workplace incident discovery."
+---
+
+OpenSore Case Desk is the native desktop shell for legal, HR, board, compliance, and outside-investigator workflows.
+
+It wraps the existing OpenSore discovery engine in a matter workspace:
+
+- Matter setup for title, matter type, date range, custodians, and source exports
+- Keyword set editing for harassment, retaliation, sexual misconduct, executive concealment, and custom terms
+- Discovery plan preview before evidence is read
+- Local CSV/JSON/JSONL/NDJSON export search using `opensore discovery run`
+- Evidence review with hit counts, excerpts, custodians, and timestamps
+- Export package links for `discovery_evidence.csv`, `discovery_hit_report.csv`, and `discovery_manifest.json`
+
+## Install
+
+The desktop app depends on the Python environment plus Electron:
+
+```bash
+cd ~/Documents/root/opensore
+make install
+npm install
+```
+
+If `npm` is not installed, install Node.js from Homebrew or the official Node.js installer first.
+
+```bash
+brew install node
+```
+
+## Run
+
+```bash
+npm run desktop
+```
+
+For development logging:
+
+```bash
+npm run desktop:dev
+```
+
+The desktop app launches from the repo root and calls:
+
+```bash
+uv run opensore discovery plan ...
+uv run opensore discovery run ...
+```
+
+That keeps the native UI aligned with the CLI behavior and avoids a separate desktop-only investigation engine.
+
+## Verify
+
+Run the desktop smoke check:
+
+```bash
+npm run desktop:check
+```
+
+The smoke check validates that the renderer files exist and that the shared Python discovery model can generate a matter plan.
+
+## Evidence Handling
+
+The current desktop flow is local-export mode. It reads files you select from disk and writes artifacts only to the output folder you choose.
+
+Do not store real privileged or confidential evidence inside the repository. Prefer matter-specific folders outside the checkout and keep source exports in user-owned storage.

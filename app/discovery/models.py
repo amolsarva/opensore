@@ -478,16 +478,18 @@ def build_discovery_plan(request: DiscoveryInvestigationRequest) -> DiscoveryInv
 def build_discovery_queries(request: DiscoveryInvestigationRequest) -> list[DiscoveryQuery]:
     """Build executable query units without retrieving evidence."""
 
-    custodians = request.custodians or [DiscoveryCustodian(display_name="")]
+    custodians: list[DiscoveryCustodian | None] = (
+        list(request.custodians) if request.custodians else [None]
+    )
     queries: list[DiscoveryQuery] = []
     for source in request.sources:
         for keyword_set in request.keyword_sets:
             for custodian in custodians:
-                custodian_label = custodian.primary_label
+                custodian_label = custodian.primary_label if custodian is not None else ""
                 terms = list(keyword_set.terms)
                 query_text = _query_text(
                     terms=terms,
-                    custodian_terms=custodian.search_terms(),
+                    custodian_terms=custodian.search_terms() if custodian is not None else [],
                     date_start=request.date_start,
                     date_end=request.date_end,
                 )

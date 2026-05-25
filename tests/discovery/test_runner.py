@@ -4,7 +4,7 @@ import csv
 import json
 from pathlib import Path
 
-from app.discovery.models import DiscoveryInvestigationRequest
+from app.discovery.models import DiscoveryInvestigationRequest, build_discovery_plan
 from app.discovery.runner import run_local_discovery
 
 
@@ -118,3 +118,18 @@ def test_run_local_discovery_reads_json_records(tmp_path: Path) -> None:
     assert manifest.row_count == 2
     assert {row["matched_keyword"] for row in evidence_rows} == {"retaliation", "complaint"}
     assert evidence_rows[0]["source"] == "gmail"
+
+
+def test_build_discovery_plan_allows_uncustodianed_broad_search() -> None:
+    request = DiscoveryInvestigationRequest(
+        title="Broad executive matter",
+        sources=[{"kind": "custom_csv", "label": "Local export"}],
+        keyword_sets=[{"name": "complaints", "terms": ["complaint"]}],
+        export_target="local_csv",
+    )
+
+    plan = build_discovery_plan(request)
+
+    assert plan.custodian_count == 0
+    assert plan.queries[0].custodian == ""
+    assert plan.queries[0].query_text == "(complaint)"

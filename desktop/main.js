@@ -25,10 +25,16 @@ function createWindow() {
   });
 
   win.loadFile(path.join(__dirname, "renderer.html"));
+  return win;
 }
 
 app.whenReady().then(() => {
-  createWindow();
+  const win = createWindow();
+  if (process.argv.includes("--smoke")) {
+    win.webContents.once("did-finish-load", () => {
+      setTimeout(() => app.quit(), 250);
+    });
+  }
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();

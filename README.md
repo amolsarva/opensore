@@ -192,7 +192,18 @@ This writes `discovery_evidence.csv`, `discovery_hit_report.csv`, and `discovery
 for counsel, HR, compliance, or an investigator to review. See
 [docs/discovery-cli.mdx](docs/discovery-cli.mdx).
 
-### 5. Personal Agent And Messaging
+### 5. Native Desktop Case Desk
+
+The Electron desktop shell gives lawyers, HR, boards, and investigators a native matter workspace on top of the same discovery engine:
+
+```bash
+npm install
+npm run desktop
+```
+
+Use it to define a matter, add custodians, choose local evidence exports, tune keyword sets, preview the discovery plan, run local export search, and review the generated CSV artifacts. See [docs/desktop-case-desk.mdx](docs/desktop-case-desk.mdx).
+
+### 6. Personal Agent And Messaging
 
 For local assistant workflows, WhatsApp experiments, and OpenClaw-style local automation:
 
@@ -302,6 +313,7 @@ Before pushing or opening a PR, follow [CI.md](CI.md). It is the source of truth
 | Path | Purpose |
 | --- | --- |
 | `app/` | CLI, agent logic, investigation pipeline, integrations, tools, state, and web app |
+| `desktop/` | Electron Case Desk for native legal/HR discovery workflows |
 | `tests/` | Unit, integration, synthetic, e2e, deployment, and scenario tests |
 | `docs/` | Product plans, investigation docs, integration guides, and contributor notes |
 | `.github/` | Workflows, templates, and repo automation |
