@@ -73,6 +73,11 @@ The output directory contains:
 - `discovery_manifest.json` - run metadata, source files, query plan, OpenSore version, and output
   file paths.
 
+The hosted Drive export path uses the same artifact shapes, but uploads evidence CSV, hit report
+CSV, and manifest JSON directly to the user's Google Drive from memory. It does not write evidence
+artifacts to durable OpenSore server storage, and transient Drive upload failures are retried before
+surfacing a structured export error.
+
 ## Build a review package
 
 ```bash

@@ -197,6 +197,10 @@ Acceptance tests:
 
 Goal: connect real source reads to user-owned exports without storing evidence on the OpenSore host.
 
+Status: in progress. The first hosted export hardening batch adds an in-memory Google Drive package
+exporter for evidence CSV, hit report CSV, and manifest JSON, with transient upload retry handling
+and structured artifact metadata.
+
 Build:
 
 - Replace service-account Drive assumptions with user OAuth for hosted mode.
@@ -270,6 +274,8 @@ The first implementation adds:
 - Evidence CSV, hit report CSV, and manifest outputs with stable hashes and query metadata.
 - Review package generation with timeline events, facets, suggested tags, open questions, and a
   Markdown report draft that avoids legal conclusions.
+- No-retention Google Drive package export scaffolding that uploads evidence CSV, hit report CSV,
+  and manifest JSON from memory with retry-aware artifact metadata.
 
 The connector foundation now includes local custom-export search plus Google Workspace and Slack
 OAuth scaffolding. The next hosted slice should harden Google Drive export with no-retention

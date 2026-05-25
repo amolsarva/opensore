@@ -193,6 +193,10 @@ This writes `discovery_evidence.csv`, `discovery_hit_report.csv`, and `discovery
 plus a review package with facets, chronology, suggested reviewer tags, open questions, and a Markdown report draft for counsel, HR, compliance, or an investigator to review. See
 [docs/discovery-cli.mdx](docs/discovery-cli.mdx).
 
+The hosted Drive export path now follows the same artifact contract from memory: evidence CSV, hit
+report CSV, and manifest JSON can be uploaded to user-owned Google Drive without durable
+OpenSore-host evidence files.
+
 ### 5. Native Desktop Case Desk
 
 The Electron desktop shell gives lawyers, HR, boards, and investigators a native matter workspace on top of the same discovery engine:
