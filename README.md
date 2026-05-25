@@ -181,6 +181,17 @@ Start with the product plan:
 
 The intended hosted mode avoids storing user evidence on the OpenSore host. Users authenticate their own source accounts, and exports should be written to user-owned storage such as Google Drive.
 
+Run deterministic local discovery over exported workplace data:
+
+```bash
+uv run opensore discovery plan matter.json
+uv run opensore discovery run matter.json --source slack-export.csv --source gmail-export.json --out ./matter-output
+```
+
+This writes `discovery_evidence.csv`, `discovery_hit_report.csv`, and `discovery_manifest.json`
+for counsel, HR, compliance, or an investigator to review. See
+[docs/discovery-cli.mdx](docs/discovery-cli.mdx).
+
 ### 5. Personal Agent And Messaging
 
 For local assistant workflows, WhatsApp experiments, and OpenClaw-style local automation:

@@ -68,12 +68,14 @@ def test_run_local_discovery_writes_evidence_hit_report_and_manifest(tmp_path: P
 
     assert manifest.row_count == 2
     assert manifest.unique_hash_count == 2
-    evidence_rows = list(csv.DictReader(Path(manifest.evidence_file).open(encoding="utf-8")))
+    with Path(manifest.evidence_file).open(encoding="utf-8") as handle:
+        evidence_rows = list(csv.DictReader(handle))
     assert {row["matched_keyword"] for row in evidence_rows} == {"keep this quiet", "complaint"}
     assert {row["custodian"] for row in evidence_rows} == {"alex@example.com"}
     assert all(row["hash"] for row in evidence_rows)
 
-    hit_rows = list(csv.DictReader(Path(manifest.hit_report_file).open(encoding="utf-8")))
+    with Path(manifest.hit_report_file).open(encoding="utf-8") as handle:
+        hit_rows = list(csv.DictReader(handle))
     assert len(hit_rows) == 2
     assert {row["hit_count"] for row in hit_rows} == {"1"}
 
@@ -111,7 +113,8 @@ def test_run_local_discovery_reads_json_records(tmp_path: Path) -> None:
         output_dir=tmp_path / "out",
     )
 
-    evidence_rows = list(csv.DictReader(Path(manifest.evidence_file).open(encoding="utf-8")))
+    with Path(manifest.evidence_file).open(encoding="utf-8") as handle:
+        evidence_rows = list(csv.DictReader(handle))
     assert manifest.row_count == 2
     assert {row["matched_keyword"] for row in evidence_rows} == {"retaliation", "complaint"}
     assert evidence_rows[0]["source"] == "gmail"

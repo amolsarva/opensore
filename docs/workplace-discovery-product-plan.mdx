@@ -264,5 +264,9 @@ The first implementation adds:
 - No-local-evidence-storage validation.
 - CSV schema and plan summary export.
 - In-memory Google Drive CSV export service scaffolding.
+- A local `uv run opensore discovery plan <config.json>` command.
+- A local `uv run opensore discovery run <config.json> --source <export.csv> --out <dir>`
+  workflow for CSV, JSON, JSONL, and NDJSON exports.
+- Evidence CSV, hit report CSV, and manifest outputs with stable hashes and query metadata.
 
 The next slice should implement Google OAuth around the Drive CSV writer before any source connector pulls real evidence.

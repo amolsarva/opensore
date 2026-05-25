@@ -1,0 +1,92 @@
+---
+title: "Discovery CLI"
+description: "Run local workplace misconduct keyword discovery over exported CSV and JSON evidence."
+---
+
+OpenSore can run deterministic discovery searches over local CSV, JSON, JSONL, and NDJSON exports
+from workplace systems. This is the first practical workflow for searching messages, documents,
+tickets, and case-system exports before hosted OAuth connectors are available.
+
+Use it for early review tasks:
+
+- Search exported Slack, Gmail, Teams, Jira, GitHub, HR, or legal records for matter keywords.
+- Scope by custodians and date range.
+- Produce evidence CSV, hit report CSV, and a manifest with query plan metadata and hashes.
+- Keep the run local and explicit; OpenSore only writes to the output directory you choose.
+
+## Matter config
+
+Create a JSON config:
+
+```json
+{
+  "title": "Executive complaint review",
+  "date_start": "2026-01-01T00:00:00+00:00",
+  "date_end": "2026-01-31T23:59:59+00:00",
+  "timezone": "UTC",
+  "custodians": [
+    {
+      "display_name": "Alex Manager",
+      "email": "alex@example.com",
+      "aliases": ["alexm", "Alex M."]
+    },
+    { "email": "hr@example.com" }
+  ],
+  "sources": [
+    { "kind": "custom_csv", "label": "Slack export" }
+  ],
+  "keyword_sets": [
+    {
+      "name": "retaliation",
+      "category": "retaliation",
+      "terms": ["retaliation", "keep this quiet", "complaint"]
+    }
+  ],
+  "export_target": "local_csv"
+}
+```
+
+## Preview the plan
+
+```bash
+uv run opensore discovery plan matter.json
+```
+
+The plan contains no evidence bodies. It shows source count, custodian count, keyword count, CSV
+columns, and executable query units.
+
+## Run a local search
+
+```bash
+uv run opensore discovery run matter.json \
+  --source slack-export.csv \
+  --source gmail-export.json \
+  --out ./matter-output
+```
+
+The output directory contains:
+
+- `discovery_evidence.csv` - matched source rows with context excerpts and stable hashes.
+- `discovery_hit_report.csv` - counts by source, custodian, keyword set, and keyword.
+- `discovery_manifest.json` - run metadata, source files, query plan, OpenSore version, and output
+  file paths.
+
+## Source fields
+
+The runner accepts broad export shapes and looks for common fields:
+
+- Text: `body`, `text`, `message`, `content`, `description`, `comment`, `subject`, `title`,
+  `summary`, `file_name`, `attachment_names`.
+- People: `custodian`, `sender`, `from`, `author`, `owner`, `recipients`, `to`, `cc`, `bcc`,
+  `participants`, `assignee`, `reporter`.
+- Time: `timestamp`, `date`, `sent_at`, `created_at`, `updated_at`, `modified_at`.
+- IDs and links: `message_id`, `id`, `record_id`, `event_id`, `issue_key`, `url`, `source_url`,
+  `web_url`, `permalink`.
+
+Rows outside the configured date range are skipped. If custodians are provided, rows must mention
+at least one custodian email, display name, alias, or source ID in a people field.
+
+## Review limits
+
+This workflow organizes potentially relevant evidence. It does not decide whether misconduct
+occurred, provide legal advice, or replace counsel, HR, or investigator review.
