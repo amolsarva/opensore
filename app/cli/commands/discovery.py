@@ -12,7 +12,7 @@ from rich.table import Table
 from app.discovery.connectors import get_connector, run_google_oauth, run_slack_oauth
 from app.discovery.credentials import list_sources, remove_source, upsert_source
 from app.discovery.models import build_discovery_plan
-from app.discovery.runner import load_discovery_request, run_local_discovery
+from app.discovery.runner import load_discovery_request, run_discovery
 
 
 @click.group(name="discovery")
@@ -49,9 +49,14 @@ def discovery_plan(config: Path, output: Path | None) -> None:
     "--source",
     "sources",
     multiple=True,
-    required=True,
     type=click.Path(exists=True, dir_okay=False, path_type=Path),
     help="CSV, JSON, JSONL, or NDJSON export file to search. Repeat for multiple exports.",
+)
+@click.option(
+    "--connected-source",
+    "connected_source_ids",
+    multiple=True,
+    help="Connected workspace source ID from 'discovery sources'. Repeat for multiple.",
 )
 @click.option(
     "--out",
@@ -60,13 +65,25 @@ def discovery_plan(config: Path, output: Path | None) -> None:
     type=click.Path(file_okay=False, path_type=Path),
     help="Directory for evidence CSV, hit report, and manifest.",
 )
-def discovery_run(config: Path, sources: tuple[Path, ...], output_dir: Path) -> None:
-    """Run deterministic local keyword discovery over exported source files."""
+def discovery_run(
+    config: Path,
+    sources: tuple[Path, ...],
+    connected_source_ids: tuple[str, ...],
+    output_dir: Path,
+) -> None:
+    """Run keyword discovery over local exports and/or linked workspace accounts."""
+
+    if not sources and not connected_source_ids:
+        raise click.UsageError(
+            "Provide at least one --source file or --connected-source ID.\n"
+            "Run 'opensore discovery sources' to list linked workspace accounts."
+        )
 
     request = load_discovery_request(config)
-    manifest = run_local_discovery(
+    manifest = run_discovery(
         request=request,
         source_paths=list(sources),
+        connector_ids=list(connected_source_ids),
         output_dir=output_dir,
     )
     click.echo(f"Wrote evidence CSV: {manifest.evidence_file}")

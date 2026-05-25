@@ -9,7 +9,10 @@ import re
 from collections import Counter
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from app.discovery.connectors.base import DiscoverySearchHit
 
 from app.discovery.models import (
     CSV_COLUMNS,
@@ -91,6 +94,115 @@ def run_local_discovery(
         started_at=started_at,
         completed_at=completed_at,
         source_files=[str(path) for path in source_paths],
+        evidence_file=str(evidence_file),
+        hit_report_file=str(hit_report_file),
+        manifest_file=str(manifest_file),
+        row_count=len(evidence_rows),
+        unique_hash_count=len({row.hash for row in evidence_rows}),
+        query_count=len(build_discovery_queries(request)),
+        retention_mode=(
+            "local explicit export mode; evidence written only to requested output directory"
+        ),
+    )
+    _write_json(
+        manifest_file,
+        {
+            **manifest.model_dump(mode="json"),
+            "opensore_version": get_version(),
+            "csv_columns": CSV_COLUMNS,
+            "queries": [
+                query.model_dump(mode="json") for query in build_discovery_queries(request)
+            ],
+        },
+    )
+    return manifest
+
+
+def evidence_row_from_hit(
+    hit: DiscoverySearchHit,
+    *,
+    matter_title: str,
+) -> DiscoveryEvidenceRow:
+    """Convert a live connector hit to a CSV-ready evidence row."""
+    hash_val = _hash_row(
+        source=hit.source_label,
+        message_id=hit.message_id,
+        matched_keyword=hit.matched_keyword,
+    )
+    return DiscoveryEvidenceRow(
+        matter_title=matter_title,
+        source=hit.source_label,
+        custodian=hit.custodian,
+        message_id=hit.message_id,
+        timestamp=hit.timestamp,
+        sender=hit.sender,
+        recipients=hit.recipients,
+        matched_keyword_set=hit.matched_keyword_set,
+        matched_keyword=hit.matched_keyword,
+        context_excerpt=hit.excerpt[:MAX_EXCERPT_CHARS],
+        source_url=hit.source_url,
+        hash=hash_val,
+        thread_id=hit.thread_id,
+        channel=hit.channel,
+        file_name=hit.file_name,
+        subject=hit.subject,
+        attachment_names=hit.attachment_names,
+        ingested_at=_utc_now(),
+    )
+
+
+def run_discovery(
+    *,
+    request: DiscoveryInvestigationRequest,
+    source_paths: list[Path],
+    connector_ids: list[str],
+    output_dir: Path,
+) -> DiscoveryRunManifest:
+    """Run discovery over local exports and/or live connector sources.
+
+    Combines file-based rows and live connector rows into a single unified
+    output package. Either ``source_paths`` or ``connector_ids`` may be empty
+    but at least one must be non-empty.
+    """
+    from app.discovery.connectors import get_connector
+    from app.discovery.credentials import get_source
+
+    started_at = _utc_now()
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    evidence_rows: list[DiscoveryEvidenceRow] = []
+
+    if source_paths:
+        records = _load_records(source_paths)
+        evidence_rows.extend(_matching_rows(request=request, records=records))
+
+    for cid in connector_ids:
+        record = get_source(cid)
+        if record is None:
+            continue
+        connector = get_connector(record)
+        if connector is None:
+            continue
+        for hit in connector.search(request):
+            evidence_rows.append(evidence_row_from_hit(hit, matter_title=request.title))
+
+    evidence_rows.sort(key=lambda row: (row.timestamp, row.source, row.custodian, row.hash))
+
+    evidence_file = output_dir / "discovery_evidence.csv"
+    hit_report_file = output_dir / "discovery_hit_report.csv"
+    manifest_file = output_dir / "discovery_manifest.json"
+
+    _write_text(evidence_file, discovery_evidence_csv(evidence_rows))
+    _write_hit_report(hit_report_file, _hit_report(evidence_rows))
+
+    completed_at = _utc_now()
+    manifest = DiscoveryRunManifest(
+        title=request.title,
+        matter_type=request.matter_type,
+        status=DiscoveryRunStatus.COMPLETED,
+        started_at=started_at,
+        completed_at=completed_at,
+        source_files=[str(p) for p in source_paths],
         evidence_file=str(evidence_file),
         hit_report_file=str(hit_report_file),
         manifest_file=str(manifest_file),

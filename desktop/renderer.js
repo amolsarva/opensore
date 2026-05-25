@@ -1,5 +1,6 @@
 const state = {
   sources: [],
+  connectedSources: [],
   outputDir: "",
   custodians: [
     { display_name: "Executive sponsor", email: "", aliases: "" },
@@ -49,6 +50,32 @@ document.querySelector("#add-custodian").addEventListener("click", () => {
 document.querySelector("#add-keyword").addEventListener("click", () => {
   state.keywords.push({ name: "new keyword set", terms: "" });
   renderKeywords();
+});
+
+document.querySelector("#connect-google").addEventListener("click", async () => {
+  try {
+    setBusy(true, "Opening browser...");
+    await window.opensore.connectSource("google_workspace");
+    await loadConnectedSources();
+    toast("Google Workspace connected.");
+  } catch (error) {
+    toast(error.message || "Failed to connect Google Workspace.");
+  } finally {
+    setBusy(false);
+  }
+});
+
+document.querySelector("#connect-slack").addEventListener("click", async () => {
+  try {
+    setBusy(true, "Opening browser...");
+    await window.opensore.connectSource("slack");
+    await loadConnectedSources();
+    toast("Slack connected.");
+  } catch (error) {
+    toast(error.message || "Failed to connect Slack.");
+  } finally {
+    setBusy(false);
+  }
 });
 
 document.querySelector("#select-sources").addEventListener("click", async () => {
@@ -170,10 +197,54 @@ async function planDiscovery() {
   }
 }
 
+async function loadConnectedSources() {
+  try {
+    state.connectedSources = await window.opensore.listSources();
+  } catch (_error) {
+    state.connectedSources = [];
+  }
+  renderConnectedSources();
+}
+
+function renderConnectedSources() {
+  const list = document.querySelector("#linked-sources");
+  list.innerHTML = "";
+  if (state.connectedSources.length === 0) {
+    list.innerHTML =
+      '<div class="file-item"><span>No workspace accounts linked. Connect Google Workspace or Slack above.</span></div>';
+    return;
+  }
+  state.connectedSources.forEach((source) => {
+    const item = document.createElement("div");
+    item.className = "file-item linked-account";
+    const kindLabel =
+      source.kind === "google_workspace"
+        ? "Google Workspace"
+        : source.kind === "slack"
+          ? "Slack"
+          : source.kind;
+    item.innerHTML = `
+      <span class="source-kind">${escapeHtml(kindLabel)}</span>
+      <span class="source-label">${escapeHtml(source.label || source.email || source.team_name || source.id)}</span>
+      <button class="remove" title="Disconnect account">×</button>
+    `;
+    item.querySelector(".remove").addEventListener("click", async () => {
+      try {
+        await window.opensore.disconnectSource(source.id);
+        await loadConnectedSources();
+        toast(`Disconnected: ${source.label || source.id}`);
+      } catch (error) {
+        toast(error.message || "Failed to disconnect.");
+      }
+    });
+    list.appendChild(item);
+  });
+}
+
 async function runDiscovery() {
   try {
-    if (state.sources.length === 0) {
-      toast("Add at least one CSV, JSON, JSONL, or NDJSON export first.");
+    if (state.sources.length === 0 && state.connectedSources.length === 0) {
+      toast("Add a local export file or link a workspace account first.");
       return;
     }
     if (!state.outputDir) {
@@ -189,6 +260,7 @@ async function runDiscovery() {
     state.run = await window.opensore.runDiscovery({
       request: buildRequest("local_csv"),
       sources: state.sources,
+      connectedSourceIds: state.connectedSources.map((s) => s.id),
       outputDir: state.outputDir,
     });
     renderRun();
@@ -353,7 +425,12 @@ function toast(message) {
   toastTimer = setTimeout(() => element.classList.remove("visible"), 4200);
 }
 
-renderCustodians();
-renderKeywords();
-renderSources();
-renderOutput();
+async function init() {
+  renderCustodians();
+  renderKeywords();
+  renderSources();
+  renderOutput();
+  await loadConnectedSources();
+}
+
+init();

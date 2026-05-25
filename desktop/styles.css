@@ -381,6 +381,36 @@ td {
   margin-bottom: 16px;
 }
 
+.single-row {
+  margin-top: 18px;
+}
+
+.connect-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.linked-account {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr) 40px;
+  gap: 12px;
+  align-items: center;
+}
+
+.source-kind {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.source-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .toast {
   position: fixed;
   right: 24px;

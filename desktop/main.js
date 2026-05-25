@@ -5,6 +5,7 @@ const path = require("node:path");
 const { spawn } = require("node:child_process");
 
 const REPO_ROOT = path.resolve(__dirname, "..");
+const SOURCES_PATH = path.join(os.homedir(), ".config", "opensore", "discovery_sources.json");
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -71,6 +72,31 @@ ipcMain.handle("shell:openPath", async (_event, targetPath) => {
   await shell.openPath(targetPath);
 });
 
+ipcMain.handle("opensore:listSources", async () => {
+  try {
+    const raw = await fs.readFile(SOURCES_PATH, "utf8");
+    const data = JSON.parse(raw);
+    return Array.isArray(data.sources) ? data.sources : [];
+  } catch (_error) {
+    return [];
+  }
+});
+
+ipcMain.handle("opensore:connectSource", async (_event, kind) => {
+  const result = await runOpenSore(["discovery", "connect", kind]);
+  if (result.code !== 0) {
+    throw new Error(result.stderr || result.stdout || `Failed to connect ${kind}`);
+  }
+  return result.stdout.trim();
+});
+
+ipcMain.handle("opensore:disconnectSource", async (_event, sourceId) => {
+  const result = await runOpenSore(["discovery", "disconnect", sourceId]);
+  if (result.code !== 0) {
+    throw new Error(result.stderr || `Source not found: ${sourceId}`);
+  }
+});
+
 ipcMain.handle("opensore:planDiscovery", async (_event, request) => {
   const configPath = await writeTempConfig(request);
   const result = await runOpenSore(["discovery", "plan", configPath]);
@@ -86,6 +112,9 @@ ipcMain.handle("opensore:runDiscovery", async (_event, payload) => {
   const args = ["discovery", "run", configPath];
   for (const source of payload.sources || []) {
     args.push("--source", source);
+  }
+  for (const id of payload.connectedSourceIds || []) {
+    args.push("--connected-source", id);
   }
   args.push("--out", payload.outputDir);
 
@@ -135,7 +164,15 @@ function runOpenSore(args) {
     });
     child.on("error", reject);
     child.on("close", (code) => {
-      resolve({ code, stdout, stderr });
+      let stderrOut = stderr;
+      if (stderr.includes("ModuleNotFoundError: No module named 'app'")) {
+        stderrOut =
+          "Python environment not set up.\n\n" +
+          "Run this in the OpenSore repo directory, then restart the app:\n\n" +
+          "    make install\n\n" +
+          stderr;
+      }
+      resolve({ code, stdout, stderr: stderrOut });
     });
   });
 }
