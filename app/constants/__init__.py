@@ -28,6 +28,7 @@ OPENSORE_HOME_DIR: Path = Path.home() / ".config" / "opensore"
 LEGACY_OPENSORE_HOME_DIR: Path = Path.home() / ".opensore"
 LEGACY_TRACER_HOME_DIR: Path = Path.home() / ".tracer"
 INTEGRATIONS_STORE_PATH: Path = OPENSORE_HOME_DIR / "integrations.json"
+DISCOVERY_SOURCES_PATH: Path = OPENSORE_HOME_DIR / "discovery_sources.json"
 LEGACY_INTEGRATIONS_STORE_PATH: Path = LEGACY_TRACER_HOME_DIR / "integrations.json"
 OPENSORE_TMP_DIR: Path = Path(tempfile.gettempdir()) / "opensore"
 
@@ -48,6 +49,7 @@ __all__ = [
     "DEFAULT_POSTHOG_BOUNCE_WINDOW",
     "DEFAULT_POSTHOG_TIMEOUT_SECONDS",
     "DEFAULT_POSTHOG_URL",
+    "DISCOVERY_SOURCES_PATH",
     "INTEGRATIONS_STORE_PATH",
     "LEGACY_OPENSORE_HOME_DIR",
     "LEGACY_INTEGRATIONS_STORE_PATH",

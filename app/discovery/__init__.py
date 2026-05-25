@@ -1,5 +1,16 @@
 """Workplace discovery investigation helpers."""
 
+from app.discovery.connectors import (
+    CustomCsvConnector,
+    DiscoveryEstimate,
+    DiscoverySearchHit,
+    DiscoverySourceConnector,
+    GoogleWorkspaceConnector,
+    SlackConnector,
+    get_connector,
+    run_google_oauth,
+    run_slack_oauth,
+)
 from app.discovery.models import (
     DiscoveryCustodian,
     DiscoveryDateRange,
@@ -21,8 +32,10 @@ from app.discovery.models import (
 )
 
 __all__ = [
+    "CustomCsvConnector",
     "DiscoveryCustodian",
     "DiscoveryDateRange",
+    "DiscoveryEstimate",
     "DiscoveryExportTarget",
     "DiscoveryEvidenceRow",
     "DiscoveryHitReportRow",
@@ -32,10 +45,17 @@ __all__ = [
     "DiscoveryQuery",
     "DiscoveryRunManifest",
     "DiscoveryRunStatus",
+    "DiscoverySearchHit",
     "DiscoverySource",
+    "DiscoverySourceConnector",
     "DiscoverySourceKind",
+    "GoogleWorkspaceConnector",
+    "SlackConnector",
     "build_discovery_queries",
     "build_discovery_plan",
-    "discovery_evidence_csv",
     "default_keyword_sets",
+    "discovery_evidence_csv",
+    "get_connector",
+    "run_google_oauth",
+    "run_slack_oauth",
 ]

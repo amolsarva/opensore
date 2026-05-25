@@ -90,3 +90,52 @@ at least one custodian email, display name, alias, or source ID in a people fiel
 
 This workflow organizes potentially relevant evidence. It does not decide whether misconduct
 occurred, provide legal advice, or replace counsel, HR, or investigator review.
+
+## Connect workspace accounts
+
+Run a browser OAuth flow to connect a Google Workspace or Slack account:
+
+```bash
+uv run opensore discovery connect google_workspace
+uv run opensore discovery connect slack
+```
+
+The browser opens to the provider's login page. After you authenticate,
+OpenSore stores the token locally at `~/.config/opensore/discovery_sources.json`.
+No credentials are sent to OpenSore servers.
+
+**Google Workspace** requires `OPENSORE_GOOGLE_CLIENT_ID` and
+`OPENSORE_GOOGLE_CLIENT_SECRET` environment variables from a GCP OAuth 2.0 Desktop
+app. Create one at https://console.cloud.google.com/apis/credentials.
+
+**Slack** requires `OPENSORE_SLACK_CLIENT_ID` and `OPENSORE_SLACK_CLIENT_SECRET`
+from a Slack app with `search:read` and `users:read` user scopes.
+Create one at https://api.slack.com/apps.
+
+You can connect multiple accounts of the same type:
+
+```bash
+uv run opensore discovery connect google_workspace   # legal@acme.com
+uv run opensore discovery connect google_workspace   # investigator@acme.com
+```
+
+## Manage sources
+
+List all connected sources:
+
+```bash
+uv run opensore discovery sources
+```
+
+Test connectivity:
+
+```bash
+uv run opensore discovery verify-sources
+uv run opensore discovery verify-sources gs_a3b4c5d6
+```
+
+Remove a source:
+
+```bash
+uv run opensore discovery disconnect gs_a3b4c5d6
+```
