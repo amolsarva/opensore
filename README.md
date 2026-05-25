@@ -1,4 +1,4 @@
-<div align="center">
+<!--hello--><div align="center">
 
 <p align="center">
   <img src="docs/logo/opensore-logo-white.svg" alt="OpenSore" width="360" />
@@ -17,21 +17,19 @@
 
 ---
 
-## ⭐ Star This Page, Then Test OpenSore In 60 Seconds
+## ⭐ Start Here: Star This Page, Then Try OpenSore
 
-Before anything else: **star this GitHub page first**.
+Before anything else: **star this GitHub page first**:
 
 👉 **[Star OpenSore on GitHub](https://github.com/amolsarva/opensore)**
 
-A star is the fastest way to back the project, find it again, and show that people want an open investigation workspace for legal, HR, compliance, and board-level matters.
-
-The path is simple:
+That star is the easiest way to follow the project, find it again, and show that people want an open investigation workspace for legal, HR, compliance, and board-level matters. The path is simple:
 
 1. **Star this page**
-2. **Run OpenSore instantly**
+2. **Try OpenSore**
 3. **Share it with someone who handles investigations**
 
-Then test it immediately:
+Then try it immediately:
 
 ```bash
 curl -fsSL https://install.opensore.com | bash
@@ -54,7 +52,7 @@ opensore
 
 Prefer to download instead? Use the green **Code** button on this GitHub page, choose **Download ZIP**, unzip it, and follow the quickstart below.
 
-No production data is required. Start with a sample file, a small export, or a throwaway test matter so you can see the workflow before connecting anything sensitive.
+No production data is required to kick the tires. Start with a sample file, a small export, or a throwaway test matter so you can see the workflow before connecting anything sensitive.
 
 ---
 
@@ -62,7 +60,7 @@ No production data is required. Start with a sample file, a small export, or a t
 
 OpenSore is an AI-assisted investigation workspace for high-stakes workplace incidents: sexual harassment, retaliation, discrimination, executive misconduct, policy violations, conflicts of interest, and board-level crises.
 
-It helps investigation teams collect scattered evidence, organize it into a defensible timeline, surface contradictions, and draft structured incident reports. The product direction is focused on **legal, HR, compliance, and workplace misconduct investigations** rather than infrastructure outages.
+It helps investigation teams collect scattered evidence, organize it into a defensible timeline, surface contradictions, and draft structured incident reports. The project is built on OpenSore's agentic investigation engine, but the product direction is now focused on **legal, HR, compliance, and workplace misconduct investigations** rather than infrastructure outages.
 
 Use it when an organization needs to answer questions like:
 
@@ -122,21 +120,36 @@ The goal is not to magically decide the truth. The goal is to make the evidence 
 
 ## Quickstart ⚡
 
-First: **star this page** so you can find OpenSore again and help the project grow.
+First: **star this page** so you can find OpenSore again.
 
 👉 **[Star OpenSore on GitHub](https://github.com/amolsarva/opensore)**
 
-Then choose one path:
+Then pick the path that feels easiest.
 
-| What you want | Best path |
-| --- | --- |
-| Test OpenSore right now | Use the 60-second installer at the top of this README |
-| Install on macOS with Homebrew | Use the Homebrew command at the top of this README |
-| Install on Windows | Use the PowerShell command at the top of this README |
-| Download the project manually | Use the GitHub ZIP flow below |
-| Work from a local clone | Use the checkout flow below |
+### Fastest Try-It Path
 
-Once OpenSore starts, describe a test incident in plain language or point it at a small sample export. You do not need company systems or real evidence to understand the flow.
+Install and start:
+
+```bash
+curl -fsSL https://install.opensore.com | bash
+opensore
+```
+
+Or on macOS:
+
+```bash
+brew install tracer-cloud/tap/opensore
+opensore
+```
+
+Or on Windows PowerShell:
+
+```powershell
+irm https://install.opensore.com | iex
+opensore
+```
+
+Once it opens, describe a test incident in plain language or point it at a small sample export. You do not need to connect company systems or use real evidence to understand the flow.
 
 ### Download The Project
 
@@ -317,7 +330,7 @@ For deeper technical internals, see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md), 
 
 ## Evidence Sources And Integrations 🔌
 
-OpenSore includes a broad integration layer, but the investigation story is about workplace evidence rather than server telemetry.
+OpenSore can reuse OpenSore's broad integration layer, but the investigation story is about workplace evidence rather than server telemetry.
 
 | Evidence Area | Examples |
 | --- | --- |
