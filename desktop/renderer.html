@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OpenSore Case Desk</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="mark">O</div>
+          <div>
+            <strong>OpenSore</strong>
+            <span>Case Desk</span>
+          </div>
+        </div>
+        <nav class="nav">
+          <button class="nav-item active" data-view="matter">Matter</button>
+          <button class="nav-item" data-view="plan">Plan</button>
+          <button class="nav-item" data-view="review">Review</button>
+          <button class="nav-item" data-view="exports">Exports</button>
+        </nav>
+        <div class="case-status">
+          <span class="label">Matter posture</span>
+          <strong id="posture">Draft</strong>
+          <span id="run-summary">No discovery run yet</span>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Executive incident investigation</p>
+            <h1 id="page-title">Build the matter file</h1>
+          </div>
+          <div class="actions">
+            <button id="plan-button" class="button secondary">Plan</button>
+            <button id="run-button" class="button primary">Run discovery</button>
+          </div>
+        </header>
+
+        <section class="view active" id="matter-view">
+          <div class="two-column">
+            <section class="panel matter-panel">
+              <h2>Matter details</h2>
+              <div class="form-grid">
+                <label>
+                  Matter title
+                  <input id="title" value="Executive workplace misconduct review" />
+                </label>
+                <label>
+                  Matter type
+                  <select id="matter-type">
+                    <option value="workplace_misconduct">Workplace misconduct</option>
+                    <option value="sexual_harassment">Sexual harassment</option>
+                    <option value="retaliation">Retaliation</option>
+                    <option value="board_inquiry">Board inquiry</option>
+                    <option value="litigation_hold">Litigation hold</option>
+                  </select>
+                </label>
+                <label>
+                  Start date
+                  <input id="date-start" type="date" />
+                </label>
+                <label>
+                  End date
+                  <input id="date-end" type="date" />
+                </label>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-heading">
+                <h2>Custodians</h2>
+                <button id="add-custodian" class="icon-button" title="Add custodian">+</button>
+              </div>
+              <div id="custodian-list" class="stack"></div>
+            </section>
+          </div>
+
+          <div class="two-column lower">
+            <section class="panel">
+              <div class="panel-heading">
+                <h2>Source exports</h2>
+                <button id="select-sources" class="button secondary">Add files</button>
+              </div>
+              <div id="source-files" class="file-list"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-heading">
+                <h2>Keyword sets</h2>
+                <button id="add-keyword" class="icon-button" title="Add keyword set">+</button>
+              </div>
+              <div id="keyword-list" class="stack"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="plan-view">
+          <section class="panel full">
+            <div class="panel-heading">
+              <h2>Discovery plan</h2>
+              <span id="plan-meta" class="pill">Not generated</span>
+            </div>
+            <div class="metrics" id="plan-metrics"></div>
+            <div class="query-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Source</th>
+                    <th>Custodian</th>
+                    <th>Keyword set</th>
+                    <th>Query</th>
+                  </tr>
+                </thead>
+                <tbody id="query-table"></tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+
+        <section class="view" id="review-view">
+          <section class="panel full">
+            <div class="panel-heading">
+              <h2>Evidence review</h2>
+              <span id="evidence-meta" class="pill">No hits</span>
+            </div>
+            <div class="metrics" id="review-metrics"></div>
+            <div class="query-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Custodian</th>
+                    <th>When</th>
+                    <th>Matched</th>
+                    <th>Excerpt</th>
+                  </tr>
+                </thead>
+                <tbody id="evidence-table"></tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+
+        <section class="view" id="exports-view">
+          <section class="panel full">
+            <div class="panel-heading">
+              <h2>Export package</h2>
+              <button id="select-output" class="button secondary">Choose folder</button>
+            </div>
+            <div class="export-path" id="output-path"></div>
+            <div class="artifact-list" id="artifact-list"></div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast"></div>
+    <script src="./renderer.js"></script>
+  </body>
+</html>

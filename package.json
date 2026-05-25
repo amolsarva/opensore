@@ -1,11 +1,16 @@
 {
-  "name": "opensore-dev",
+  "name": "opensore-desktop",
   "private": true,
-  "description": "Dev tooling for OpenSore (not a published package).",
+  "description": "Native desktop shell and dev tooling for OpenSore.",
+  "main": "desktop/main.js",
   "scripts": {
+    "desktop": "electron .",
+    "desktop:dev": "ELECTRON_ENABLE_LOGGING=1 electron .",
+    "desktop:check": "node desktop/smoke.mjs",
     "regen-splash": "node scripts/regen_splash.js"
   },
   "devDependencies": {
+    "electron": "^39.2.7",
     "oh-my-logo": "^0.4.0"
   }
 }
