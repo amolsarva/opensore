@@ -133,9 +133,7 @@ def _complete_slack(req: OAuthCompleteRequest) -> dict[str, Any]:
         user_profile = info_resp.json().get("user", {}).get("profile", {})
 
     display_name = (
-        user_profile.get("display_name")
-        or user_profile.get("real_name")
-        or authed_user_id
+        user_profile.get("display_name") or user_profile.get("real_name") or authed_user_id
     )
     label = f"{team_name} ({display_name})" if team_name else display_name
 
