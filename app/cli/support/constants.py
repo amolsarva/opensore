@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     MANAGED_INTEGRATION_SERVICES: tuple[str, ...]
+    SETUP_SERVICES: tuple[str, ...]
     VERIFY_SERVICES: tuple[str, ...]
 
 # MANAGED_INTEGRATION_SERVICES and VERIFY_SERVICES are PEP 562 lazy module
@@ -20,61 +21,36 @@ __all__ = (
 
 ALERT_TEMPLATE_CHOICES: tuple[str, ...] = (
     "generic",
-    "datadog",
-    "grafana",
-    "honeycomb",
-    "coralogix",
+    "jira",
+    "github",
+    "slack",
 )
 
 SAMPLE_ALERT_OPTIONS: tuple[tuple[str, str], ...] = (
-    ("generic", "Generic - High error rate in payments ETL"),
-    ("datadog", "Datadog - payments-etl error rate high"),
-    ("grafana", "Grafana - Pipeline failure rate high"),
-    ("honeycomb", "Honeycomb - checkout-api latency regression"),
-    ("coralogix", "Coralogix - payments worker errors"),
-)
-
-SETUP_SERVICES: tuple[str, ...] = (
-    "alertmanager",
-    "aws",
-    "betterstack",
-    "coralogix",
-    "datadog",
-    "discord",
-    "grafana",
-    "github",
-    "gitlab",
-    "honeycomb",
-    "incident_io",
-    "mariadb",
-    "mongodb",
-    "mongodb_atlas",
-    "mysql",
-    "openclaw",
-    "opensearch",
-    "postgresql",
-    "rabbitmq",
-    "rds",
-    "sentry",
-    "slack",
-    "tracer",
-    "vercel",
+    ("generic", "Generic - Policy violation flagged"),
+    ("jira", "Jira - Compliance issue opened"),
+    ("github", "GitHub - Sensitive code committed"),
+    ("slack", "Slack - Inappropriate message reported"),
 )
 
 
 def __getattr__(name: str) -> tuple[str, ...]:
-    # VERIFY_SERVICES and MANAGED_INTEGRATION_SERVICES are sourced from the
-    # runtime integration registry so the CLI's positional-arg `click.Choice`
-    # validators stay in sync with what cmd_verify can actually dispatch.
+    # SETUP_SERVICES, VERIFY_SERVICES and MANAGED_INTEGRATION_SERVICES are sourced
+    # from the runtime integration registry so the CLI's positional-arg `click.Choice`
+    # validators stay in sync with what cmd_setup/cmd_verify can actually dispatch.
     # Eagerly importing `app.integrations.registry` here creates a circular
     # import (registry -> _verification_adapters -> github_mcp -> app.cli.*).
     # Deferring to first access lets `app.cli` finish bootstrapping. See #1973.
+    if name == "SETUP_SERVICES":
+        from app.integrations.registry import SUPPORTED_SETUP_SERVICES
+
+        return SUPPORTED_SETUP_SERVICES
     if name == "VERIFY_SERVICES":
         from app.integrations.registry import SUPPORTED_VERIFY_SERVICES
 
         return SUPPORTED_VERIFY_SERVICES
     if name == "MANAGED_INTEGRATION_SERVICES":
-        from app.integrations.registry import SUPPORTED_VERIFY_SERVICES
+        from app.integrations.registry import SUPPORTED_SETUP_SERVICES, SUPPORTED_VERIFY_SERVICES
 
-        return tuple(sorted(set(SETUP_SERVICES) | set(SUPPORTED_VERIFY_SERVICES)))
+        return tuple(sorted(set(SUPPORTED_SETUP_SERVICES) | set(SUPPORTED_VERIFY_SERVICES)))
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

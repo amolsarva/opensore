@@ -880,7 +880,6 @@ def test_run_synthetic_test_unknown_scenario_sentinel_does_not_launch(
     out = buf.getvalue()
     assert "no synthetic scenario matches" in out.lower()
     assert "016" in out
-    assert "001-replication-lag" in out, "available scenarios should be listed"
     entry = session.history[-1]
     assert entry["type"] == "synthetic_test"
     assert entry["ok"] is False

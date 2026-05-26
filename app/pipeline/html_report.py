@@ -123,9 +123,7 @@ def generate_html_report(state: dict[str, Any], runbook_md: str = "") -> str:
     root_cause = str(state.get("root_cause") or "")
     category = html.escape(str(state.get("root_cause_category") or "unknown"))
     severity = str(
-        state.get("severity")
-        or (state.get("raw_alert") or {}).get("severity")
-        or "unknown"
+        state.get("severity") or (state.get("raw_alert") or {}).get("severity") or "unknown"
     ).lower()
     score = float(state.get("validity_score") or 0.0)
     remediation = list(state.get("remediation_steps") or [])

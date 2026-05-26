@@ -13,43 +13,16 @@ from app.integrations.registry import CORE_VERIFY_SERVICES, SUPPORTED_VERIFY_SER
 # Re-export type and all verifiers so external callers keep working.
 VerifierFn = _adapters.VerifierFn
 
-_verify_alertmanager = _adapters._verify_alertmanager
-_verify_argocd = _adapters._verify_argocd
-_verify_aws = _adapters._verify_aws
-_verify_azure = _adapters._verify_azure
-_verify_azure_sql = _adapters._verify_azure_sql
-_verify_betterstack = _adapters._verify_betterstack
 _verify_bitbucket = _adapters._verify_bitbucket
-_verify_clickhouse = _adapters._verify_clickhouse
-_verify_coralogix = _adapters._verify_coralogix
-_verify_datadog = _adapters._verify_datadog
 _verify_discord = _adapters._verify_discord
 _verify_github = _adapters._verify_github
 _verify_google_docs = _adapters._verify_google_docs
-_verify_grafana = _adapters._verify_grafana
-_verify_helm = _adapters._verify_helm
-_verify_honeycomb = _adapters._verify_honeycomb
-_verify_incident_io = _adapters._verify_incident_io
-_verify_kafka = _adapters._verify_kafka
-_verify_mariadb = _adapters._verify_mariadb
-_verify_mongodb = _adapters._verify_mongodb
-_verify_mongodb_atlas = _adapters._verify_mongodb_atlas
-_verify_mysql = _adapters._verify_mysql
 _verify_openclaw = _adapters._verify_openclaw
-_verify_openobserve = _adapters._verify_openobserve
-_verify_opensearch = _adapters._verify_opensearch
-_verify_opsgenie = _adapters._verify_opsgenie
-_verify_postgresql = _adapters._verify_postgresql
-_verify_rabbitmq = _adapters._verify_rabbitmq
-_verify_sentry = _adapters._verify_sentry
-_verify_signoz = _adapters._verify_signoz
 _verify_slack = _adapters._verify_slack
-_verify_snowflake = _adapters._verify_snowflake
-_verify_splunk = _adapters._verify_splunk
 _verify_telegram = _adapters._verify_telegram
 _verify_tracer = _adapters._verify_tracer
+_verify_twilio = _adapters._verify_twilio
 _verify_whatsapp = _adapters._verify_whatsapp
-_verify_vercel = _adapters._verify_vercel
 
 _result = _adapters.result
 
@@ -158,42 +131,15 @@ __all__ = [
     "SUPPORTED_VERIFY_SERVICES",
     "VERIFIER_REGISTRY",
     "VerifierFn",
-    "_verify_alertmanager",
-    "_verify_argocd",
-    "_verify_aws",
-    "_verify_azure",
-    "_verify_azure_sql",
-    "_verify_betterstack",
     "_verify_bitbucket",
-    "_verify_clickhouse",
-    "_verify_coralogix",
-    "_verify_datadog",
     "_verify_discord",
     "_verify_github",
     "_verify_google_docs",
-    "_verify_grafana",
-    "_verify_helm",
-    "_verify_honeycomb",
-    "_verify_incident_io",
-    "_verify_kafka",
-    "_verify_mariadb",
-    "_verify_mongodb",
-    "_verify_mongodb_atlas",
-    "_verify_mysql",
     "_verify_openclaw",
-    "_verify_openobserve",
-    "_verify_opensearch",
-    "_verify_opsgenie",
-    "_verify_postgresql",
-    "_verify_rabbitmq",
-    "_verify_sentry",
-    "_verify_signoz",
     "_verify_slack",
-    "_verify_snowflake",
-    "_verify_splunk",
     "_verify_telegram",
     "_verify_tracer",
-    "_verify_vercel",
+    "_verify_twilio",
     "_verify_whatsapp",
     "format_verification_results",
     "resolve_effective_integrations",

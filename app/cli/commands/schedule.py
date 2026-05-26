@@ -75,7 +75,9 @@ def list_schedules_command() -> None:
     """List all configured investigation schedules."""
     entries = _load_schedules()
     if not entries:
-        console.print("[dim]No schedules configured. Use [cyan]opensore schedule add[/cyan] to create one.[/dim]")
+        console.print(
+            "[dim]No schedules configured. Use [cyan]opensore schedule add[/cyan] to create one.[/dim]"
+        )
         return
 
     table = Table(title="Investigation Schedules", show_lines=False, expand=True)
@@ -102,7 +104,13 @@ def list_schedules_command() -> None:
 @click.option("--name", required=True, help="Alert name to probe (e.g. HighMemoryUsage).")
 @click.option("--service", default="", help="Service name for context.")
 @click.option("--severity", default="warning", help="Alert severity.")
-@click.option("--interval", "interval_minutes", default=60, show_default=True, help="Check interval in minutes.")
+@click.option(
+    "--interval",
+    "interval_minutes",
+    default=60,
+    show_default=True,
+    help="Check interval in minutes.",
+)
 @click.option("--description", default="", help="Description of what this probe checks.")
 @click.option("--disabled", is_flag=True, help="Add schedule in disabled state.")
 def add_schedule_command(
@@ -117,7 +125,9 @@ def add_schedule_command(
     entries = _load_schedules()
     for entry in entries:
         if entry.get("name") == name:
-            console.print(f"[yellow]Schedule '{name}' already exists. Use [cyan]opensore schedule edit[/cyan] to update it.[/yellow]")
+            console.print(
+                f"[yellow]Schedule '{name}' already exists. Use [cyan]opensore schedule edit[/cyan] to update it.[/yellow]"
+            )
             return
 
     entries.append(

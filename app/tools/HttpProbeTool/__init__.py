@@ -169,14 +169,14 @@ class HttpProbeTool(BaseTool):
                 socket.create_connection((hostname, port), timeout=timeout) as sock,
                 ctx.wrap_socket(sock, server_hostname=hostname) as ssock,
             ):
-                    cert = ssock.getpeercert() or {}
-                    expire_raw = cert.get("notAfter")
-                    expire_str = str(expire_raw) if expire_raw else ""
-                    if expire_str:
-                        expire_dt = datetime.strptime(
-                            expire_str, "%b %d %H:%M:%S %Y %Z"
-                        ).replace(tzinfo=UTC)
-                        return (expire_dt - datetime.now(UTC)).total_seconds() / 86400
+                cert = ssock.getpeercert() or {}
+                expire_raw = cert.get("notAfter")
+                expire_str = str(expire_raw) if expire_raw else ""
+                if expire_str:
+                    expire_dt = datetime.strptime(expire_str, "%b %d %H:%M:%S %Y %Z").replace(
+                        tzinfo=UTC
+                    )
+                    return (expire_dt - datetime.now(UTC)).total_seconds() / 86400
         except Exception:
             pass
         return None

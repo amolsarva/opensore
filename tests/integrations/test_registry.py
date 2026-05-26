@@ -44,10 +44,9 @@ def test_registry_supported_lists_are_derived_from_specs() -> None:
 
 def test_registry_preserves_aliases_and_special_case_buckets() -> None:
     assert service_key("github_mcp") == "github"
-    assert service_key("carologix") == "coralogix"
-    assert service_key("open search") == "opensearch"
-    assert family_key("grafana_local") == "grafana"
-    assert family_key("grafana") == "grafana"
+    assert service_key("GitHub") == "github"
+    assert family_key("github") == "github"
+    assert family_key("jira") == "jira"
     assert "slack" in SKIP_CLASSIFIED_SERVICES
-    assert "grafana" in DIRECT_CLASSIFIED_EFFECTIVE_SERVICES
+    assert "github" in DIRECT_CLASSIFIED_EFFECTIVE_SERVICES
     assert "bitbucket" not in DIRECT_CLASSIFIED_EFFECTIVE_SERVICES

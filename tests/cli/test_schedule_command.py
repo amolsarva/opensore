@@ -82,6 +82,7 @@ def test_dry_run_does_not_modify_last_run(schedules_path) -> None:
 
     # last_run should still be null
     import sys
+
     schedule_mod = sys.modules["app.cli.commands.schedule"]
     entries = schedule_mod._load_schedules()
     entry = next((e for e in entries if e["name"] == "DryProbe"), None)

@@ -30,7 +30,6 @@ from app.remote.server import (
     investigate_stream,
 )
 from app.remote.stream import StreamEvent
-from app.remote.vercel_poller import VercelResolutionError
 
 
 class _UrlopenResponse:
@@ -109,61 +108,6 @@ def test_health_endpoints_do_not_require_api_key(
     response = remote_client.get(path)
 
     assert response.status_code == 200
-
-
-def test_investigate_enriches_pasted_vercel_url(monkeypatch: pytest.MonkeyPatch) -> None:
-    captured: dict[str, Any] = {}
-
-    def fake_enrich(raw_alert: dict[str, Any]) -> dict[str, Any]:
-        captured["raw_alert"] = raw_alert
-        return {
-            **raw_alert,
-            "alert_name": "Vercel deployment issue: tracer-marketing-website-v3",
-            "pipeline_name": "tracer-marketing-website-v3",
-            "severity": "critical",
-        }
-
-    def fake_execute_investigation(**_kwargs: Any) -> tuple[dict[str, Any], str, str, str]:
-        return (
-            {"report": "Report body", "root_cause": "Root cause", "problem_md": "Problem"},
-            "Vercel deployment issue: tracer-marketing-website-v3",
-            "tracer-marketing-website-v3",
-            "critical",
-        )
-
-    monkeypatch.setattr("app.remote.server.enrich_remote_alert_from_vercel", fake_enrich)
-    monkeypatch.setattr(
-        "app.remote.server._execute_investigation",
-        fake_execute_investigation,
-    )
-    monkeypatch.setattr("app.remote.server._save_investigation", lambda **_kwargs: None)
-
-    response = investigate(
-        InvestigateRequest(
-            raw_alert={},
-            vercel_url="https://vercel.com/org/tracer-marketing-website-v3/logs?selectedLogId=abc",
-        )
-    )
-
-    assert captured["raw_alert"]["vercel_url"].startswith("https://vercel.com/")
-    assert captured["raw_alert"]["vercel_log_url"].startswith("https://vercel.com/")
-    assert response.root_cause == "Root cause"
-    assert response.problem_md == "Problem"
-
-
-def test_investigate_returns_bad_request_for_invalid_vercel_url(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    monkeypatch.setattr(
-        "app.remote.server.enrich_remote_alert_from_vercel",
-        lambda _raw_alert: (_ for _ in ()).throw(VercelResolutionError("invalid vercel url")),
-    )
-
-    with pytest.raises(HTTPException) as exc_info:
-        investigate(InvestigateRequest(raw_alert={}, vercel_url="https://vercel.com/example"))
-
-    assert exc_info.value.status_code == 400
-    assert exc_info.value.detail == "invalid vercel url"
 
 
 def test_investigate_captures_unexpected_exception(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -341,33 +285,6 @@ async def test_investigate_stream_captures_streaming_exception(
         "critical",
     )
     assert astream_calls[0]["raw_alert"].get("alert_name") == "PayloadAlert"
-
-
-@pytest.mark.anyio
-async def test_lifespan_starts_and_cancels_vercel_poller(
-    monkeypatch: pytest.MonkeyPatch,
-    tmp_path,
-) -> None:
-    started = asyncio.Event()
-    cancelled = asyncio.Event()
-
-    async def _run_forever(self, _handler) -> None:
-        started.set()
-        try:
-            await asyncio.Future()
-        except asyncio.CancelledError:
-            cancelled.set()
-            raise
-
-    monkeypatch.setenv("VERCEL_POLL_ENABLED", "true")
-    monkeypatch.setenv("VERCEL_POLL_PROJECT_IDS", "proj_123")
-    monkeypatch.setattr("app.remote.server.INVESTIGATIONS_DIR", tmp_path)
-    monkeypatch.setattr("app.remote.vercel_poller.VercelPoller.run_forever", _run_forever)
-
-    async with _lifespan(object()):
-        await asyncio.wait_for(started.wait(), timeout=1)
-
-    assert cancelled.is_set()
 
 
 @pytest.mark.anyio
@@ -800,110 +717,3 @@ def test_check_memory_health_returns_missing_on_oserror(
     assert result.name == "Memory"
     assert result.status == "missing"
     assert "Unable to read meminfo:" in result.detail
-
-
-@pytest.mark.anyio
-async def test_investigate_stream_emits_correlation_payload(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    persisted: dict[str, Any] = {}
-
-    def fake_investigation_run(
-        _self: object,
-        _state: object,
-        *,
-        on_event: object | None = None,
-    ) -> dict[str, str]:
-        _ = on_event
-        return {
-            "root_cause": "RDS CPU spike",
-            "report": "Correlation attached",
-        }
-
-    monkeypatch.setattr("app.config.LLMSettings.from_env", object)
-
-    monkeypatch.setattr(
-        "app.cli.investigation.resolve_investigation_context",
-        lambda **_kwargs: ("test-alert", "orders-pipeline", "critical"),
-    )
-
-    monkeypatch.setattr(
-        "app.agent.context.resolve_integrations",
-        lambda _state: {},
-    )
-
-    monkeypatch.setattr(
-        "app.agent.extract.extract_alert",
-        lambda _state: {
-            "raw_alert": {
-                "alert_name": "PayloadAlert",
-                "service": "orders",
-                "resource": "orders-rds-prod",
-            },
-            "alert_name": "PayloadAlert",
-            "pipeline_name": "orders",
-            "severity": "critical",
-            "incident_window": {
-                "since": "2026-04-15T14:00:00Z",
-                "until": "2026-04-15T14:15:00Z",
-            },
-        },
-    )
-
-    monkeypatch.setattr(
-        "app.agent.investigation.ConnectedInvestigationAgent.run",
-        fake_investigation_run,
-    )
-
-    monkeypatch.setattr(
-        "app.correlation.node.node_correlate_upstream",
-        lambda _state, _config=None: {
-            "correlation": {
-                "correlated_signals": [
-                    {
-                        "name": "upstream-correlation",
-                        "source": "runtime",
-                        "score": 0.9,
-                    }
-                ],
-                "most_likely_causal_drivers": [
-                    {
-                        "name": "system.cpu.user{service:orders-web}",
-                        "confidence": 0.9,
-                        "rationale": "time_window=1.0",
-                    }
-                ],
-            }
-        },
-    )
-
-    monkeypatch.setattr(
-        "app.delivery.publish_findings.node.generate_report",
-        lambda _state: {
-            "root_cause": "RDS CPU spike",
-            "report": "Correlation attached",
-        },
-    )
-
-    monkeypatch.setattr(
-        "app.remote.server._persist_streamed_result",
-        lambda **kwargs: persisted.update(kwargs),
-    )
-
-    response = await investigate_stream(
-        InvestigateRequest(raw_alert={"alert_name": "PayloadAlert"})
-    )
-
-    chunks = [chunk async for chunk in response.body_iterator]
-
-    assert chunks
-    assert any("correlate_upstream" in chunk for chunk in chunks)
-
-    correlation = persisted["state"]["correlation"]
-
-    assert correlation["correlated_signals"]
-    assert correlation["most_likely_causal_drivers"]
-    assert (
-        correlation["most_likely_causal_drivers"][0]["name"]
-        == "system.cpu.user{service:orders-web}"
-    )

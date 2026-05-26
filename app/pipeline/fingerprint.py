@@ -126,7 +126,9 @@ def check_and_record(
         _evict_expired(ttl_seconds)
         if fingerprint in _SEEN:
             age = time.monotonic() - _SEEN[fingerprint]
-            logger.info("[fingerprint] duplicate alert suppressed (fp=%s age=%.0fs)", fingerprint[:12], age)
+            logger.info(
+                "[fingerprint] duplicate alert suppressed (fp=%s age=%.0fs)", fingerprint[:12], age
+            )
             return True
         _SEEN[fingerprint] = time.monotonic()
         return False

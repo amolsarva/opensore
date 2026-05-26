@@ -48,7 +48,9 @@ def test_run_dispatches_to_pagerduty() -> None:
     mock_pd.__enter__ = MagicMock(return_value=mock_pd)
     mock_pd.__exit__ = MagicMock(return_value=False)
 
-    with patch("app.tools.BroadcastFindingsTool.BroadcastFindingsTool._dispatch_pagerduty") as mock_dispatch:
+    with patch(
+        "app.tools.BroadcastFindingsTool.BroadcastFindingsTool._dispatch_pagerduty"
+    ) as mock_dispatch:
         mock_dispatch.return_value = {"ok": True, "note_id": "note-123"}
         result = broadcast_findings.run(
             summary="DB pool exhausted — add PgBouncer.",
@@ -63,7 +65,9 @@ def test_run_dispatches_to_pagerduty() -> None:
 
 
 def test_run_dispatches_to_linear() -> None:
-    with patch("app.tools.BroadcastFindingsTool.BroadcastFindingsTool._dispatch_linear") as mock_dispatch:
+    with patch(
+        "app.tools.BroadcastFindingsTool.BroadcastFindingsTool._dispatch_linear"
+    ) as mock_dispatch:
         mock_dispatch.return_value = {"ok": True, "identifier": "ENG-42"}
         result = broadcast_findings.run(
             summary="Memory leak in worker process.",
@@ -81,7 +85,10 @@ def test_run_partial_failure_handled() -> None:
         raise Exception("Network error")
 
     with (
-        patch("app.tools.BroadcastFindingsTool.BroadcastFindingsTool._dispatch_pagerduty", side_effect=_fail),
+        patch(
+            "app.tools.BroadcastFindingsTool.BroadcastFindingsTool._dispatch_pagerduty",
+            side_effect=_fail,
+        ),
         patch("app.tools.BroadcastFindingsTool.BroadcastFindingsTool._dispatch_linear") as mock_lin,
     ):
         mock_lin.return_value = {"ok": True}

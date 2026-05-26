@@ -108,7 +108,12 @@ class BroadcastFindingsTool(BaseTool):
                 tid,
                 str(kwargs.get("linear_api_key", "")),
             )
-        if jira_project_key and kwargs.get("jira_base_url") and kwargs.get("jira_email") and kwargs.get("jira_api_token"):
+        if (
+            jira_project_key
+            and kwargs.get("jira_base_url")
+            and kwargs.get("jira_email")
+            and kwargs.get("jira_api_token")
+        ):
             tasks["jira"] = lambda pkey=jira_project_key: self._dispatch_jira(
                 title,
                 summary,

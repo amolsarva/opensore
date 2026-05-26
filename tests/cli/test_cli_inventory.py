@@ -80,7 +80,7 @@ def test_tests_list_category_synthetic() -> None:
     result = runner.invoke(cli, ["tests", "list", "--category", "synthetic"])
 
     assert result.exit_code == 0
-    assert "synthetic:001-replication-lag" in result.output
+    assert "openclaw-synthetic:db_connection_pool_exhausted" in result.output
 
 
 def test_tests_list_category_rca_excludes_make_targets() -> None:

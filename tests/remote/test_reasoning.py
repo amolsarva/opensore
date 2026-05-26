@@ -7,23 +7,23 @@ from app.remote.reasoning import reasoning_text, tool_display_name
 
 class TestToolDisplayName:
     def test_known_tool(self) -> None:
-        assert tool_display_name("query_datadog_logs") == "Datadog logs"
+        assert tool_display_name("jira_search_issues") == "jira search issues"
 
-    def test_known_tool_grafana(self) -> None:
-        assert tool_display_name("query_grafana_logs") == "Grafana Loki"
+    def test_known_tool_github(self) -> None:
+        assert tool_display_name("search_github_code") == "search github code"
 
     def test_unknown_tool_desnakes(self) -> None:
         assert tool_display_name("my_custom_tool") == "my custom tool"
 
-    def test_cloudwatch(self) -> None:
-        assert tool_display_name("get_cloudwatch_logs") == "CloudWatch"
+    def test_slack_tool(self) -> None:
+        assert tool_display_name("slack_channel_history") == "slack channel history"
 
 
 class TestReasoningText:
     def test_tool_start(self) -> None:
-        data = {"name": "query_datadog_logs"}
+        data = {"name": "jira_search_issues"}
         result = reasoning_text("on_tool_start", data, "investigate")
-        assert result == "calling Datadog logs"
+        assert result == "calling jira search issues"
 
     def test_tool_start_unknown_tool(self) -> None:
         data = {"name": "fetch_pagerduty_incidents"}
@@ -35,24 +35,24 @@ class TestReasoningText:
         assert result == "calling tool"
 
     def test_tool_end_with_output(self) -> None:
-        data = {"name": "query_datadog_logs", "data": {"output": "42 log entries found"}}
+        data = {"name": "jira_search_issues", "data": {"output": "5 issues found"}}
         result = reasoning_text("on_tool_end", data, "investigate")
-        assert result == "Datadog logs returned"
+        assert result == "jira search issues returned"
 
     def test_tool_end_empty_output(self) -> None:
-        data = {"name": "get_error_logs", "data": {"output": ""}}
+        data = {"name": "slack_search_messages", "data": {"output": ""}}
         result = reasoning_text("on_tool_end", data, "investigate")
-        assert result == "error logs done"
+        assert result == "slack search messages done"
 
     def test_tool_end_malformed_data_string(self) -> None:
-        data = {"name": "query_datadog_logs", "data": "bad-payload"}
+        data = {"name": "jira_search_issues", "data": "bad-payload"}
         result = reasoning_text("on_tool_end", data, "investigate")
-        assert result == "Datadog logs done"
+        assert result == "jira search issues done"
 
     def test_tool_end_malformed_data_none(self) -> None:
-        data = {"name": "query_datadog_logs", "data": None}
+        data = {"name": "jira_search_issues", "data": None}
         result = reasoning_text("on_tool_end", data, "investigate")
-        assert result == "Datadog logs done"
+        assert result == "jira search issues done"
 
     def test_chat_model_start_investigate(self) -> None:
         result = reasoning_text("on_chat_model_start", {}, "investigate")

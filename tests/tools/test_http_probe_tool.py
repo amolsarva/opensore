@@ -59,7 +59,9 @@ def test_run_wrong_status_code_ok_false() -> None:
 
 
 def test_run_timeout_returns_error() -> None:
-    with patch("app.tools.HttpProbeTool.httpx.request", side_effect=httpx.TimeoutException("timeout")):
+    with patch(
+        "app.tools.HttpProbeTool.httpx.request", side_effect=httpx.TimeoutException("timeout")
+    ):
         result = http_probe.run(url="http://example.com/health", timeout_seconds=1.0)
 
     assert result["available"] is True

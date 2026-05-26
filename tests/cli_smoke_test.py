@@ -389,17 +389,15 @@ def test_opensore_version_smoke(cli_sandbox: CliSandbox) -> None:
     assert get_version() in result.stdout
 
 
-def test_health_smoke_uses_real_datadog_store_config(cli_sandbox: CliSandbox) -> None:
+def test_health_smoke_uses_real_slack_store_config(cli_sandbox: CliSandbox) -> None:
     cli_sandbox.seed_integrations(
         [
             {
-                "id": "datadog-local",
-                "service": "datadog",
+                "id": "slack-local",
+                "service": "slack",
                 "status": "active",
                 "credentials": {
-                    "api_key": "",
-                    "app_key": "",
-                    "site": "datadoghq.com",
+                    "webhook_url": "",
                 },
             }
         ]
@@ -409,8 +407,7 @@ def test_health_smoke_uses_real_datadog_store_config(cli_sandbox: CliSandbox) ->
 
     assert result.exit_code == 1
     assert "OpenSore Health" in result.stdout
-    assert "datadog" in result.stdout
-    assert "Missing API key or application key." in result.stdout
+    assert "slack" in result.stdout
 
 
 def test_update_check_smoke_uses_local_stub(cli_sandbox: CliSandbox, release_api_url: str) -> None:
@@ -440,52 +437,48 @@ def test_integrations_list_and_show_smoke(cli_sandbox: CliSandbox) -> None:
     cli_sandbox.seed_integrations(
         [
             {
-                "id": "datadog-local",
-                "service": "datadog",
+                "id": "jira-local",
+                "service": "jira",
                 "status": "active",
                 "credentials": {
-                    "api_key": "dd-api-key",
-                    "app_key": "dd-app-key",
-                    "site": "datadoghq.com",
+                    "base_url": "https://example.atlassian.net",
+                    "email": "user@example.com",
+                    "api_token": "jira-api-token",
                 },
             }
         ]
     )
 
     list_result = _run_cli(cli_sandbox, "integrations", "list")
-    show_result = _run_cli(cli_sandbox, "integrations", "show", "datadog")
+    show_result = _run_cli(cli_sandbox, "integrations", "show", "jira")
 
     assert list_result.exit_code == 0
-    assert "datadog" in list_result.stdout
-    assert "datadog-local" in list_result.stdout
+    assert "jira" in list_result.stdout
+    assert "jira-local" in list_result.stdout
 
     assert show_result.exit_code == 0
-    assert '"service": "datadog"' in show_result.stdout
-    assert '"api_key": "dd-a****"' in show_result.stdout
-    assert '"app_key": "dd-a****"' in show_result.stdout
+    assert '"service": "jira"' in show_result.stdout
+    assert '"api_token": "jira****"' in show_result.stdout
 
 
-def test_integrations_verify_datadog_smoke(cli_sandbox: CliSandbox) -> None:
+def test_integrations_verify_slack_smoke(cli_sandbox: CliSandbox) -> None:
     cli_sandbox.seed_integrations(
         [
             {
-                "id": "datadog-local",
-                "service": "datadog",
+                "id": "slack-local",
+                "service": "slack",
                 "status": "active",
                 "credentials": {
-                    "api_key": "",
-                    "app_key": "",
-                    "site": "datadoghq.com",
+                    "webhook_url": "",
                 },
             }
         ]
     )
 
-    result = _run_cli(cli_sandbox, "integrations", "verify", "datadog")
+    result = _run_cli(cli_sandbox, "integrations", "verify", "slack")
 
     assert result.exit_code == 1
-    assert "datadog" in result.stdout
-    assert "Missing API key or application key." in result.stdout
+    assert "slack" in result.stdout
 
 
 def test_tests_inventory_commands_smoke(cli_sandbox: CliSandbox) -> None:
@@ -654,42 +647,24 @@ def test_onboard_interactive_smoke_cli_provider_repick_when_unauthenticated(
 
 
 @pytest.mark.skipif(os.name == "nt", reason="interactive smoke uses POSIX PTYs")
-def test_integrations_setup_datadog_interactive_smoke(cli_sandbox: CliSandbox) -> None:
-    result = _run_cli_pty(
-        cli_sandbox,
-        "integrations",
-        "setup",
-        "datadog",
-        actions=[
-            PtyAction(expect="API key", send=b"dd-api-key\r"),
-            PtyAction(expect="Application key", send=b"dd-app-key\r"),
-            PtyAction(expect="Site", send=b"\r"),
-        ],
-    )
+def test_integrations_setup_unsupported_service_smoke(cli_sandbox: CliSandbox) -> None:
+    result = _run_cli(cli_sandbox, "integrations", "setup", "datadog")
 
-    assert "Saved" in result.stdout
-    # Setup saves credentials then runs verify; placeholder keys fail the Datadog API check.
-    assert result.exit_code in (0, 1)
-
-    integrations = cli_sandbox.read_integrations()
-    assert len(integrations) == 1
-    assert integrations[0]["service"] == "datadog"
-    # v2 store shape: credentials live inside the default instance.
-    assert integrations[0]["instances"][0]["credentials"]["site"] == "datadoghq.com"
+    assert result.exit_code != 0
+    output = result.stdout + result.stderr
+    assert "is not" in output
 
 
 @pytest.mark.skipif(os.name == "nt", reason="interactive smoke uses POSIX PTYs")
-def test_integrations_remove_datadog_interactive_smoke(cli_sandbox: CliSandbox) -> None:
+def test_integrations_remove_slack_interactive_smoke(cli_sandbox: CliSandbox) -> None:
     cli_sandbox.seed_integrations(
         [
             {
-                "id": "datadog-local",
-                "service": "datadog",
+                "id": "slack-local",
+                "service": "slack",
                 "status": "active",
                 "credentials": {
-                    "api_key": "dd-api-key",
-                    "app_key": "dd-app-key",
-                    "site": "datadoghq.com",
+                    "webhook_url": "https://hooks.slack.com/services/T00/B00/xxx",
                 },
             }
         ]
@@ -699,12 +674,12 @@ def test_integrations_remove_datadog_interactive_smoke(cli_sandbox: CliSandbox) 
         cli_sandbox,
         "integrations",
         "remove",
-        "datadog",
-        actions=[PtyAction(expect="Remove 'datadog'?", send=b"y\r")],
+        "slack",
+        actions=[PtyAction(expect="Remove 'slack'?", send=b"y\r")],
     )
 
     assert result.exit_code == 0
-    assert "Removed 'datadog'." in result.stdout
+    assert "Removed 'slack'." in result.stdout
     assert cli_sandbox.read_integrations() == []
 
 
