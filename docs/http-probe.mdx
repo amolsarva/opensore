@@ -1,0 +1,40 @@
+---
+title: "HTTP Endpoint Probe"
+description: "Probe any HTTP/HTTPS endpoint for availability, latency, and TLS certificate health."
+---
+
+The `http_probe` tool checks any URL directly — no integration setup required. Use it during investigation to verify service reachability or detect certificate expiry.
+
+## What it checks
+
+- **Status code** — whether the response matches the expected code
+- **Latency** — round-trip time in milliseconds  
+- **TLS expiry** — days until the SSL/TLS certificate expires (HTTPS only)
+- **Response body** — first 500 characters of the response
+
+## Parameters
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `url` | — | URL to probe (`http://` or `https://`) |
+| `expected_status` | `200` | Status code for `ok: true` |
+| `method` | `GET` | HTTP method |
+| `timeout_seconds` | `10` | Request timeout |
+| `follow_redirects` | `true` | Follow HTTP redirects |
+
+## Example response
+
+```json
+{
+  "ok": true,
+  "status_code": 200,
+  "latency_ms": 142.7,
+  "ssl_expiry_days": 83.4,
+  "body_excerpt": "{\"status\":\"healthy\",\"db\":\"connected\"}",
+  "redirect_count": 0
+}
+```
+
+## No configuration needed
+
+Unlike most tools, `http_probe` requires no API key or integration. It's always available and is automatically considered by the investigation agent when a downstream service reachability hypothesis is being tested.

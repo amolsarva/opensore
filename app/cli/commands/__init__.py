@@ -24,6 +24,7 @@ from app.cli.commands.onboard import onboard
 from app.cli.commands.personal import personal
 from app.cli.commands.remote import remote
 from app.cli.commands.runbook import runbook
+from app.cli.commands.schedule import schedule
 from app.cli.commands.tests import tests
 from app.cli.commands.watchdog import watchdog_command
 
@@ -42,6 +43,7 @@ _COMMANDS: tuple[click.Command, ...] = (
     hermes_command,
     watchdog_command,
     runbook,
+    schedule,
     debug_command,
     health_command,
     doctor_command,

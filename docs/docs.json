@@ -148,7 +148,11 @@
             "group": "Investigation features",
             "pages": [
               "runbooks",
-              "webhooks"
+              "webhooks",
+              "http-probe",
+              "slo-burn-rate",
+              "grafana-annotate",
+              "investigation-reports"
             ]
           },
           {

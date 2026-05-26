@@ -192,6 +192,19 @@ async def webhook_investigate(request: Request) -> WebhookInvestigateResponse:
     alert_name = str(raw_alert.get("name") or "Webhook Alert")
     logger.info("[webhook] received alert: %s (source=%s)", alert_name, raw_alert.get("source"))
 
+    # Dedup gate — skip investigation if this fingerprint was seen recently
+    dedup_ttl = int(os.environ.get("WEBHOOK_DEDUP_TTL", "300"))
+    if dedup_ttl > 0:
+        from app.pipeline.fingerprint import check_and_record, fingerprint_alert
+
+        fp = fingerprint_alert(raw_alert)
+        if check_and_record(fp, ttl_seconds=dedup_ttl):
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=f"Duplicate alert suppressed (fingerprint={fp[:16]}). "
+                f"Set WEBHOOK_DEDUP_TTL=0 to disable deduplication.",
+            )
+
     try:
         from app.pipeline.pipeline import run_investigation
         from app.state import make_initial_state
@@ -233,4 +246,22 @@ def webhook_schema() -> dict[str, Any]:
             "environment": "production",
         },
         "auth": "Set WEBHOOK_SECRET env var to enable HMAC-SHA256 verification (X-Webhook-Signature header).",
+        "dedup": "Set WEBHOOK_DEDUP_TTL env var (seconds) to control deduplication window (default 300, set 0 to disable).",
     }
+
+
+@router.get("/dedup/stats")
+def webhook_dedup_stats() -> dict[str, Any]:
+    """Return current deduplication cache statistics."""
+    from app.pipeline.fingerprint import dedup_stats
+
+    return dedup_stats()
+
+
+@router.delete("/dedup/cache")
+def webhook_dedup_clear() -> dict[str, Any]:
+    """Flush the deduplication cache (useful for testing or after a maintenance window)."""
+    from app.pipeline.fingerprint import clear_dedup_cache
+
+    cleared = clear_dedup_cache()
+    return {"cleared": cleared, "message": f"Flushed {cleared} fingerprint(s) from dedup cache."}

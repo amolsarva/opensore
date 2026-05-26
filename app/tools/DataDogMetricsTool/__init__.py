@@ -1,7 +1,8 @@
-"""Datadog metrics query tool (stub — implementation pending)."""
+"""Datadog metrics query tool — retrieve time-series metrics for investigation."""
 
 from __future__ import annotations
 
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from pydantic import BaseModel, Field
@@ -19,7 +20,7 @@ class QueryDatadogMetricsInput(BaseModel):
     )
     query: str | None = Field(
         default=None,
-        description="Optional full Datadog metrics query string override.",
+        description="Optional full Datadog metrics query string override (e.g. 'avg:system.cpu.user{service:web}').",
     )
 
 
@@ -27,24 +28,29 @@ class QueryDatadogMetricsOutput(BaseModel):
     source: str = Field(description="Evidence source label.")
     available: bool = Field(description="Whether Datadog metrics query is available.")
     metric_name: str = Field(description="Metric name requested.")
-    metrics: list[dict[str, Any]] = Field(default_factory=list, description="Returned metric data.")
+    query: str = Field(description="Query string executed against Datadog.")
+    metrics: list[dict[str, Any]] = Field(
+        default_factory=list, description="Time-series data points [{timestamp, value}]."
+    )
+    stats: dict[str, Any] = Field(
+        default_factory=dict,
+        description="Summary statistics: min, max, avg, latest.",
+    )
+    data_points: int = Field(default=0, description="Number of data points returned.")
     error: str | None = Field(default=None, description="Error details when unavailable.")
 
 
-def _metrics_is_available(_sources: dict[str, dict]) -> bool:
-    # Hidden from the planner until the Metrics API v2 implementation lands (see #669).
-    # Flip back to `bool(sources.get("datadog", {}).get("connection_verified"))` once
-    # the stub body below is replaced with a real request.
-    return False
+def _metrics_is_available(sources: dict[str, dict]) -> bool:
+    return bool(sources.get("datadog", {}).get("connection_verified"))
 
 
 def _metrics_extract_params(sources: dict[str, dict]) -> dict[str, Any]:
-    dd = sources["datadog"]
+    dd = sources.get("datadog", {})
     return {
-        "metric_name": dd.get("metric_name", ""),
-        "time_range_minutes": dd.get("time_range_minutes", 60),
-        "api_key": dd.get("api_key"),
-        "app_key": dd.get("app_key"),
+        "metric_name": "",
+        "time_range_minutes": 60,
+        "api_key": dd.get("api_key", ""),
+        "app_key": dd.get("app_key", ""),
         "site": dd.get("site", "datadoghq.com"),
     }
 
@@ -52,11 +58,15 @@ def _metrics_extract_params(sources: dict[str, dict]) -> dict[str, Any]:
 @tool(
     name="query_datadog_metrics",
     source="datadog",
-    description="Query Datadog metrics for infrastructure and application performance data.",
+    description=(
+        "Query Datadog metrics for infrastructure and application performance data. "
+        "Returns time-series data points with summary statistics (min, max, avg, latest)."
+    ),
     use_cases=[
         "Investigating CPU or memory spikes correlated with an alert",
         "Reviewing custom pipeline throughput metrics over time",
         "Checking host resource utilisation trends",
+        "Correlating error rate spikes with infrastructure metrics",
     ],
     requires=[],
     source_id="datadog_metrics_api",
@@ -77,20 +87,69 @@ def query_datadog_metrics(
     metric_name: str,
     time_range_minutes: int = 60,
     query: str | None = None,
-    **_kwargs: Any,
+    **kwargs: Any,
 ) -> dict[str, Any]:
-    """Query Datadog metrics for infrastructure and application performance data.
+    """Query Datadog metrics API v1 for time-series data."""
+    from app.integrations.config_models import DatadogIntegrationConfig
+    from app.services.datadog import DatadogClient
 
-    NOTE: This tool is a stub. A full implementation will query the Datadog
-    Metrics API (v2) to retrieve time-series data for pipeline performance,
-    host resource utilisation, and custom business metrics.
-    """
+    api_key = str(kwargs.get("api_key") or "")
+    app_key = str(kwargs.get("app_key") or "")
+    site = str(kwargs.get("site") or "datadoghq.com")
+
+    if not api_key or not app_key:
+        return {
+            "source": "datadog",
+            "available": False,
+            "error": "Missing Datadog api_key or app_key.",
+            "metric_name": metric_name,
+            "query": "",
+            "metrics": [],
+            "stats": {},
+            "data_points": 0,
+        }
+
+    config = DatadogIntegrationConfig(api_key=api_key, app_key=app_key, site=site)
+    client = DatadogClient(config)
+
+    now = datetime.now(UTC)
+    start = now - timedelta(minutes=time_range_minutes)
+    dd_query = query or f"avg:{metric_name}{{*}}"
+
+    result = client.query_metrics(dd_query, start=start, end=now)
+
+    if not result.get("success"):
+        return {
+            "source": "datadog",
+            "available": False,
+            "error": result.get("error", "Metrics query failed."),
+            "metric_name": metric_name,
+            "query": dd_query,
+            "metrics": [],
+            "stats": {},
+            "data_points": 0,
+        }
+
+    timestamps: list[str] = result.get("timestamps", [])
+    values: list[float] = result.get("values", [])
+    metrics = [{"timestamp": ts, "value": v} for ts, v in zip(timestamps, values)]
+
+    stats: dict[str, Any] = {}
+    if values:
+        stats = {
+            "min": min(values),
+            "max": max(values),
+            "avg": sum(values) / len(values),
+            "latest": values[-1],
+        }
+
     return {
-        "source": "datadog_metrics",
-        "available": False,
-        "error": "DataDogMetricsTool is not yet implemented.",
+        "source": "datadog",
+        "available": True,
         "metric_name": metric_name,
+        "query": dd_query,
         "time_range_minutes": time_range_minutes,
-        "query": query,
-        "metrics": [],
+        "metrics": metrics,
+        "stats": stats,
+        "data_points": len(metrics),
     }

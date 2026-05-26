@@ -1,0 +1,56 @@
+---
+title: "Investigation Reports"
+description: "Export investigation findings as standalone HTML reports for sharing and audit trails."
+---
+
+After each investigation, opensore generates a runbook in `~/.opensore/runbooks/`. You can export any runbook as a shareable standalone HTML report.
+
+## Export a report
+
+```bash
+opensore runbook export <runbook-id>
+# With custom path
+opensore runbook export <runbook-id> -o ./incident-2024-01-15.html
+# Export and open in browser
+opensore runbook export <runbook-id> --open
+```
+
+The HTML file is fully self-contained — no external resources, safe to email or attach to a ticket.
+
+## Report contents
+
+- **Alert metadata** — name, severity, category, confidence score
+- **Root cause** — the identified root cause with full description
+- **Remediation steps** — numbered action items
+- **Investigation runbook** — the full Markdown runbook rendered as HTML
+- **Similar past incidents** — matched historical incidents with similarity scores
+- **Raw alert payload** — the original alert JSON for debugging
+
+## Programmatic export
+
+```python
+from app.pipeline.html_report import export_runbook_as_html
+
+html_str, path = export_runbook_as_html("rb-abc123")
+```
+
+## Schedule CLI
+
+Run investigations on a schedule with `opensore schedule`:
+
+```bash
+# Add a 15-minute probe
+opensore schedule add --name HighDBLatency --service payments --interval 15
+
+# List all schedules
+opensore schedule list
+
+# Run all due probes (add to cron)
+opensore schedule run --quiet
+```
+
+Add to crontab for automated periodic investigations:
+
+```cron
+*/15 * * * * opensore schedule run --quiet
+```

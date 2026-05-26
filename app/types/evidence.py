@@ -58,4 +58,7 @@ EvidenceSource = Literal[
     "slack",
     "linear",
     "github_actions",
+    "http_probe",
+    "slo",
+    "broadcast",
 ]

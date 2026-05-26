@@ -178,3 +178,32 @@ def similar_runbooks_command(query: str, top: int, min_score: float) -> None:
     console.print(
         "\n[dim]Run [cyan]opensore runbook show <id>[/cyan] to read a full runbook.[/dim]"
     )
+
+
+@runbook.command(name="export")
+@click.argument("runbook_id")
+@click.option("--output", "-o", default=None, help="Output HTML file path.")
+@click.option("--open", "open_browser", is_flag=True, help="Open in browser after export.")
+def export_runbook_command(runbook_id: str, output: str | None, open_browser: bool) -> None:
+    """Export a runbook as a standalone HTML investigation report.
+
+    Example: opensore runbook export rb-abc123 -o report.html --open
+    """
+    import pathlib
+
+    from app.pipeline.html_report import export_runbook_as_html
+
+    try:
+        _, out_path = export_runbook_as_html(
+            runbook_id,
+            pathlib.Path(output) if output else None,
+        )
+    except FileNotFoundError as exc:
+        console.print(f"[red]{exc}[/red]")
+        raise SystemExit(1) from exc
+
+    console.print(f"[green]Report exported → {out_path}[/green]")
+    if open_browser:
+        import webbrowser
+
+        webbrowser.open(out_path.as_uri())
