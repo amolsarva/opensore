@@ -419,6 +419,8 @@ _MIGRATED_TOOL_NAMES: frozenset[str] = frozenset(
 _TOOLS_WITHOUT_DELIBERATE_CATCH: frozenset[str] = frozenset(
     {
         "broadcast_findings",
+        # Evidence synthesis — pure computation, no external API; exceptions propagate.
+        "build_evidence_timeline",
         "get_bitbucket_file_contents",
         "get_github_file_contents",
         "get_github_repository_tree",
@@ -434,9 +436,15 @@ _TOOLS_WITHOUT_DELIBERATE_CATCH: frozenset[str] = frozenset(
         "list_github_commits",
         "list_gitlab_commits",
         "list_gitlab_mrs",
+        # HR/legal tools — catch and return structured {"available": False} without report_run_error.
+        "lookup_bamboohr_employee",
+        "manage_case_notes",
         "run_diagnostic_code",
         "search_bitbucket_code",
         "search_github_code",
+        "search_gmail_emails",
+        "search_sharepoint_documents",
+        "search_teams_messages",
         "slack_channel_history",
         "slack_search_messages",
         "twilio_notify",

@@ -19,4 +19,8 @@ EvidenceSource = Literal[
     "twilio",
     "http_probe",
     "broadcast",
+    "email",
+    "bamboohr",
+    "teams",
+    "sharepoint",
 ]
