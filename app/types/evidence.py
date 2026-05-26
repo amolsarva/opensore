@@ -23,4 +23,8 @@ EvidenceSource = Literal[
     "bamboohr",
     "teams",
     "sharepoint",
+    "okta",
+    "google_calendar",
+    "zoom",
+    "workday",
 ]
