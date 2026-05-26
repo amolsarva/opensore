@@ -495,7 +495,7 @@ function Get-OpenSreBinaryVersionInfo {
 }
 
 function Install-OpenSre {
-    $repo = if ($env:OPENSORE_INSTALL_REPO) { $env:OPENSORE_INSTALL_REPO } else { "Tracer-Cloud/opensore" }
+    $repo = if ($env:OPENSORE_INSTALL_REPO) { $env:OPENSORE_INSTALL_REPO } else { "amolsarva/opensore" }
     $installDir = if ($env:OPENSORE_INSTALL_DIR) { $env:OPENSORE_INSTALL_DIR } else { Get-OpenSreDefaultInstallDir }
     $binaryName = "opensore.exe"
     $requestedVersion = if ($env:OPENSORE_VERSION) { $env:OPENSORE_VERSION.Trim().TrimStart("v") } else { "" }

@@ -25,7 +25,7 @@ else
   SUCCESS_MARK="Success:"
 fi
 
-REPO="${OPENSORE_INSTALL_REPO:-Tracer-Cloud/opensore}"
+REPO="${OPENSORE_INSTALL_REPO:-amolsarva/opensore}"
 DEFAULT_INSTALL_DIR="${HOME}/.local/bin"
 USER_INSTALL_DIR_CANDIDATES="${OPENSORE_USER_INSTALL_DIR_CANDIDATES:-$HOME/.local/bin:$HOME/bin}"
 SYSTEM_INSTALL_DIR_CANDIDATES="${OPENSORE_SYSTEM_INSTALL_DIR_CANDIDATES:-/opt/homebrew/bin:/usr/local/bin:/opt/local/bin}"
@@ -600,7 +600,7 @@ print_success_screen() {
   log "  3. Optional — one-shot RCA from a file:"
   log "     ${BIN_NAME:-opensore} investigate -i path/to/alert.json"
   log ""
-  log "Docs: https://www.opensore.com/docs"
+  log "Docs: https://opensore.newaiyork.com"
   log ""
 }
 

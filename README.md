@@ -32,7 +32,7 @@ That star is the easiest way to follow the project, find it again, and show that
 Then try it immediately:
 
 ```bash
-curl -fsSL https://install.opensore.com | bash
+curl -fsSL https://opensore.newaiyork.com | bash
 opensore
 ```
 
@@ -46,7 +46,7 @@ opensore
 On Windows PowerShell:
 
 ```powershell
-irm https://install.opensore.com | iex
+irm https://opensore.newaiyork.com | iex
 opensore
 ```
 
@@ -131,7 +131,7 @@ Then pick the path that feels easiest.
 Install and start:
 
 ```bash
-curl -fsSL https://install.opensore.com | bash
+curl -fsSL https://opensore.newaiyork.com | bash
 opensore
 ```
 
@@ -145,7 +145,7 @@ opensore
 Or on Windows PowerShell:
 
 ```powershell
-irm https://install.opensore.com | iex
+irm https://opensore.newaiyork.com | iex
 opensore
 ```
 
@@ -196,8 +196,8 @@ Or create a minimal local `.env`:
 
 ```bash
 LLM_PROVIDER=openai
-OPENAI_REASONING_MODEL=gpt-5.4-mini
-OPENAI_TOOLCALL_MODEL=gpt-5.4-mini
+OPENAI_REASONING_MODEL=gpt-4o-mini
+OPENAI_TOOLCALL_MODEL=gpt-4o-mini
 AWS_PROFILE=amol
 AWS_REGION=us-east-1
 ```

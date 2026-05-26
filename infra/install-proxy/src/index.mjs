@@ -1,7 +1,7 @@
 const SHELL_SCRIPT_URL =
-  "https://raw.githubusercontent.com/Tracer-Cloud/opensore/main/install.sh";
+  "https://raw.githubusercontent.com/amolsarva/opensore/main/install.sh";
 const POWERSHELL_SCRIPT_URL =
-  "https://raw.githubusercontent.com/Tracer-Cloud/opensore/main/install.ps1";
+  "https://raw.githubusercontent.com/amolsarva/opensore/main/install.ps1";
 
 function requestedShell(request) {
   const url = new URL(request.url);

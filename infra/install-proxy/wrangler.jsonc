@@ -6,7 +6,7 @@
     "workers_dev": true,
     "routes": [
         {
-            "pattern": "install.opensore.com",
+            "pattern": "opensore.newaiyork.com",
             "custom_domain": true,
         },
     ],
