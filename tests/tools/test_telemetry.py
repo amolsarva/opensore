@@ -454,6 +454,11 @@ _TOOLS_WITHOUT_DELIBERATE_CATCH: frozenset[str] = frozenset(
         "slack_channel_history",
         "slack_search_messages",
         "twilio_notify",
+        # macOS local device forensics — catch and return {"available": False} on error.
+        "inspect_macos_keychain",
+        "read_macos_browser_history",
+        "read_macos_messages_history",
+        "read_macos_recent_files",
     }
 )
 

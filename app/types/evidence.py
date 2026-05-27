@@ -27,4 +27,5 @@ EvidenceSource = Literal[
     "google_calendar",
     "zoom",
     "workday",
+    "local_device",
 ]
