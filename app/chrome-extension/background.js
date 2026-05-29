@@ -29,12 +29,26 @@ function extensionRedirectUri(provider) {
   return `https://${chrome.runtime.id}.chromiumapp.org/${provider}`;
 }
 
-async function fetchConfig(port) {
+async function fetchServerConfig(port) {
   const resp = await fetch(serverUrl(port, "/api/extension/config"), {
     signal: AbortSignal.timeout(5000),
   });
-  if (!resp.ok) throw new Error("OpenSore local server not reachable");
+  if (!resp.ok) return { slack_client_id: "", google_client_id: "" };
   return resp.json();
+}
+
+async function getClientIds() {
+  const port = await getServerPort();
+  const [serverConfig, stored] = await Promise.all([
+    fetchServerConfig(port).catch(() => ({ slack_client_id: "", google_client_id: "" })),
+    chrome.storage.local.get({ google_client_id: "", slack_client_id: "", slack_client_secret: "" }),
+  ]);
+  return {
+    port,
+    google_client_id: serverConfig.google_client_id || stored.google_client_id,
+    slack_client_id: serverConfig.slack_client_id || stored.slack_client_id,
+    slack_client_secret: stored.slack_client_secret,
+  };
 }
 
 async function oauthSlack(clientId) {
@@ -130,24 +144,31 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message.action === "oauth") {
     (async () => {
       try {
-        const port = await getServerPort();
-        const config = await fetchConfig(port);
+        const { port, google_client_id, slack_client_id, slack_client_secret } =
+          await getClientIds();
 
         let data;
         if (message.provider === "slack") {
-          if (!config.slack_client_id) {
+          if (!slack_client_id) {
             throw new Error(
-              "OPENSORE_SLACK_CLIENT_ID not set — add it to your environment and restart opensore.",
+              "Slack not set up yet — click \"Set up →\" in the popup to enter your Client ID and Secret.",
             );
           }
-          data = await oauthSlack(config.slack_client_id);
+          data = {
+            ...(await oauthSlack(slack_client_id)),
+            client_id: slack_client_id,
+            ...(slack_client_secret ? { client_secret: slack_client_secret } : {}),
+          };
         } else if (message.provider === "google") {
-          if (!config.google_client_id) {
+          if (!google_client_id) {
             throw new Error(
-              "OPENSORE_GOOGLE_CLIENT_ID not set — add it to your environment and restart opensore.",
+              "Google not set up yet — click \"Set up →\" in the popup to enter your Client ID.",
             );
           }
-          data = await oauthGoogle(config.google_client_id);
+          data = {
+            ...(await oauthGoogle(google_client_id)),
+            client_id: google_client_id,
+          };
         } else {
           throw new Error(`Unknown provider: ${message.provider}`);
         }
