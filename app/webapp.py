@@ -1,6 +1,13 @@
 from __future__ import annotations
 
-from fastapi import FastAPI, Response, status
+import asyncio
+import hashlib
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+from fastapi import FastAPI, Query, Response, status
 from fastapi.responses import HTMLResponse, PlainTextResponse
 from pydantic import BaseModel, ValidationError
 
@@ -20,12 +27,15 @@ from app.version import get_version
 
 init_sentry(entrypoint="webapp")
 
+_REPO_ROOT = Path(__file__).parent.parent
+
 
 class HealthResponse(BaseModel):
     ok: bool
     version: str
     llm_configured: bool
     env: str
+    git_sha: str = ""
 
 
 app = FastAPI(title="OpenSore Discovery")
@@ -41,6 +51,17 @@ def _llm_configured() -> bool:
     return True
 
 
+def _get_git_sha() -> str:
+    try:
+        r = subprocess.run(
+            ["git", "rev-parse", "--short", "HEAD"],
+            capture_output=True, text=True, cwd=_REPO_ROOT,
+        )
+        return r.stdout.strip()
+    except Exception:
+        return ""
+
+
 def get_health_response() -> HealthResponse:
     llm_configured = _llm_configured()
 
@@ -49,7 +70,77 @@ def get_health_response() -> HealthResponse:
         version=get_version(),
         llm_configured=llm_configured,
         env=get_environment().value,
+        git_sha=_get_git_sha(),
     )
+
+
+# ── Admin / dev endpoints ─────────────────────────────────────────────────────
+
+
+async def _exec_restart() -> None:
+    await asyncio.sleep(0.4)
+    os.execv(sys.executable, [sys.executable, "-m", "uvicorn"] + sys.argv[1:])
+
+
+@app.post("/api/admin/restart")
+async def admin_restart() -> dict[str, bool]:
+    """Restart the uvicorn process in-place (dev use)."""
+    asyncio.create_task(_exec_restart())
+    return {"ok": True}
+
+
+@app.post("/api/admin/update")
+def admin_update() -> dict[str, object]:
+    """Git pull + uv sync if deps changed; caller should then POST /api/admin/restart."""
+    steps: list[dict[str, object]] = []
+
+    r = subprocess.run(
+        ["git", "pull", "--ff-only"],
+        capture_output=True, text=True, cwd=_REPO_ROOT,
+    )
+    steps.append({
+        "cmd": "git pull",
+        "stdout": r.stdout.strip(),
+        "stderr": r.stderr.strip(),
+        "returncode": r.returncode,
+    })
+
+    content = b"".join(
+        (_REPO_ROOT / f).read_bytes()
+        for f in ("pyproject.toml", "uv.lock")
+        if (_REPO_ROOT / f).exists()
+    )
+    current_hash = hashlib.sha256(content).hexdigest()
+    stamp = _REPO_ROOT / ".opensore_install_stamp"
+    stored_hash = stamp.read_text().strip() if stamp.exists() else ""
+
+    if current_hash != stored_hash:
+        r2 = subprocess.run(
+            ["uv", "sync", "--frozen", "--extra", "dev"],
+            capture_output=True, text=True, cwd=_REPO_ROOT,
+        )
+        steps.append({
+            "cmd": "uv sync",
+            "stdout": r2.stdout.strip(),
+            "stderr": r2.stderr.strip(),
+            "returncode": r2.returncode,
+        })
+        if r2.returncode == 0:
+            stamp.write_text(current_hash)
+    else:
+        steps.append({"cmd": "uv sync", "skipped": True, "reason": "deps unchanged"})
+
+    return {"ok": True, "steps": steps}
+
+
+@app.get("/api/admin/logs")
+def admin_logs(n: int = Query(default=100, le=500)) -> dict[str, list[str]]:
+    """Return the last n lines of the web server log."""
+    log_path = Path("/tmp/opensore_web.log")
+    if not log_path.exists():
+        return {"lines": []}
+    lines = log_path.read_text(errors="replace").splitlines()
+    return {"lines": lines[-n:]}
 
 
 @app.get("/", response_model=HealthResponse)
@@ -130,10 +221,89 @@ def discovery_ui() -> str:
       .steps { grid-template-columns: 1fr; }
       .ext-card { padding: 18px 20px; }
     }
+
+    /* ── Dev controls bar ─────────────────── */
+    .dev-bar {
+      display: flex; align-items: center; gap: 12px;
+      background: #1e293b; border: 1px solid #334155; border-radius: 10px;
+      padding: 12px 18px; margin-bottom: 24px; flex-wrap: wrap;
+    }
+    .dev-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+    .dev-label { font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .06em; color: #475569; }
+    .dev-chip { font-size: 12px; background: #0f172a; border: 1px solid #334155;
+      border-radius: 5px; padding: 2px 8px; color: #94a3b8; font-family: ui-monospace, monospace; }
+    .dev-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .dev-btn {
+      padding: 6px 14px; border: 1px solid #334155; border-radius: 6px;
+      background: #0f172a; color: #e2e8f0; font-size: 12px; font-weight: 500;
+      cursor: pointer; transition: border-color .12s, background .12s; white-space: nowrap;
+    }
+    .dev-btn:hover:not(:disabled) { border-color: #6366f1; background: #1e1b4b; color: #c7d2fe; }
+    .dev-btn:disabled { opacity: .45; cursor: not-allowed; }
+    .dev-btn-primary {
+      background: #4f46e5; border-color: #4f46e5; color: #fff;
+    }
+    .dev-btn-primary:hover:not(:disabled) { background: #4338ca; border-color: #4338ca; }
+    .dev-btn-icon { padding: 6px 10px; border: 1px solid #334155; border-radius: 6px;
+      background: #0f172a; color: #64748b; font-size: 13px; cursor: pointer;
+      transition: border-color .12s, color .12s; }
+    .dev-btn-icon:hover { border-color: #475569; color: #94a3b8; }
+    .dev-status {
+      font-size: 12px; color: #94a3b8; padding: 8px 18px;
+      background: #1e293b; border: 1px solid #334155; border-radius: 8px;
+      margin-bottom: 16px; line-height: 1.5;
+    }
+    .dev-status.err { background: #450a0a; border-color: #991b1b; color: #fca5a5; }
+    .dev-status.ok  { background: #052e16; border-color: #166534; color: #86efac; }
+    .dev-logs {
+      background: #0f172a; border: 1px solid #1e293b; border-radius: 8px;
+      margin-bottom: 24px; overflow: hidden;
+    }
+    .dev-logs-header {
+      display: flex; align-items: center; gap: 10px; padding: 8px 14px;
+      border-bottom: 1px solid #1e293b; font-size: 11px; color: #475569;
+    }
+    .dev-logs-header span { flex: 1; font-weight: 600; text-transform: uppercase;
+      letter-spacing: .06em; }
+    .dev-logs-header label { display: flex; align-items: center; gap: 5px;
+      cursor: pointer; user-select: none; }
+    .dev-btn-sm { padding: 3px 8px; border: 1px solid #1e293b; border-radius: 4px;
+      background: transparent; color: #475569; font-size: 10px; cursor: pointer; }
+    .dev-btn-sm:hover { border-color: #334155; color: #64748b; }
+    .dev-logs-pre {
+      margin: 0; padding: 12px 14px; font-size: 11px; line-height: 1.6;
+      font-family: ui-monospace, monospace; color: #64748b; max-height: 320px;
+      overflow-y: auto; white-space: pre-wrap; word-break: break-all;
+    }
   </style>
 </head>
 <body>
 <main>
+
+  <!-- Dev controls bar -->
+  <div class="dev-bar" id="dev-bar">
+    <div class="dev-info">
+      <span class="dev-label">Server</span>
+      <span class="dev-chip" id="dev-version">…</span>
+      <span class="dev-chip" id="dev-sha">…</span>
+    </div>
+    <div class="dev-actions">
+      <button class="dev-btn" id="btn-restart">↺ Restart</button>
+      <button class="dev-btn dev-btn-primary" id="btn-pull-restart">⬇ Pull &amp; Restart</button>
+      <button class="dev-btn-icon" id="btn-logs-toggle" title="Toggle server logs">📋</button>
+    </div>
+  </div>
+  <div class="dev-status" id="dev-status" hidden></div>
+  <div class="dev-logs" id="dev-logs" hidden>
+    <div class="dev-logs-header">
+      <span>Server logs</span>
+      <label><input type="checkbox" id="logs-auto" checked> Auto-refresh</label>
+      <button class="dev-btn-sm" id="btn-logs-clear">Clear view</button>
+    </div>
+    <pre class="dev-logs-pre" id="dev-logs-pre"></pre>
+  </div>
+
   <header>
     <h1>Workplace misconduct discovery without storing evidence on this host.</h1>
     <p class="lead">Run targeted investigations across communication and work systems for harassment,
@@ -242,6 +412,131 @@ def discovery_ui() -> str:
       window.addEventListener('opensore-extension-ready', function () { checkExtension(); });
       // Fallback: check after 600 ms if the event never fires
       setTimeout(checkExtension, 600);
+    })();
+  </script>
+
+  <script>
+    (function () {
+      var statusEl = document.getElementById('dev-status');
+      var logsEl = document.getElementById('dev-logs');
+      var logsPreEl = document.getElementById('dev-logs-pre');
+      var logsVisible = false;
+      var logsTimer = null;
+
+      // Populate version / sha from /ok
+      fetch('/ok').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+        if (!d) return;
+        document.getElementById('dev-version').textContent = 'v' + d.version;
+        document.getElementById('dev-sha').textContent = d.git_sha || 'unknown';
+      }).catch(function () {});
+
+      function setStatus(msg, cls) {
+        statusEl.textContent = msg;
+        statusEl.className = 'dev-status' + (cls ? ' ' + cls : '');
+        statusEl.hidden = false;
+        if (cls !== 'err') setTimeout(function () { statusEl.hidden = true; }, 10000);
+      }
+
+      function clearStatus() { statusEl.hidden = true; }
+
+      async function pollReady(maxMs) {
+        var end = Date.now() + maxMs;
+        while (Date.now() < end) {
+          await new Promise(function (r) { setTimeout(r, 700); });
+          try {
+            var r = await fetch('/ok', { signal: AbortSignal.timeout(1200) });
+            if (r.ok) return true;
+          } catch (e) { /* still starting */ }
+        }
+        return false;
+      }
+
+      function disableBtns() {
+        document.getElementById('btn-restart').disabled = true;
+        document.getElementById('btn-pull-restart').disabled = true;
+      }
+      function enableBtns() {
+        document.getElementById('btn-restart').disabled = false;
+        document.getElementById('btn-pull-restart').disabled = false;
+      }
+
+      document.getElementById('btn-restart').addEventListener('click', async function () {
+        disableBtns();
+        setStatus('Restarting server…');
+        try { await fetch('/api/admin/restart', { method: 'POST', signal: AbortSignal.timeout(3000) }); } catch (e) {}
+        var ok = await pollReady(20000);
+        enableBtns();
+        if (ok) {
+          setStatus('Server restarted.', 'ok');
+          refreshVersion();
+          if (logsVisible) loadLogs();
+        } else {
+          setStatus('Server did not come back within 20 s — check your terminal.', 'err');
+        }
+      });
+
+      document.getElementById('btn-pull-restart').addEventListener('click', async function () {
+        disableBtns();
+        setStatus('Pulling latest changes…');
+        try {
+          var r = await fetch('/api/admin/update', { method: 'POST', signal: AbortSignal.timeout(180000) });
+          var data = await r.json();
+          var summary = data.steps.map(function (s) {
+            return s.skipped
+              ? (s.cmd + ': skipped (' + s.reason + ')')
+              : (s.cmd + ': exit ' + s.returncode + (s.stderr ? ' — ' + s.stderr.split('\n')[0] : ''));
+          }).join(' | ');
+          setStatus(summary + ' — restarting…');
+          try { await fetch('/api/admin/restart', { method: 'POST', signal: AbortSignal.timeout(3000) }); } catch (e) {}
+        } catch (e) {
+          setStatus('Update failed: ' + e.message, 'err');
+          enableBtns();
+          return;
+        }
+        var ok = await pollReady(25000);
+        enableBtns();
+        if (ok) {
+          setStatus('Server updated and restarted.', 'ok');
+          refreshVersion();
+          if (logsVisible) loadLogs();
+        } else {
+          setStatus('Server did not come back after update — check your terminal.', 'err');
+        }
+      });
+
+      function refreshVersion() {
+        fetch('/ok').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+          if (!d) return;
+          document.getElementById('dev-version').textContent = 'v' + d.version;
+          document.getElementById('dev-sha').textContent = d.git_sha || 'unknown';
+        }).catch(function () {});
+      }
+
+      document.getElementById('btn-logs-toggle').addEventListener('click', function () {
+        logsVisible = !logsVisible;
+        logsEl.hidden = !logsVisible;
+        if (logsVisible) loadLogs();
+      });
+
+      document.getElementById('btn-logs-clear').addEventListener('click', function () {
+        logsPreEl.textContent = '';
+      });
+
+      document.getElementById('logs-auto').addEventListener('change', function () {
+        if (this.checked && logsVisible) loadLogs();
+      });
+
+      function loadLogs() {
+        fetch('/api/admin/logs?n=120').then(function (r) { return r.json(); }).then(function (d) {
+          var lines = d.lines || [];
+          logsPreEl.textContent = lines.length ? lines.join('\n') : '(no log output yet)';
+          logsPreEl.scrollTop = logsPreEl.scrollHeight;
+        }).catch(function () {});
+      }
+
+      setInterval(function () {
+        if (logsVisible && document.getElementById('logs-auto').checked) loadLogs();
+      }, 4000);
     })();
   </script>
 
