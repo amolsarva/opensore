@@ -1,0 +1,88 @@
+---
+title: "Linear"
+description: "Search issues and auto-create incident tickets from RCA findings."
+---
+
+## Overview
+
+The Linear integration connects the investigation agent to your engineering backlog.
+After diagnosing an incident, the agent can:
+
+- **Search** for existing issues that describe the same failure (preventing duplicates)
+- **Create** a new Linear issue with the full RCA — root cause, causal chain, and remediation steps
+
+## Setup
+
+1. In Linear → **Settings → API → Personal API Keys**, create a new key.
+2. Add to opensore:
+
+```bash
+opensore integrations add linear
+```
+
+| Field | Description |
+|-------|-------------|
+| `api_key` | Linear personal API key |
+| `default_team_id` | Optional default team ID for issue creation |
+
+To find your team ID, call `linear_search_issues` and check the `team_key` field on any result,
+then look it up in Linear settings.
+
+## Tools
+
+### `linear_search_issues`
+
+Full-text search across all Linear issues your key can access.
+
+```json
+{
+  "query": "payments connection pool exhausted",
+  "limit": 10
+}
+```
+
+**Returns:** `issues[]` with `identifier`, `title`, `state`, `priority`, `team`, `url`, `description`.
+
+### `linear_create_issue`
+
+Create a new issue from the RCA findings.
+
+```json
+{
+  "team_id": "team-uuid-here",
+  "title": "Incident: HighDBLatency 2024-01-15",
+  "description": "## Root Cause\nConnection pool exhausted...\n\n## Remediation\n1. Increase pool size",
+  "priority": "urgent"
+}
+```
+
+**Priority values:** `urgent` (P1), `high` (P2), `medium` (P3), `low` (P4), `none`.
+
+**Returns:** `identifier` (e.g. `ENG-123`), `url`, `id`.
+
+## Investigation workflow
+
+1. `linear_search_issues` with the alert name and affected service — check for existing tickets
+2. If a matching open issue exists, surface it as prior art in the RCA
+3. After diagnosis, `linear_create_issue` with the full runbook-style description
+4. The created issue identifier is stored in investigation state for audit trail
+
+## Description format
+
+The agent generates Linear issue descriptions using the same Markdown as the
+auto-generated runbooks, giving you a consistent incident record format:
+
+```markdown
+## Root Cause
+Connection pool exhaustion on payments-rds due to slow query backlog.
+
+## Causal Chain
+1. Slow query backlog grew past 50 connections
+2. Pool hit maximum connection limit (100)
+3. New requests started timing out
+
+## Remediation
+1. Increase max_pool_size to 200
+2. Add query timeout of 30s
+3. Alert on pool utilization > 70%
+```

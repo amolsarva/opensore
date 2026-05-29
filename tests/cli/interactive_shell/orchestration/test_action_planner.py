@@ -124,6 +124,7 @@ def test_plan_synthetic_test_full_id_matches_deterministically(
 
 def test_plan_synthetic_test_bare_numeric_id_resolves_to_matching_scenario(
     _clear_scenario_cache: None,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """A bare number that matches a known scenario prefix resolves to that scenario.
 
@@ -132,6 +133,13 @@ def test_plan_synthetic_test_bare_numeric_id_resolves_to_matching_scenario(
     returned None (the hint WAS resolved), but the resolved scenario was never used —
     the code fell straight through to the default fallback.
     """
+    import app.cli.interactive_shell.routing.handle_message_with_agent.orchestration.slash_commands.synthetic_resolution as synth_res
+
+    monkeypatch.setattr(
+        synth_res,
+        "list_rds_postgres_scenarios",
+        lambda: ("001-replication-lag", "005-failover", "010-connection-exhausted"),
+    )
     msg = "run synthetic test 005 now"
     actions, unhandled = action_planner_module.map_actions_with_unhandled(msg)
 
@@ -162,8 +170,8 @@ def test_plan_task_cancel_before_shell_kill() -> None:
 
 
 def test_plan_integration_detail_request_maps_to_integrations_show() -> None:
-    msg = "show me what configured datadog integration connections I have"
-    assert action_planner_module.map_cli_actions(msg) == ["/integrations show datadog"]
+    msg = "show me what configured jira integration connections I have"
+    assert action_planner_module.map_cli_actions(msg) == ["/integrations show jira"]
 
 
 def test_plan_integration_capability_only_request_does_not_map_detail_command() -> None:

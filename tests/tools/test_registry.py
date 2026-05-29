@@ -15,15 +15,7 @@ from app.tools.registered_tool import REGISTERED_TOOL_ATTR, RegisteredTool
 from app.tools.tool_decorator import tool
 from app.types.retrieval import RetrievalControls
 
-_V2_TOOL_CONTRACT_NAMES = frozenset(
-    {
-        "query_grafana_metrics",
-        "describe_rds_instance",
-        "get_postgresql_slow_queries",
-        "query_datadog_metrics",
-        "list_eks_pods",
-    }
-)
+_V2_TOOL_CONTRACT_NAMES: frozenset[str] = frozenset()
 
 
 @pytest.fixture(autouse=True)
@@ -297,19 +289,23 @@ def test_resolve_tool_display_name_falls_back_for_unknown_tools() -> None:
     )
 
 
-def test_real_registry_discovers_migrated_sre_guidance_tool() -> None:
+def test_real_registry_discovers_jira_tools() -> None:
     action_names = {tool_def.name for tool_def in get_available_actions()}
-    assert "get_sre_guidance" in action_names
+    assert {"jira_search_issues", "jira_issue_detail"} <= action_names
 
 
-def test_real_registry_discovers_honeycomb_and_coralogix_tools() -> None:
+def test_real_registry_discovers_github_and_gitlab_tools() -> None:
     action_names = {tool_def.name for tool_def in get_available_actions()}
-    assert {"query_honeycomb_traces", "query_coralogix_logs"} <= action_names
+    assert {"search_github_code", "list_gitlab_commits"} <= action_names
 
 
 def test_real_registry_preserves_existing_chat_tool_surface() -> None:
     chat_names = {tool_def.name for tool_def in registry_module.get_registered_tools("chat")}
-    assert {"fetch_failed_run", "get_tracer_run", "search_github_code"} <= chat_names
+    assert {
+        "search_github_code",
+        "get_github_file_contents",
+        "get_github_repository_tree",
+    } <= chat_names
 
 
 def test_registry_regression_duplicate_tool_names_across_modules(

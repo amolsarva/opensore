@@ -25,25 +25,9 @@ _SKIP_MODULE_NAMES = {
     "utils",
 }
 
-# Preserve the current chat surface while the repo migrates toward explicit
-# per-tool surface metadata.
-_LEGACY_CHAT_TOOL_NAMES = {
-    "fetch_failed_run",
-    "get_tracer_run",
-    "get_tracer_tasks",
-    "get_failed_jobs",
-    "get_failed_tools",
-    "get_error_logs",
-    "get_batch_statistics",
-    "get_host_metrics",
-    "search_github_code",
-    "get_github_file_contents",
-    "get_github_repository_tree",
-    "list_github_commits",
-    "search_sentry_issues",
-    "get_sentry_issue_details",
-    "list_sentry_issue_events",
-}
+# Legacy set for tools that predate explicit surface metadata; kept for any
+# remaining tools that don't declare surfaces= themselves.
+_LEGACY_CHAT_TOOL_NAMES: set[str] = set()
 
 
 def _iter_tool_module_names() -> list[str]:

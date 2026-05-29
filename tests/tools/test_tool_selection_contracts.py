@@ -3,33 +3,35 @@ from __future__ import annotations
 from app.tools.registry import get_registered_tool_map
 
 
-def test_rds_performance_family_uses_rds_and_postgresql_contracts() -> None:
+def test_jira_tool_family_uses_correct_source_and_required_fields() -> None:
     tool_map = get_registered_tool_map("investigation")
 
-    rds_tool = tool_map["describe_rds_instance"]
-    pg_tool = tool_map["get_postgresql_slow_queries"]
+    search_tool = tool_map["jira_search_issues"]
+    detail_tool = tool_map["jira_issue_detail"]
 
-    assert rds_tool.source == "rds"
-    assert "db_instance_identifier" in set(rds_tool.public_input_schema.get("required", []))
+    assert search_tool.source == "jira"
+    assert {"base_url", "email", "api_token"} <= set(
+        search_tool.public_input_schema.get("required", [])
+    )
 
-    assert pg_tool.source == "postgresql"
-    assert {"host", "threshold_ms"} <= set(pg_tool.public_input_schema.get("properties", {}).keys())
+    assert detail_tool.source == "jira"
+    assert "issue_key" in set(detail_tool.public_input_schema.get("required", []))
 
 
-def test_kubernetes_contract_requires_cluster_and_namespace_filters() -> None:
+def test_slack_tool_requires_channel_and_token_filters() -> None:
     tool_map = get_registered_tool_map("investigation")
-    eks_tool = tool_map["list_eks_pods"]
-    required = set(eks_tool.public_input_schema.get("required", []))
-    assert {"cluster_name", "namespace"} <= required
+    slack_tool = tool_map["slack_channel_history"]
+    required = set(slack_tool.public_input_schema.get("required", []))
+    assert {"bot_token", "channel_id"} <= required
 
 
-def test_metrics_contracts_hide_credentials_from_model_visible_schema() -> None:
+def test_github_search_tool_requires_owner_repo_query() -> None:
     tool_map = get_registered_tool_map("investigation")
-    grafana = tool_map["query_grafana_metrics"]
-    datadog = tool_map["query_datadog_metrics"]
+    github = tool_map["search_github_code"]
+    bitbucket = tool_map["get_bitbucket_file_contents"]
 
-    grafana_props = set(grafana.public_input_schema.get("properties", {}).keys())
-    datadog_props = set(datadog.public_input_schema.get("properties", {}).keys())
+    github_props = set(github.public_input_schema.get("properties", {}).keys())
+    bitbucket_props = set(bitbucket.public_input_schema.get("properties", {}).keys())
 
-    assert {"grafana_endpoint", "grafana_api_key", "grafana_backend"}.isdisjoint(grafana_props)
-    assert {"api_key", "app_key", "site"}.isdisjoint(datadog_props)
+    assert {"owner", "repo", "query"} <= github_props
+    assert {"repo_slug", "path"} <= bitbucket_props

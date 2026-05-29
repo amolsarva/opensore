@@ -22,7 +22,7 @@ import time
 import urllib.error
 import urllib.request
 from collections.abc import AsyncIterator
-from contextlib import asynccontextmanager, suppress
+from contextlib import asynccontextmanager
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -49,12 +49,6 @@ from app.analytics.source import EntrypointSource, TriggerMode
 from app.cli.support.cli_error_mapping import reraise_cli_runtime_error
 from app.cli.support.errors import OpenSoreError
 from app.remote.error_reporting import report_remote_exception
-from app.remote.vercel_poller import (
-    VercelInvestigationCandidate,
-    VercelPoller,
-    VercelResolutionError,
-    enrich_remote_alert_from_vercel,
-)
 from app.utils.sentry_sdk import capture_exception, init_sentry
 from app.version import get_version
 
@@ -145,21 +139,10 @@ async def _lifespan(_app: FastAPI) -> AsyncIterator[None]:
         ) from exc
     _refresh_instance_metadata()
 
-    poller_task: asyncio.Task[None] | None = None
-    poller = VercelPoller(investigations_dir=INVESTIGATIONS_DIR)
-    if poller.is_enabled:
-        poller_task = asyncio.create_task(
-            poller.run_forever(_handle_polled_candidate),
-            name="vercel-poller",
-        )
-
     try:
         yield
     finally:
-        if poller_task is not None:
-            poller_task.cancel()
-            with suppress(asyncio.CancelledError):
-                await poller_task
+        pass
 
 
 app = FastAPI(
@@ -183,7 +166,6 @@ class InvestigateRequest(BaseModel):
     alert_name: str | None = None
     pipeline_name: str | None = None
     severity: str | None = None
-    vercel_url: str | None = None
 
 
 class InvestigateResponse(BaseModel):
@@ -398,8 +380,6 @@ def investigate(req: InvestigateRequest) -> InvestigateResponse:
             pipeline_name=req.pipeline_name,
             severity=req.severity,
         )
-    except VercelResolutionError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
     except OpenSoreError as exc:
         logger.warning("Investigation failed due to CLI runtime error: %s", exc)
         detail = str(exc)
@@ -446,11 +426,7 @@ async def investigate_stream(req: InvestigateRequest) -> Response:
     from app.pipeline.runners import astream_investigation
 
     LLMSettings.from_env()
-    try:
-        raw_alert = _normalized_request_alert(req)
-    except VercelResolutionError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
-
+    raw_alert = _normalized_request_alert(req)
     investigation_metadata = resolve_investigation_context(
         raw_alert=raw_alert,
         alert_name=req.alert_name,
@@ -544,41 +520,6 @@ def _persist_streamed_result(
     except Exception as exc:
         capture_exception(exc)
         logger.exception("Failed to persist streamed investigation")
-
-
-async def _handle_polled_candidate(candidate: VercelInvestigationCandidate) -> bool:
-    """Run and persist RCA for a polled Vercel candidate."""
-    try:
-        result, alert_name, pipeline_name, severity = await asyncio.to_thread(
-            _execute_investigation,
-            raw_alert=candidate.raw_alert,
-            alert_name=candidate.alert_name,
-            pipeline_name=candidate.pipeline_name,
-            severity=candidate.severity,
-        )
-    except Exception as exc:
-        capture_exception(exc)
-        logger.exception(
-            "Background Vercel investigation failed for deployment %s",
-            candidate.dedupe_key,
-        )
-        return False
-
-    inv_id = _make_id(alert_name)
-    await asyncio.to_thread(
-        _save_investigation,
-        inv_id=inv_id,
-        alert_name=alert_name,
-        pipeline_name=pipeline_name,
-        severity=severity,
-        result=result,
-    )
-    logger.info(
-        "Persisted background Vercel investigation %s for deployment %s",
-        inv_id,
-        candidate.dedupe_key,
-    )
-    return True
 
 
 @app.get("/investigations", response_model=list[InvestigationMeta])
@@ -827,13 +768,8 @@ def _save_investigation(
 
 
 def _normalized_request_alert(req: InvestigateRequest) -> dict[str, Any]:
-    """Merge optional Vercel URL input into the alert and resolve it when present."""
-    raw_alert = dict(req.raw_alert)
-    if req.vercel_url:
-        raw_alert.setdefault("vercel_url", req.vercel_url)
-        raw_alert.setdefault("vercel_log_url", req.vercel_url)
-    resolved_alert = enrich_remote_alert_from_vercel(raw_alert)
-    return resolved_alert if isinstance(resolved_alert, dict) else raw_alert
+    """Return the raw alert from the request as a plain dict."""
+    return dict(req.raw_alert)
 
 
 def _execute_investigation(

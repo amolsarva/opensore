@@ -109,6 +109,7 @@
               "honeycomb",
               "incident_io",
               "opsgenie",
+              "pagerduty",
               "sentry",
               "signoz",
               "splunk"
@@ -121,10 +122,12 @@
               "aws",
               "bitbucket",
               "github",
+              "github-actions",
               "gitlab",
               "google-docs",
               "helm",
               "jira",
+              "linear",
               "vercel"
             ]
           },
@@ -134,10 +137,22 @@
             "pages": [
               "messaging/index",
               "messaging/slack",
+              "slack-search",
               "messaging/discord",
               "messaging/telegram",
               "messaging/whatsapp",
               "messaging/twilio-sms"
+            ]
+          },
+          {
+            "group": "Investigation features",
+            "pages": [
+              "runbooks",
+              "webhooks",
+              "http-probe",
+              "slo-burn-rate",
+              "grafana-annotate",
+              "investigation-reports"
             ]
           },
           {

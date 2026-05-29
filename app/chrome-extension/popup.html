@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>OpenSore</title>
   <link rel="stylesheet" href="popup.css">
 </head>
@@ -11,49 +10,21 @@
     <span class="logo">🕵️</span>
     <div class="header-text">
       <div class="title">OpenSore</div>
-      <div class="subtitle" id="server-status">Checking local server…</div>
+      <div class="subtitle" id="server-status">Checking…</div>
     </div>
   </header>
 
-  <section>
-    <div class="section-label">Connected sources</div>
-    <div id="connections-list" class="empty-state">Loading…</div>
-  </section>
+  <div id="app">
+    <div class="loading">Loading…</div>
+  </div>
 
-  <section id="add-section">
-    <div class="section-label">Add a source</div>
-    <div class="provider-list">
-
-      <button class="provider-btn" id="btn-slack" disabled>
-        <span class="provider-icon">💬</span>
-        <span class="provider-name">Connect Slack</span>
-        <span class="provider-status" id="status-slack"></span>
-      </button>
-
-      <button class="provider-btn" id="btn-google" disabled>
-        <span class="provider-icon">📧</span>
-        <span class="provider-name">Connect Google Workspace</span>
-        <span class="provider-status" id="status-google"></span>
-      </button>
-
-    </div>
-    <div class="provider-hint" id="provider-hint" hidden>
-      Start <code>uv run opensore serve</code> to enable source connections.
-    </div>
-  </section>
-
-  <details class="settings-panel">
-    <summary>Settings</summary>
-    <div class="settings-row">
-      <label for="port-input">Local server port</label>
+  <footer>
+    <button id="port-toggle" class="port-toggle">⚙ Port <span id="port-display">8000</span></button>
+    <div id="port-edit" class="port-edit" hidden>
       <input type="number" id="port-input" value="8000" min="1" max="65535">
       <button id="save-port">Save</button>
     </div>
-    <div class="settings-row redirect-uri" id="redirect-uri-row" hidden>
-      <label>Extension redirect URI (register with providers)</label>
-      <code id="redirect-uri-value"></code>
-    </div>
-  </details>
+  </footer>
 
   <script src="popup.js"></script>
 </body>

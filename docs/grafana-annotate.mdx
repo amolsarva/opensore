@@ -1,0 +1,48 @@
+---
+title: "Grafana Annotations"
+description: "Write investigation findings directly onto Grafana dashboards as time-correlated annotations."
+---
+
+The `grafana_annotate` tool posts a Grafana annotation at the incident timestamp so your root cause summary overlays directly on metric and log panels.
+
+## What it does
+
+- Creates a Grafana annotation with the root cause summary as the body
+- Tags the annotation with `opensore` and `rca` (customisable)
+- Supports region annotations (start + end time) for incident windows
+- Can be scoped to a specific dashboard or panel
+
+## Setup
+
+Requires a Grafana service account token with the **Annotations Editor** role.
+
+```bash
+opensore integrations verify grafana
+```
+
+## Parameters
+
+| Parameter | Required | Description |
+|-----------|----------|-------------|
+| `grafana_url` | ✓ | Grafana base URL |
+| `api_key` | ✓ | Service account token |
+| `text` | ✓ | Annotation body (root cause summary) |
+| `tags` | | Comma-separated tags (default: `opensore,rca`) |
+| `time_ms` | | Epoch milliseconds (defaults to now) |
+| `time_end_ms` | | End time for region annotation |
+| `dashboard_uid` | | Scope to a dashboard |
+| `panel_id` | | Scope to a panel |
+
+## Example
+
+After investigation completes, the agent calls `grafana_annotate` automatically if Grafana is configured:
+
+```json
+{
+  "annotation_id": 1042,
+  "url": "https://grafana.example.com/dashboard/annotations?annotationId=1042",
+  "message": "Annotation added"
+}
+```
+
+The annotation appears as a vertical marker on all time-series panels in Grafana, labelled with the root cause.

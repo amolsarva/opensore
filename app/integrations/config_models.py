@@ -13,153 +13,8 @@ from app.integrations._validators import (
     normalize_bool_str,
     normalize_str,
     normalize_url,
-    normalize_with_default,
 )
 from app.strict_config import StrictConfigModel
-from app.utils.url_validation import validate_https_or_loopback_http_url
-
-_LOCAL_GRAFANA_HOSTS = {"localhost", "127.0.0.1", "0.0.0.0"}
-DEFAULT_HONEYCOMB_BASE_URL = "https://api.honeycomb.io"
-DEFAULT_HONEYCOMB_DATASET = "__all__"
-DEFAULT_CORALOGIX_BASE_URL = "https://api.coralogix.com"
-DEFAULT_OPSGENIE_BASE_URLS: dict[str, str] = {
-    "us": "https://api.opsgenie.com",
-    "eu": "https://api.eu.opsgenie.com",
-}
-DEFAULT_INCIDENT_IO_BASE_URL = "https://api.incident.io"
-
-
-# ---------------------------------------------------------------------------
-# Observability
-# ---------------------------------------------------------------------------
-
-
-class GrafanaIntegrationConfig(StrictConfigModel):
-    """Normalized Grafana credentials used by resolution and verification flows."""
-
-    endpoint: str
-    api_key: str = ""
-    integration_id: str = ""
-
-    _normalize_endpoint = field_validator("endpoint", mode="before")(normalize_url())
-
-    @property
-    def is_local(self) -> bool:
-        host = urlparse(self.endpoint).hostname or ""
-        return host in _LOCAL_GRAFANA_HOSTS
-
-
-class DatadogIntegrationConfig(StrictConfigModel):
-    """Normalized Datadog credentials used by resolution and verification flows."""
-
-    api_key: str
-    app_key: str
-    site: str = "datadoghq.com"
-    integration_id: str = ""
-
-    _normalize_site = field_validator("site", mode="before")(
-        normalize_with_default("datadoghq.com")
-    )
-
-    @property
-    def base_url(self) -> str:
-        return f"https://api.{self.site}"
-
-    @property
-    def headers(self) -> dict[str, str]:
-        return {
-            "DD-API-KEY": self.api_key,
-            "DD-APPLICATION-KEY": self.app_key,
-            "Content-Type": "application/json",
-        }
-
-
-class HoneycombIntegrationConfig(StrictConfigModel):
-    """Normalized Honeycomb credentials used by resolution and verification flows."""
-
-    api_key: str
-    dataset: str = DEFAULT_HONEYCOMB_DATASET
-    base_url: str = DEFAULT_HONEYCOMB_BASE_URL
-    integration_id: str = ""
-
-    _normalize_dataset = field_validator("dataset", mode="before")(
-        normalize_with_default(DEFAULT_HONEYCOMB_DATASET)
-    )
-    _normalize_base_url = field_validator("base_url", mode="before")(
-        normalize_url(DEFAULT_HONEYCOMB_BASE_URL)
-    )
-
-
-class CoralogixIntegrationConfig(StrictConfigModel):
-    """Normalized Coralogix credentials used by resolution and verification flows."""
-
-    api_key: str
-    base_url: str = DEFAULT_CORALOGIX_BASE_URL
-    application_name: str = ""
-    subsystem_name: str = ""
-    integration_id: str = ""
-
-    _normalize_base_url = field_validator("base_url", mode="before")(
-        normalize_url(DEFAULT_CORALOGIX_BASE_URL)
-    )
-
-
-# ---------------------------------------------------------------------------
-# Cloud / Infrastructure
-# ---------------------------------------------------------------------------
-
-
-class AWSStaticCredentials(StrictConfigModel):
-    """Static AWS access key credentials."""
-
-    access_key_id: str
-    secret_access_key: str
-    session_token: str = ""
-
-
-class AWSIntegrationConfig(StrictConfigModel):
-    """Normalized AWS integration config supporting role or static keys."""
-
-    region: str = "us-east-1"
-    role_arn: str = ""
-    external_id: str = ""
-    credentials: AWSStaticCredentials | None = None
-    integration_id: str = ""
-
-    _normalize_region = field_validator("region", mode="before")(
-        normalize_with_default("us-east-1")
-    )
-
-    @model_validator(mode="after")
-    def _require_auth_method(self) -> AWSIntegrationConfig:
-        if self.role_arn or self.credentials:
-            return self
-        raise ValueError(
-            "AWS integration requires either role_arn or credentials.access_key_id/secret_access_key."
-        )
-
-
-class VercelIntegrationConfig(StrictConfigModel):
-    """Normalized Vercel credentials used by resolution and verification flows."""
-
-    api_token: str
-    team_id: str = ""
-    integration_id: str = ""
-
-    _normalize_api_token = field_validator("api_token", mode="before")(normalize_str())
-    _normalize_team_id = field_validator("team_id", mode="before")(normalize_str())
-
-    @property
-    def headers(self) -> dict[str, str]:
-        return {
-            "Authorization": f"Bearer {self.api_token}",
-            "Content-Type": "application/json",
-        }
-
-    @property
-    def team_params(self) -> dict[str, str]:
-        return {"teamId": self.team_id} if self.team_id else {}
-
 
 # ---------------------------------------------------------------------------
 # Alerting & Incident Management
@@ -182,207 +37,9 @@ class SlackWebhookConfig(StrictConfigModel):
         return self
 
 
-class OpsGenieIntegrationConfig(StrictConfigModel):
-    """Normalized OpsGenie credentials used by resolution and verification flows."""
-
-    api_key: str
-    region: str = "us"
-    integration_id: str = ""
-
-    @field_validator("region", mode="before")
-    @classmethod
-    def _normalize_region(cls, value: object) -> str:
-        raw = str(value or "us").strip().lower()
-        return raw if raw in DEFAULT_OPSGENIE_BASE_URLS else "us"
-
-    @property
-    def base_url(self) -> str:
-        return DEFAULT_OPSGENIE_BASE_URLS.get(self.region, DEFAULT_OPSGENIE_BASE_URLS["us"])
-
-    @property
-    def headers(self) -> dict[str, str]:
-        return {
-            "Authorization": f"GenieKey {self.api_key}",
-            "Content-Type": "application/json",
-        }
-
-
-class IncidentIoIntegrationConfig(StrictConfigModel):
-    """Normalized incident.io credentials used by investigation and verification flows."""
-
-    api_key: str
-    base_url: str = DEFAULT_INCIDENT_IO_BASE_URL
-    integration_id: str = ""
-
-    @field_validator("base_url", mode="before")
-    @classmethod
-    def _normalize_base_url(cls, value: object) -> str:
-        normalized = normalize_url(DEFAULT_INCIDENT_IO_BASE_URL)(value)
-        return validate_https_or_loopback_http_url(normalized, service_name="incident.io")
-
-    @field_validator("api_key", mode="before")
-    @classmethod
-    def _normalize_api_key(cls, value: object) -> str:
-        return normalize_str()(value)
-
-    @property
-    def headers(self) -> dict[str, str]:
-        return {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json",
-        }
-
-
-class AlertmanagerIntegrationConfig(StrictConfigModel):
-    """Normalized Alertmanager credentials used by resolution and verification flows."""
-
-    base_url: str
-    bearer_token: str = ""
-    username: str = ""
-    password: str = ""
-    integration_id: str = ""
-
-    _normalize_base_url = field_validator("base_url", mode="before")(normalize_url())
-    _normalize_strs = field_validator("bearer_token", "username", "password", mode="before")(
-        normalize_str()
-    )
-
-    @model_validator(mode="after")
-    def _no_dual_auth(self) -> AlertmanagerIntegrationConfig:
-        if self.bearer_token and self.username:
-            raise ValueError(
-                "Alertmanager config has both bearer_token and username set; "
-                "use one auth method only."
-            )
-        return self
-
-    @property
-    def headers(self) -> dict[str, str]:
-        headers: dict[str, str] = {"Content-Type": "application/json"}
-        if self.bearer_token:
-            headers["Authorization"] = f"Bearer {self.bearer_token}"
-        return headers
-
-    @property
-    def basic_auth(self) -> tuple[str, str] | None:
-        if self.username and self.password:
-            return (self.username, self.password)
-        return None
-
-
-class SplunkIntegrationConfig(StrictConfigModel):
-    """Normalized Splunk credentials used by resolution and verification flows."""
-
-    base_url: str
-    token: str = ""
-    index: str = "main"
-    verify_ssl: bool = True
-    ca_bundle: str = ""
-    integration_id: str = ""
-
-    _normalize_base_url = field_validator("base_url", mode="before")(normalize_url())
-    _normalize_token = field_validator("token", mode="before")(normalize_str())
-    _normalize_index = field_validator("index", mode="before")(normalize_with_default("main"))
-    _normalize_ca_bundle = field_validator("ca_bundle", mode="before")(normalize_str())
-
-    @property
-    def ssl_verify(self) -> bool | str:
-        if self.ca_bundle:
-            return self.ca_bundle
-        return self.verify_ssl
-
-    @property
-    def is_configured(self) -> bool:
-        return bool(self.base_url and self.token)
-
-
-class VictoriaLogsIntegrationConfig(StrictConfigModel):
-    """Normalized VictoriaLogs credentials used by resolution and verification flows."""
-
-    base_url: str
-    tenant_id: str | None = None
-    integration_id: str = ""
-
-    _normalize_base_url = field_validator("base_url", mode="before")(normalize_url())
-    _normalize_integration_id = field_validator("integration_id", mode="before")(normalize_str())
-
-    @field_validator("tenant_id", mode="before")
-    @classmethod
-    def _normalize_tenant_id(cls, value: object) -> str | None:
-        # Treat empty / blank / None uniformly as "not configured" so the
-        # AccountID header is only sent when the user explicitly opts in.
-        if value is None:
-            return None
-        text = str(value).strip()
-        return text or None
-
-    @property
-    def is_configured(self) -> bool:
-        return bool(self.base_url)
-
-
 # ---------------------------------------------------------------------------
 # Source Control & CI/CD
 # ---------------------------------------------------------------------------
-
-
-class ArgoCDIntegrationConfig(StrictConfigModel):
-    """Normalized Argo CD credentials used by resolution and verification flows."""
-
-    base_url: str
-    bearer_token: str = ""
-    username: str = ""
-    password: str = ""
-    project: str = ""
-    app_namespace: str = ""
-    verify_ssl: bool = True
-    integration_id: str = ""
-
-    @field_validator("base_url", mode="before")
-    @classmethod
-    def _normalize_base_url(cls, value: object) -> str:
-        normalized = str(value or "").strip().rstrip("/")
-        return validate_https_or_loopback_http_url(normalized, service_name="Argo CD")
-
-    _normalize_bearer_token = field_validator("bearer_token", mode="before")(normalize_bearer())
-    _normalize_strs = field_validator(
-        "username", "password", "project", "app_namespace", "integration_id", mode="before"
-    )(normalize_str())
-    _normalize_verify_ssl = field_validator("verify_ssl", mode="before")(normalize_bool_str())
-
-    @model_validator(mode="after")
-    def _no_dual_auth(self) -> ArgoCDIntegrationConfig:
-        if self.bearer_token and (self.username or self.password):
-            raise ValueError(
-                "Argo CD config has both bearer_token and username/password set; "
-                "use one auth method only."
-            )
-        return self
-
-    @property
-    def is_configured(self) -> bool:
-        return bool(self.base_url and (self.bearer_token or (self.username and self.password)))
-
-
-class HelmIntegrationConfig(StrictConfigModel):
-    """Normalized Helm CLI settings for read-only Kubernetes release inspection."""
-
-    helm_path: str = "helm"
-    kube_context: str = ""
-    kubeconfig: str = ""
-    default_namespace: str = ""
-    integration_id: str = ""
-
-    _normalize_helm_path = field_validator("helm_path", mode="before")(
-        normalize_with_default("helm")
-    )
-    _normalize_strs = field_validator(
-        "kube_context", "kubeconfig", "default_namespace", "integration_id", mode="before"
-    )(normalize_str())
-
-    @property
-    def is_configured(self) -> bool:
-        return bool(str(self.helm_path or "").strip())
 
 
 class GitLabIntegrationConfig(StrictConfigModel):
@@ -391,198 +48,6 @@ class GitLabIntegrationConfig(StrictConfigModel):
     url: str
     access_token: str
     integration_id: str = ""
-
-
-# ---------------------------------------------------------------------------
-# Error Tracking & APM
-# ---------------------------------------------------------------------------
-
-
-class SentryIntegrationConfig(StrictConfigModel):
-    """Normalized Sentry credentials — kept for type-check consumers."""
-
-    base_url: str = "https://sentry.io"
-    organization_slug: str = ""
-    auth_token: str = ""
-    project_slug: str = ""
-    integration_id: str = ""
-
-    _normalize_base_url = field_validator("base_url", mode="before")(
-        normalize_url("https://sentry.io")
-    )
-    _normalize_strs = field_validator(
-        "organization_slug", "auth_token", "project_slug", mode="before"
-    )(normalize_str())
-
-
-# ---------------------------------------------------------------------------
-# Databases — Relational
-# ---------------------------------------------------------------------------
-
-
-class PostgreSQLIntegrationConfig(StrictConfigModel):
-    """Normalized PostgreSQL credentials used by resolution and verification flows."""
-
-    host: str
-    port: int = 5432
-    database: str
-    username: str = "postgres"
-    password: str = ""
-    ssl_mode: str = "prefer"
-    integration_id: str = ""
-
-    _normalize_host = field_validator("host", mode="before")(normalize_str())
-    _normalize_database = field_validator("database", mode="before")(normalize_str())
-    _normalize_username = field_validator("username", mode="before")(
-        normalize_with_default("postgres")
-    )
-    _normalize_ssl_mode = field_validator("ssl_mode", mode="before")(
-        normalize_with_default("prefer")
-    )
-
-
-class MySQLIntegrationConfig(StrictConfigModel):
-    """Normalized MySQL credentials used by resolution and verification flows."""
-
-    host: str
-    port: int = 3306
-    database: str
-    username: str = "root"
-    password: str = ""
-    ssl_mode: str = "preferred"
-    integration_id: str = ""
-
-    _normalize_host = field_validator("host", mode="before")(normalize_str())
-    _normalize_database = field_validator("database", mode="before")(normalize_str())
-    _normalize_username = field_validator("username", mode="before")(normalize_with_default("root"))
-    _normalize_ssl_mode = field_validator("ssl_mode", mode="before")(
-        normalize_with_default("preferred")
-    )
-
-
-class MariaDBIntegrationConfig(StrictConfigModel):
-    """Normalized MariaDB credentials used by resolution and verification flows."""
-
-    host: str
-    port: int = 3306
-    database: str
-    username: str
-    password: str = ""
-    ssl: bool = True
-    integration_id: str = ""
-
-    _normalize_strs = field_validator("host", "database", "username", mode="before")(
-        normalize_str()
-    )
-
-
-class AzureSQLIntegrationConfig(StrictConfigModel):
-    """Normalized Azure SQL Database credentials used by resolution and verification flows."""
-
-    server: str
-    port: int = 1433
-    database: str
-    username: str = ""
-    password: str = ""
-    driver: str = "ODBC Driver 18 for SQL Server"
-    encrypt: bool = True
-    integration_id: str = ""
-
-    _normalize_strs = field_validator("server", "database", "username", mode="before")(
-        normalize_str()
-    )
-    _normalize_driver = field_validator("driver", mode="before")(
-        normalize_with_default("ODBC Driver 18 for SQL Server")
-    )
-
-
-# ---------------------------------------------------------------------------
-# Databases — Document / NoSQL
-# ---------------------------------------------------------------------------
-
-
-class MongoDBIntegrationConfig(StrictConfigModel):
-    """Normalized MongoDB credentials used by resolution and verification flows."""
-
-    connection_string: str
-    database: str = ""
-    auth_source: str = "admin"
-    tls: bool = True
-    integration_id: str = ""
-
-    _normalize_connection_string = field_validator("connection_string", mode="before")(
-        normalize_str()
-    )
-    _normalize_auth_source = field_validator("auth_source", mode="before")(
-        normalize_with_default("admin")
-    )
-
-
-class MongoDBAtlasIntegrationConfig(StrictConfigModel):
-    """Normalized MongoDB Atlas API credentials used by resolution and verification flows."""
-
-    api_public_key: str
-    api_private_key: str
-    project_id: str
-    base_url: str = "https://cloud.mongodb.com/api/atlas/v2"
-    integration_id: str = ""
-
-    _normalize_strs = field_validator(
-        "api_public_key", "api_private_key", "project_id", mode="before"
-    )(normalize_str())
-    _normalize_base_url = field_validator("base_url", mode="before")(
-        normalize_url("https://cloud.mongodb.com/api/atlas/v2")
-    )
-
-
-# ---------------------------------------------------------------------------
-# Message Queues
-# ---------------------------------------------------------------------------
-
-
-class RabbitMQIntegrationConfig(StrictConfigModel):
-    """Normalized RabbitMQ Management API credentials used by resolution and verification flows."""
-
-    host: str
-    management_port: int = 15672
-    username: str
-    password: str = ""
-    vhost: str = "/"
-    ssl: bool = False
-    verify_ssl: bool = True
-    integration_id: str = ""
-
-    _normalize_strs = field_validator("host", "username", mode="before")(normalize_str())
-    _normalize_vhost = field_validator("vhost", mode="before")(normalize_with_default("/"))
-
-
-# ---------------------------------------------------------------------------
-# Logging & Telemetry
-# ---------------------------------------------------------------------------
-
-
-class BetterStackIntegrationConfig(StrictConfigModel):
-    """Normalized Better Stack Telemetry SQL Query API credentials."""
-
-    query_endpoint: str
-    username: str
-    password: str = ""
-    sources: list[str] = []
-    integration_id: str = ""
-
-    _normalize_endpoint = field_validator("query_endpoint", mode="before")(normalize_url())
-    _normalize_username = field_validator("username", mode="before")(normalize_str())
-
-    @field_validator("sources", mode="before")
-    @classmethod
-    def _normalize_sources(cls, value: object) -> list[str]:
-        if value in (None, ""):
-            return []
-        if isinstance(value, str):
-            return [part.strip() for part in value.split(",") if part.strip()]
-        if isinstance(value, list):
-            return [str(v).strip() for v in value if str(v).strip()]
-        return []
 
 
 # ---------------------------------------------------------------------------
@@ -621,16 +86,6 @@ class NotionIntegrationConfig(StrictConfigModel):
     integration_id: str = ""
 
     _normalize_strs = field_validator("api_key", "database_id", mode="before")(normalize_str())
-
-
-class TrelloIntegrationConfig(StrictConfigModel):
-    """Normalized Trello credentials."""
-
-    api_key: str
-    api_token: str
-    integration_id: str = ""
-
-    _normalize_strs = field_validator("api_key", "api_token", mode="before")(normalize_str())
 
 
 class GoogleDocsIntegrationConfig(StrictConfigModel):
@@ -870,20 +325,86 @@ class TracerIntegrationConfig(StrictConfigModel):
 
 
 # ---------------------------------------------------------------------------
-# SaaS / workflow integrations (config-only, no active verifier)
+# SaaS / workflow integrations
 # ---------------------------------------------------------------------------
 
 
-class PrefectIntegrationConfig(StrictConfigModel):
-    api_url: str = "https://api.prefect.cloud/api"
-    api_key: str = ""
-    account_id: str = ""
-    workspace_id: str = ""
+class PagerDutyIntegrationConfig(StrictConfigModel):
+    """Normalized PagerDuty credentials for incident lookup, on-call, and writeback."""
+
+    api_token: str
+    from_email: str = ""
     integration_id: str = ""
 
-    _normalize_api_url = field_validator("api_url", mode="before")(
-        normalize_url("https://api.prefect.cloud/api")
-    )
-    _normalize_strs = field_validator("api_key", "account_id", "workspace_id", mode="before")(
+    _normalize_strs = field_validator("api_token", "from_email", mode="before")(normalize_str())
+
+    @field_validator("api_token", mode="before")
+    @classmethod
+    def _require_token(cls, value: object) -> str:
+        stripped = str(value or "").strip()
+        if not stripped:
+            raise ValueError("api_token cannot be empty")
+        return stripped
+
+
+class SlackSearchIntegrationConfig(StrictConfigModel):
+    """Slack credentials for searching messages during investigations.
+
+    Requires a bot token with search:read, channels:history, and channels:read scopes.
+    """
+
+    bot_token: str
+    default_channel: str = ""
+    integration_id: str = ""
+
+    _normalize_strs = field_validator("bot_token", "default_channel", mode="before")(
         normalize_str()
     )
+
+    @field_validator("bot_token", mode="before")
+    @classmethod
+    def _require_token(cls, value: object) -> str:
+        stripped = str(value or "").strip()
+        if not stripped:
+            raise ValueError("bot_token cannot be empty")
+        return stripped
+
+
+class LinearIntegrationConfig(StrictConfigModel):
+    """Linear GraphQL API credentials for issue search and creation."""
+
+    api_key: str
+    default_team_id: str = ""
+    integration_id: str = ""
+
+    _normalize_strs = field_validator("api_key", "default_team_id", mode="before")(normalize_str())
+
+    @field_validator("api_key", mode="before")
+    @classmethod
+    def _require_api_key(cls, value: object) -> str:
+        stripped = str(value or "").strip()
+        if not stripped:
+            raise ValueError("api_key cannot be empty")
+        return stripped
+
+
+class GitHubActionsIntegrationConfig(StrictConfigModel):
+    """GitHub credentials for Actions/Workflows REST API access during investigations."""
+
+    owner: str
+    repo: str
+    auth_token: str = ""
+    url: str = ""
+    integration_id: str = ""
+
+    _normalize_strs = field_validator("owner", "repo", "auth_token", "url", mode="before")(
+        normalize_str()
+    )
+
+    @field_validator("owner", "repo", mode="before")
+    @classmethod
+    def _require_non_empty(cls, value: object) -> str:
+        stripped = str(value or "").strip()
+        if not stripped:
+            raise ValueError("owner and repo cannot be empty")
+        return stripped

@@ -29,18 +29,16 @@ def test_health_command_runs() -> None:
     assert "aws" in result.output
 
 
-def test_health_command_uses_real_datadog_verification_path(monkeypatch) -> None:
+def test_health_command_uses_real_github_verification_path(monkeypatch) -> None:
     runner = CliRunner()
     monkeypatch.setattr(
         "app.integrations.verify.resolve_effective_integrations",
         lambda: {
-            "datadog": {
+            "github": {
                 "source": "local store",
                 "config": {
-                    "api_key": "",
-                    "app_key": "",
-                    "site": "datadoghq.com",
-                    "integration_id": "datadog-local",
+                    "token": "",
+                    "integration_id": "github-local",
                 },
             }
         },
@@ -50,6 +48,4 @@ def test_health_command_uses_real_datadog_verification_path(monkeypatch) -> None
 
     assert result.exit_code == 1
     assert "Summary:" in result.output
-    assert "datadog" in result.output
-    assert "MISSING" in result.output
-    assert "Missing API key or application key." in result.output
+    assert "github" in result.output

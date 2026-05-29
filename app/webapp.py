@@ -14,6 +14,7 @@ from app.discovery.models import (
     discovery_plan_csv,
 )
 from app.entrypoints.extension_api import router as extension_router
+from app.entrypoints.webhook_api import router as webhook_router
 from app.utils.sentry_sdk import init_sentry
 from app.version import get_version
 
@@ -29,6 +30,7 @@ class HealthResponse(BaseModel):
 
 app = FastAPI(title="OpenSore Discovery")
 app.include_router(extension_router)
+app.include_router(webhook_router)
 
 
 def _llm_configured() -> bool:
@@ -81,71 +83,172 @@ def discovery_ui() -> str:
     main { max-width: 1120px; margin: 0 auto; padding: 48px 24px 72px; }
     header { display: grid; gap: 18px; margin-bottom: 36px; }
     h1 { font-size: 44px; line-height: 1.05; margin: 0; letter-spacing: 0; max-width: 780px; }
-    p { font-size: 17px; line-height: 1.55; max-width: 760px; margin: 0; }
-    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
-    a, button { border: 1px solid #202124; background: #202124; color: #fff; padding: 11px 14px;
-      border-radius: 6px; text-decoration: none; font-weight: 650; font-size: 14px; }
-    a.secondary { background: transparent; color: #202124; }
-    section { border-top: 1px solid #d7d0c5; padding-top: 24px; margin-top: 28px; }
+    p.lead { font-size: 17px; line-height: 1.55; max-width: 760px; margin: 0; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px; }
+    .btn { display: inline-flex; align-items: center; gap: 7px; border: 1px solid #202124;
+      background: #202124; color: #fff; padding: 11px 16px; border-radius: 6px;
+      text-decoration: none; font-weight: 650; font-size: 14px; cursor: pointer; }
+    .btn-secondary { background: transparent; color: #202124; }
+    section { border-top: 1px solid #d7d0c5; padding-top: 28px; margin-top: 32px; }
     .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-    .card { background: #fff; border: 1px solid #ddd5ca; border-radius: 8px; padding: 18px; }
-    h2 { margin: 0 0 14px; font-size: 22px; }
+    .card { background: #fff; border: 1px solid #ddd5ca; border-radius: 8px; padding: 20px; }
+    h2 { margin: 0 0 16px; font-size: 22px; }
     h3 { margin: 0 0 8px; font-size: 16px; }
-    ul { margin: 0; padding-left: 18px; line-height: 1.65; }
-    code { background: #eee8df; padding: 2px 5px; border-radius: 4px; }
-    @media (max-width: 760px) { h1 { font-size: 34px; } .grid { grid-template-columns: 1fr; } }
+    p { margin: 0; line-height: 1.6; }
+    ul { margin: 0; padding-left: 20px; line-height: 1.75; }
+    code { background: #eee8df; padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: ui-monospace, monospace; }
+
+    /* Extension install card */
+    .ext-card { border-radius: 10px; padding: 24px 28px; margin-top: 4px; }
+    .ext-card-install { background: #1e1b4b; border: 1px solid #4338ca; color: #c7d2fe; }
+    .ext-card-connected { background: #052e16; border: 1px solid #16a34a; color: #bbf7d0; }
+    .ext-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .ext-icon { font-size: 26px; flex-shrink: 0; }
+    .ext-card-title { font-size: 17px; font-weight: 700; color: #e0e7ff; margin: 0 0 3px; }
+    .ext-card-connected .ext-card-title { color: #dcfce7; }
+    .ext-card-subtitle { font-size: 13px; color: #a5b4fc; margin: 0; }
+    .ext-card-connected .ext-card-subtitle { color: #86efac; }
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px; }
+    .step { background: rgba(255,255,255,0.07); border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 7px; padding: 14px 16px; }
+    .step-num { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+      color: #818cf8; margin-bottom: 6px; }
+    .step-text { font-size: 13px; color: #e0e7ff; line-height: 1.5; }
+    .step-text code { background: rgba(255,255,255,0.12); color: #c7d2fe; }
+    .ext-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .btn-ext-primary { background: #4f46e5; border-color: #4f46e5; color: #fff; }
+    .btn-ext-primary:hover { background: #4338ca; border-color: #4338ca; }
+    .btn-ext-secondary { background: transparent; border-color: #6366f1; color: #a5b4fc; font-size: 13px; padding: 8px 14px; }
+    .connection-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .connection-chip { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(74,222,128,0.4); border-radius: 20px; padding: 4px 12px; font-size: 13px;
+      color: #bbf7d0; }
+
+    @media (max-width: 760px) {
+      h1 { font-size: 32px; }
+      .grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr; }
+      .ext-card { padding: 18px 20px; }
+    }
   </style>
 </head>
 <body>
 <main>
   <header>
     <h1>Workplace misconduct discovery without storing evidence on this host.</h1>
-    <p>Run targeted investigations across communication and work systems for harassment,
-    executive misconduct, retaliation, and sexual misconduct matters. User-owned source
-    accounts authenticate directly, and exports are designed to land as CSV files in the
-    user's Google Drive.</p>
+    <p class="lead">Run targeted investigations across communication and work systems for harassment,
+    executive misconduct, retaliation, and sexual misconduct matters. Accounts authenticate directly,
+    and exports land as CSV files in the user's Google Drive.</p>
     <div class="actions">
-      <a href="/api/discovery/default-keywords">View keyword seeds</a>
-      <a class="secondary" href="/api/discovery/schema">API schema</a>
-    </div>
-    <div id="ext-banner" style="display:none;margin-top:12px;padding:10px 14px;background:#1e1b4b;
-      border:1px solid #4338ca;border-radius:8px;font-size:13px;color:#c7d2fe;
-      display:flex;align-items:center;gap:10px;max-width:560px">
-      <span style="font-size:20px">🧩</span>
-      <div>
-        <strong style="color:#e0e7ff">Install the OpenSore Chrome extension</strong>
-        to connect Slack and Google directly from your browser — no copy-pasting tokens.
-        <a href="https://github.com/amolsarva/opensore#chrome-extension"
-           style="color:#818cf8;text-decoration:underline;margin-left:4px">Learn more</a>
-      </div>
-      <button onclick="this.parentElement.style.display='none'"
-        style="margin-left:auto;background:none;border:none;color:#6366f1;cursor:pointer;font-size:18px;
-               padding:0 4px;line-height:1">×</button>
+      <a class="btn btn-secondary" href="/api/discovery/default-keywords">View keyword seeds</a>
+      <a class="btn btn-secondary" href="/api/discovery/schema">API schema</a>
     </div>
   </header>
+
+  <!-- Extension: install state (shown when extension absent) -->
+  <div id="ext-install" class="ext-card ext-card-install" style="display:none">
+    <div class="ext-card-header">
+      <span class="ext-icon">🧩</span>
+      <div>
+        <p class="ext-card-title">Install the OpenSore Chrome Extension</p>
+        <p class="ext-card-subtitle">Connect Slack and Google directly from your browser — no copy-pasting tokens.</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">Step 1</div>
+        <div class="step-text">Open Chrome and go to <code>chrome://extensions</code></div>
+      </div>
+      <div class="step">
+        <div class="step-num">Step 2</div>
+        <div class="step-text">Toggle <strong style="color:#e0e7ff">Developer mode</strong> on (top-right switch)</div>
+      </div>
+      <div class="step">
+        <div class="step-num">Step 3</div>
+        <div class="step-text">Click <strong style="color:#e0e7ff">Load unpacked</strong> and select the <code>app/chrome-extension</code> folder from this repo</div>
+      </div>
+      <div class="step">
+        <div class="step-num">Step 4</div>
+        <div class="step-text">Reload this page — the extension will connect automatically</div>
+      </div>
+    </div>
+    <div class="ext-cta">
+      <a class="btn btn-ext-primary" href="chrome://extensions" id="ext-open-mgr">Open chrome://extensions</a>
+      <a class="btn btn-ext-secondary" href="https://github.com/amolsarva/opensore/tree/main/app/chrome-extension" target="_blank" rel="noopener">View extension source</a>
+      <a class="btn btn-ext-secondary" href="https://github.com/amolsarva/opensore#chrome-extension" target="_blank" rel="noopener">Install guide</a>
+    </div>
+  </div>
+
+  <!-- Extension: connected state (shown when extension present) -->
+  <div id="ext-connected" class="ext-card ext-card-connected" style="display:none">
+    <div class="ext-card-header">
+      <span class="ext-icon">✅</span>
+      <div>
+        <p class="ext-card-title">Chrome Extension Connected</p>
+        <p class="ext-card-subtitle">Click the OpenSore icon in your toolbar to manage source connections.</p>
+      </div>
+    </div>
+    <div id="ext-connections" class="connection-list"></div>
+  </div>
+
   <script>
     (function () {
-      // Show install banner only if the extension is NOT present.
-      // The content script sets this attribute when it loads.
-      function check() {
-        var hasExt = document.documentElement.getAttribute('data-opensore-extension') === 'true';
-        if (!hasExt) {
-          var el = document.getElementById('ext-banner');
-          if (el) el.style.display = 'flex';
+      var installEl = document.getElementById('ext-install');
+      var connectedEl = document.getElementById('ext-connected');
+      var connectionsEl = document.getElementById('ext-connections');
+
+      // chrome:// links can't be navigated via <a> — open them programmatically
+      var mgr = document.getElementById('ext-open-mgr');
+      if (mgr) {
+        mgr.addEventListener('click', function (e) {
+          e.preventDefault();
+          // Works from extension context; in plain page just copy the URL.
+          window.open('chrome://extensions', '_blank');
+        });
+      }
+
+      function showInstall() {
+        if (installEl) installEl.style.display = 'block';
+        if (connectedEl) connectedEl.style.display = 'none';
+      }
+
+      function showConnected(connections) {
+        if (installEl) installEl.style.display = 'none';
+        if (connectedEl) connectedEl.style.display = 'block';
+        if (connectionsEl && connections && connections.length) {
+          connectionsEl.innerHTML = connections.map(function (c) {
+            return '<span class="connection-chip"><span>' + (c.icon || '🔗') + '</span>'
+              + '<span>' + (c.label || c.service || c) + '</span></span>';
+          }).join('');
         }
       }
-      // Give the content script ~500 ms to inject before deciding it's absent.
-      window.addEventListener('opensore-extension-ready', function () {
-        var el = document.getElementById('ext-banner');
-        if (el) el.style.display = 'none';
-      });
-      setTimeout(check, 500);
+
+      function checkExtension() {
+        var hasExt = document.documentElement.getAttribute('data-opensore-extension') === 'true';
+        if (hasExt) {
+          // Try to fetch live connection state from extension / local server
+          fetch('http://localhost:8000/api/extension/connections', { signal: AbortSignal.timeout(1500) })
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .then(function (data) {
+              showConnected(data && data.connections ? data.connections : []);
+            })
+            .catch(function () { showConnected([]); });
+        } else {
+          showInstall();
+        }
+      }
+
+      // Extension signals readiness via a custom event
+      window.addEventListener('opensore-extension-ready', function () { checkExtension(); });
+      // Fallback: check after 600 ms if the event never fires
+      setTimeout(checkExtension, 600);
     })();
   </script>
+
   <section class="grid">
     <div class="card"><h3>1. Create matter</h3><p>Name the investigation, add custodians, date range, and keyword sets.</p></div>
-    <div class="card"><h3>2. Connect sources</h3><p>Use read-only authorization for Google Workspace, Slack, Microsoft 365, GitHub, Jira, or CSV.</p></div>
-    <div class="card"><h3>3. Export to Drive</h3><p>Write reviewable CSV outputs to the user's Drive and discard transient buffers.</p></div>
+    <div class="card"><h3>2. Connect sources</h3><p>Authorize Google Workspace, Slack, Microsoft 365, GitHub, Jira, or CSV via the extension — read-only.</p></div>
+    <div class="card"><h3>3. Export to Drive</h3><p>Write reviewable CSV outputs to the user's Drive and discard transient buffers on this host.</p></div>
   </section>
   <section>
     <h2>What this is not</h2>

@@ -189,104 +189,6 @@ class ToolFailureCase:
     expected_source: str
 
 
-def _azure_case() -> ToolFailureCase:
-    def patch(mp: pytest.MonkeyPatch) -> None:
-        from app.tools import AzureMonitorLogsTool as mod
-
-        mp.setattr(mod, "httpx", SimpleNamespace(post=MagicMock(side_effect=RuntimeError("net"))))
-
-    def invoke() -> dict[str, Any]:
-        from app.tools.AzureMonitorLogsTool import query_azure_monitor_logs
-
-        return query_azure_monitor_logs(workspace_id="w", access_token="t")
-
-    return ToolFailureCase("azure_monitor_logs", patch, invoke, "query_azure_monitor_logs", "azure")
-
-
-def _openobserve_case() -> ToolFailureCase:
-    def patch(mp: pytest.MonkeyPatch) -> None:
-        from app.tools import OpenObserveLogsTool as mod
-
-        mp.setattr(mod, "httpx", SimpleNamespace(post=MagicMock(side_effect=RuntimeError("net"))))
-
-    def invoke() -> dict[str, Any]:
-        from app.tools.OpenObserveLogsTool import query_openobserve_logs
-
-        return query_openobserve_logs(
-            base_url="https://oo.example",
-            org="default",
-            stream="default",
-            query="*",
-            api_token="t",
-        )
-
-    return ToolFailureCase(
-        "openobserve_logs", patch, invoke, "query_openobserve_logs", "openobserve"
-    )
-
-
-def _snowflake_case() -> ToolFailureCase:
-    def patch(mp: pytest.MonkeyPatch) -> None:
-        from app.tools import SnowflakeQueryHistoryTool as mod
-
-        mp.setattr(mod, "httpx", SimpleNamespace(post=MagicMock(side_effect=RuntimeError("net"))))
-
-    def invoke() -> dict[str, Any]:
-        from app.tools.SnowflakeQueryHistoryTool import query_snowflake_history
-
-        return query_snowflake_history(
-            account_identifier="acc",
-            token="tok",
-            query="select 1",
-        )
-
-    return ToolFailureCase(
-        "snowflake_query_history", patch, invoke, "query_snowflake_history", "snowflake"
-    )
-
-
-def _cloudwatch_logs_case() -> ToolFailureCase:
-    def patch(mp: pytest.MonkeyPatch) -> None:
-        from app.tools import CloudWatchLogsTool as mod
-
-        mp.setattr(
-            mod,
-            "boto3",
-            SimpleNamespace(client=MagicMock(side_effect=RuntimeError("aws"))),
-        )
-
-    def invoke() -> dict[str, Any]:
-        from app.tools.CloudWatchLogsTool import get_cloudwatch_logs
-
-        return get_cloudwatch_logs(log_group="/aws/lambda/test")
-
-    return ToolFailureCase("cloudwatch_logs", patch, invoke, "get_cloudwatch_logs", "cloudwatch")
-
-
-def _cloudwatch_batch_case() -> ToolFailureCase:
-    def patch(mp: pytest.MonkeyPatch) -> None:
-        from app.tools import CloudWatchBatchMetricsTool as mod
-
-        mp.setattr(
-            mod,
-            "get_metric_statistics",
-            MagicMock(side_effect=RuntimeError("aws")),
-        )
-
-    def invoke() -> dict[str, Any]:
-        from app.tools.CloudWatchBatchMetricsTool import get_cloudwatch_batch_metrics
-
-        return get_cloudwatch_batch_metrics(job_queue="q", metric_type="cpu")
-
-    return ToolFailureCase(
-        "cloudwatch_batch_metrics",
-        patch,
-        invoke,
-        "get_cloudwatch_batch_metrics",
-        "cloudwatch",
-    )
-
-
 def _google_docs_case() -> ToolFailureCase:
     def patch(mp: pytest.MonkeyPatch) -> None:
         from app.tools import GoogleDocsCreateReportTool as mod
@@ -316,173 +218,6 @@ def _google_docs_case() -> ToolFailureCase:
         "create_google_docs_incident_report",
         "google_docs",
     )
-
-
-def _eks_list_clusters_case() -> ToolFailureCase:
-    def patch(mp: pytest.MonkeyPatch) -> None:
-        from app.tools import EKSListClustersTool as mod
-
-        mp.setattr(mod, "EKSClient", MagicMock(side_effect=RuntimeError("eks")))
-
-    def invoke() -> dict[str, Any]:
-        from app.tools.EKSListClustersTool import list_eks_clusters
-
-        return list_eks_clusters(role_arn="arn:aws:iam::123:role/x")
-
-    return ToolFailureCase("eks_list_clusters", patch, invoke, "list_eks_clusters", "eks")
-
-
-def _eks_describe_cluster_case() -> ToolFailureCase:
-    def patch(mp: pytest.MonkeyPatch) -> None:
-        from app.tools import EKSDescribeClusterTool as mod
-
-        mp.setattr(mod, "EKSClient", MagicMock(side_effect=RuntimeError("eks")))
-
-    def invoke() -> dict[str, Any]:
-        from app.tools.EKSDescribeClusterTool import describe_eks_cluster
-
-        return describe_eks_cluster(cluster_name="c", role_arn="arn:aws:iam::123:role/x")
-
-    return ToolFailureCase("eks_describe_cluster", patch, invoke, "describe_eks_cluster", "eks")
-
-
-def _eks_nodegroup_case() -> ToolFailureCase:
-    def patch(mp: pytest.MonkeyPatch) -> None:
-        from app.tools import EKSNodegroupHealthTool as mod
-
-        mp.setattr(mod, "EKSClient", MagicMock(side_effect=RuntimeError("eks")))
-
-    def invoke() -> dict[str, Any]:
-        from app.tools.EKSNodegroupHealthTool import get_eks_nodegroup_health
-
-        return get_eks_nodegroup_health(cluster_name="c", role_arn="arn:aws:iam::123:role/x")
-
-    return ToolFailureCase("eks_nodegroup_health", patch, invoke, "get_eks_nodegroup_health", "eks")
-
-
-def _eks_addon_case() -> ToolFailureCase:
-    def patch(mp: pytest.MonkeyPatch) -> None:
-        from app.tools import EKSDescribeAddonTool as mod
-
-        mp.setattr(mod, "EKSClient", MagicMock(side_effect=RuntimeError("eks")))
-
-    def invoke() -> dict[str, Any]:
-        from app.tools.EKSDescribeAddonTool import describe_eks_addon
-
-        return describe_eks_addon(
-            cluster_name="c",
-            addon_name="coredns",
-            role_arn="arn:aws:iam::123:role/x",
-        )
-
-    return ToolFailureCase("eks_describe_addon", patch, invoke, "describe_eks_addon", "eks")
-
-
-def _eks_events_case() -> ToolFailureCase:
-    def patch(mp: pytest.MonkeyPatch) -> None:
-        from app.tools import EKSEventsTool as mod
-
-        mp.setattr(mod, "build_k8s_clients", MagicMock(side_effect=RuntimeError("k8s")))
-
-    def invoke() -> dict[str, Any]:
-        from app.tools.EKSEventsTool import get_eks_events
-
-        return get_eks_events(
-            cluster_name="c",
-            namespace="default",
-            role_arn="arn:aws:iam::123:role/x",
-        )
-
-    return ToolFailureCase("eks_events", patch, invoke, "get_eks_events", "eks")
-
-
-def _eks_node_health_case() -> ToolFailureCase:
-    def patch(mp: pytest.MonkeyPatch) -> None:
-        from app.tools import EKSNodeHealthTool as mod
-
-        mp.setattr(mod, "build_k8s_clients", MagicMock(side_effect=RuntimeError("k8s")))
-
-    def invoke() -> dict[str, Any]:
-        from app.tools.EKSNodeHealthTool import get_eks_node_health
-
-        return get_eks_node_health(
-            cluster_name="c",
-            role_arn="arn:aws:iam::123:role/x",
-        )
-
-    return ToolFailureCase("eks_node_health", patch, invoke, "get_eks_node_health", "eks")
-
-
-def _eks_list_namespaces_case() -> ToolFailureCase:
-    def patch(mp: pytest.MonkeyPatch) -> None:
-        from app.tools import EKSListNamespacesTool as mod
-
-        mp.setattr(mod, "build_k8s_clients", MagicMock(side_effect=RuntimeError("k8s")))
-
-    def invoke() -> dict[str, Any]:
-        from app.tools.EKSListNamespacesTool import list_eks_namespaces
-
-        return list_eks_namespaces(
-            cluster_name="c",
-            role_arn="arn:aws:iam::123:role/x",
-        )
-
-    return ToolFailureCase("eks_list_namespaces", patch, invoke, "list_eks_namespaces", "eks")
-
-
-def _eks_list_deployments_case() -> ToolFailureCase:
-    def patch(mp: pytest.MonkeyPatch) -> None:
-        from app.tools import EKSListDeploymentsTool as mod
-
-        mp.setattr(mod, "build_k8s_clients", MagicMock(side_effect=RuntimeError("k8s")))
-
-    def invoke() -> dict[str, Any]:
-        from app.tools.EKSListDeploymentsTool import list_eks_deployments
-
-        return list_eks_deployments(
-            cluster_name="c",
-            namespace="default",
-            role_arn="arn:aws:iam::123:role/x",
-        )
-
-    return ToolFailureCase("eks_list_deployments", patch, invoke, "list_eks_deployments", "eks")
-
-
-def _eks_list_pods_case() -> ToolFailureCase:
-    def patch(mp: pytest.MonkeyPatch) -> None:
-        from app.tools import EKSListPodsTool as mod
-
-        mp.setattr(mod, "build_k8s_clients", MagicMock(side_effect=RuntimeError("k8s")))
-
-    def invoke() -> dict[str, Any]:
-        from app.tools.EKSListPodsTool import list_eks_pods
-
-        return list_eks_pods(
-            cluster_name="c",
-            namespace="default",
-            role_arn="arn:aws:iam::123:role/x",
-        )
-
-    return ToolFailureCase("eks_list_pods", patch, invoke, "list_eks_pods", "eks")
-
-
-def _eks_pod_logs_case() -> ToolFailureCase:
-    def patch(mp: pytest.MonkeyPatch) -> None:
-        from app.tools import EKSPodLogsTool as mod
-
-        mp.setattr(mod, "build_k8s_clients", MagicMock(side_effect=RuntimeError("k8s")))
-
-    def invoke() -> dict[str, Any]:
-        from app.tools.EKSPodLogsTool import get_eks_pod_logs
-
-        return get_eks_pod_logs(
-            cluster_name="c",
-            namespace="default",
-            pod_name="p",
-            role_arn="arn:aws:iam::123:role/x",
-        )
-
-    return ToolFailureCase("eks_pod_logs", patch, invoke, "get_eks_pod_logs", "eks")
 
 
 def _patch_openclaw_runtime(mp: pytest.MonkeyPatch) -> None:
@@ -587,22 +322,7 @@ def _openclaw_call_tool_case() -> ToolFailureCase:
 
 
 _TOOL_FAILURE_CASES: list[ToolFailureCase] = [
-    _azure_case(),
-    _openobserve_case(),
-    _snowflake_case(),
-    _cloudwatch_logs_case(),
-    _cloudwatch_batch_case(),
     _google_docs_case(),
-    _eks_list_clusters_case(),
-    _eks_describe_cluster_case(),
-    _eks_nodegroup_case(),
-    _eks_addon_case(),
-    _eks_events_case(),
-    _eks_node_health_case(),
-    _eks_list_namespaces_case(),
-    _eks_list_deployments_case(),
-    _eks_list_pods_case(),
-    _eks_pod_logs_case(),
     _openclaw_list_case(),
     _openclaw_search_case(),
     _openclaw_get_conversation_case(),
@@ -651,97 +371,6 @@ def test_tool_reports_exactly_one_sentry_event(
         assert registered.source == case.expected_source
 
 
-def test_eks_client_error_path_uses_warning_severity(
-    captured_sentry_events: list[CapturedSentryEvent],
-    caplog: pytest.LogCaptureFixture,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """The EKS ``except ClientError`` branch must report at WARNING, not ERROR.
-
-    The broad ``except Exception`` branch in every EKS tool reports at the
-    default severity (``error``); the dedicated ``ClientError`` branch
-    intentionally degrades to ``warning`` because a missing-permission or
-    not-found response is operationally useful but not a code defect. The
-    parameterised cases above patch ``EKSClient`` to raise plain
-    ``RuntimeError``, which exercises only the ``Exception`` branch — this
-    test fills the gap by raising a real ``botocore.exceptions.ClientError``.
-    """
-    from botocore.exceptions import ClientError
-
-    from app.tools import EKSListClustersTool as mod
-
-    client_error = ClientError(
-        error_response={
-            "Error": {"Code": "ResourceNotFoundException", "Message": "cluster missing"},
-        },
-        operation_name="ListClusters",
-    )
-
-    instance = MagicMock()
-    instance.list_clusters.side_effect = client_error
-    monkeypatch.setattr(mod, "EKSClient", MagicMock(return_value=instance))
-
-    with caplog.at_level(logging.WARNING, logger="app.tools"):
-        result = mod.list_eks_clusters(role_arn="arn:aws:iam::123:role/x")
-
-    assert result["available"] is False
-    assert len(captured_sentry_events) == 1
-    event = captured_sentry_events[0]
-    assert isinstance(event.exc, ClientError)
-    assert event.extras["tag.tool_name"] == "list_eks_clusters"
-
-    warning_records = [
-        r
-        for r in caplog.records
-        if r.levelno == logging.WARNING and "list_eks_clusters" in r.getMessage()
-    ]
-    assert warning_records, (
-        "EKS ClientError branch must log at WARNING via severity='warning'; "
-        f"got levels {[r.levelname for r in caplog.records]}"
-    )
-    error_records_for_tool = [
-        r
-        for r in caplog.records
-        if r.levelno >= logging.ERROR and "list_eks_clusters" in r.getMessage()
-    ]
-    assert error_records_for_tool == [], "ClientError severity='warning' must not also log at ERROR"
-
-
-def test_eks_nodegroup_health_tags_failing_nodegroup_during_iteration(
-    captured_sentry_events: list[CapturedSentryEvent],
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """A mid-loop ``describe_nodegroup`` failure must tag the actual failing nodegroup.
-
-    The tool loops through one nodegroup at a time. When the caller does not
-    pass ``nodegroup_name`` the loop runs over the discovered list, and a
-    failure on the second nodegroup should reach Sentry tagged with
-    ``ng-broken``, not ``None`` or the first nodegroup.
-    """
-    from app.tools import EKSNodegroupHealthTool as mod
-
-    def _describe(_cluster: str, ng: str) -> dict[str, Any]:
-        if ng == "ng-broken":
-            raise RuntimeError("describe_nodegroup failed")
-        return {"status": "ACTIVE"}
-
-    instance = MagicMock()
-    instance.list_nodegroups.return_value = ["ng-ok", "ng-broken"]
-    instance.describe_nodegroup.side_effect = _describe
-    monkeypatch.setattr(mod, "EKSClient", MagicMock(return_value=instance))
-
-    result = mod.get_eks_nodegroup_health(cluster_name="c", role_arn="arn:aws:iam::123:role/x")
-
-    assert result["available"] is False
-    assert len(captured_sentry_events) == 1
-    event = captured_sentry_events[0]
-    assert event.extras["tag.tool_name"] == "get_eks_nodegroup_health"
-    assert event.extras["nodegroup_name"] == "ng-broken", (
-        "Mid-loop failure must tag the actual failing nodegroup, not the (None) "
-        f"caller input. Got extras={event.extras!r}"
-    )
-
-
 # ---------------------------------------------------------------------------
 # Registry-wide coverage
 #
@@ -771,26 +400,8 @@ def test_eks_nodegroup_health_tags_failing_nodegroup_during_iteration(
 
 _MIGRATED_TOOL_NAMES: frozenset[str] = frozenset(
     {
-        # HTTP / cloud sites from #1463
-        "query_azure_monitor_logs",
-        "query_openobserve_logs",
-        "query_snowflake_history",
-        "get_cloudwatch_logs",
-        "get_cloudwatch_batch_metrics",
         "create_google_docs_incident_report",
-        # EKS — enumerated in #1463
-        "list_eks_clusters",
-        "describe_eks_cluster",
-        "get_eks_nodegroup_health",
-        "describe_eks_addon",
-        "list_eks_pods",
-        "get_eks_pod_logs",
-        # EKS — same deliberate-catch pattern, migrated alongside #1463
-        "get_eks_events",
-        "get_eks_node_health",
-        "list_eks_namespaces",
-        "list_eks_deployments",
-        # OpenClaw — all four swallow sites in OpenClawMCPTool/__init__.py.
+        # OpenClaw — all swallow sites in OpenClawMCPTool/__init__.py.
         # ``send_openclaw_message`` and ``get_openclaw_conversation`` share
         # ``_normalize_named_bridge_call`` via the ``surface_tool_name`` arg.
         "list_openclaw_tools",
@@ -807,155 +418,47 @@ _MIGRATED_TOOL_NAMES: frozenset[str] = frozenset(
 # wrapper from #1476, or (b) have no observed swallow pattern. Keep alphabetised.
 _TOOLS_WITHOUT_DELIBERATE_CATCH: frozenset[str] = frozenset(
     {
-        "CheckNodeServiceStatus",
-        "CheckServiceConnectivity",
-        "DescribeResource",
-        "GetAlerts",
-        "GetAppYAML",
-        "GetClusterConfiguration",
-        "GetErrorLogs",
-        "GetRecentLogs",
-        "GetResources",
-        "GetServiceDependencies",
-        "alertmanager_alerts",
-        "alertmanager_silences",
-        "argocd_application_diff",
-        "argocd_application_status",
-        "check_s3_marker",
-        "describe_rds_events",
-        "describe_rds_instance",
-        "ec2_instances_by_tag",
-        "execute_aws_operation",
-        "fetch_failed_run",
-        "get_airflow_dag_runs",
-        "get_airflow_metrics",
-        "get_airflow_task_instances",
-        "get_azure_sql_current_queries",
-        "get_azure_sql_resource_stats",
-        "get_azure_sql_server_status",
-        "get_azure_sql_slow_queries",
-        "get_azure_sql_wait_stats",
-        "get_batch_statistics",
+        "broadcast_findings",
+        # Evidence synthesis — pure computation, no external API; exceptions propagate.
+        "build_evidence_timeline",
         "get_bitbucket_file_contents",
-        "get_clickhouse_query_activity",
-        "get_clickhouse_system_health",
-        "get_eks_deployment_status",
-        "get_elb_target_health",
-        "get_error_logs",
-        "get_failed_jobs",
-        "get_failed_tools",
-        "get_git_deploy_timeline",
         "get_github_file_contents",
         "get_github_repository_tree",
         "get_gitlab_file",
-        "get_hermes_config",
-        "get_hermes_cron_state",
-        "get_hermes_filesystem_state",
-        "get_hermes_kv_cache_state",
-        "get_hermes_logs",
-        "get_hermes_memory_state",
-        "get_hermes_message_history",
-        "get_hermes_orchestration_state",
-        "get_hermes_provider_traffic",
-        "get_hermes_routing_decisions",
-        "get_hermes_runtime_state",
-        "get_hermes_session_log",
-        "get_hermes_session_topology",
-        "get_host_metrics",
-        "get_kafka_consumer_group_lag",
-        "get_kafka_topic_health",
-        "get_lambda_configuration",
-        "get_lambda_errors",
-        "get_lambda_invocation_logs",
-        "get_mariadb_global_status",
-        "get_mariadb_innodb_status",
-        "get_mariadb_process_list",
-        "get_mariadb_replication_status",
-        "get_mariadb_slow_queries",
-        "get_mongodb_atlas_alerts",
-        "get_mongodb_atlas_cluster_events",
-        "get_mongodb_atlas_cluster_metrics",
-        "get_mongodb_atlas_clusters",
-        "get_mongodb_atlas_performance_advisor",
-        "get_mongodb_collection_stats",
-        "get_mongodb_current_ops",
-        "get_mongodb_profiler_data",
-        "get_mongodb_replica_status",
-        "get_mongodb_server_status",
-        "get_mysql_current_processes",
-        "get_mysql_replication_status",
-        "get_mysql_server_status",
-        "get_mysql_slow_queries",
-        "get_mysql_table_stats",
-        "get_pods_on_node",
-        "get_postgresql_current_queries",
-        "get_postgresql_replication_status",
-        "get_postgresql_server_status",
-        "get_postgresql_slow_queries",
-        "get_postgresql_table_stats",
-        "get_rabbitmq_broker_overview",
-        "get_rabbitmq_connection_stats",
-        "get_rabbitmq_consumer_health",
-        "get_rabbitmq_node_health",
-        "get_rabbitmq_queue_backlog",
-        "get_recent_airflow_failures",
-        "get_s3_object",
-        "get_sentry_issue_details",
-        "get_sre_guidance",
-        "get_supabase_service_health",
-        "get_supabase_storage_buckets",
-        "get_tracer_run",
-        "get_tracer_tasks",
-        "helm_get_release_manifest",
-        "helm_get_release_values",
-        "helm_list_releases",
-        "helm_release_history",
-        "helm_release_status",
-        "incident_io_incidents",
-        "inspect_lambda_function",
-        "inspect_s3_object",
+        "http_probe",
         "jira_add_comment",
         "jira_create_issue",
         "jira_issue_detail",
         "jira_search_issues",
+        "linear_create_issue",
+        "linear_search_issues",
         "list_bitbucket_commits",
         "list_github_commits",
         "list_gitlab_commits",
         "list_gitlab_mrs",
-        "list_gitlab_pipelines",
-        "list_s3_objects",
-        "list_sentry_issue_events",
-        "opsgenie_alert_detail",
-        "opsgenie_alerts",
-        "prefect_flow_runs",
-        "prefect_worker_health",
-        "query_betterstack_logs",
-        "query_coralogix_logs",
-        "query_datadog_all",
-        "query_datadog_events",
-        "query_datadog_logs",
-        "query_datadog_metrics",
-        "query_datadog_monitors",
-        "query_elasticsearch_logs",
-        "query_grafana_alert_rules",
-        "query_grafana_logs",
-        "query_grafana_metrics",
-        "query_grafana_service_names",
-        "query_grafana_traces",
-        "query_honeycomb_traces",
-        "query_opensearch_analytics",
-        "query_signoz_logs",
-        "query_signoz_metrics",
-        "query_signoz_traces",
-        "query_splunk_logs",
+        # HR/legal tools — catch and return structured {"available": False} without report_run_error.
+        "analyze_communication_patterns",
+        "detect_evidence_contradictions",
+        "generate_investigation_report",
+        "lookup_bamboohr_employee",
+        "lookup_okta_identity",
+        "manage_case_notes",
         "run_diagnostic_code",
         "search_bitbucket_code",
         "search_github_code",
-        "search_sentry_issues",
+        "search_gmail_emails",
+        "search_google_calendar",
+        "search_sharepoint_documents",
+        "search_teams_messages",
+        "search_zoom_meetings",
+        "slack_channel_history",
+        "slack_search_messages",
         "twilio_notify",
-        "vercel_deployment_logs",
-        "vercel_deployment_status",
-        "victoria_logs_query",
+        # macOS local device forensics — catch and return {"available": False} on error.
+        "inspect_macos_keychain",
+        "read_macos_browser_history",
+        "read_macos_messages_history",
+        "read_macos_recent_files",
     }
 )
 

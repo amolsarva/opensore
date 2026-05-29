@@ -151,3 +151,7 @@ package-lock.json
 
 # Synthetic test run observations (generated test output, not source)
 tests/synthetic/rds_postgres/_observations/
+
+# start.sh runtime files
+.opensore_install_stamp
+.opensore_web.pid

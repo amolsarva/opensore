@@ -1,0 +1,126 @@
+---
+title: "Inbound Webhooks"
+description: "Auto-trigger investigations from PagerDuty, Datadog, Alertmanager, or any alert source."
+---
+
+## Overview
+
+The webhook endpoint closes the automation loop: when an alert fires in any source,
+opensore immediately runs a full investigation and returns the RCA synchronously.
+
+```
+Alert fires → POST /webhooks/investigate → RCA runs → root cause + runbook returned
+```
+
+## Endpoint
+
+```
+POST /webhooks/investigate
+Content-Type: application/json
+```
+
+The endpoint auto-detects the alert format (PagerDuty, Datadog, Alertmanager, or generic JSON)
+and normalizes it before running the investigation.
+
+## Supported formats
+
+### Generic (recommended for custom integrations)
+
+```json
+{
+  "name": "HighDBLatency",
+  "service": "payments-api",
+  "severity": "critical",
+  "description": "p99 latency on payments RDS exceeded 2000ms",
+  "environment": "production"
+}
+```
+
+### PagerDuty v3 webhook
+
+Forward PagerDuty `incident.triggered` events directly. Configure the webhook
+in PagerDuty → **Integrations → Generic Webhooks v3**.
+
+### Datadog monitor webhook
+
+Forward Datadog monitor alerts. Configure in Datadog → **Integrations → Webhooks**.
+
+### Prometheus / Alertmanager
+
+Forward Alertmanager webhook notifications. Add to your `alertmanager.yml`:
+
+```yaml
+receivers:
+  - name: opensore
+    webhook_configs:
+      - url: http://your-opensore-host/webhooks/investigate
+```
+
+## Response
+
+```json
+{
+  "ok": true,
+  "alert_name": "HighDBLatency",
+  "root_cause": "Connection pool exhausted on payments-rds due to slow query backlog.",
+  "root_cause_category": "database",
+  "validity_score": 0.87,
+  "remediation_steps": [
+    "Increase max_pool_size to 200",
+    "Add 30s query timeout",
+    "Alert on pool utilization > 70%"
+  ],
+  "runbook_id": "abc123def456",
+  "runbook_path": "/home/user/.opensore/runbooks/20240115-100000-database-highdblatency-abc123.md",
+  "similar_incidents": [
+    {
+      "runbook_id": "def456abc789",
+      "alert_name": "HighDBLatency",
+      "root_cause_category": "database",
+      "similarity_score": 0.84,
+      "generated_at": "2024-01-08 14:22",
+      "excerpt": "Connection pool was saturated during the peak traffic window..."
+    }
+  ],
+  "is_noise": false
+}
+```
+
+## Security
+
+Set `WEBHOOK_SECRET` in your environment to enable HMAC-SHA256 signature verification:
+
+```bash
+export WEBHOOK_SECRET=your-shared-secret
+```
+
+Include the signature in the request header:
+
+```
+X-Webhook-Signature: sha256=<hex-digest>
+```
+
+The digest is `HMAC-SHA256(secret, raw_request_body)`. PagerDuty and GitHub
+both support custom signature headers — set their webhook secret to the same
+value as `WEBHOOK_SECRET`.
+
+## Inspect the schema
+
+```
+GET /webhooks/investigate/schema
+```
+
+Returns the JSON Schema for the response model and example payloads for each
+supported format.
+
+## Starting the server
+
+```bash
+uv run uvicorn app.webapp:app --host 0.0.0.0 --port 8080
+```
+
+Or via Docker:
+
+```bash
+docker build -t opensore . && docker run -p 8080:8080 opensore
+```

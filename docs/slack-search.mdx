@@ -1,0 +1,83 @@
+---
+title: "Slack (Investigation Tools)"
+description: "Search Slack messages and read channel history during investigations."
+---
+
+## Overview
+
+The Slack investigation tools let the agent query Slack *during* an investigation to find
+engineer discussions, deployment announcements, and error messages shared in channels.
+
+This is distinct from [Slack delivery](/messaging/slack), which handles posting RCA results
+to a channel. These tools are read-only and scoped to investigation use.
+
+## Setup
+
+1. Create a Slack app at **api.slack.com/apps** with the following bot token scopes:
+   - `search:read` — for full-text message search
+   - `channels:history` — for reading public channel messages
+   - `channels:read` — for listing channels
+   - `groups:history` — if you need private channel access
+
+2. Install the app to your workspace and copy the **Bot User OAuth Token** (`xoxb-...`).
+
+3. Add to opensore:
+
+```bash
+opensore integrations add slack-search
+```
+
+## Tools
+
+### `slack_search_messages`
+
+Full-text search across all Slack messages the bot can access. Supports Slack search modifiers.
+
+```json
+{
+  "query": "payments latency after:2024-01-15 in:#incidents",
+  "count": 20,
+  "sort": "timestamp"
+}
+```
+
+**Useful queries during investigation:**
+
+| Goal | Query example |
+|------|---------------|
+| Find discussion about the failing service | `"payments-api" error after:2024-01-15` |
+| Find deployment announcements | `"deployed" in:#deployments after:2024-01-15` |
+| Find who noticed first | `"payments down" after:2024-01-15` |
+
+**Returns:** `messages[]` with text, user, channel, permalink, isoformat timestamp.
+
+### `slack_channel_history`
+
+Read recent messages from a specific channel, optionally scoped to a time window.
+
+```json
+{
+  "channel_id": "C1234567890",
+  "limit": 50,
+  "oldest": "1704067200",
+  "latest": "1704153600"
+}
+```
+
+Use `oldest` / `latest` as Unix timestamps to scope the window to the alert's time range.
+
+**Returns:** `messages[]` with text, user, timestamp, reactions.
+
+## Investigation workflow
+
+A typical agent pattern:
+
+1. **Search first** — use `slack_search_messages` with the service name and a time window
+   to find any existing discussion about the alert
+2. **Drill into a channel** — if relevant discussion appears in `#incidents` or `#eng-alerts`,
+   use `slack_channel_history` to get the full timeline around the alert window
+3. **Correlate** — use timestamps from Slack messages to compare with metric anomalies found
+   via Datadog, CloudWatch, or Grafana
+
+This gives the agent social context — it knows when engineers noticed the problem, what they
+tried, and whether there was a coordinated response before the investigation started.

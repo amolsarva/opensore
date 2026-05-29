@@ -1,0 +1,102 @@
+---
+title: "Auto-Generated Runbooks"
+description: "Every investigation automatically produces a structured runbook for future incidents."
+---
+
+## Overview
+
+After every successful investigation, opensore generates a structured **runbook** — a Markdown
+document that captures:
+
+- Root cause summary and category
+- Causal chain (step-by-step failure sequence)
+- Remediation playbook
+- Evidence collected during the investigation
+- Validated and unvalidated claims
+- Prevention checklist
+
+Runbooks are stored locally in `~/.opensore/runbooks/` and indexed for fast lookup.
+
+## CLI Commands
+
+### List runbooks
+
+```bash
+opensore runbook list
+```
+
+Filter by root cause category:
+
+```bash
+opensore runbook list --category database
+opensore runbook list --category memory --limit 5
+```
+
+### Show a runbook
+
+```bash
+opensore runbook show <runbook-id>
+```
+
+Print raw Markdown (useful for piping to a file or Confluence):
+
+```bash
+opensore runbook show <runbook-id> --raw
+```
+
+### Generate manually
+
+You can generate a runbook without running a full investigation — useful for documenting known
+failure patterns:
+
+```bash
+opensore runbook generate \
+  --alert-name "HighDBLatency" \
+  --root-cause "Connection pool exhausted due to slow queries" \
+  --category database \
+  --remediation "Increase max pool size" \
+  --remediation "Kill queries over 30 seconds" \
+  --output runbooks/high-db-latency.md
+```
+
+## Runbook format
+
+Each runbook contains the following sections:
+
+| Section | Content |
+|---------|---------|
+| Root Cause Summary | 2-3 sentence diagnosis |
+| Causal Chain | Ordered steps leading to the failure |
+| Remediation Playbook | Numbered action items |
+| Detection Signals | Alert name, service, severity |
+| Evidence Collected | Tool-by-tool summary of what was found |
+| Validated Claims | Facts confirmed by tool evidence |
+| Unvalidated Claims | Hypotheses not yet confirmed |
+| Prevention & Monitoring | Checklist for hardening |
+
+## Automatic generation
+
+Every investigation triggered via `opensore investigate` or the programmatic API automatically
+generates a runbook on completion. No extra configuration is required.
+
+Runbooks are non-blocking — if generation fails (e.g. disk full), the investigation result is
+still returned and delivered normally.
+
+## Storage
+
+```
+~/.opensore/runbooks/
+├── index.json                         # Fast lookup index (last 500 entries)
+├── 20240115-103045-database-highdblatency-abc123.md
+└── 20240115-091200-memory-oomkiller-def456.md
+```
+
+The index stores `runbook_id`, `alert_name`, `root_cause_category`, `generated_at`, and
+`validity_score` for every runbook — no need to open files to find the one you want.
+
+## Tips
+
+- **Share runbooks in Slack**: `opensore runbook show <id> --raw | pbcopy` then paste into Slack
+- **Import to Confluence**: the raw Markdown maps cleanly to Confluence wiki markup
+- **Compare patterns**: `opensore runbook list --category database` to see all DB-related incidents
+  and identify recurring failure patterns

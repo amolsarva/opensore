@@ -110,13 +110,13 @@ def test_kill_synthetic_test_request_plans_cancel_action() -> None:
     assert agent_actions.plan_cli_actions(message) == []
 
 
-def test_integration_prompt_plans_datadog_lookup_only() -> None:
+def test_integration_prompt_plans_jira_lookup_only() -> None:
     message = (
         "tell me about what the discord integration can do and then tell me what "
-        "datadog services I have connections to"
+        "jira services I have connections to"
     )
 
-    assert agent_actions.plan_cli_actions(message) == ["/integrations show datadog"]
+    assert agent_actions.plan_cli_actions(message) == ["/integrations show jira"]
 
 
 def test_execute_cli_actions_dispatches_planned_commands(monkeypatch: object) -> None:
@@ -381,7 +381,7 @@ def test_execute_cli_actions_runs_implementation_action(monkeypatch: object) -> 
     assert "implemented /history search" in output
 
 
-def test_execute_cli_actions_answers_discord_then_dispatches_datadog(
+def test_execute_cli_actions_mixed_intent_discord_and_jira_fails_closed(
     monkeypatch: object,
 ) -> None:
     dispatched: list[str] = []
@@ -404,7 +404,7 @@ def test_execute_cli_actions_answers_discord_then_dispatches_datadog(
     handled = agent_actions.execute_cli_actions(
         (
             "tell me about what the discord integration can do and then tell me what "
-            "datadog services I have connections to"
+            "jira services I have connections to"
         ),
         session,
         console,
@@ -417,7 +417,7 @@ def test_execute_cli_actions_answers_discord_then_dispatches_datadog(
             "type": "cli_agent",
             "text": (
                 "tell me about what the discord integration can do and then tell me what "
-                "datadog services I have connections to"
+                "jira services I have connections to"
             ),
             "ok": False,
         }

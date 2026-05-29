@@ -17,14 +17,14 @@ from app.cli.commands.general import (
     version_command,
 )
 from app.cli.commands.guardrails import guardrails
-from app.cli.commands.hermes import hermes_command
 from app.cli.commands.integrations import integrations
 from app.cli.commands.messaging import messaging
 from app.cli.commands.onboard import onboard
 from app.cli.commands.personal import personal
 from app.cli.commands.remote import remote
+from app.cli.commands.runbook import runbook
+from app.cli.commands.schedule import schedule
 from app.cli.commands.tests import tests
-from app.cli.commands.watchdog import watchdog_command
 
 _COMMANDS: tuple[click.Command, ...] = (
     investigate_command,
@@ -38,8 +38,8 @@ _COMMANDS: tuple[click.Command, ...] = (
     agents,
     messaging,
     personal,
-    hermes_command,
-    watchdog_command,
+    runbook,
+    schedule,
     debug_command,
     health_command,
     doctor_command,

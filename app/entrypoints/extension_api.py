@@ -32,7 +32,9 @@ class OAuthCompleteRequest(BaseModel):
     provider: str
     code: str
     redirect_uri: str
-    code_verifier: str | None = None  # PKCE verifier — required for Google
+    code_verifier: str | None = None   # PKCE verifier — required for Google
+    client_id: str | None = None       # extension-supplied override (takes priority over env)
+    client_secret: str | None = None   # extension-supplied override
 
 
 @router.get("/ping")
@@ -83,14 +85,14 @@ def extension_oauth_complete(request: OAuthCompleteRequest) -> dict[str, Any]:
 
 
 def _complete_slack(req: OAuthCompleteRequest) -> dict[str, Any]:
-    client_id = os.environ.get("OPENSORE_SLACK_CLIENT_ID", "").strip()
-    client_secret = os.environ.get("OPENSORE_SLACK_CLIENT_SECRET", "").strip()
+    client_id = (req.client_id or os.environ.get("OPENSORE_SLACK_CLIENT_ID", "")).strip()
+    client_secret = (req.client_secret or os.environ.get("OPENSORE_SLACK_CLIENT_SECRET", "")).strip()
     if not client_id or not client_secret:
         raise HTTPException(
             status_code=503,
             detail=(
                 "Slack OAuth credentials not configured. "
-                "Set OPENSORE_SLACK_CLIENT_ID and OPENSORE_SLACK_CLIENT_SECRET."
+                "Enter your Client ID and Secret in the extension popup setup wizard."
             ),
         )
 
@@ -133,9 +135,7 @@ def _complete_slack(req: OAuthCompleteRequest) -> dict[str, Any]:
         user_profile = info_resp.json().get("user", {}).get("profile", {})
 
     display_name = (
-        user_profile.get("display_name")
-        or user_profile.get("real_name")
-        or authed_user_id
+        user_profile.get("display_name") or user_profile.get("real_name") or authed_user_id
     )
     label = f"{team_name} ({display_name})" if team_name else display_name
 
@@ -157,14 +157,14 @@ def _complete_slack(req: OAuthCompleteRequest) -> dict[str, Any]:
 
 
 def _complete_google(req: OAuthCompleteRequest) -> dict[str, Any]:
-    client_id = os.environ.get("OPENSORE_GOOGLE_CLIENT_ID", "").strip()
-    client_secret = os.environ.get("OPENSORE_GOOGLE_CLIENT_SECRET", "").strip()
+    client_id = (req.client_id or os.environ.get("OPENSORE_GOOGLE_CLIENT_ID", "")).strip()
+    client_secret = (req.client_secret or os.environ.get("OPENSORE_GOOGLE_CLIENT_SECRET", "")).strip()
     if not client_id or not client_secret:
         raise HTTPException(
             status_code=503,
             detail=(
                 "Google OAuth credentials not configured. "
-                "Set OPENSORE_GOOGLE_CLIENT_ID and OPENSORE_GOOGLE_CLIENT_SECRET."
+                "Enter your Client ID in the extension popup setup wizard."
             ),
         )
 

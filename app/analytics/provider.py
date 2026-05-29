@@ -66,10 +66,10 @@ _CI_FINGERPRINT_ENV_KEYS: Final[tuple[str, ...]] = (
     "JOB_NAME",
 )
 
-type JsonScalar = str | bool | int | float
-type JsonValue = JsonScalar | list["JsonValue"] | dict[str, "JsonValue"]
-type PropertyValue = JsonValue
-type Properties = dict[str, JsonValue]
+JsonScalar = str | bool | int | float
+JsonValue = JsonScalar | list["JsonValue"] | dict[str, "JsonValue"]  # type: ignore[misc]
+PropertyValue = JsonValue
+Properties = dict[str, JsonValue]
 
 
 @dataclass(frozen=True, slots=True)

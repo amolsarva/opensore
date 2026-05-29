@@ -42,34 +42,6 @@ class MigrationCase:
 
 
 CASES: tuple[MigrationCase, ...] = (
-    # trello
-    MigrationCase(
-        "app/integrations/trello.py", "validate_trello_config", "trello", "validate_trello_config"
-    ),
-    # kafka
-    MigrationCase(
-        "app/integrations/kafka.py", "validate_kafka_config", "kafka", "validate_kafka_config"
-    ),
-    MigrationCase("app/integrations/kafka.py", "get_topic_health", "kafka", "get_topic_health"),
-    MigrationCase(
-        "app/integrations/kafka.py", "get_consumer_group_lag", "kafka", "get_consumer_group_lag"
-    ),
-    # clickhouse
-    MigrationCase(
-        "app/integrations/clickhouse.py",
-        "validate_clickhouse_config",
-        "clickhouse",
-        "validate_clickhouse_config",
-    ),
-    MigrationCase(
-        "app/integrations/clickhouse.py", "get_query_activity", "clickhouse", "get_query_activity"
-    ),
-    MigrationCase(
-        "app/integrations/clickhouse.py", "get_system_health", "clickhouse", "get_system_health"
-    ),
-    MigrationCase(
-        "app/integrations/clickhouse.py", "get_table_stats", "clickhouse", "get_table_stats"
-    ),
     # github_mcp
     MigrationCase(
         "app/integrations/github_mcp.py",
@@ -77,46 +49,6 @@ CASES: tuple[MigrationCase, ...] = (
         "github_mcp",
         "validate_github_mcp_config",
     ),
-    # airflow (validate + loop site)
-    MigrationCase(
-        "app/integrations/airflow.py",
-        "validate_airflow_config",
-        "airflow",
-        "validate_airflow_config",
-    ),
-    MigrationCase(
-        "app/integrations/airflow.py",
-        "get_recent_airflow_failures",
-        "airflow",
-        "get_recent_airflow_failures.task_instances",
-    ),
-    # posthog
-    MigrationCase(
-        "app/integrations/posthog.py",
-        "validate_posthog_config",
-        "posthog",
-        "validate_posthog_config",
-    ),
-    # azure_sql
-    MigrationCase(
-        "app/integrations/azure_sql.py",
-        "validate_azure_sql_config",
-        "azure_sql",
-        "validate_azure_sql_config",
-    ),
-    MigrationCase(
-        "app/integrations/azure_sql.py", "get_server_status", "azure_sql", "get_server_status"
-    ),
-    MigrationCase(
-        "app/integrations/azure_sql.py", "get_current_queries", "azure_sql", "get_current_queries"
-    ),
-    MigrationCase(
-        "app/integrations/azure_sql.py", "get_resource_stats", "azure_sql", "get_resource_stats"
-    ),
-    MigrationCase(
-        "app/integrations/azure_sql.py", "get_slow_queries", "azure_sql", "get_slow_queries"
-    ),
-    MigrationCase("app/integrations/azure_sql.py", "get_wait_stats", "azure_sql", "get_wait_stats"),
     # openclaw
     MigrationCase(
         "app/integrations/openclaw.py",
@@ -124,14 +56,6 @@ CASES: tuple[MigrationCase, ...] = (
         "openclaw",
         "validate_openclaw_config",
     ),
-    # betterstack
-    MigrationCase(
-        "app/integrations/betterstack.py",
-        "validate_betterstack_config",
-        "betterstack",
-        "validate_betterstack_config",
-    ),
-    MigrationCase("app/integrations/betterstack.py", "query_logs", "betterstack", "query_logs"),
     # gitlab
     MigrationCase(
         "app/integrations/gitlab.py", "validate_gitlab_config", "gitlab", "validate_gitlab_config"
@@ -148,133 +72,6 @@ CASES: tuple[MigrationCase, ...] = (
         "app/integrations/bitbucket.py", "get_file_contents", "bitbucket", "get_file_contents"
     ),
     MigrationCase("app/integrations/bitbucket.py", "search_code", "bitbucket", "search_code"),
-    # mongodb
-    MigrationCase(
-        "app/integrations/mongodb.py",
-        "validate_mongodb_config",
-        "mongodb",
-        "validate_mongodb_config",
-    ),
-    MigrationCase(
-        "app/integrations/mongodb.py", "get_server_status", "mongodb", "get_server_status"
-    ),
-    MigrationCase("app/integrations/mongodb.py", "get_current_ops", "mongodb", "get_current_ops"),
-    MigrationCase("app/integrations/mongodb.py", "get_rs_status", "mongodb", "get_rs_status"),
-    MigrationCase(
-        "app/integrations/mongodb.py", "get_profiler_data", "mongodb", "get_profiler_data"
-    ),
-    MigrationCase(
-        "app/integrations/mongodb.py", "get_collection_stats", "mongodb", "get_collection_stats"
-    ),
-    # postgresql
-    MigrationCase(
-        "app/integrations/postgresql.py",
-        "validate_postgresql_config",
-        "postgresql",
-        "validate_postgresql_config",
-    ),
-    MigrationCase(
-        "app/integrations/postgresql.py", "get_server_status", "postgresql", "get_server_status"
-    ),
-    MigrationCase(
-        "app/integrations/postgresql.py", "get_current_queries", "postgresql", "get_current_queries"
-    ),
-    MigrationCase(
-        "app/integrations/postgresql.py",
-        "get_replication_status",
-        "postgresql",
-        "get_replication_status",
-    ),
-    MigrationCase(
-        "app/integrations/postgresql.py", "get_slow_queries", "postgresql", "get_slow_queries"
-    ),
-    MigrationCase(
-        "app/integrations/postgresql.py", "get_table_stats", "postgresql", "get_table_stats"
-    ),
-    # mysql
-    MigrationCase(
-        "app/integrations/mysql.py", "validate_mysql_config", "mysql", "validate_mysql_config"
-    ),
-    MigrationCase("app/integrations/mysql.py", "get_server_status", "mysql", "get_server_status"),
-    MigrationCase(
-        "app/integrations/mysql.py", "get_current_processes", "mysql", "get_current_processes"
-    ),
-    MigrationCase(
-        "app/integrations/mysql.py", "get_replication_status", "mysql", "get_replication_status"
-    ),
-    MigrationCase("app/integrations/mysql.py", "get_slow_queries", "mysql", "get_slow_queries"),
-    MigrationCase("app/integrations/mysql.py", "get_table_stats", "mysql", "get_table_stats"),
-    # mariadb
-    MigrationCase(
-        "app/integrations/mariadb.py",
-        "validate_mariadb_config",
-        "mariadb",
-        "validate_mariadb_config",
-    ),
-    MigrationCase("app/integrations/mariadb.py", "get_process_list", "mariadb", "get_process_list"),
-    MigrationCase(
-        "app/integrations/mariadb.py", "get_global_status", "mariadb", "get_global_status"
-    ),
-    MigrationCase(
-        "app/integrations/mariadb.py", "get_innodb_status", "mariadb", "get_innodb_status"
-    ),
-    MigrationCase("app/integrations/mariadb.py", "get_slow_queries", "mariadb", "get_slow_queries"),
-    MigrationCase(
-        "app/integrations/mariadb.py", "get_replication_status", "mariadb", "get_replication_status"
-    ),
-    # rabbitmq
-    MigrationCase(
-        "app/integrations/rabbitmq.py",
-        "validate_rabbitmq_config",
-        "rabbitmq",
-        "validate_rabbitmq_config",
-    ),
-    MigrationCase(
-        "app/integrations/rabbitmq.py", "get_queue_backlog", "rabbitmq", "get_queue_backlog"
-    ),
-    MigrationCase(
-        "app/integrations/rabbitmq.py", "get_consumer_health", "rabbitmq", "get_consumer_health"
-    ),
-    MigrationCase(
-        "app/integrations/rabbitmq.py", "get_broker_overview", "rabbitmq", "get_broker_overview"
-    ),
-    MigrationCase("app/integrations/rabbitmq.py", "get_node_health", "rabbitmq", "get_node_health"),
-    MigrationCase(
-        "app/integrations/rabbitmq.py", "get_connection_stats", "rabbitmq", "get_connection_stats"
-    ),
-    # mongodb_atlas
-    MigrationCase(
-        "app/integrations/mongodb_atlas.py",
-        "validate_mongodb_atlas_config",
-        "mongodb_atlas",
-        "validate_mongodb_atlas_config",
-    ),
-    MigrationCase(
-        "app/integrations/mongodb_atlas.py", "get_clusters", "mongodb_atlas", "get_clusters"
-    ),
-    MigrationCase("app/integrations/mongodb_atlas.py", "get_alerts", "mongodb_atlas", "get_alerts"),
-    MigrationCase(
-        "app/integrations/mongodb_atlas.py",
-        "get_cluster_metrics",
-        "mongodb_atlas",
-        "get_cluster_metrics",
-    ),
-    MigrationCase(
-        "app/integrations/mongodb_atlas.py",
-        "get_performance_advisor",
-        "mongodb_atlas",
-        "get_performance_advisor",
-    ),
-    MigrationCase(
-        "app/integrations/mongodb_atlas.py",
-        "get_cluster_events",
-        "mongodb_atlas",
-        "get_cluster_events",
-    ),
-    # sentry (its own validator captures into OpenSore's Sentry)
-    MigrationCase(
-        "app/integrations/sentry.py", "validate_sentry_config", "sentry", "validate_sentry_config"
-    ),
     # adjacent
     MigrationCase(
         "app/integrations/daily_update.py",

@@ -268,10 +268,10 @@ class TestStreamRendererEventsMode:
                 "investigation_agent",
                 {
                     "id": "call-1",
-                    "name": "query_grafana_logs",
+                    "name": "jira_search_issues",
                     "input": {
-                        "service_name": "checkout-api",
-                        "grafana_api_key": "secret-key",
+                        "query": "HR misconduct reports",
+                        "api_token": "secret-key",
                     },
                 },
                 kind="on_tool_start",
@@ -281,8 +281,8 @@ class TestStreamRendererEventsMode:
                 "investigation_agent",
                 {
                     "id": "call-1",
-                    "name": "query_grafana_logs",
-                    "output": {"available": True, "logs": [{"message": "boom"}]},
+                    "name": "jira_search_issues",
+                    "output": {"available": True, "issues": [{"summary": "incident"}]},
                 },
                 kind="on_tool_end",
             )
@@ -293,10 +293,10 @@ class TestStreamRendererEventsMode:
         out, _ = capfd.readouterr()
         assert "Input:" not in out
         assert "Output:" not in out
-        assert "checkout-api" not in out
-        assert "boom" not in out
+        assert "HR misconduct reports" not in out
+        assert "incident" not in out
         assert "secret-key" not in out
-        assert renderer._format_tool_summary() == "Grafana: Loki"
+        assert renderer._format_tool_summary() == "Jira: search issues"
 
     @patch.dict(os.environ, {"TRACER_OUTPUT_FORMAT": "text"})
     def test_tool_detail_toggle_prints_redacted_input_and_output(self, capfd) -> None:
@@ -306,10 +306,10 @@ class TestStreamRendererEventsMode:
                 "investigation_agent",
                 {
                     "id": "call-1",
-                    "name": "query_grafana_logs",
+                    "name": "jira_search_issues",
                     "input": {
                         "service_name": "checkout-api",
-                        "grafana_api_key": "secret-key",
+                        "api_token": "secret-key",
                     },
                 },
                 kind="on_tool_start",
@@ -319,8 +319,8 @@ class TestStreamRendererEventsMode:
                 "investigation_agent",
                 {
                     "id": "call-1",
-                    "name": "query_grafana_logs",
-                    "output": {"available": True, "logs": [{"message": "boom"}]},
+                    "name": "jira_search_issues",
+                    "output": {"available": True, "issues": [{"summary": "boom"}]},
                 },
                 kind="on_tool_end",
             )
@@ -342,14 +342,17 @@ class TestStreamRendererEventsMode:
     def test_tool_summary_groups_repeated_tools_by_source(self) -> None:
         renderer = StreamRenderer()
         for tool_name in (
-            "query_grafana_alert_rules",
-            "query_grafana_metrics",
-            "query_grafana_metrics",
-            "query_grafana_logs",
+            "jira_search_issues",
+            "jira_issue_detail",
+            "jira_issue_detail",
+            "slack_channel_history",
         ):
             renderer._record_tool_summary(tool_name)
 
-        assert renderer._format_tool_summary() == "Grafana: alerts, Mimir x2, Loki"
+        assert (
+            renderer._format_tool_summary()
+            == "Jira: search issues, issue detail x2 | Slack: channel history"
+        )
 
     @patch.dict(os.environ, {"TRACER_OUTPUT_FORMAT": "text"})
     def test_ignores_events_without_node(self) -> None:

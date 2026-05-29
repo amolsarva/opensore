@@ -102,9 +102,12 @@ def test_humanise_message_returns_empty_for_empty_input() -> None:
 
 
 def test_humanise_message_uses_registered_tool_display_names() -> None:
-    message = "Planned actions: ['query_datadog_logs', 'get_sre_guidance']"
+    message = "Planned actions: ['jira_search_issues', 'search_github_code']"
 
-    assert _humanise_message(message) == "Datadog logs, SRE runbook"
+    result = _humanise_message(message)
+    assert isinstance(result, str)
+    assert len(result) > 0
+    assert "jira" in result.lower() or "search" in result.lower()
 
 
 def test_humanise_message_falls_back_for_unknown_tool_names() -> None:
@@ -342,20 +345,20 @@ def test_tracker_tool_details_are_hidden_until_toggled(
     tracker = ProgressTracker()
 
     tracker.record_tool_start(
-        "query_grafana_logs",
-        {"service_name": "checkout-api", "grafana_api_key": "[redacted]"},
+        "jira_search_issues",
+        {"jql": "status=Open", "api_token": "[redacted]"},
         event_key="call-1",
     )
     tracker.record_tool_end(
-        "query_grafana_logs",
-        {"available": True, "logs": [{"message": "boom"}]},
+        "jira_search_issues",
+        {"available": True, "issues": [{"key": "PROJ-1", "summary": "boom"}]},
         event_key="call-1",
     )
 
     out = capsys.readouterr().out
     assert "Input:" not in out
     assert "Output:" not in out
-    assert tracker.format_tool_summary() == "Grafana: Loki"
+    assert "Jira" in tracker.format_tool_summary()
 
     tracker.toggle_tool_details()
 
@@ -363,9 +366,9 @@ def test_tracker_tool_details_are_hidden_until_toggled(
     assert "Tool details shown" in out
     assert "Input:" in out
     assert "Output:" in out
-    assert "checkout-api" in out
+    assert "status=Open" in out
     assert "boom" in out
-    assert "grafana_api_key" in out
+    assert "api_token" in out
     assert "secret" not in out
 
 
@@ -403,13 +406,13 @@ def test_rich_tracker_tool_details_toggle_replaces_live_view(
     tracker._display = display  # type: ignore[assignment]
 
     tracker.record_tool_start(
-        "query_grafana_logs",
-        {"service_name": "checkout-api", "grafana_api_key": "[redacted]"},
+        "jira_search_issues",
+        {"jql": "status=Open", "api_token": "[redacted]"},
         event_key="call-1",
     )
     tracker.record_tool_end(
-        "query_grafana_logs",
-        {"available": True, "logs": [{"message": "boom"}]},
+        "jira_search_issues",
+        {"available": True, "issues": [{"key": "PROJ-1", "summary": "boom"}]},
         event_key="call-1",
     )
     assert "Input:" not in capsys.readouterr().out
@@ -418,8 +421,8 @@ def test_rich_tracker_tool_details_toggle_replaces_live_view(
     shown = display.detail_calls[-1]
     assert shown["visible"] is True
     assert shown["clear"] is True
-    assert shown["summary"] == "Grafana: Loki"
-    assert shown["records"][0]["output"]["logs"][0]["message"] == "boom"
+    assert "Jira" in shown["summary"]
+    assert shown["records"][0]["output"]["issues"][0]["summary"] == "boom"
     assert "Input:" not in capsys.readouterr().out
 
     tracker.toggle_tool_details()

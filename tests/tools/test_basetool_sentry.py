@@ -14,7 +14,7 @@ class ExplodingBaseTool(BaseTool):
     name = "exploding_base_tool"
     description = "Tool that raises for Sentry coverage."
     input_schema = {"type": "object", "properties": {}}
-    source = "grafana"
+    source = "knowledge"
 
     def run(self) -> dict[str, Any]:
         raise RuntimeError("base boom")
@@ -54,7 +54,7 @@ def test_decorated_function_tool_exception_is_captured_with_tool_tag(
         name="decorated_failure",
         description="Function tool that raises for Sentry coverage.",
         input_schema={"type": "object", "properties": {}},
-        source="grafana",
+        source="github",
     )
     def decorated_failure() -> dict[str, Any]:
         raise ValueError("decorated boom")
