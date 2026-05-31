@@ -32,7 +32,7 @@ dependencies = [
     "cryptography>=42.0.0",
     "keyring",
     # AWS
-    "boto3>=1.42.88",
+    "boto3>=1.43.18",
     # Utilities
     "python-dotenv>=1.2.2",
     "click>=8.1.0",
